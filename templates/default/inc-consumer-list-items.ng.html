@@ -1,0 +1,13 @@
+<div class="list-group-wrapper app-consumers">
+	<div class="sub-list-wrapper ng-class:{'flat': ! group};" ng-repeat="group in groups">
+		<li class="list-group-item sub-list-header">{{group.name}}</li>
+		<li class="list-group-item ng-class:{'selected': selected({a: c})};" ng-repeat="c in consumers | filterConsumersByGroup:group | filter:listFilter | filter:searchFilter" ng-click="selector({a: c})" on-long-press="presser({a: c})">
+			<div ng-show="c.avatar" class="avatar"><img ng-src="{{c.avatar ? c.avatar : ''}}"/></div>
+			{{c.name}}
+
+			<div class="consumer-setting-show form-checkbox" ng-if="c.isEditable">
+				<input type="checkbox" ng-model="c.show" /><label></label>
+			</div>
+		</li>
+	</div>
+</div><!-- consumer-list.html -->
