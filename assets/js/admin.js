@@ -80,6 +80,12 @@ jQuery(document).ready( function($) {
 				.find( '.activity-participant' ).removeClass( 'search-hide' ).find( '.title' ).filter( function( i, el ) {
 					return ! el.innerHTML.replace( / /g, '' ).match( reg );
 				}).parents( '.activity-participant' ).addClass( 'search-hide' );
+
+			actPartBoxToggleGroups({
+				show: this.value.length,
+				filterBy: '.activity-participant:not(.search-hide)',
+				toggleClassName: 'search-hidden'
+			});
 		})
 
 		// Show (un)limit selected items
@@ -212,7 +218,7 @@ jQuery(document).ready( function($) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return void
+	 * @return {Void}
 	 */
 	function actDtlsBoxUpdateTotal() {
 		var $selected = $actPtcptList.find( '.activity-participant .select-user:checked' ),
@@ -236,7 +242,7 @@ jQuery(document).ready( function($) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return void
+	 * @return {Void}
 	 */
 	function actPartBoxUpdateCount() {
 		$actPartBox.find( 'h2 .count' ).text( '(' + $actPtcptList.find( '.activity-participant .select-user:checked' ).length + ')' );
@@ -247,18 +253,24 @@ jQuery(document).ready( function($) {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return void
+	 * @param {Object} options Toggle options.
+	 * @return {Void}
 	 */
-	function actPartBoxToggleGroups() {
-		var show = $actPtcptList.is( '.showing-selected' );
+	function actPartBoxToggleGroups( options ) {
+
+		// Setup defaults
+		options = options || {};
+		options.show            = options.show || $actPtcptList.is( '.showing-selected' );
+		options.filterBy        = options.filterBy || '.select-user:checked';
+		options.toggleClassName = options.toggleClassName || 'hidden';
 
 		$actPtcptList
 			.find( '.group' )
-			.removeClass( 'hidden' ) // Reset visibility
+			.removeClass( options.toggleClassName ) // Reset visibility
 			.filter( function( i, el ) {
-				return ! $(el).find( '.select-user:checked' ).length;
+				return ! $(el).find( options.filterBy ).length;
 			})
-			.toggleClass( 'hidden', show ); // Set visibility
+			.toggleClass( options.toggleClassName, options.show ); // Set visibility
 	}
 
 	/**

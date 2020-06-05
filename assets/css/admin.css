@@ -237,7 +237,8 @@ body.incassoos-post-view #postdivrich .inside {
 	display: inline-block;
 }
 
-.incassoos-item-list .sublist > li.hidden {
+.incassoos-item-list .sublist > li.hidden,
+.incassoos-item-list .sublist > li.search-hidden {
 	/*display: none;*/
 	position: absolute !important;
 	top: -9999px !important;
