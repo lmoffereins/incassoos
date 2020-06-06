@@ -147,6 +147,8 @@ class Incassoos_Admin {
 			'l10n' => array(
 				'showSelectedAll'   => __( 'Showing selected',                   'incassoos' ),
 				'showSelectedOnly'  => __( 'Show selected',                      'incassoos' ),
+				'showVisibleAll'    => __( 'Showing visible',                    'incassoos' ),
+				'showVisibleOnly'   => __( 'Show visible',                       'incassoos' ),
 				'termMetaDefault'   => _x( 'Default', 'Term meta',               'incassoos' ),
 				'toggleCloseErrors' => _x( 'Hide errors', 'Notice toggle label', 'incassoos' ),
 				'toggleOpenErrors'  => _x( 'Show errors', 'Notice toggle label', 'incassoos' ),

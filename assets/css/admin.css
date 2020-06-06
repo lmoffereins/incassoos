@@ -402,7 +402,8 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	vertical-align: middle;
 }
 
-.incassoos-item-list #select-matches #show-selected {
+.incassoos-item-list #select-matches #show-selected,
+.incassoos-item-list #select-matches #show-visible {
 	padding: 4px 0px;
 	margin: 0px 6px 0px auto; /* auto applies float:right in flexbox */
 }
@@ -414,6 +415,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 .incassoos-item-list #show-selected:after,
+.incassoos-item-list #show-visible:after,
 .incassoos-item-list #reverse-group-order:after,
 .incassoos-item-list #toggle-list-columns:after,
 .incassoos-item-list .activity-participant .toggle-custom-price:before {
@@ -426,13 +428,15 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	text-decoration: none !important;
 }
 
-.incassoos-item-list #show-selected:after {
+.incassoos-item-list #show-selected:after,
+.incassoos-item-list #show-visible:after {
 	content: '\f530';
 	color: #ddd;
 	margin: 0px 0px -2px 6px;
 }
 
-.incassoos-item-list.showing-selected #show-selected:after {
+.incassoos-item-list.showing-selected #show-selected:after,
+.incassoos-item-list.showing-visible #show-visible:after {
 	content: '\f177';
 	color: inherit;
 }
@@ -452,9 +456,10 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	transform: rotateZ(90deg);
 }
 
-.incassoos-item-list .activity-participant.search-hide,
+.incassoos-item-list .search-hide,
 .incassoos-item-list.showing-selected .activity-participant .select-user:not(:checked),
-.incassoos-item-list.showing-selected .activity-participant .select-user:not(:checked) ~ * {
+.incassoos-item-list.showing-selected .activity-participant .select-user:not(:checked) ~ *,
+.incassoos-item-list.showing-visible .consumer.noshow {
 	display: none;
 }
 
@@ -637,7 +642,8 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 		font-size: 16px;
 	}
 
-	.incassoos-item-list #select-matches #show-selected {
+	.incassoos-item-list #select-matches #show-selected,
+	.incassoos-item-list #select-matches #show-visible {
 		font-size: 16px;
 	}
 
@@ -762,15 +768,6 @@ body.incassoos_page_incassoos-consumers .users li.no-iban input[name="_incassoos
 	border-color: #f06060;
 }
 
-body.incassoos_page_incassoos-consumers .users .sublist-header {
-	display: inline-block;
-	margin: 0px;
-	padding: 6px 12px;
-	line-height: 20px;
-	font-weight: normal;
-	font-style: italic;
-}
-
 body.incassoos_page_incassoos-consumers .users li > .name {
 	width: 100%;
 	padding: 6px 12px;
@@ -830,6 +827,10 @@ body.incassoos_page_incassoos-consumers .inline-edit {
 	padding: 5px 12px;
 }
 
+body.incassoos_page_incassoos-consumers .inline-edit-row fieldset label span.input-text-wrap {
+	margin-left: 7em;
+}
+
 body.incassoos_page_incassoos-consumers .inline-edit .input-text-wrap label {
 	display: inline-block;
 	margin: 0px 15px 0px 2px;
@@ -842,7 +843,7 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 
 @media screen and (min-width: 600px) {
 
-	body.incassoos_page_incassoos-consumers .users {
+	body.incassoos_page_incassoos-consumers .incassoos-item-list .groups {
 		columns: 2;
 		-webkit-column-gap: 1px;
 		   -moz-column-gap: 1px;
@@ -855,14 +856,14 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 
 @media only screen and (min-width: 1200px) {
 
-	body.incassoos_page_incassoos-consumers .users {
+	body.incassoos_page_incassoos-consumers .incassoos-item-list .groups {
 		columns: 3;
 	}
 }
 
 @media only screen and (min-width: 1600px) {
 
-	body.incassoos_page_incassoos-consumers .users {
+	body.incassoos_page_incassoos-consumers .incassoos-item-list .groups {
 		columns: 4;
 	}
 }

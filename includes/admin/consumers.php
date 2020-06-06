@@ -210,17 +210,27 @@ function incassoos_admin_consumers_page() {
 
 	<p><?php esc_html_e( 'Manage consumers and their specific Incassoos attributes.', 'incassoos' ); ?></p>
 
-	<form method="post">
-		<ul class="users postbox">
+	<form method="post" class="incassoos-item-list postbox">
+		<div id="select-matches" class="hide-if-no-js">
+			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+
+			<button type="button" id="show-visible" class="button-link"><?php esc_html_e( 'Show visible', 'incassoos' ); ?></button>
+			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
+			</button>
+		</div>
+
+		<ul class="sublist groups">
 			<?php foreach ( incassoos_get_grouped_users() as $group ) : ?>
 
-				<li id="group-<?php echo $group->id; ?>" class="sublist-header">
-					<h4><?php echo esc_html( $group->name ); ?></h4>
-				</li>
+			<li id="group-<?php echo $group->id; ?>" class="group">
+				<h4 class="sublist-header item-content"><?php echo esc_html( $group->name ); ?></h4>
 
-				<?php foreach ( $group->users as $user ) : ?>
+				<ul class="users">
+					<?php foreach ( $group->users as $user ) : ?>
 
-					<li id="user-<?php echo $user->ID; ?>" class="<?php echo implode( ' ', incassoos_admin_consumers_list_class( $user ) ); ?>">
+					<li id="user-<?php echo $user->ID; ?>" class="consumer <?php echo implode( ' ', incassoos_admin_consumers_list_class( $user ) ); ?>">
 						<button type="button" class="name"><?php echo incassoos_get_user_display_name( $user->ID ); ?></button>
 
 						<div class="details" style="display:none;">
@@ -234,7 +244,10 @@ function incassoos_admin_consumers_page() {
 						</div>
 					</li>
 
-				<?php endforeach; ?>
+					<?php endforeach; ?>
+				</ul>
+			</li>
+
 			<?php endforeach; ?>
 		</ul>
 	</form>
