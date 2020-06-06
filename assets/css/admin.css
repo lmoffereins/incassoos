@@ -284,7 +284,7 @@ body.incassoos-post-view #postdivrich .inside {
 	width: calc( 100% - 24px );
 }
 
-.incassoos-post-edit .incassoos-item-list .products li input + label {
+.incassoos-post-edit .incassoos-item-list .products .product input + label {
 	width: calc( 100% - 76px );
 	padding-top: 4px;
 	padding-bottom: 5px;
@@ -329,10 +329,9 @@ body.incassoos-post-view #postdivrich .inside {
 	display: flex;
 }
 
-.incassoos-item-list .assets li .title,
-.incassoos-item-list .users li .title,
-.incassoos-item-list .products li label,
-.incassoos-item-list .products li .label {
+.incassoos-item-list .assets .asset .title,
+.incassoos-item-list .users .consumer .title,
+.incassoos-item-list .products .product .label {
 	display: inline-block;
 	font-weight: 600;
 	vertical-align: middle;
@@ -395,7 +394,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	border-bottom: 1px solid #eee;
 }
 
-.incassoos-item-list #select-matches #participant-search {
+.incassoos-item-list #select-matches #consumer-search {
 	height: 28px;
 	padding: 4px 5px;
 	line-height: 28px;
@@ -405,13 +404,17 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 .incassoos-item-list #select-matches #show-selected,
 .incassoos-item-list #select-matches #show-visible {
 	padding: 4px 0px;
-	margin: 0px 6px 0px auto; /* auto applies float:right in flexbox */
 }
 
 .incassoos-item-list #select-matches #reverse-group-order,
 .incassoos-item-list #select-matches #toggle-list-columns {
 	padding: 3px 3px 3.5px;
 	margin: 1px 0px 0px 2px;
+}
+
+/* Any sibling following the search box */
+.incassoos-item-list #select-matches #consumer-search + * {
+	margin: 0px 6px 0px auto; /* auto applies float:right in flexbox */
 }
 
 .incassoos-item-list #show-selected:after,
@@ -547,37 +550,32 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	content: '\f335'; /* dashicons-no-alt */
 }
 
-.incassoos-item-list .products li .value {
+.incassoos-item-list .products .product .value {
 	display: inline-block;
 	margin-right: 8px;
 	text-align: right;
 	vertical-align: middle;
 }
 
-.incassoos-item-list .products li input.value {
+.incassoos-item-list .products .product input.value {
 	width: 52px;
 	margin: 5px 8px 5px 0px;
 }
 
-.incassoos-item-list .products li .order-product-amount:after {
+.incassoos-item-list .products .product .order-product-amount:after {
 	content: '×';
 	margin-left: 8px;
 }
 
-.incassoos-item-list .users li .price,
-.incassoos-item-list .products li .total,
-.incassoos-item-list .users li .total {
-}
-
-.incassoos-item-list .users li .input {
+.incassoos-item-list .users .consumer .input {
 	position: absolute;
 	top: 50%;
 	right: 8px;
 	transform: translateY(-50%);
 }
 
-.incassoos-post-edit .incassoos-item-list .users li:not(.has-custom-price) .price,
-.incassoos-item-list .products li .price {
+.incassoos-post-edit .incassoos-item-list .users .consumer:not(.has-custom-price) .price,
+.incassoos-item-list .products .product .price {
 	opacity: .6;
 }
 
@@ -597,11 +595,11 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	opacity: .6
 }
 
-.incassoos-item-list .products li .price:before {
+.incassoos-item-list .products .product .price:before {
 	content: '(';
 }
 
-.incassoos-item-list .products li .price:after {
+.incassoos-item-list .products .product .price:after {
 	content: ')';
 }
 
@@ -637,7 +635,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 		/*width: calc( 100% - 33px );*/
 	}
 
-	.incassoos-item-list #select-matches #participant-search {
+	.incassoos-item-list #select-matches #consumer-search {
 		height: 36px;
 		font-size: 16px;
 	}
@@ -756,19 +754,19 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 
 /** Consumers Page **/
 
-body.incassoos_page_incassoos-consumers .users li {
+body.incassoos_page_incassoos-consumers .users .consumer {
 	margin: 0px;
 }
 
-body.incassoos_page_incassoos-consumers .users li.no-iban .name {
+body.incassoos_page_incassoos-consumers .users .consumer.no-iban .consumer-name {
 	color: #f06060;
 }
 
-body.incassoos_page_incassoos-consumers .users li.no-iban input[name="_incassoos_iban"] {
+body.incassoos_page_incassoos-consumers .users .consumer.no-iban input[name="_incassoos_iban"] {
 	border-color: #f06060;
 }
 
-body.incassoos_page_incassoos-consumers .users li > .name {
+body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name {
 	width: 100%;
 	padding: 6px 12px;
 	background: none;
@@ -778,30 +776,31 @@ body.incassoos_page_incassoos-consumers .users li > .name {
 	cursor: pointer;
 }
 
-body.incassoos_page_incassoos-consumers .users li.toggled {
+body.incassoos_page_incassoos-consumers .users .consumer.toggled {
 	display: inline-block;
 	width: 100%;
 }
 
-body.incassoos_page_incassoos-consumers .users li.toggled:not(:first-child) {
+body.incassoos_page_incassoos-consumers .users .consumer.toggled {
 	border-top: 1px solid #e5e5e5;
+	margin-top: -1px; /* correct pixel-jump */
 }
 
-body.incassoos_page_incassoos-consumers .users li.toggled:not(:last-child) {
+body.incassoos_page_incassoos-consumers .users .consumer.toggled {
 	border-bottom: 1px solid #e5e5e5;
 }
 
-body.incassoos_page_incassoos-consumers .users li > .name {
+body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name {
 	font-weight: 600;
 }
 
-body.incassoos_page_incassoos-consumers .users li:hover,
-body.incassoos_page_incassoos-consumers .users li.toggled,
-body.incassoos_page_incassoos-consumers .users li > .name:focus {
+body.incassoos_page_incassoos-consumers .users .consumer:hover,
+body.incassoos_page_incassoos-consumers .users .consumer.toggled,
+body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name:focus {
 	background: #fbfbfb;
 }
 
-body.incassoos_page_incassoos-consumers .users li > .name:after {
+body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name:after {
 	display: inline-block;
 	float: right;
 	font: normal 20px/1 dashicons;
@@ -813,12 +812,12 @@ body.incassoos_page_incassoos-consumers .users li > .name:after {
 	opacity: .35;
 }
 
-body.incassoos_page_incassoos-consumers .users li.noshow > .name:after {
+body.incassoos_page_incassoos-consumers .users .consumer.noshow > .consumer-name:after {
 	content: '\f530'; /* dashicons-hidden */
 }
 
-body.incassoos_page_incassoos-consumers .users li:not(.toggled) > .name:hover:after,
-body.incassoos_page_incassoos-consumers .users li:not(.toggled) > .name:focus:after {
+body.incassoos_page_incassoos-consumers .users .consumer:not(.toggled) > .consumer-name:hover:after,
+body.incassoos_page_incassoos-consumers .users .consumer:not(.toggled) > .consumer-name:focus:after {
 	content: '\f464'; /* dashicons-edit */
 	opacity: 1;
 }

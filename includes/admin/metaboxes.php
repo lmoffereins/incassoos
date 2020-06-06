@@ -548,7 +548,7 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 		<ul class="assets">
 			<?php foreach ( $activities as $item_id ) : ?>
 
-			<li id="post-<?php echo $item_id; ?>" class="collection-activity">
+			<li id="post-<?php echo $item_id; ?>" class="asset collection-activity">
 				<?php if ( ! $is_post_view ) : ?>
 
 				<input id="collection-activity-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-activity[]" <?php checked( in_array( $item_id, $cactivities ) ); ?> />
@@ -627,7 +627,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 		<ul class="assets">
 			<?php foreach ( $occasions as $item_id ) : ?>
 
-			<li id="post-<?php echo $item_id; ?>" class="collection-occasion">
+			<li id="post-<?php echo $item_id; ?>" class="asset collection-occasion">
 				<?php if ( ! $is_post_view ) : ?>
 
 				<input id="collection-occasion-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-occasion[]" <?php checked( in_array( $item_id, $coccasions ) ); ?> />
@@ -694,18 +694,31 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 	?>
 
 	<div class="incassoos-item-list">
+		<div id="select-matches" class="hide-if-no-js">
+			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+
+			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
+			</button>
+			<button type="button" id="toggle-list-columns" class="button-link" title="<?php esc_attr_e( 'Toggle list columns', 'incassoos' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Toggle list columns', 'incassoos' ); ?></span>
+			</button>
+		</div>
+
 		<ul class="sublist list-columns groups">
 			<?php foreach ( incassoos_group_users( $consumers ) as $group ) : ?>
 
 			<li id="group-<?php echo $group->id; ?>" class="group">
 				<h4 class="sublist-header"><?php echo esc_html( $group->name ); ?></h4>
+
 				<ul class="users">
 					<?php foreach ( $group->users as $user ) : ?>
 
-					<li id="user-<?php echo $user->ID; ?>" class="collection-consumer selector">
+					<li id="user-<?php echo $user->ID; ?>" class="consumer collection-consumer selector">
 						<button type="button" class="button-link open-details">
-							<span class="title"><?php echo $user->display_name; ?></span>
-							<span class="total"><?php incassoos_the_collection_consumer_total( $user->ID, $post, true ); ?></span>
+							<span class="consumer-name title"><?php echo $user->display_name; ?></span>
+							<span class="consumer-total total"><?php incassoos_the_collection_consumer_total( $user->ID, $post, true ); ?></span>
 						</button>
 
 						<ul class="item-details">
@@ -733,9 +746,9 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 				<ul class="users">
 					<?php foreach ( $consumer_types as $consumer_type ) : ?>
 
-					<li id="type-<?php echo esc_attr( $consumer_type ); ?>" class="collection-consumer-type selector">
+					<li id="type-<?php echo esc_attr( $consumer_type ); ?>" class="consumer collection-consumer-type selector">
 						<button type="button" class="button-link open-details">
-							<span class="title"><?php incassoos_the_consumer_type_title( $consumer_type ); ?></span>
+							<span class="consumer-name title"><?php incassoos_the_consumer_type_title( $consumer_type ); ?></span>
 							<span class="total"><?php incassoos_the_collection_consumer_total( $consumer_type, $post, true ); ?></span>
 						</button>
 
@@ -904,7 +917,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	}
 
 	// List item class
-	$item_class = array( 'activity-participant' );
+	$item_class = array( 'consumer', 'activity-participant' );
 	if ( ! $is_post_view ) {
 		$item_class[] = 'selector';
 	}
@@ -912,17 +925,16 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	?>
 
 	<div class="incassoos-item-list">
-
-		<?php if ( ! $is_post_view ) :
-
-			// Get match options
-			$matches     = incassoos_get_user_match_options();
-			$selectors   = array_filter( $matches, function( $g ) { return ( false === strpos( $g, '_' ) ); }, ARRAY_FILTER_USE_KEY ); // PHP 5.6+
-			$deselectors = array_diff_key( $matches, $selectors );
-
-		?>
-
 		<div id="select-matches" class="hide-if-no-js">
+			<?php if ( ! $is_post_view ) :
+
+				// Get match options
+				$matches     = incassoos_get_user_match_options();
+				$selectors   = array_filter( $matches, function( $g ) { return ( false === strpos( $g, '_' ) ); }, ARRAY_FILTER_USE_KEY ); // PHP 5.6+
+				$deselectors = array_diff_key( $matches, $selectors );
+
+			?>
+
 			<label for="participant-quick-select" class="screen-reader-text"><?php esc_html_e( 'Quick select participants', 'incassoos' ); ?></label>
 			<select id="participant-quick-select">
 				<option value="-1"><?php esc_html_e( '&mdash; Quick select &mdash;', 'incassoos' ); ?></option>
@@ -952,10 +964,17 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 				<?php endif; ?>
 			</select>
 
-			<label for="participant-search" class="screen-reader-text"><?php esc_html_e( 'Search users', 'incassoos' ); ?></label>
-			<input type="search" id="participant-search" placeholder="<?php esc_attr_e( 'Search users&hellip;', 'incassoos' ); ?>" />
+			<?php endif; ?>
+
+			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search participants', 'incassoos' ); ?></label>
+			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search participants&hellip;', 'incassoos' ); ?>" />
+
+			<?php if ( ! $is_post_view ) : ?>
 
 			<button type="button" id="show-selected" class="button-link"><?php esc_html_e( 'Show selected', 'incassoos' ); ?></button>
+
+			<?php endif; ?>
+
 			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
 			</button>
@@ -963,8 +982,6 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 				<span class="screen-reader-text"><?php esc_html_e( 'Toggle list columns', 'incassoos' ); ?></span>
 			</button>
 		</div>
-
-		<?php endif; ?>
 
 		<ul class="sublist list-columns groups">
 			<?php foreach ( incassoos_group_users( $users ) as $group ) : ?>
@@ -1001,7 +1018,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 						<div class="item-content">
 							<input type="checkbox" name="activity-participant[]" id="participant-<?php echo $user->ID; ?>" class="select-user" value="<?php echo $user->ID; ?>" <?php checked( in_array( $user->ID, $participants ) ); ?> data-matches="<?php incassoos_the_user_match_ids_list( $user->ID ); ?>" />
-							<label for="participant-<?php echo $user->ID; ?>" class="title"><?php echo $user->display_name; ?></label>
+							<label for="participant-<?php echo $user->ID; ?>" class="consumer-name title"><?php echo $user->display_name; ?></label>
 
 							<span class="price-input">
 								<input type="number" name="participant-price[<?php echo $user->ID; ?>]" class="custom-price" step="0.01" min="0" value="<?php if ( $has_custom_price ) { echo esc_attr( number_format( $prices[ $user->ID ], absint( $format_args['decimals'] ) ) ); } ?>" placeholder="<?php echo esc_attr( $price ); ?>" <?php if ( ! $has_custom_price ) { echo 'disabled="disabled"'; } ?> />
@@ -1017,7 +1034,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 						<?php else : ?>
 
 						<div class="item-content">
-							<span class="title"><?php echo $user->display_name; ?></span>
+							<span class="consumer-name title"><?php echo $user->display_name; ?></span>
 							<span class="price"><?php incassoos_the_activity_participant_price( $user->ID, $post, true ); ?></span>
 						</div>
 
@@ -1213,7 +1230,7 @@ function incassoos_admin_occasion_products_metabox( $post ) {
 		<ul class="products">
 			<?php foreach ( $products as $product ) : ?>
 
-			<li id="post-<?php echo $product->id; ?>" class="occasion-product">
+			<li id="post-<?php echo $product->id; ?>" class="product occasion-product">
 				<span class="label">
 					<span class="title"><?php echo esc_html( $product->name ); ?></span>
 					<span class="price"><?php incassoos_the_format_currency( $product->price ); ?></span>
@@ -1250,6 +1267,18 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 	?>
 
 	<div class="incassoos-item-list">
+		<div id="select-matches" class="hide-if-no-js">
+			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+
+			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
+			</button>
+			<button type="button" id="toggle-list-columns" class="button-link" title="<?php esc_attr_e( 'Toggle list columns', 'incassoos' ); ?>">
+				<span class="screen-reader-text"><?php esc_html_e( 'Toggle list columns', 'incassoos' ); ?></span>
+			</button>
+		</div>
+
 		<ul class="sublist list-columns groups">
 			<?php foreach ( incassoos_group_users( $consumers ) as $group ) : ?>
 
@@ -1258,9 +1287,9 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 				<ul class="users">
 					<?php foreach ( $group->users as $user ) : ?>
 
-					<li id="user-<?php echo $user->ID; ?>" class="occasion-consumer selector">
+					<li id="user-<?php echo $user->ID; ?>" class="consumer occasion-consumer selector">
 						<button type="button" class="button-link open-details">
-							<span class="title"><?php echo $user->display_name; ?></span>
+							<span class="consumer-name title"><?php echo $user->display_name; ?></span>
 							<span class="total"><?php incassoos_the_occasion_consumer_total( $user->ID, $post, true ); ?></span>
 						</button>
 
@@ -1289,9 +1318,9 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 				<ul class="users">
 					<?php foreach ( $consumer_types as $consumer_type ) : ?>
 
-					<li id="type-<?php echo esc_attr( $consumer_type ); ?>" class="occasion-consumer-type selector">
+					<li id="type-<?php echo esc_attr( $consumer_type ); ?>" class="consumer occasion-consumer-type selector">
 						<button type="button" class="button-link open-details">
-							<span class="title"><?php incassoos_the_consumer_type_title( $consumer_type ); ?></span>
+							<span class="consumer-name title"><?php incassoos_the_consumer_type_title( $consumer_type ); ?></span>
 							<span class="total"><?php incassoos_the_occasion_consumer_total( $consumer_type, $post, true ); ?></span>
 						</button>
 

@@ -22,13 +22,47 @@ jQuery(document).ready( function($) {
 
 	/** Generic *********************************************************/
 
-	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_occasion_consumers' );
+	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_occasion_consumers, #incassoos_activity_participants, body.incassoos_page_incassoos-consumers' ),
+	    $consumerList = $consumerBox.find( '.incassoos-item-list' );
 
-	$consumerBox
+	$consumerList
 		// Toggling item details
 		.on( 'click', '.open-details', function() {
 			$( this ).toggleClass( 'opened' );
-			$consumerBox.find( '.open-details' ).not( this ).removeClass( 'opened' );
+			$consumerList.find( '.open-details' ).not( this ).removeClass( 'opened' );
+		})
+
+		// Show (un)limit searched items
+		.on( 'keyup change search input', '#consumer-search', function() {
+
+			// Create regex from search string
+			var reg = new RegExp( this.value.replace( / /g, '' ), 'gi' );
+
+			// Unhide all, filter unmatched usernames, and hide those
+			$consumerList
+				.find( '.consumer' ).removeClass( 'search-hide' ).find( '.consumer-name' ).filter( function( i, el ) {
+					return ! el.innerHTML.replace( / /g, '' ).match( reg );
+				}).parents( '.consumer' ).addClass( 'search-hide' );
+
+			toggleGroups({
+				$parent: $consumerList,
+				show: this.value.length,
+				filterBy: '.consumer:not(.search-hide)',
+				toggleClassName: 'search-hidden'
+			});
+		})
+
+		// Reverse groups order
+		.on( 'click', '#reverse-group-order', function() {
+			var $list = $consumerList.find( '.groups' );
+
+			// Move the list items in a reversed order back into their parent
+			$list.append( $list.find( '.group' ).get().reverse() );
+		})
+
+		// Toggle list columns
+		.on( 'click', '#toggle-list-columns', function() {
+			$consumerList.toggleClass( 'no-list-columns' );
 		});
 
 	// Datepicker
@@ -68,49 +102,6 @@ jQuery(document).ready( function($) {
 		actDtlsBoxUpdateTotal();
 	});
 
-	$actPartBox
-		// Show (un)limit searched items
-		.on( 'keyup change search input', '#participant-search', function() {
-
-			// Create regex from search string
-			var reg = new RegExp( this.value.replace( / /g, '' ), 'gi' );
-
-			// Unhide all, filter unmatched usernames, and hide those
-			$actPtcptList
-				.find( '.activity-participant' ).removeClass( 'search-hide' ).find( '.title' ).filter( function( i, el ) {
-					return ! el.innerHTML.replace( / /g, '' ).match( reg );
-				}).parents( '.activity-participant' ).addClass( 'search-hide' );
-
-			toggleGroups({
-				show: this.value.length,
-				filterBy: '.activity-participant:not(.search-hide)',
-				toggleClassName: 'search-hidden'
-			});
-		})
-
-		// Show (un)limit selected items
-		.on( 'click', '#show-selected', function() {
-			$actPtcptList
-				.toggleClass( 'showing-selected' )
-				.find( '#show-selected' )
-				.text( $actPtcptList.hasClass( 'showing-selected' ) ? l10n.showSelectedAll : l10n.showSelectedOnly );
-
-			toggleGroups();
-		})
-
-		// Reverse groups order
-		.on( 'click', '#reverse-group-order', function() {
-			var $list = $actPtcptList.find( '.groups' );
-
-			// Move the list items in a reversed order back into their parent
-			$list.append( $list.find( '.group' ).get().reverse() );
-		})
-
-		// Toggle list columns
-		.on( 'click', '#toggle-list-columns', function() {
-			$actPtcptList.toggleClass( 'no-list-columns' );
-		});
-
 	$actPtcptList
 		// Quick select participants
 		.on( 'change', '#participant-quick-select', function() {
@@ -142,6 +133,16 @@ jQuery(document).ready( function($) {
 			actPartBoxUpdateCount();
 			toggleGroups();
 			actDtlsBoxUpdateTotal();
+		})
+
+		// Show (un)limit selected items
+		.on( 'click', '#show-selected', function() {
+			$actPtcptList
+				.toggleClass( 'showing-selected' )
+				.find( '#show-selected' )
+				.text( $actPtcptList.hasClass( 'showing-selected' ) ? l10n.showSelectedAll : l10n.showSelectedOnly );
+
+			toggleGroups();
 		})
 
 		// Keep selected count
@@ -341,12 +342,11 @@ jQuery(document).ready( function($) {
 	 */
 
 	var $consumersPage = $( 'body.incassoos_page_incassoos-consumers' ),
-	    $inlineEdit = $consumersPage.find( '#inlineedit' ),
-	    $cnsmrList = $consumersPage.find( '.incassoos-item-list' );
+	    $inlineEdit = $consumersPage.find( '#inlineedit' );
 
 	$consumersPage
 		// Open inline edit
-		.on( 'click', 'li:not(.toggled) > .name', function() {
+		.on( 'click', '.consumer:not(.toggled) > .consumer-name', function() {
 			consumersRemoveInlineEdit();
 
 			var $user   = $( this ).parent( 'li' ).addClass( 'toggled' ),
@@ -396,55 +396,27 @@ jQuery(document).ready( function($) {
 		})
 
 		// Cancel inline edit
-		.on( 'click', '.submit .cancel', function() {
+		.on( 'click', '.consumer.toggled, .submit .cancel', function() {
 
 			// Focus parent again
-			$( this ).parents( 'li' ).find( '.name' ).focus();
+			$( this ).parents( '.consumer' ).find( '.consumer-name' ).focus();
 
 			consumersRemoveInlineEdit();
 		})
 
-		// Show (un)limit searched items
-		.on( 'keyup change search input', '#consumer-search', function() {
-
-			// Create regex from search string
-			var reg = new RegExp( this.value.replace( / /g, '' ), 'gi' );
-
-			// Unhide all, filter unmatched usernames, and hide those
-			$cnsmrList
-				.find( '.consumer' ).removeClass( 'search-hide' ).find( '.name' ).filter( function( i, el ) {
-					return ! el.innerHTML.replace( / /g, '' ).match( reg );
-				}).parents( '.consumer' ).addClass( 'search-hide' );
-
-			toggleGroups({
-				$parent: $cnsmrList,
-				show: this.value.length,
-				filterBy: '.consumer:not(.search-hide)',
-				toggleClassName: 'search-hidden'
-			});
-		})
-
 		// Show (un)limit visible items
 		.on( 'click', '#show-visible', function() {
-			$cnsmrList
+			$consumerList
 				.toggleClass( 'showing-visible' )
 				.find( '#show-visible' )
-				.text( $cnsmrList.hasClass( 'showing-visible' ) ? l10n.showVisibleAll : l10n.showVisibleOnly );
+				.text( $consumerList.hasClass( 'showing-visible' ) ? l10n.showVisibleAll : l10n.showVisibleOnly );
 
 			toggleGroups({
-				$parent: $cnsmrList,
-				show: $cnsmrList.is( 'showing-visible' ),
+				$parent: $consumerList,
+				show: $consumerList.is( 'showing-visible' ),
 				filterBy: '.consumer:not(.noshow)',
 				toggleClassName: 'hidden'
 			});
-		})
-
-		// Reverse groups order
-		.on( 'click', '#reverse-group-order', function() {
-			var $list = $cnsmrList.find( '.groups' );
-
-			// Move the list items in a reversed order back into their parent
-			$list.append( $list.find( '.group' ).get().reverse() );
 		});
 
 	/**
@@ -455,6 +427,6 @@ jQuery(document).ready( function($) {
 	 * @return {void}
 	 */
 	function consumersRemoveInlineEdit() {
-		$consumersPage.find( 'li' ).removeClass( 'toggled' ).find( '.inline-edit' ).remove();
+		$consumersPage.find( '.consumer' ).removeClass( 'toggled' ).find( '.inline-edit' ).remove();
 	}
 });

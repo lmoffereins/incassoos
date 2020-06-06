@@ -231,7 +231,7 @@ function incassoos_admin_consumers_page() {
 					<?php foreach ( $group->users as $user ) : ?>
 
 					<li id="user-<?php echo $user->ID; ?>" class="consumer <?php echo implode( ' ', incassoos_admin_consumers_list_class( $user ) ); ?>">
-						<button type="button" class="name"><?php echo incassoos_get_user_display_name( $user->ID ); ?></button>
+						<button type="button" class="consumer-name"><?php echo incassoos_get_user_display_name( $user->ID ); ?></button>
 
 						<div class="details" style="display:none;">
 							<span class="user-id"><?php echo $user->ID; ?></span>
