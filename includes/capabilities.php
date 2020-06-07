@@ -252,11 +252,30 @@ function incassoos_map_collection_caps( $caps = array(), $cap = '', $user_id = 0
 
 		case 'collect_incassoos_collection' :
 
-			$post = incassoos_get_collection( $args[0], false );
+			$post = incassoos_get_collection( $args[0] );
 			if ( $post ) {
 
 				// Prevent collecting when it is not staged yet
 				if ( ! incassoos_is_collection_staged( $post ) ) {
+					$caps = array( 'do_not_allow' );
+
+				// Defer to collecting caps
+				} else {
+					$caps = array( 'collect_incassoos_collections' );
+				}
+			}
+
+			break;
+
+		/** Exporting ***************************************************/
+
+		case 'export_incassoos_collection' :
+
+			$post = incassoos_get_collection( $args[0] );
+			if ( $post ) {
+
+				// Prevent exporting uncollected collections
+				if ( ! incassoos_is_collection_collected( $post ) ) {
 					$caps = array( 'do_not_allow' );
 
 				// Defer to collecting caps

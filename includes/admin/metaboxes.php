@@ -441,6 +441,10 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$unstage_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_unstage' ), $base_url ), 'unstage-collection_' . $post->ID );
 	$collect_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect' ), $base_url ), 'collect-collection_' . $post->ID );
 
+	// Export
+	$export_types = incassoos_get_collection_export_types();
+	$can_export   = current_user_can( 'export_incassoos_collection', $post->ID ) && ! empty( $export_types );
+
 	?>
 
 	<div class="incassoos-object-details">
@@ -490,25 +494,45 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_stage || $can_unstage ) : ?>
+	<?php if ( $can_stage || $can_unstage || $can_export ) : ?>
 
 	<div id="major-publishing-actions">
 		<?php if ( $can_stage ) : ?>
-			<div class="publishing-notice">
-				<label><?php esc_html_e( 'Total', 'incassoos' ); ?></label>
-				<span class="value"><?php incassoos_the_collection_total( $post, true ); ?></span>
-			</div>
+
+		<div class="publishing-notice">
+			<label><?php esc_html_e( 'Total', 'incassoos' ); ?></label>
+			<span class="value"><?php incassoos_the_collection_total( $post, true ); ?></span>
+		</div>
+
+		<?php elseif ( $can_export ) : ?>
+
+		<div class="publishing-notice">
+			<label class="screen-reader-text" for="collection-export-type"><?php esc_html_e( 'Select collection export type', 'incassoos' ); ?></label>
+			<select id="collection-export-type" name="export-type">
+				<option value=""><?php esc_html_e( '&mdash; Export &mdash;', 'incassoos' ); ?></option>
+				<?php foreach ( $export_types as $type => $args ) : ?>
+
+				<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $args['label'] ); ?></option>
+
+				<?php endforeach; ?>
+			</select>
+		</div>
+
 		<?php endif; ?>
 
 		<div id="publishing-action">
 			<span class="spinner"></span>
 			<?php if ( $can_stage ) : ?>
-				<a class="button button-primary button-large" id="stage-collection" href="<?php echo esc_url( $stage_url ); ?>" ?><?php esc_html_e( 'Stage', 'incassoos' ); ?></a>
+				<a class="button button-primary button-large" id="stage-collection" href="<?php echo esc_url( $stage_url ); ?>"><?php esc_html_e( 'Stage', 'incassoos' ); ?></a>
 			<?php elseif ( $can_unstage ) : ?>
-				<a class="button button-secondary button-large" id="unstage-collection" href="<?php echo esc_url( $unstage_url ); ?>" ?><?php esc_html_e( 'Unstage', 'incassoos' ); ?></a>
+				<a class="button button-secondary button-large" id="unstage-collection" href="<?php echo esc_url( $unstage_url ); ?>"><?php esc_html_e( 'Unstage', 'incassoos' ); ?></a>
 			<?php endif; ?>
 			<?php if ( current_user_can( 'collect_incassoos_collection', $post->ID ) ) : ?>
-				<a class="button button-primary button-large" id="collect-collection" href="<?php echo esc_url( $collect_url ); ?>" ?><?php esc_html_e( 'Submit', 'incassoos' ); ?></a>
+				<a class="button button-primary button-large" id="collect-collection" href="<?php echo esc_url( $collect_url ); ?>"><?php esc_html_e( 'Submit', 'incassoos' ); ?></a>
+			<?php elseif ( $can_export ) : ?>
+				<?php wp_nonce_field( 'export_collection-' . $post->ID, 'collection_export_nonce' ); ?>
+				<input type="hidden" name="action" value="inc_export" />
+				<input type="submit" class="button button-secondary button-large" id="export-collection" name="export-collection" value="<?php esc_attr_e( 'Export', 'incassoos' ); ?>" />
 			<?php endif; ?>
 		</div>
 		<div class="clear"></div>
@@ -1194,9 +1218,9 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 		<div id="publishing-action">
 			<span class="spinner"></span>
 			<?php if ( $can_close ) : ?>
-				<a class="button button-primary button-large" id="close-occasion" href="<?php echo esc_url( $close_url ); ?>" ?><?php esc_html_e( 'Close', 'incassoos' ); ?></a>
+				<a class="button button-primary button-large" id="close-occasion" href="<?php echo esc_url( $close_url ); ?>"><?php esc_html_e( 'Close', 'incassoos' ); ?></a>
 			<?php elseif ( $can_reopen ) : ?>
-				<a class="button button-secondary button-large" id="reopen-occasion" href="<?php echo esc_url( $reopen_url ); ?>" ?><?php esc_html_e( 'Reopen', 'incassoos' ); ?></a>
+				<a class="button button-secondary button-large" id="reopen-occasion" href="<?php echo esc_url( $reopen_url ); ?>"><?php esc_html_e( 'Reopen', 'incassoos' ); ?></a>
 			<?php endif; ?>
 		</div>
 		<div class="clear"></div>

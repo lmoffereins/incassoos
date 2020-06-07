@@ -10,41 +10,14 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-/** SEPA **********************************************************************/
-
 /**
- * Add SEPA download link to the Collection details metabox
+ * Process the export file request for a collection
  *
  * @since 1.0.0
  *
- * @param  WP_Post $post Post object
+ * @param int $post_id Post ID
  */
-function incassoos_sepa_collection_details( $post = 0 ) {
-
-	// Collection is collected
-	if ( incassoos_is_collection_collected( $post ) ) { ?>
-
-		<p>
-			<label><?php esc_html_e( 'SEPA:', 'incassoos' ); ?></label>
-			<span class="value"><?php printf(
-				'<a href="%s">%s</a>',
-				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_export_file_sepa' ), admin_url( 'post.php' ) ), 'export-file-sepa_' . $post->ID ) ),
-				esc_html__( 'Download file', 'incassoos' )
-			); ?></span>
-		</p>
-
-		<?php
-	}
-}
-
-/**
- * Process the SEPA file download action
- *
- * @since 1.0.0
- *
- * @param  mixed $post_id Post ID
- */
-function incassoos_sepa_export_post_action( $post_id ) {
+function incassoos_export_collection_file( $post_id ) {
 	$post = incassoos_get_collection( $post_id, true );
 
 	// Bail when the post is not a collected Collection
@@ -52,26 +25,35 @@ function incassoos_sepa_export_post_action( $post_id ) {
 		return;
 
 	// Nonce check
-	check_admin_referer( 'export-file-sepa_' . $post->ID );
+	check_admin_referer( 'export_collection-' . $post->ID, 'collection_export_nonce' );
 
-	// Require classes
-	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-parser.php' );
-	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-file.php' );
+	// Export types
+	$export_types = incassoos_get_collection_export_types();
+	$export_type  = isset( $_POST['export-type'] ) ? $_POST['export-type'] : '';
+
+	// Bail when the export type is not supported
+	if ( ! $export_type || ! in_array( $export_type, array_keys( $export_types ), true ) )
+		return;
+
+	$class = $export_types[ $export_type ]['class_name'];
+
+	// Bail when the class is not present
+	if ( ! class_exists( $class ) )
+		return;
 
 	// Construct file
-	$file = new Incassoos_SEPA_XML_File( $post );
+	$file = new $class( $post );
 
 	// Log any errors
-	if ( $file->has_errors() ) {
-		set_transient( 'inc-sepa-file-errors_' . $post->ID, $file->get_errors() );
+	if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
+		set_transient( 'inc_export_errors-' . $post->ID, $file->get_errors() );
 
 	// Offer file download
 	} else {
 		incassoos_download_text_file( $file );
 	}
-	// incassoos_download_text_file( $file );
 
-	// Still here? Redirect to the Collection page
+	// Still here? Redirect to the Collection's page
 	wp_redirect( incassoos_get_collection_url( $post ) );
 	exit();
 }
@@ -83,10 +65,10 @@ function incassoos_sepa_export_post_action( $post_id ) {
  *
  * @param WP_Post $post Post object
  */
-function incassoos_sepa_export_error_notice( $post ) {
+function incassoos_export_error_notice( $post ) {
 
 	// Bail when no errors are logged
-	if ( ! $transient = get_transient( 'inc-sepa-file-errors_' . $post->ID ) )
+	if ( ! $transient = get_transient( 'inc_export_errors-' . $post->ID ) )
 		return;
 
 	?>
@@ -105,12 +87,39 @@ function incassoos_sepa_export_error_notice( $post ) {
 		); ?></p>
 
 		<?php foreach ( $transient as $message ) : ?>
+
 		<p><?php echo $message; ?></p>
+
 		<?php endforeach; ?>
 	</div>
 
 	<?php
 
 	// Remove logged errors afterwards
-	delete_transient( 'inc-sepa-file-errors_' . $post->ID );
+	delete_transient( 'inc_export_errors-' . $post->ID );
+}
+
+/** SEPA **********************************************************************/
+
+/**
+ * Add the SEPA collection export type
+ *
+ * @since 1.0.0
+ *
+ * @param array $export_types Export types
+ * @param array Export types
+ */
+function incassoos_export_sepa_export_type( $export_types ) {
+
+	// Require classes
+	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-parser.php' );
+	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-file.php' );
+
+	// SEPA
+	$export_types['inc_sepa'] = array(
+		'label'      => esc_html__( 'SEPA file', 'incassoos' ),
+		'class_name' => 'Incassoos_SEPA_XML_File'
+	);
+
+	return $export_types;
 }

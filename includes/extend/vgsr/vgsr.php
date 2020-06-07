@@ -74,8 +74,7 @@ class Incassoos_VGSR {
 
 		// Collection
 		add_filter( 'default_title',                         array( $this, 'default_title'           ), 10, 2 );
-		add_action( 'incassoos_collection_details_metabox',  array( $this, 'collection_details'      ), 10    );
-		add_action( 'post_action_inc_export_file_sfc',       array( $this, 'post_action_sfc'         ), 10    );
+		add_filter( 'incassoos_get_collection_export_types', array( $this, 'collection_export_types' ), 10    );
 
 		// Activity
 		add_filter( 'incassoos_get_user_match_options',      array( $this, 'user_match_options'      ), 10, 2 );
@@ -242,56 +241,25 @@ class Incassoos_VGSR {
 	}
 
 	/**
-	 * Add to the Collection details metabox
+	 * Add custom export types
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param  WP_Post $post Post object
+	 * @param array Export types
+	 * @return array Export types
 	 */
-	public function collection_details( $post ) {
-
-		// Collection is collected
-		if ( incassoos_is_collection_collected( $post ) ) { ?>
-
-			<p>
-				<label><?php esc_html_e( 'SFC:', 'incassoos' ); ?></label>
-				<span class="value"><?php printf(
-					'<a href="%s">%s</a>',
-					esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_export_file_sfc' ), admin_url( 'post.php' ) ), 'export-file-sfc_' . $post->ID ) ),
-					esc_html__( 'Download file', 'incassoos' )
-				); ?></span>
-			</p>
-
-			<?php
-		}
-	}
-
-	/**
-	 * Process the SFC file download action
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param  mixed $post_id Post ID
-	 */
-	public function post_action_sfc( $post_id ) {
-		$post = incassoos_get_collection( $post_id, true );
-
-		// Bail when the post is not a collected Collection
-		if ( ! $post )
-			return;
-
-		// Nonce check
-		check_admin_referer( 'export-file-sfc_' . $post->ID );
+	public function collection_export_types( $export_types ) {
 
 		// Require class
 		require_once( $this->plugin_dir . 'classes/class-incassoos-vgsr-sfc-file.php' );
 
-		// Offer file download
-		incassoos_download_text_file( new Incassoos_VGSR_SFC_File( $post ) );
+		// SFC
+		$export_types['vgsr_sfc'] = array(
+			'label'      => esc_html__( 'SFC file', 'incassoos' ),
+			'class_name' => 'Incassoos_VGSR_SFC_File'
+		);
 
-		// Still here? Redirect to the Collection page
-		wp_redirect( incassoos_get_collection_url( $post ) );
-		exit();
+		return $export_types;
 	}
 
 	/**

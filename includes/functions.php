@@ -1410,9 +1410,11 @@ function incassoos_download_text_file( $file, $filename = '' ) {
 		header('Content-Type: ' . incassoos_get_file_type( $filename ) );
 		header('Content-Description: File Transfer');
 		header('Content-Disposition: inline; filename="' . $filename . '"');
-		// header('Content-Disposition: attachment; filename="' . $filename . '"');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: ' . mb_strlen( $content ) );
+
+		// echo "Filename: $filename \n";
 
 		// Output file content
 		echo $content;

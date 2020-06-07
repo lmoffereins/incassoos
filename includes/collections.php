@@ -1734,6 +1734,19 @@ function incassoos_collect_collection( $post = 0 ) {
 /** Export ********************************************************************/
 
 /**
+ * Return the available collection export types
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_collection_export_types'
+ *
+ * @return array Collection export types
+ */
+function incassoos_get_collection_export_types() {
+	return apply_filters( 'incassoos_get_collection_export_types', array() );
+}
+
+/**
  * Return the Collection's transaction description
  *
  * When the setting for transaction description is empty, the Collection's title
