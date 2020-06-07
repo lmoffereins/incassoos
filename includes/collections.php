@@ -403,6 +403,8 @@ function incassoos_get_collection_total( $post = 0, $format = false ) {
  *
  * @global WPDB $wpdb
  *
+ * @uses apply_filters() Calls 'incassoos_get_collection_total_raw'
+ *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return float Collection raw total value.
  */
@@ -429,7 +431,7 @@ function incassoos_get_collection_total_raw( $post = 0 ) {
 		}
 	}
 
-	return $total;
+	return (float) apply_filters( 'incassoos_get_collection_total_raw', $total, $post );
 }
 
 /**
@@ -1003,10 +1005,9 @@ function incassoos_get_collection_consumer_total( $consumer, $post = 0, $format 
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
  * @return string Collection consumer raw total value.
  */
-function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0, $format = false ) {
+function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 	global $wpdb;
 
 	$post   = incassoos_get_collection( $post );

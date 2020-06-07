@@ -530,8 +530,10 @@ function incassoos_get_order_total( $post = 0, $format = false ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_order_total_raw'
+ *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return string Order raw total price.
+ * @return float Order raw total price.
  */
 function incassoos_get_order_total_raw( $post = 0 ) {
 	$post     = incassoos_get_order( $post );
@@ -542,7 +544,7 @@ function incassoos_get_order_total_raw( $post = 0 ) {
 		$total += ( $product['amount'] * $product['price'] );
 	}
 
-	return $total;
+	return (float) apply_filters( 'incassoos_get_order_total_raw', $total, $post );
 }
 
 /**

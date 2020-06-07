@@ -518,6 +518,8 @@ function incassoos_get_occasion_total( $post = 0, $format = false ) {
  *
  * @global WPDB $wpdb
  *
+ * @uses apply_filters() Calls 'incassoos_get_occasion_total_raw'
+ *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return float Occasion raw total value.
  */
@@ -538,7 +540,7 @@ function incassoos_get_occasion_total_raw( $post = 0 ) {
 		}
 	}
 
-	return $total;
+	return (float) apply_filters( 'incassoos_get_occasion_total_raw', $total, $post );
 }
 
 /**

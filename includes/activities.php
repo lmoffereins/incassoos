@@ -712,6 +712,8 @@ function incassoos_get_activity_total( $post = 0, $format = false ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_activity_total_raw'
+ *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return float Activity raw total price.
  */
@@ -720,7 +722,7 @@ function incassoos_get_activity_total_raw( $post = 0 ) {
 	$prices = incassoos_get_activity_participant_prices( $post );
 	$total  = $prices ? array_sum( array_map( 'floatval', $prices ) ) : 0;
 
-	return $total;
+	return (float) apply_filters( 'incassoos_get_activity_total_raw', $total, $post );
 }
 
 /**
