@@ -1829,8 +1829,8 @@ function incassoos_collection_email_amounts_table( $post, $user ) {
 		return;
 
 	// Rearrange filters
-	add_filter(    'incassoos_get_activity_date', 'incassoos_email_filter_activity_date', 10, 3 );
-	remove_filter( 'the_title',                   'incassoos_filter_occasion_title',      10, 2 );
+	add_filter(    'incassoos_get_activity_date', 'incassoos_filter_activity_date',  10, 3 );
+	remove_filter( 'the_title',                   'incassoos_filter_occasion_title', 10, 2 );
 
 	?>
 
@@ -1868,8 +1868,8 @@ function incassoos_collection_email_amounts_table( $post, $user ) {
 	<?php
 
 	// Rearrange filters
-	remove_filter( 'incassoos_get_activity_date', 'incassoos_email_filter_activity_date', 10, 3 );
-	add_filter(    'the_title',                   'incassoos_filter_occasion_title',      10, 2 );
+	remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date',  10, 3 );
+	add_filter(    'the_title',                   'incassoos_filter_occasion_title', 10, 2 );
 }
 
 /**

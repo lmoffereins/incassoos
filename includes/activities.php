@@ -840,13 +840,16 @@ function incassoos_filter_activity_class( $classes, $class, $post_id ) {
 /**
  * Modify the Activity's date
  *
+ * Defaults the activity date to its created date.
+ *
  * @since 1.0.0
  *
- * @param  string      $date Activity date
- * @param  int}WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return string            Activity date
+ * @param  string      $date   Activity date
+ * @param  int}WP_Post $post   Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $format Date format
+ * @return string              Activity date
  */
-function incassoos_email_filter_activity_date( $date, $post = 0, $format = false ) {
+function incassoos_filter_activity_date( $date, $post = 0, $format = false ) {
 
 	// Default the activity date to the created date
 	if ( ! $date ) {
