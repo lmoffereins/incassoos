@@ -80,7 +80,11 @@ class Incassoos_VGSR_SFC_File {
 	 */
 	public function get_filename() {
 		if ( $this->post ) {
-			return sprintf( '%s-SFC-%s.sfc', incassoos_get_organization_name(), incassoos_get_collection_date( $this->post, 'Y-m-d' ) );
+			return sprintf( '%s-SFC-%s-%s.sfc',
+				incassoos_get_organization_name(),
+				incassoos_get_collection_date( $this->post, 'Y-m-d' ),
+				incassoos_get_collection_title( $this->post )
+			);
 		}
 	}
 
@@ -96,14 +100,17 @@ class Incassoos_VGSR_SFC_File {
 		$totals     = 0;
 		$retval     = array();
 
+		// Provide default activity date
+		add_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date', 10, 3 );
+
 		// Walk Activities
 		foreach ( $activities as $item_id ) {
 			$title   = incassoos_get_activity_title( $item_id );
-			$total   = incassoos_get_activity_total( $item_id );
+			$total   = incassoos_get_activity_total( $item_id, null );
 			$totals += $total;
 
 			// Append activity date
-			if ( $date  = incassoos_get_activity_date( $item_id, 'Y-m-d' ) ) {
+			if ( $date  = incassoos_get_activity_date( $item_id, 'j-n-Y' ) ) {
 				$title .= " ($date)";
 			}
 
@@ -115,9 +122,12 @@ class Incassoos_VGSR_SFC_File {
 			);
 		}
 
+		// Remove filter
+		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date', 10, 3 );
+
 		// Append counter line
 		$retval[] = array(
-			'title'  => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'Y-m-d' ) ),
+			'title'  => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
 			'debit'  => $totals < 0 ? abs( $totals ) : 0,
 			'credit' => $totals < 0 ? 0 : $totals,
 		);
@@ -134,7 +144,7 @@ class Incassoos_VGSR_SFC_File {
 	 */
 	public function get_occasion_lines() {
 		$occasions      = incassoos_get_collection_occasions( $this->post );
-		$date           = incassoos_get_collection_date( $this->post, 'Y-m-d' );
+		$date           = incassoos_get_collection_date( $this->post, 'j-n-Y' );
 		$consumer_types = incassoos_get_consumer_types();
 		$retval         = array();
 
@@ -143,13 +153,13 @@ class Incassoos_VGSR_SFC_File {
 
 		// Walk Occasions
 		foreach ( $occasions as $item_id ) {
-			$totals['all'] = incassoos_get_occasion_total( $item_id );
+			$totals['all'] = incassoos_get_occasion_total( $item_id, null );
 
 			// Distinguish totals per consumer type
 			foreach ( $consumer_types as $type ) {
 
 				// Add type total, subtract from all
-				if ( $total = incassoos_get_occasion_consumer_total( $type, $item_id ) ) {
+				if ( $total = incassoos_get_occasion_consumer_total( $type, $item_id, null ) ) {
 					$totals[ $type ] += $total;
 					$totals['all']   -= $total;
 				}
@@ -200,7 +210,13 @@ class Incassoos_VGSR_SFC_File {
 			$line = array_map( 'esc_html', $line );
 
 			// Build line
-			$retval .= "#{$date}#," . $line['ledger_id'] . ',"' . $line['title'] . '",' . $line['credit'] . ',' . $line['debit'] . "\n";
+			$retval .= sprintf('#%s#,%d,"%s",%s,%s' . "\r",
+				$date,
+				$line['ledger_id'],
+				$line['title'],
+				$line['credit'],
+				$line['debit']
+			);
 		}
 
 		return $retval;
