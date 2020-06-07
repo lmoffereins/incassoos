@@ -623,7 +623,7 @@ function incassoos_get_currency_format_args() {
  * @since 1.0.0
  *
  * @param  float      $total  Currency value
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array $format Optional. Whether to apply currency format. Pass array as custom format args.
  * @return string Parsed currency, formatted when requested.
  */
 function incassoos_parse_currency( $value = 0, $format = false ) {
@@ -635,7 +635,7 @@ function incassoos_parse_currency( $value = 0, $format = false ) {
 	if ( $format ) {
 		$value = incassoos_get_format_currency( $value, (array) $format );
 
-	// Parse float
+	// Default parse float
 	} else {
 		$format = incassoos_get_currency_format_args();
 		$value  = sprintf( '%.' . (int) $format['decimals'] . 'f', $value );

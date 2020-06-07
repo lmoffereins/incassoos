@@ -305,7 +305,8 @@ function incassoos_get_product_menu_order( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_product_price( $post = 0, $format = false ) {
 	echo incassoos_get_product_price( $post, $format );
@@ -319,8 +320,9 @@ function incassoos_the_product_price( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_product_price'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Product price.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Product price.
  */
 function incassoos_get_product_price( $post = 0, $format = false ) {
 	$post  = incassoos_get_product( $post );
@@ -333,7 +335,9 @@ function incassoos_get_product_price( $post = 0, $format = false ) {
 	$price = (float) apply_filters( 'incassoos_get_product_price', (float) $price, $post );
 
 	// Apply currency format
-	$price = incassoos_parse_currency( $price, $format );
+	if ( null !== $format ) {
+		$price = incassoos_parse_currency( $price, $format );
+	}
 
 	return $price;
 }

@@ -357,7 +357,8 @@ function incassoos_get_collection_date( $post = 0, $format = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_collection_total( $post = 0, $format = false ) {
 	echo incassoos_get_collection_total( $post, $format );
@@ -371,8 +372,9 @@ function incassoos_the_collection_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Collection total value.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Collection total value.
  */
 function incassoos_get_collection_total( $post = 0, $format = false ) {
 	$post  = incassoos_get_collection( $post );
@@ -387,7 +389,9 @@ function incassoos_get_collection_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_collection_total', (float) $total, $post );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
@@ -421,7 +425,7 @@ function incassoos_get_collection_total_raw( $post = 0 ) {
 
 		// Query all totals
 		if ( $values = $wpdb->get_col( $sql ) ) {
-			$total = array_sum( array_map( 'incassoos_parse_currency', $values ) );
+			$total = array_sum( array_map( 'floatval', $values ) );
 		}
 	}
 
@@ -941,7 +945,8 @@ function incassoos_get_collection_consumer_types( $post = 0 ) {
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_collection_consumer_total( $consumer, $post = 0, $format = false ) {
 	echo incassoos_get_collection_consumer_total( $consumer, $post, $format );
@@ -956,8 +961,9 @@ function incassoos_the_collection_consumer_total( $consumer, $post = 0, $format 
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Collection consumer total value.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Collection consumer total value.
  */
 function incassoos_get_collection_consumer_total( $consumer, $post = 0, $format = false ) {
 	$post  = incassoos_get_collection( $post );
@@ -972,14 +978,16 @@ function incassoos_get_collection_consumer_total( $consumer, $post = 0, $format 
 
 		// Get calculated amount
 		} else {
-			$total  = incassoos_get_collection_consumer_total_raw( $consumer, $post, false );
+			$total  = incassoos_get_collection_consumer_total_raw( $consumer, $post );
 		}
 	}
 
 	$total = (float) apply_filters( 'incassoos_get_collection_consumer_total', (float) $total, $post, $consumer );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
@@ -1048,12 +1056,7 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0, $for
 		}
 	}
 
-	$total = (float) apply_filters( 'incassoos_get_collection_consumer_total_raw', (float) $total, $post, $consumer );
-
-	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
-
-	return $total;
+	return (float) apply_filters( 'incassoos_get_collection_consumer_total_raw', (float) $total, $post, $consumer );
 }
 
 /**
@@ -1237,7 +1240,8 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $ar
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  * @return array Collection consumer total values by asset. Value is a string when formatting is applied.
  */
 function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0, $format = false ) {
@@ -1499,7 +1503,8 @@ function incassoos_get_asset_link( $post = 0 ) {
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_asset_consumer_total( $consumer, $post = 0, $format = false ) {
 	echo incassoos_get_asset_consumer_total( $consumer, $post, $format );
@@ -1514,8 +1519,9 @@ function incassoos_the_asset_consumer_total( $consumer, $post = 0, $format = fal
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Asset consumer total value.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Asset consumer total value.
  */
 function incassoos_get_asset_consumer_total( $consumer, $post = 0, $format = false ) {
 	$total = 0;
@@ -1537,8 +1543,8 @@ function incassoos_get_asset_consumer_total( $consumer, $post = 0, $format = fal
 		$total = apply_filters( 'incassoos_get_asset_consumer_total', $total, $post, $consumer, $format );
 
 		// Apply currency format
-		if ( ! is_string( $total ) && $format ) {
-			$total = incassoos_get_format_currency( $total, (array) $format );
+		if ( ! is_string( $total ) && null !== $format ) {
+			$total = incassoos_get_format_currency( $total, $format );
 		}
 	}
 

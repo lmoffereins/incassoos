@@ -486,7 +486,8 @@ function incassoos_get_order_product_list( $post = 0, $sep = ', ' ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_order_total( $post = 0, $format = false ) {
 	echo incassoos_get_order_total( $post, $format );
@@ -500,8 +501,9 @@ function incassoos_the_order_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_order_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Order total price.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Order total price.
  */
 function incassoos_get_order_total( $post = 0, $format = false ) {
 	$post  = incassoos_get_order( $post );
@@ -516,7 +518,9 @@ function incassoos_get_order_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_order_total', (float) $total, $post );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
@@ -537,9 +541,6 @@ function incassoos_get_order_total_raw( $post = 0 ) {
 	foreach ( $products as $product ) {
 		$total += ( $product['amount'] * $product['price'] );
 	}
-
-	// Parse currency format
-	$total = incassoos_parse_currency( $total );
 
 	return $total;
 }

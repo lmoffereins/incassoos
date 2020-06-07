@@ -331,7 +331,8 @@ function incassoos_get_activity_author( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_activity_price( $post = 0, $format = false ) {
 	echo incassoos_get_activity_price( $post, $format );
@@ -345,8 +346,9 @@ function incassoos_the_activity_price( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_activity_price'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Activity price.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Activity price.
  */
 function incassoos_get_activity_price( $post = 0, $format = false ) {
 	$post  = incassoos_get_activity( $post );
@@ -359,7 +361,9 @@ function incassoos_get_activity_price( $post = 0, $format = false ) {
 	$price = (float) apply_filters( 'incassoos_get_activity_price', (float) $price, $post );
 
 	// Apply currency format
-	$price = incassoos_parse_currency( $price, $format );
+	if ( null !== $format ) {
+		$price = incassoos_parse_currency( $price, $format );
+	}
 
 	return $price;
 }
@@ -579,7 +583,7 @@ function incassoos_get_activity_prices_raw( $post = 0 ) {
 
 	// Prices are a serialized array
 	if ( $prices ) {
-		$prices = array_map( 'incassoos_parse_currency', maybe_unserialize( $prices ) );
+		$prices = array_map( 'floatval', maybe_unserialize( $prices ) );
 	} else {
 		$prices = array();
 	}
@@ -594,7 +598,8 @@ function incassoos_get_activity_prices_raw( $post = 0 ) {
  *
  * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_activity_participant_price( $participant, $post = 0, $format = false ) {
 	echo incassoos_get_activity_participant_price( $participant, $post, $format );
@@ -609,8 +614,9 @@ function incassoos_the_activity_participant_price( $participant, $post = 0, $for
  *
  * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Activity participant price.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Activity participant price.
  */
 function incassoos_get_activity_participant_price( $participant, $post = 0, $format = false ) {
 	$post  = incassoos_get_activity( $post );
@@ -625,7 +631,9 @@ function incassoos_get_activity_participant_price( $participant, $post = 0, $for
 	$total = (float) apply_filters( 'incassoos_get_activity_participant_price', (float) $total, $post, $participant );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
@@ -660,7 +668,8 @@ function incassoos_activity_participant_has_custom_price( $participant, $post = 
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_activity_total( $post = 0, $format = false ) {
 	echo incassoos_get_activity_total( $post, $format );
@@ -674,8 +683,9 @@ function incassoos_the_activity_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_activity_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Activity total price.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Activity total price.
  */
 function incassoos_get_activity_total( $post = 0, $format = false ) {
 	$post  = incassoos_get_activity( $post );
@@ -690,7 +700,9 @@ function incassoos_get_activity_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_activity_total', (float) $total, $post );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
@@ -706,7 +718,7 @@ function incassoos_get_activity_total( $post = 0, $format = false ) {
 function incassoos_get_activity_total_raw( $post = 0 ) {
 	$post   = incassoos_get_activity( $post );
 	$prices = incassoos_get_activity_participant_prices( $post );
-	$total  = $prices ? array_sum( array_map( 'incassoos_parse_currency', $prices ) ) : 0;
+	$total  = $prices ? array_sum( array_map( 'floatval', $prices ) ) : 0;
 
 	return $total;
 }

@@ -472,7 +472,8 @@ function incassoos_get_occasion_type( $post = 0, $object = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_occasion_total( $post = 0, $format = false ) {
 	echo incassoos_get_occasion_total( $post, $format );
@@ -486,8 +487,9 @@ function incassoos_the_occasion_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Occasion total value.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Occasion total value.
  */
 function incassoos_get_occasion_total( $post = 0, $format = false ) {
 	$post  = incassoos_get_occasion( $post );
@@ -502,7 +504,9 @@ function incassoos_get_occasion_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_occasion_total', (float) $total, $post );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
@@ -530,7 +534,7 @@ function incassoos_get_occasion_total_raw( $post = 0 ) {
 		$sql      = $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id IN ($post_ids) AND meta_key = %s", 'total' );
 
 		if ( $values = $wpdb->get_col( $sql ) ) {
-			$total = array_sum( array_map( 'incassoos_parse_currency', $values ) );
+			$total = array_sum( array_map( 'floatval', $values ) );
 		}
 	}
 
@@ -892,7 +896,8 @@ function incassoos_get_occasion_consumer_types( $post = 0 ) {
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
  */
 function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $format = false ) {
 	echo incassoos_get_occasion_consumer_total( $consumer, $post, $format );
@@ -909,8 +914,9 @@ function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $format = 
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array $format Optional. Whether to apply currency format. Pass array as format args.
- * @return string Occasion consumer total value.
+ * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                  null to skip format parsing. Defaults to false.
+ * @return string|float Occasion consumer total value.
  */
 function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $format = false ) {
 	global $wpdb;
@@ -935,7 +941,9 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $format = 
 	$total = (float) apply_filters( 'incassoos_get_occasion_consumer_total', (float) $total, $post, $consumer );
 
 	// Apply currency format
-	$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $format ) {
+		$total = incassoos_parse_currency( $total, $format );
+	}
 
 	return $total;
 }
