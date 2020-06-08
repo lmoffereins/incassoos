@@ -27,15 +27,16 @@ function incassoos_export_collection_file( $post_id ) {
 	// Nonce check
 	check_admin_referer( 'export_collection-' . $post->ID, 'collection_export_nonce' );
 
-	// Export types
-	$export_types = incassoos_get_collection_export_types();
-	$export_type  = isset( $_POST['export-type'] ) ? $_POST['export-type'] : '';
+	// Export type
+	$type_id     = isset( $_POST['export-type'] ) ? $_POST['export-type'] : '';
+	$export_type = incassoos_get_export_type( $type_id );
 
-	// Bail when the export type is not supported
-	if ( ! $export_type || ! in_array( $export_type, array_keys( $export_types ), true ) )
+	// Bail when the export type does not exist
+	if ( ! $type_id || ! $export_type )
 		return;
 
-	$class = $export_types[ $export_type ]['class_name'];
+	// Get export class
+	$class = $export_type->class_name;
 
 	// Bail when the class is not present
 	if ( ! class_exists( $class ) )
@@ -97,29 +98,4 @@ function incassoos_export_error_notice( $post ) {
 
 	// Remove logged errors afterwards
 	delete_transient( 'inc_export_errors-' . $post->ID );
-}
-
-/** SEPA **********************************************************************/
-
-/**
- * Add the SEPA collection export type
- *
- * @since 1.0.0
- *
- * @param array $export_types Export types
- * @param array Export types
- */
-function incassoos_export_sepa_export_type( $export_types ) {
-
-	// Require classes
-	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-parser.php' );
-	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-file.php' );
-
-	// SEPA
-	$export_types['inc_sepa'] = array(
-		'label'      => esc_html__( 'SEPA file', 'incassoos' ),
-		'class_name' => 'Incassoos_SEPA_XML_File'
-	);
-
-	return $export_types;
 }

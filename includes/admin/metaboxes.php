@@ -442,7 +442,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$collect_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect' ), $base_url ), 'collect-collection_' . $post->ID );
 
 	// Export
-	$export_types = incassoos_get_collection_export_types();
+	$export_types = incassoos_get_export_types();
 	$can_export   = current_user_can( 'export_incassoos_collection', $post->ID ) && ! empty( $export_types );
 
 	?>
@@ -510,9 +510,9 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<label class="screen-reader-text" for="collection-export-type"><?php esc_html_e( 'Select collection export type', 'incassoos' ); ?></label>
 			<select id="collection-export-type" name="export-type">
 				<option value=""><?php esc_html_e( '&mdash; Export &mdash;', 'incassoos' ); ?></option>
-				<?php foreach ( $export_types as $type => $args ) : ?>
+				<?php foreach ( $export_types as $type ) : ?>
 
-				<option value="<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $args['label'] ); ?></option>
+				<option value="<?php echo esc_attr( $type ); ?>"><?php incassoos_the_export_type_title( $type ); ?></option>
 
 				<?php endforeach; ?>
 			</select>

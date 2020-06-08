@@ -56,9 +56,8 @@ add_action( 'load-nav-menus.php',          'incassoos_admin_add_nav_menu_meta_bo
 
 /** Export ********************************************************************/
 
-add_action( 'post_action_inc_export',                'incassoos_export_collection_file',  10 );
-add_action( 'edit_form_top',                         'incassoos_export_error_notice',     10 );
-add_filter( 'incassoos_get_collection_export_types', 'incassoos_export_sepa_export_type', 10 );
+add_action( 'post_action_inc_export', 'incassoos_export_collection_file', 10 );
+add_action( 'edit_form_top',          'incassoos_export_error_notice',    10 );
 
 /** Pages *********************************************************************/
 

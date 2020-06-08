@@ -44,8 +44,8 @@ class Incassoos_VGSR {
 		/** Identifiers *******************************************************/
 
 		// Consumer type
-		$this->cash_consumer_type         = apply_filters( 'inc_cash_consumer_type',         'cash'         );
-		$this->on_the_house_consumer_type = apply_filters( 'inc_on_the_house_consumer_type', 'on_the_house' );
+		$this->cash_consumer_type         = apply_filters( 'inc_vgsr_cash_consumer_type',         'cash'         );
+		$this->on_the_house_consumer_type = apply_filters( 'inc_vgsr_on_the_house_consumer_type', 'on_the_house' );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Incassoos_VGSR {
 	 */
 	private function setup_actions() {
 
-		add_action( 'incassoos_init', array( $this, 'register_consumer_types' ), 10 );
+		add_action( 'incassoos_register', array( $this, 'register_consumer_types' ), 20 );
 
 		// Users
 		add_filter( 'incassoos_get_user_query_args',              array( $this, 'get_users_args'                   ), 10    );
@@ -73,8 +73,8 @@ class Incassoos_VGSR {
 		add_filter( 'incassoos_rest_prepare_consumer',            array( $this, 'rest_prepare_consumer'            ), 10, 3 );
 
 		// Collection
-		add_filter( 'default_title',                         array( $this, 'default_title'           ), 10, 2 );
-		add_filter( 'incassoos_get_collection_export_types', array( $this, 'collection_export_types' ), 10    );
+		add_filter( 'default_title',      array( $this, 'default_title'         ), 10, 2 );
+		add_filter( 'incassoos_register', array( $this, 'register_export_types' ), 20    );
 
 		// Activity
 		add_filter( 'incassoos_get_user_match_options',      array( $this, 'user_match_options'      ), 10, 2 );
@@ -241,25 +241,20 @@ class Incassoos_VGSR {
 	}
 
 	/**
-	 * Add custom export types
+	 * Register custom export types
 	 *
 	 * @since 1.0.0
-	 *
-	 * @param array Export types
-	 * @return array Export types
 	 */
-	public function collection_export_types( $export_types ) {
+	public function register_export_types() {
 
 		// Require class
 		require_once( $this->plugin_dir . 'classes/class-incassoos-vgsr-sfc-file.php' );
 
 		// SFC
-		$export_types['vgsr_sfc'] = array(
+		incassoos_register_export_type( 'vgsr_sfc', array(
 			'label'      => esc_html__( 'SFC file', 'incassoos' ),
 			'class_name' => 'Incassoos_VGSR_SFC_File'
-		);
-
-		return $export_types;
+		) );
 	}
 
 	/**

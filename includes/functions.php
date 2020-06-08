@@ -1370,6 +1370,161 @@ function incassoos_app_get_default_occasion_title() {
 	return apply_filters( 'incassoos_app_get_default_occasion_title', __( 'Drinks', 'incassoos' ) );
 }
 
+/** Export ********************************************************************/
+
+/**
+ * Return the SEPA export type id
+ *
+ * @since 1.0.0
+ *
+ * @return string SEPA export type id
+ */
+function incassoos_get_sepa_export_type_id() {
+	return incassoos()->sepa_export_type;
+}
+
+/**
+ * Register a Collection export type
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters Calls 'incassoos_register_export_type'
+ *
+ * @param  string $type_id Export type id.
+ * @param  array  $args    Optional. Export type parameters.
+ * @return bool Registration success.
+ */
+function incassoos_register_export_type( $type_id, $args = array() ) {
+	$plugin  = incassoos();
+	$type_id = sanitize_title( $type_id );
+
+	// Bail when type param is invalid
+	if ( empty( $type_id ) ) {
+		return false;
+	}
+
+	// Keep original arguments
+	$original_args = $args;
+
+	// Parse defaults
+	$args['id'] = $type_id;
+	$args = wp_parse_args( $args, array(
+		'label'      => ucfirst( $type_id ),
+		'class_name' => ''
+	) );
+
+	// Allow filtering
+	$export_type = apply_filters( 'incassoos_register_export_type', $args, $type_id, $original_args );
+
+	// Define consumer types collection
+	if ( ! isset( $plugin->export_types ) ) {
+		$plugin->export_types = array();
+	}
+
+	// Add type to collection
+	$plugin->export_types[ $type_id ] = (object) $export_type;
+
+	return true;
+}
+
+/**
+ * Unregister a export type
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Export type id.
+ * @return bool Unregistration success.
+ */
+function incassoos_unregister_export_type( $type_id ) {
+	unset( incassoos()->export_types[ $type_id ] );
+
+	return true;
+}
+
+/**
+ * Return the export type object
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters Calls 'incassoos_get_export_type'
+ *
+ * @param  string $type Export type id or label.
+ * @return object|bool Export type object or False when not found.
+ */
+function incassoos_get_export_type( $type = '' ) {
+	$plugin      = incassoos();
+	$type_id     = sanitize_title( $type );
+	$type_object = false;
+
+	if ( ! isset( $plugin->export_types ) ) {
+		$plugin->export_types = array();
+	}
+
+	// Get type by id
+	if ( isset( $plugin->export_types[ $type_id ] ) ) {
+		$type_object = $plugin->export_types[ $type_id ];
+
+	// Get type by label
+	} elseif ( $type_id = array_search( $type, wp_list_pluck( $plugin->export_types, 'label' ) ) ) {
+		$type_object = $plugin->export_types[ $type_id ];
+	}
+
+	return apply_filters( 'incassoos_get_export_type', $type_object, $type );
+}
+
+/**
+ * Return whether the export type exists
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type Export type id or label
+ * @return bool Does export type exist?
+ */
+function incassoos_export_type_exists( $type ) {
+	return !! incassoos_get_export_type( $type );
+}
+
+/**
+ * Return the ids of all defined export types
+ *
+ * @since 1.0.0
+ *
+ * @return array Export type ids
+ */
+function incassoos_get_export_types() {
+	return array_keys( incassoos()->export_types );
+}
+
+/**
+ * Output the export type title
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type Export type id
+ */
+function incassoos_the_export_type_title( $type ) {
+	echo incassoos_get_export_type_title( $type );
+}
+
+/**
+ * Return the export type title
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type Export type id
+ * @return string Export type title
+ */
+function incassoos_get_export_type_title( $type ) {
+	$export_type = incassoos_get_export_type( $type );
+	$title       = ucfirst( $type );
+
+	if ( $export_type ) {
+		$title = $export_type->label;
+	}
+
+	return apply_filters( 'incassoos_get_export_type_title', $title, $export_type );
+}
+
 /** Files *********************************************************************/
 
 /**

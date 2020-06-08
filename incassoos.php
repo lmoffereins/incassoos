@@ -117,6 +117,9 @@ final class Incassoos {
 		// Consumer type
 		$this->guest_consumer_type  = apply_filters( 'inc_guest_consumer_type', 'guest' );
 
+		// Export type
+		$this->sepa_export_type     = apply_filters( 'inc_sepa_export_type', 'inc_sepa' );
+
 		/** Misc ********************************************************/
 
 		$this->extend               = new stdClass();
@@ -192,6 +195,7 @@ final class Incassoos {
 		add_action( 'incassoos_register', array( $this, 'register_taxonomies'     ) );
 		add_action( 'incassoos_register', array( $this, 'register_post_statuses'  ) );
 		add_action( 'incassoos_register', array( $this, 'register_consumer_types' ) );
+		add_action( 'incassoos_register', array( $this, 'register_export_types'   ) );
 
 		/** Permalinks **************************************************/
 
@@ -484,6 +488,28 @@ final class Incassoos {
 			array(
 				'label'       => _x( 'Guest', 'Consumer type', 'incassoos' ),
 				'label_count' => _nx_noop( 'Guest <span class="count">(%s)</span>', 'Guest <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
+			)
+		);
+	}
+
+	/**
+	 * Register export types
+	 *
+	 * @since 1.0.0
+	 */
+	public function register_export_types() {
+
+		/** SEPA ********************************************************/
+
+		// Require classes
+		require_once( $this->includes_dir . 'classes/class-incassoos-sepa-xml-parser.php' );
+		require_once( $this->includes_dir . 'classes/class-incassoos-sepa-xml-file.php' );
+
+		incassoos_register_export_type(
+			incassoos_get_sepa_export_type_id(),
+			array(
+				'label'      => esc_html__( 'SEPA file', 'incassoos' ),
+				'class_name' => 'Incassoos_SEPA_XML_File'
 			)
 		);
 	}
