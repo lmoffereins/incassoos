@@ -154,7 +154,7 @@ body.incassoos-post-view #postdivrich .inside {
 	display: block;
 }
 
-.incassoos-object-details #activity-total .new-value:not(:empty) + .value {
+.incassoos-object-details .new-value:not(:empty) + .value {
 	margin-left: 4px;
 	text-decoration: line-through;
 }

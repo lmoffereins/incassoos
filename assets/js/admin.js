@@ -99,7 +99,7 @@ jQuery(document).ready( function($) {
 		$actPartBox.find( '.activity-participant .custom-price' ).attr( 'placeholder', this.value );
 
 		// Update total
-		actDtlsBoxUpdateTotal();
+		updateTotal();
 	});
 
 	$actPtcptList
@@ -130,9 +130,9 @@ jQuery(document).ready( function($) {
 			}
 
 			// Update count and total
-			actPartBoxUpdateCount();
+			updateCount();
 			toggleGroups();
-			actDtlsBoxUpdateTotal();
+			updateTotal();
 		})
 
 		// Show (un)limit selected items
@@ -149,8 +149,8 @@ jQuery(document).ready( function($) {
 		.on( 'change', '.activity-participant .select-user', function() {
 
 			// Update count and total
-			actPartBoxUpdateCount();
-			actDtlsBoxUpdateTotal();
+			updateCount();
+			updateTotal();
 		})
 
 		// Toggle group users selection
@@ -165,8 +165,8 @@ jQuery(document).ready( function($) {
 				.parents( '.group' ).first().find( '.activity-participant .select-user' ).attr( 'checked', ! selected );
 
 			// Update count and total
-			actPartBoxUpdateCount();
-			actDtlsBoxUpdateTotal();
+			updateCount();
+			updateTotal();
 		})
 
 		// Toggle custom price input
@@ -179,7 +179,7 @@ jQuery(document).ready( function($) {
 			this.value = parseFloatFormat( this.value );
 
 			// Update total
-			actDtlsBoxUpdateTotal();
+			updateTotal();
 		});
 
 	/**
@@ -211,46 +211,67 @@ jQuery(document).ready( function($) {
 		}
 
 		// Update total
-		actDtlsBoxUpdateTotal();
+		updateTotal();
 	}
 
 	/**
-	 * Update the Activity details metabox total value
+	 * Update the details metabox total value
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param {Object} options Update options.
 	 * @return {Void}
 	 */
-	function actDtlsBoxUpdateTotal() {
-		var $selected = $actPtcptList.find( '.activity-participant .select-user:checked' ),
-		    total = 0, $listItem;
+	function updateTotal( options ) {
+		var total = 0;
 
-		// Calculate total from (custom) prices
-		$.each( $selected, function( i, el ) {
-			$listItem = $(el).parents( '.activity-participant' ).first();
+		// Setup defaults for Activity details
+		options = options || {};
+		options.calculator = options.calculator || function() {
+			var $selected = $actPtcptList.find( '.activity-participant .select-user:checked' ), calculated = 0, $listItem;
 
-			total += $listItem.hasClass( 'has-custom-price' )
-				? parseFloat( $listItem.find( '.custom-price' ).val() || 0 )
-				: parseFloat( $actPriceField.val() || 0 );
-		});
+			// Calculate total from (custom) prices
+			$.each( $selected, function( i, el ) {
+				$listItem = $(el).parents( '.activity-participant' ).first();
+
+				calculated += $listItem.hasClass( 'has-custom-price' )
+					? parseFloat( $listItem.find( '.custom-price' ).val() || 0 )
+					: parseFloat( $actPriceField.val() || 0 );
+			});
+
+			return calculated;
+		};
+		options.$totalField = options.$totalField || $actTotalField;
+
+		// Calculate total
+		if ( 'function' === typeof options.calculator ) {
+			total = options.calculator();
+		}
 
 		// Replace total text
-		$actTotalField.find( '.new-value' ).html( parseCurrencyFormat( total ) );
+		options.$totalField.find( '.new-value' ).html( parseCurrencyFormat( total ) );
 	}
 
 	/**
-	 * Update the Activity participant metabox heading counter
+	 * Update the metabox's heading counter
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param {Object} options Update options.
 	 * @return {Void}
 	 */
-	function actPartBoxUpdateCount() {
-		$actPartBox.find( 'h2 .count' ).text( '(' + $actPtcptList.find( '.activity-participant .select-user:checked' ).length + ')' );
+	function updateCount( options ) {
+
+		// Setup deafults for Activity participants
+		options = options || {};
+		options.$box = options.$box || $actPartBox;
+		options.countBy = options.countBy || '.activity-participant .select-user:checked';
+
+		options.$box.find( 'h2 .count' ).text( '(' + options.$box.find( options.countBy ).length + ')' );
 	}
 
 	/**
-	 * Toggle visibility of Activity participant groups
+	 * Toggle visibility of user groups
 	 *
 	 * @since 1.0.0
 	 *
@@ -259,7 +280,7 @@ jQuery(document).ready( function($) {
 	 */
 	function toggleGroups( options ) {
 
-		// Setup defaults
+		// Setup defaults for Activity participants
 		options = options || {};
 		options.$parent         = options.$parent || $actPtcptList;
 		options.show            = options.show || $actPtcptList.is( '.showing-selected' );
