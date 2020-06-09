@@ -311,6 +311,47 @@ function incassoos_get_collection_created( $post = 0, $format = false ) {
 }
 
 /**
+ * Output the Collection's staged date
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ */
+function incassoos_the_collection_staged( $post = 0, $format = false ) {
+	echo incassoos_get_collection_staged( $post );
+}
+
+/**
+ * Return the Collection's staged date
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_collection_staged'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return string Collection's staged date.
+ */
+function incassoos_get_collection_staged( $post = 0, $format = false ) {
+	$post = incassoos_get_collection( $post );
+	$date = get_post_meta( $post ? $post->ID : 0, 'staged', true );
+
+	// Default to the registered date format
+	if ( empty( $format ) ) {
+		$format = get_option( 'date_format' );
+	}
+
+	if ( $date ) {
+		$date = mysql2date( $format, $date );
+	} else {
+		$date = '';
+	}
+
+	return apply_filters( 'incassoos_get_collection_staged', $date, $post, $format );
+}
+
+/**
  * Output the Collection's collected date
  *
  * @since 1.0.0
@@ -1634,6 +1675,9 @@ function incassoos_stage_collection( $post = 0 ) {
 	$post_ids = implode( ',', $updating );
 	$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN ($post_ids)", incassoos_get_collected_status_id() ) );
 
+	// Update staged date
+	update_post_meta( $post->ID, 'staged', wp_date( 'Y-m-d H:i:s' ) );
+
 	// Run action after staging
 	do_action( 'incassoos_staged_collection', $post );
 
@@ -1682,6 +1726,9 @@ function incassoos_unstage_collection( $post = 0 ) {
 	// Update post status
 	$post_ids = implode( ',', $updating );
 	$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN ($post_ids)", 'publish' ) );
+
+	// Delete staged date
+	delete_post_meta( $post->ID, 'staged' );
 
 	// Run action after unstaging
 	do_action( 'incassoos_unstaged_collection', $post );

@@ -472,7 +472,12 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			} else {
 				esc_html_e( 'Collected:', 'incassoos' );
 			} ?></label>
-			<span id="collection-date" class="value"><?php incassoos_the_collection_date( $post ); ?></span>
+			<span id="collection-date" class="value"><?php
+			if ( incassoos_is_collection_staged() ) {
+				incassoos_the_collection_staged( $post );
+			} else {
+				incassoos_the_collection_date( $post );
+			} ?></span>
 		</p>
 
 		<?php endif; ?>
