@@ -1598,6 +1598,10 @@ function incassoos_get_asset_consumer_total( $consumer, $post = 0, $format = fal
 /**
  * Update the Collection's consumer totals
  *
+ * Since the list of totals is already stored as a serialized string, the consumer
+ * totals are parsed as strings. This shortens storage space in case of long floats
+ * that don't need to be precise beyond the defined decimal length.
+ *
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
@@ -1614,12 +1618,12 @@ function incassoos_update_collection_consumer_totals( $post = 0 ) {
 
 		// Consumers
 		foreach ( $consumers as $consumer ) {
-			$totals[ $consumer ] = incassoos_get_collection_consumer_total_raw( $consumer );
+			$totals[ $consumer ] = incassoos_parse_currency( incassoos_get_collection_consumer_total_raw( $consumer, $post ) );
 		}
 
 		// Consumer types
 		foreach ( $consumer_types as $consumer_type ) {
-			$totals[ $consumer_type ] = incassoos_get_collection_consumer_total_raw( $consumer_type );
+			$totals[ $consumer_type ] = incassoos_parse_currency( incassoos_get_collection_consumer_total_raw( $consumer_type, $post ) );
 		}
 
 		// Update post meta
