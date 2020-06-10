@@ -154,7 +154,17 @@ body.incassoos-post-view #postdivrich .inside {
 	display: block;
 }
 
-.incassoos-object-details .new-value:not(:empty) + .value {
+#major-publishing-actions #collection-total {
+	display: inline-block;
+	vertical-align: top;
+	text-overflow: ellipsis;
+	max-width: 110px;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.incassoos-object-details .new-value:not(:empty) + .value,
+#major-publishing-actions .new-value:not(:empty) + .value {
 	margin-left: 4px;
 	text-decoration: line-through;
 }

@@ -72,13 +72,69 @@ jQuery(document).ready( function($) {
 
 	/** Collection ******************************************************/
 
-	var $colDtlsBox = $( '#incassoos_collection_details' );
+	var $colDtlsBox = $( '#incassoos_collection_details' ),
+	    $colActBox = $( '#incassoos_collection_activities' ),
+	    $colOccBox = $( '#incassoos_collection_occasions' ),
+	    $colTotalField = $colDtlsBox.find( '#collection-total' ).prepend( '<span class="new-value value"></span>' );
 
 	$colDtlsBox
 		// Collecting action
 		.on( 'click', '#collecting-action .button', function() {
 			$colDtlsBox.find( '#major-publishing-actions .spinner' ).addClass( 'is-active' );
 		});
+
+	// Keep selected count
+	$colActBox.on( 'click', '.select-activity', function() {
+
+		// Update count and total
+		updateCount({
+			$box: $colActBox,
+			countBy: '.select-activity:checked'
+		});
+		updateTotal({
+			$totalField: $colTotalField,
+			calculator: calculateColTotal
+		});
+	});
+
+	// Keep selected count
+	$colOccBox.on( 'click', '.select-occasion', function() {
+
+		// Update count and total
+		updateCount({
+			$box: $colOccBox,
+			countBy: '.select-occasion:checked'
+		});
+		updateTotal({
+			$totalField: $colTotalField,
+			calculator: calculateColTotal
+		});
+	});
+
+	/**
+	 * Calculate the collection's total
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return {Float} Collection total
+	 */
+	function calculateColTotal() {
+		var calculated = 0, $listItem;
+
+		// Calculate total from activities
+		$.each( $colActBox.find( '.select-activity:checked' ), function( i, el ) {
+			$listItem = $(el).parents( '.collection-activity' ).first();
+			calculated += parseFormattedCurrency( $listItem.find( '.activity-total' ).text() || 0 );
+		});
+
+		// Calculate total from occasions
+		$.each( $colOccBox.find( '.select-occasion:checked' ), function( i, el ) {
+			$listItem = $(el).parents( '.collection-occasion' ).first();
+			calculated += parseFormattedCurrency( $listItem.find( '.occasion-total' ).text() || 0 );
+		});
+
+		return calculated;
+	}
 
 	/** Activity ********************************************************/
 
@@ -228,10 +284,10 @@ jQuery(document).ready( function($) {
 		// Setup defaults for Activity details
 		options = options || {};
 		options.calculator = options.calculator || function() {
-			var $selected = $actPtcptList.find( '.activity-participant .select-user:checked' ), calculated = 0, $listItem;
+			var calculated = 0, $listItem;
 
 			// Calculate total from (custom) prices
-			$.each( $selected, function( i, el ) {
+			$.each( $actPtcptList.find( '.activity-participant .select-user:checked' ), function( i, el ) {
 				$listItem = $(el).parents( '.activity-participant' ).first();
 
 				calculated += $listItem.hasClass( 'has-custom-price' )
@@ -318,6 +374,23 @@ jQuery(document).ready( function($) {
 		format = format || formatCurrency && formatCurrency.format || '%s';
 
 		return format.replace( '%s', value );
+	}
+
+	/**
+	 * Parse a formatted value and return a numeric value
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param  {String}              Formatted currency
+	 * @return {Number|Float} value  Numeric value
+	 */
+	function parseFormattedCurrency( value ) {
+		var reg = new RegExp( '[^0123456789' + ( formatCurrency ? formatCurrency.decimal_point : ',' ) + ']', 'g' );
+
+		// Parse from string
+		value = String( value ).replace( reg, '' ).replace( formatCurrency ? formatCurrency.decimal_point : ',', '.' );
+
+		return parseFloat( value );
 	}
 
 	/**

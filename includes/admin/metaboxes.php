@@ -57,7 +57,11 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 
 		add_meta_box(
 			'incassoos_collection_activities',
-			esc_html__( 'Collection Activities', 'incassoos' ),
+			sprintf(
+				/* translators: counter */
+				esc_html__( 'Collection Activities %s', 'incassoos' ),
+				'<span class="count">(' . incassoos_get_collection_activity_count( $post ) . ')</span>'
+			),
 			'incassoos_admin_collection_activities_metabox',
 			null,
 			'side',
@@ -66,7 +70,11 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 
 		add_meta_box(
 			'incassoos_collection_occasions',
-			esc_html__( 'Collection Occasions', 'incassoos' ),
+			sprintf(
+				/* translators: counter */
+				esc_html__( 'Collection Occasions %s', 'incassoos' ),
+				'<span class="count">(' . incassoos_get_collection_occasion_count( $post ) . ')</span>'
+			),
 			'incassoos_admin_collection_occasions_metabox',
 			null,
 			'side',
@@ -506,7 +514,9 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<div class="publishing-notice">
 			<label><?php esc_html_e( 'Total', 'incassoos' ); ?></label>
-			<span class="value"><?php incassoos_the_collection_total( $post, true ); ?></span>
+			<span id="collection-total">
+				<span class="value" title="<?php echo esc_attr( incassoos_get_collection_total( $post, true ) ); ?>"><?php incassoos_the_collection_total( $post, true ); ?></span>
+			</span>
 		</div>
 
 		<?php elseif ( $can_export ) : ?>
@@ -580,7 +590,7 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 			<li id="post-<?php echo $item_id; ?>" class="asset collection-activity">
 				<?php if ( ! $is_post_view ) : ?>
 
-				<input id="collection-activity-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-activity[]" <?php checked( in_array( $item_id, $cactivities ) ); ?> />
+				<input id="collection-activity-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-activity[]" class="select-activity" <?php checked( in_array( $item_id, $cactivities ) ); ?> />
 				<label for="collection-activity-<?php echo $item_id; ?>">
 					<span class="title"><?php incassoos_the_activity_title( $item_id ); ?></span>
 
@@ -659,7 +669,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 			<li id="post-<?php echo $item_id; ?>" class="asset collection-occasion">
 				<?php if ( ! $is_post_view ) : ?>
 
-				<input id="collection-occasion-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-occasion[]" <?php checked( in_array( $item_id, $coccasions ) ); ?> />
+				<input id="collection-occasion-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-occasion[]" class="select-occasion" <?php checked( in_array( $item_id, $coccasions ) ); ?> />
 				<label for="collection-occasion-<?php echo $item_id; ?>">
 					<span class="title"><?php incassoos_the_occasion_title( $item_id ); ?></span>
 
