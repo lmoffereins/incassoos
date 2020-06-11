@@ -47,7 +47,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		if ( $can_publish_or_delete ) {
 			add_meta_box(
 				'submitdiv',
-				__( 'Publish' ),
+				esc_html__( 'Publish' ),
 				'incassoos_admin_post_submit_metabox',
 				null,
 				'side',
@@ -87,7 +87,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 				'incassoos_collection_consumers',
 				sprintf(
 					/* translators: counter */
-					__( 'Collection Consumers %s', 'incassoos' ),
+					esc_html__( 'Collection Consumers %s', 'incassoos' ),
 					'<span class="count">(' . incassoos_get_collection_consumer_count( $post ) . ')</span>'
 				),
 				'incassoos_admin_collection_consumers_metabox',
@@ -117,7 +117,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		if ( $can_publish_or_delete ) {
 			add_meta_box(
 				'submitdiv',
-				__( 'Publish' ),
+				esc_html__( 'Publish' ),
 				'incassoos_admin_post_submit_metabox',
 				null,
 				'side',
@@ -129,7 +129,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 			'incassoos_activity_participants',
 			sprintf(
 				/* translators: counter */
-				__( 'Activity Participants %s', 'incassoos' ),
+				esc_html__( 'Activity Participants %s', 'incassoos' ),
 				'<span class="count">(' . incassoos_get_activity_participant_count( $post ) . ')</span>'
 			),
 			'incassoos_admin_activity_participants_metabox',
@@ -158,7 +158,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		if ( $can_publish_or_delete ) {
 			add_meta_box(
 				'submitdiv',
-				__( 'Publish' ),
+				esc_html__( 'Publish' ),
 				'incassoos_admin_post_submit_metabox',
 				null,
 				'side',
@@ -172,7 +172,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 				'incassoos_occasion_consumers',
 				sprintf(
 					/* translators: counter */
-					__( 'Occasion Consumers %s', 'incassoos' ),
+					esc_html__( 'Occasion Consumers %s', 'incassoos' ),
 					'<span class="count">(' . incassoos_get_occasion_consumer_count( $post ) . ')</span>'
 				),
 				'incassoos_admin_occasion_consumers_metabox',
@@ -186,7 +186,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 				'incassoos_occasion_products',
 				sprintf(
 					/* translators: counter */
-					__( 'Occasion Products %s', 'incassoos' ),
+					esc_html__( 'Occasion Products %s', 'incassoos' ),
 					'<span class="count">(' . incassoos_get_occasion_product_count( $post ) . ')</span>'
 				),
 				'incassoos_admin_occasion_products_metabox',
@@ -216,7 +216,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		if ( $can_publish_or_delete ) {
 			add_meta_box(
 				'submitdiv',
-				__( 'Publish' ),
+				esc_html__( 'Publish' ),
 				'incassoos_admin_post_submit_metabox',
 				null,
 				'side',
@@ -252,7 +252,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		// Custom submit box
 		add_meta_box(
 			'submitdiv',
-			__( 'Publish' ),
+			esc_html__( 'Publish' ),
 			'incassoos_admin_post_submit_metabox',
 			null,
 			'side',
