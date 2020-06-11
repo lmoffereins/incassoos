@@ -54,6 +54,7 @@ class Incassoos_VGSR {
 	 * @since 1.0.0
 	 */
 	private function includes() {
+		require( $this->plugin_dir . 'actions.php'   );
 		require( $this->plugin_dir . 'functions.php' );
 	}
 
@@ -64,60 +65,46 @@ class Incassoos_VGSR {
 	 */
 	private function setup_actions() {
 
-		add_action( 'incassoos_register', array( $this, 'register_consumer_types' ), 20 );
+		// Collection
+		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
 
 		// Users
 		add_filter( 'incassoos_get_user_query_args',              array( $this, 'get_users_args'                   ), 10    );
 		add_filter( 'incassoos_get_user_list_group',              array( $this, 'get_user_list_group'              ), 10, 2 );
 		add_filter( 'incassoos_rest_consumers_collection_params', array( $this, 'rest_consumers_collection_params' ), 10    );
 		add_filter( 'incassoos_rest_prepare_consumer',            array( $this, 'rest_prepare_consumer'            ), 10, 3 );
-
-		// Collection
-		add_filter( 'default_title',      array( $this, 'default_title'         ), 10, 2 );
-		add_filter( 'incassoos_register', array( $this, 'register_export_types' ), 20    );
-
-		// Activity
-		add_filter( 'incassoos_get_user_match_options',      array( $this, 'user_match_options'      ), 10, 2 );
-		add_filter( 'incassoos_get_user_match_ids',          array( $this, 'user_match_ids'          ), 10, 2 );
+		add_filter( 'incassoos_get_user_match_options',           array( $this, 'user_match_options'               ), 10, 2 );
+		add_filter( 'incassoos_get_user_match_ids',               array( $this, 'user_match_ids'                   ), 10, 2 );
 
 		// Email
 		add_filter( 'incassoos_get_custom_email_salutation', array( $this, 'custom_email_salutation' ), 10, 2 );
 
 		// Settings
-		add_filter( 'incassoos_admin_get_users_fields',      array( $this, 'users_fields'            ), 10    );
-		add_filter( 'incassoos_admin_get_settings_fields',   array( $this, 'settings_fields'         ), 10    );
-		add_filter( 'incassoos_rest_prepare_settings',       array( $this, 'rest_prepare_settings'   ), 10, 2 );
+		add_filter( 'incassoos_admin_get_settings_fields', array( $this, 'settings_fields'       ), 10    );
+		add_filter( 'incassoos_rest_prepare_settings',     array( $this, 'rest_prepare_settings' ), 10, 2 );
 	}
 
 	/** Public methods **************************************************/
 
 	/**
-	 * Register consumer types
+	 * Define the default post title for a post type
+	 *
+	 * @see get_default_post_to_edit()
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param  string $default_title Default post title
+	 * @param  object $post          Default post object
+	 * @return string                Default post title
 	 */
-	public function register_consumer_types() {
+	public function default_title( $default_title, $post ) {
 
-		// Remove Guest type
-		incassoos_unregister_consumer_type( incassoos_get_guest_consumer_type_id() );
+		// Collection
+		if ( incassoos_get_collection_post_type() === $post->post_type ) {
+			$default_title = ucfirst( date_i18n( 'F Y' ) );
+		}
 
-		// Cash
-		incassoos_register_consumer_type(
-			incassoos_vgsr_get_cash_consumer_type_id(),
-			array(
-				'label'       => _x( 'Cash', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'Cash <span class="count">(%s)</span>', 'Cash <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
-			)
-		);
-
-		// On the House
-		incassoos_register_consumer_type(
-			incassoos_vgsr_get_on_the_house_consumer_type_id(),
-			array(
-				'label'       => _x( 'On the House', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'On the House <span class="count">(%s)</span>', 'On the House <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
-			)
-		);
+		return $default_title;
 	}
 
 	/**
@@ -220,44 +207,6 @@ class Incassoos_VGSR {
 	}
 
 	/**
-	 * Define the default post title for a post type
-	 *
-	 * @see get_default_post_to_edit()
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param  string $default_title Default post title
-	 * @param  object $post          Default post object
-	 * @return string                Default post title
-	 */
-	public function default_title( $default_title, $post ) {
-
-		// Collection
-		if ( incassoos_get_collection_post_type() === $post->post_type ) {
-			$default_title = ucfirst( date_i18n( 'F Y' ) );
-		}
-
-		return $default_title;
-	}
-
-	/**
-	 * Register custom export types
-	 *
-	 * @since 1.0.0
-	 */
-	public function register_export_types() {
-
-		// Require class
-		require_once( $this->plugin_dir . 'classes/class-incassoos-vgsr-sfc-file.php' );
-
-		// SFC
-		incassoos_register_export_type( 'vgsr_sfc', array(
-			'label'      => esc_html__( 'SFC file', 'incassoos' ),
-			'class_name' => 'Incassoos_VGSR_SFC_File'
-		) );
-	}
-
-	/**
 	 * Modify the collection of user match options
 	 *
 	 * Starting a match with a ...
@@ -329,28 +278,6 @@ class Incassoos_VGSR {
 	 */
 	public function custom_email_salutation( $value, $user ) {
 		return vgsr_get_salutation( $user );
-	}
-
-	/**
-	 * Modify the admin users fields
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param  array $fields Users fields
-	 * @return array          Users fields
-	 */
-	public function users_fields( $fields ) {
-
-		// Consumption limit
-		$fields['_incassoos_consumption_limit'] = array(
-			'label'           => __( 'Consumption limit', 'incassoos' ),
-			'get_callback'    => 'incassoos_admin_users_meta_get_callback',
-			'update_callback' => 'incassoos_admin_users_meta_update_callback',
-			'input_callback'  => 'incassoos_admin_users_input_callback',
-			'type'            => 'number'
-		);
-
-		return $fields;
 	}
 
 	/**
