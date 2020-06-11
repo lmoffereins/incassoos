@@ -157,7 +157,7 @@ function incassoos_sanitize_slug( $slug = '' ) {
 function incassoos_sanitize_user_list( $list = '' ) {
 
 	// Separate values
-	$value = explode( ',', $list );
+	$value = wp_parse_list( $list );
 
 	foreach ( $value as $key => $id_or_slug ) {
 		$user = false;
