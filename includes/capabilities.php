@@ -22,6 +22,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function incassoos_get_collection_post_type_caps() {
 	return apply_filters( 'incassoos_get_collection_post_type_caps', array(
+		'view_post'           => 'view_incassoos_collection',
+		'view_posts'          => 'view_incassoos_collections',
 		'edit_post'           => 'edit_incassoos_collection',
 		'edit_posts'          => 'edit_incassoos_collections',
 		'edit_others_posts'   => 'edit_incassoos_collections',
@@ -45,6 +47,8 @@ function incassoos_get_collection_post_type_caps() {
  */
 function incassoos_get_activity_post_type_caps() {
 	return apply_filters( 'incassoos_get_activity_post_type_caps', array(
+		'view_post'           => 'view_incassoos_activity',
+		'view_posts'          => 'view_incassoos_activities',
 		'edit_post'           => 'edit_incassoos_activity',
 		'edit_posts'          => 'edit_incassoos_activities',
 		'edit_others_posts'   => 'edit_incassoos_activities',
@@ -85,6 +89,8 @@ function incassoos_get_activity_cat_tax_caps() {
  */
 function incassoos_get_occasion_post_type_caps() {
 	return apply_filters( 'incassoos_get_occasion_post_type_caps', array(
+		'view_post'           => 'view_incassoos_occasion',
+		'view_posts'          => 'view_incassoos_occasions',
 		'edit_post'           => 'edit_incassoos_occasion',
 		'edit_posts'          => 'edit_incassoos_occasions',
 		'edit_others_posts'   => 'edit_incassoos_occasions',
@@ -125,6 +131,8 @@ function incassoos_get_occasion_type_tax_caps() {
  */
 function incassoos_get_order_post_type_caps() {
 	return apply_filters( 'incassoos_get_order_post_type_caps', array(
+		'view_post'           => 'view_incassoos_order',
+		'view_posts'          => 'view_incassoos_orders',
 		'edit_post'           => 'edit_incassoos_order',
 		'edit_posts'          => 'edit_incassoos_orders',
 		'edit_others_posts'   => 'edit_incassoos_orders',
@@ -148,6 +156,8 @@ function incassoos_get_order_post_type_caps() {
  */
 function incassoos_get_product_post_type_caps() {
 	return apply_filters( 'incassoos_get_product_post_type_caps', array(
+		'view_post'           => 'view_incassoos_product',
+		'view_posts'          => 'view_incassoos_products',
 		'edit_post'           => 'edit_incassoos_product',
 		'edit_posts'          => 'edit_incassoos_products',
 		'edit_others_posts'   => 'edit_incassoos_products',
@@ -697,12 +707,14 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'access_incassoos_rest_api'       => true,
 
 				// Collection
+				'view_incassoos_collections'      => true,
 				'edit_incassoos_collections'      => true,
 				'publish_incassoos_collections'   => true,
 				'delete_incassoos_collections'    => true,
 				'collect_incassoos_collections'   => true,
 
 				// Activity
+				'view_incassoos_activities'       => true,
 				'edit_incassoos_activities'       => true,
 				'publish_incassoos_activities'    => true,
 				'delete_incassoos_activities'     => true,
@@ -711,6 +723,7 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'manage_incassoos_activity_cats'  => true,
 
 				// Occasion
+				'view_incassoos_occasions'        => true,
 				'edit_incassoos_occasions'        => false,
 				'publish_incassoos_occasions'     => false,
 				'delete_incassoos_occasions'      => false,
@@ -719,11 +732,13 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'manage_incassoos_occasion_types' => false,
 
 				// Order
+				'view_incassoos_orders'           => false,
 				'edit_incassoos_orders'           => false,
 				'publish_incassoos_orders'        => false,
 				'delete_incassoos_orders'         => false,
 
 				// Product
+				'view_incassoos_products'         => false,
 				'edit_incassoos_products'         => false,
 				'publish_incassoos_products'      => false,
 				'delete_incassoos_products'       => false,
@@ -747,12 +762,14 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'access_incassoos_rest_api'       => true,
 
 				// Collection
+				'view_incassoos_collections'      => false,
 				'edit_incassoos_collections'      => false,
 				'publish_incassoos_collections'   => false,
 				'delete_incassoos_collections'    => false,
 				'collect_incassoos_collections'   => false,
 
 				// Activity
+				'view_incassoos_activities'       => false,
 				'edit_incassoos_activities'       => false,
 				'publish_incassoos_activities'    => false,
 				'delete_incassoos_activities'     => false,
@@ -761,6 +778,7 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'manage_incassoos_activity_cats'  => false,
 
 				// Occasion
+				'view_incassoos_occasions'        => true,
 				'edit_incassoos_occasions'        => true,
 				'publish_incassoos_occasions'     => true,
 				'delete_incassoos_occasions'      => true,
@@ -769,11 +787,13 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'manage_incassoos_occasion_types' => true,
 
 				// Order
+				'view_incassoos_orders'           => true,
 				'edit_incassoos_orders'           => true,
 				'publish_incassoos_orders'        => true,
 				'delete_incassoos_orders'         => true,
 
 				// Product
+				'view_incassoos_products'         => true,
 				'edit_incassoos_products'         => true,
 				'publish_incassoos_products'      => true,
 				'delete_incassoos_products'       => true,
@@ -797,12 +817,14 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'access_incassoos_rest_api'       => true,
 
 				// Collection
+				'view_incassoos_collections'      => false,
 				'edit_incassoos_collections'      => false,
 				'publish_incassoos_collections'   => false,
 				'delete_incassoos_collections'    => false,
 				'collect_incassoos_collections'   => false,
 
 				// Activity
+				'view_incassoos_activities'       => false,
 				'edit_incassoos_activities'       => false,
 				'publish_incassoos_activities'    => false,
 				'delete_incassoos_activities'     => false,
@@ -811,6 +833,7 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'manage_incassoos_activity_cats'  => false,
 
 				// Occasion
+				'view_incassoos_occasions'        => true,
 				'edit_incassoos_occasions'        => true,
 				'publish_incassoos_occasions'     => true,
 				'delete_incassoos_occasions'      => false,
@@ -819,11 +842,13 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'manage_incassoos_occasion_types' => false,
 
 				// Order
+				'view_incassoos_orders'           => true,
 				'edit_incassoos_orders'           => true,
 				'publish_incassoos_orders'        => true,
 				'delete_incassoos_orders'         => false,
 
 				// Product
+				'view_incassoos_products'         => true,
 				'edit_incassoos_products'         => false,
 				'publish_incassoos_products'      => false,
 				'delete_incassoos_products'       => false,
@@ -858,12 +883,14 @@ function incassoos_get_cap_translations() {
 		'edit_incassoos_settings'         => _x( 'Edit Settings',              'Capability name', 'incassoos' ),
 
 		// Collection
+		'view_incassoos_collections'      => _x( 'View Collections',           'Capability name', 'incassoos' ),
 		'edit_incassoos_collections'      => _x( 'Edit Collections',           'Capability name', 'incassoos' ),
 		'publish_incassoos_collections'   => _x( 'Publish Collections',        'Capability name', 'incassoos' ),
 		'delete_incassoos_collections'    => _x( 'Delete Collections',         'Capability name', 'incassoos' ),
 		'collect_incassoos_collections'   => _x( 'Collect Collections',        'Capability name', 'incassoos' ),
 
 		// Activity
+		'view_incassoos_activities'       => _x( 'View Activities',            'Capability name', 'incassoos' ),
 		'edit_incassoos_activities'       => _x( 'Edit Activities',            'Capability name', 'incassoos' ),
 		'publish_incassoos_activities'    => _x( 'Publish Activities',         'Capability name', 'incassoos' ),
 		'delete_incassoos_activities'     => _x( 'Delete Activities',          'Capability name', 'incassoos' ),
@@ -872,6 +899,7 @@ function incassoos_get_cap_translations() {
 		'manage_incassoos_activity_cats'  => _x( 'Manage Activity Categories', 'Capability name', 'incassoos' ),
 
 		// Occasion
+		'view_incassoos_occasions'        => _x( 'View Occasions',             'Capability name', 'incassoos' ),
 		'edit_incassoos_occasions'        => _x( 'Edit Occasions',             'Capability name', 'incassoos' ),
 		'publish_incassoos_occasions'     => _x( 'Publish Occasions',          'Capability name', 'incassoos' ),
 		'delete_incassoos_occasions'      => _x( 'Delete Occasions',           'Capability name', 'incassoos' ),
@@ -880,11 +908,13 @@ function incassoos_get_cap_translations() {
 		'manage_incassoos_occasion_types' => _x( 'Manage Occasion Types',      'Capability name', 'incassoos' ),
 
 		// Order
+		'view_incassoos_orders'           => _x( 'View Orders',                'Capability name', 'incassoos' ),
 		'edit_incassoos_orders'           => _x( 'Edit Orders',                'Capability name', 'incassoos' ),
 		'publish_incassoos_orders'        => _x( 'Publish Orders',             'Capability name', 'incassoos' ),
 		'delete_incassoos_orders'         => _x( 'Delete Orders',              'Capability name', 'incassoos' ),
 
 		// Product
+		'view_incassoos_products'         => _x( 'View Products',              'Capability name', 'incassoos' ),
 		'edit_incassoos_products'         => _x( 'Edit Products',              'Capability name', 'incassoos' ),
 		'publish_incassoos_products'      => _x( 'Publish Products',           'Capability name', 'incassoos' ),
 		'delete_incassoos_products'       => _x( 'Delete Products',            'Capability name', 'incassoos' ),

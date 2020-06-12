@@ -32,7 +32,8 @@ add_filter( 'manage_posts_custom_column',  'incassoos_admin_posts_custom_column'
 add_filter( 'post_row_actions',            'incassoos_admin_post_row_actions',      10, 2 );
 
 // Single
-add_action( 'load-post.php',               'incassoos_admin_load_do_post_view',      10    );
+add_action( 'load-post.php',               'incassoos_admin_load_post_view',         10    );
+add_action( 'load-edit.php',               'incassoos_admin_load_posts_view',        10    );
 add_action( 'post_action_view',            'incassoos_admin_post_action_view',       10    );
 add_action( 'post_action_inc_close',       'incassoos_admin_post_action_close',      10    );
 add_action( 'post_action_inc_reopen',      'incassoos_admin_post_action_reopen',     10    );

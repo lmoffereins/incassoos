@@ -327,7 +327,7 @@ function incassoos_admin_post_submit_metabox( $post ) {
 
 	// Get details
 	$post_type_object = get_post_type_object( $post->post_type );
-	$is_post_view     = incassoos_admin_do_post_view( $post );
+	$is_post_view     = incassoos_admin_is_post_view( $post );
 
 	?>
 
@@ -437,7 +437,8 @@ function incassoos_admin_view_form_after_editor( $post ) {
 function incassoos_admin_collection_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view = incassoos_admin_do_post_view( $post );
+	$is_post_view     = incassoos_admin_is_post_view( $post );
+	$post_type_object = get_post_type_object( $post->post_type );
 
 	// Permissions
 	$can_stage   = current_user_can( 'stage_incassoos_collection',   $post->ID );
@@ -500,7 +501,11 @@ function incassoos_admin_collection_details_metabox( $post ) {
 		<?php if ( ! incassoos_is_collection_locked( $post ) ) : ?>
 
 		<p class="warning">
-			<?php esc_html_e( 'Please publish any changes first, before staging the Collection.', 'incassoos' ); ?>
+			<?php if ( ! current_user_can( $post_type_object->cap->edit_posts ) ) {
+				esc_html_e( 'This Collection is not collected yet.', 'incassoos' );
+			} else {
+				esc_html_e( 'Please publish any changes first, before staging the Collection.', 'incassoos' );
+			} ?>
 		</p>
 
 		<?php endif; ?>
@@ -570,7 +575,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 function incassoos_admin_collection_activities_metabox( $post ) {
 
 	// Get collection assets
-	$is_post_view = incassoos_admin_do_post_view( $post );
+	$is_post_view = incassoos_admin_is_post_view( $post );
 	$cactivities  = incassoos_get_collection_activities( $post );
 
 	if ( $is_post_view ) {
@@ -649,7 +654,7 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 function incassoos_admin_collection_occasions_metabox( $post ) {
 
 	// Get collection assets
-	$is_post_view = incassoos_admin_do_post_view( $post );
+	$is_post_view = incassoos_admin_is_post_view( $post );
 	$coccasions   = incassoos_get_collection_occasions( $post );
 
 	if ( $is_post_view ) {
@@ -828,7 +833,7 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 function incassoos_admin_activity_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view     = incassoos_admin_do_post_view( $post );
+	$is_post_view     = incassoos_admin_is_post_view( $post );
 	$activity_cat_tax = incassoos_get_activity_cat_tax_id();
 	$format_args      = incassoos_get_currency_format_args();
 
@@ -943,7 +948,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 function incassoos_admin_activity_participants_metabox( $post ) {
 
 	// Get details
-	$is_post_view = incassoos_admin_do_post_view( $post );
+	$is_post_view = incassoos_admin_is_post_view( $post );
 	$participants = incassoos_get_activity_participants( $post );
 	$users        = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
 
@@ -1107,7 +1112,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 function incassoos_admin_occasion_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view      = incassoos_admin_do_post_view( $post );
+	$is_post_view      = incassoos_admin_is_post_view( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
 
 	// Permissions
@@ -1400,7 +1405,7 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 function incassoos_admin_order_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_do_post_view( $post );
+	$is_post_view = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
 	$occasion_tax  = incassoos_get_occasion_post_type();
 
 	?>
@@ -1483,7 +1488,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 function incassoos_admin_order_products_metabox( $post ) {
 
 	// Get details
-	$is_post_view   = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_do_post_view( $post );
+	$is_post_view   = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
 	$order_products = incassoos_get_order_products( $post );
 
 	if ( $is_post_view ) {
@@ -1619,7 +1624,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 function incassoos_admin_notes_metabox( $post ) {
 
 	// Get details
-	$is_post_view = incassoos_admin_do_post_view( $post );
+	$is_post_view = incassoos_admin_is_post_view( $post );
 
 	// Display editor
 	if ( ! $is_post_view ) {

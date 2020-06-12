@@ -59,7 +59,7 @@ function incassoos_register_admin_menu() {
 
 	// Settings page
 	if ( incassoos_admin_page_has_settings( 'incassoos' ) ) {
-		$hooks[] = $settings = add_submenu_page(
+		$hooks[] = $settings_page = add_submenu_page(
 			'incassoos',
 			esc_html__( 'Incassoos Settings', 'incassoos' ),
 			esc_html__( 'Settings', 'incassoos' ),
@@ -68,7 +68,7 @@ function incassoos_register_admin_menu() {
 			'incassoos_admin_page'
 		);
 
-		add_action( "load-{$settings}", 'incassoos_admin_load_settings_page' );
+		add_action( "load-{$settings_page}", 'incassoos_admin_load_settings_page' );
 	}
 
 	// Register admin page hooks
@@ -164,7 +164,7 @@ function incassoos_admin_submenu_post_type( $post_type = '', $function = '' ) {
 		'incassoos',
 		$post_type_object->label,
 		$post_type_object->labels->menu_name,
-		$post_type_object->cap->edit_posts,
+		$post_type_object->show_ui ? 'exist' : 'do_not_allow',
 		! empty( $function ) ? $function : $menu_file
 	);
 }
@@ -188,7 +188,7 @@ function incassoos_admin_submenu_taxonomy( $taxonomy = '', $function = '' ) {
 		'incassoos',
 		$taxonomy->labels->name,
 		$taxonomy->labels->menu_name,
-		$taxonomy->cap->manage_terms,
+		$taxonomy->show_ui ? 'exist' : 'do_not_allow',
 		! empty( $function ) ? $function : $menu_file
 	);
 }
@@ -357,24 +357,36 @@ function incassoos_admin_manage_posts_tablenav( $which ) {
 		// Activity
 		case incassoos_get_activity_post_type() :
 
+			$tax_object = get_taxonomy( incassoos_get_activity_cat_tax_id() );
+
 			// Display link to manage categories
-			printf( '<div class="alignleft actions incassoos-activity-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . incassoos_get_activity_cat_tax_id(), esc_html__( 'Manage Activity Categories', 'incassoos' ) );
+			if ( current_user_can( $tax_object->cap->manage_terms ) ) {
+				printf( '<div class="alignleft actions incassoos-activity-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . $tax_object->name, esc_html__( 'Manage Activity Categories', 'incassoos' ) );
+			}
 
 			break;
 
 		// Occasion
 		case incassoos_get_occasion_post_type() :
 
+			$tax_object = get_taxonomy( incassoos_get_occasion_type_tax_id() );
+
 			// Display link to manage types
-			printf( '<div class="alignleft actions incassoos-occasion-type-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . incassoos_get_occasion_type_tax_id(), esc_html__( 'Manage Occasion Types', 'incassoos' ) );
+			if ( current_user_can( $tax_object->cap->manage_terms ) ) {
+				printf( '<div class="alignleft actions incassoos-occasion-type-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . $tax_object->name, esc_html__( 'Manage Occasion Types', 'incassoos' ) );
+			}
 
 			break;
 
 		// Product
 		case incassoos_get_product_post_type() :
 
+			$tax_object = get_taxonomy( incassoos_get_product_cat_tax_id() );
+
 			// Display link to manage categories
-			printf( '<div class="alignleft actions incassoos-product-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . incassoos_get_product_cat_tax_id(), esc_html__( 'Manage Product Categories', 'incassoos' ) );
+			if ( current_user_can( $tax_object->cap->manage_terms ) ) {
+				printf( '<div class="alignleft actions incassoos-product-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . $tax_object->name, esc_html__( 'Manage Product Categories', 'incassoos' ) );
+			}
 
 			break;
 	}
@@ -745,12 +757,13 @@ function incassoos_admin_posts_custom_meta_column( $column, $post_id ) {
  * @return array Post row actions
  */
 function incassoos_admin_post_row_actions( $actions, $post ) {
+	$post_type_object = get_post_type_object( $post->post_type );
 
 	// Collection
 	if ( incassoos_get_collection( $post ) ) {
 
 		// Provide view link for locked
-		if ( incassoos_is_collection_locked( $post ) ) {
+		if ( incassoos_is_collection_locked( $post ) || ! current_user_can( $post_type_object->cap->edit_posts ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
@@ -768,7 +781,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 	if ( incassoos_get_activity( $post ) ) {
 
 		// Provide view link for collected
-		if ( incassoos_is_activity_collected( $post ) ) {
+		if ( incassoos_is_activity_collected( $post ) || ! current_user_can( $post_type_object->cap->edit_posts ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
@@ -782,20 +795,22 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 		unset( $actions['inline hide-if-no-js'] );
 
 		// Duplicate
-		$actions['inc_duplicate'] = sprintf(
-			'<a href="%s" aria-label="%s">%s</a>',
-			esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_duplicate' ), admin_url( 'post.php' ) ), 'duplicate-activity_' . $post->ID ) ),
-			/* translators: %s: post title */
-			esc_attr( sprintf( __( 'Duplicate &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
-			__( 'Duplicate', 'incassoos' )
-		);
+		if ( current_user_can( $post_type_object->cap->edit_posts ) ) {
+			$actions['inc_duplicate'] = sprintf(
+				'<a href="%s" aria-label="%s">%s</a>',
+				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_duplicate' ), admin_url( 'post.php' ) ), 'duplicate-activity_' . $post->ID ) ),
+				/* translators: %s: post title */
+				esc_attr( sprintf( __( 'Duplicate &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+				__( 'Duplicate', 'incassoos' )
+			);
+		}
 	}
 
 	// Occasion
 	if ( incassoos_get_occasion( $post ) ) {
 
 		// Provide view link for collected
-		if ( incassoos_is_occasion_collected( $post ) ) {
+		if ( incassoos_is_occasion_collected( $post ) || ! current_user_can( $post_type_object->cap->edit_posts ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
@@ -868,12 +883,12 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_admin_do_post_view'
+ * @uses apply_filters() Calls 'incassoos_admin_is_post_view'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool View post only.
  */
-function incassoos_admin_do_post_view( $post = 0 ) {
+function incassoos_admin_is_post_view( $post = 0 ) {
 	$post   = get_post( $post );
 	$retval = false;
 
@@ -882,7 +897,7 @@ function incassoos_admin_do_post_view( $post = 0 ) {
 		$retval           = ! current_user_can( $post_type_object->cap->edit_post, $post->ID );
 	}
 
-	return (bool) apply_filters( 'incassoos_admin_do_post_view', $retval, $post );
+	return (bool) apply_filters( 'incassoos_admin_is_post_view', $retval, $post );
 }
 
 /**
@@ -890,7 +905,7 @@ function incassoos_admin_do_post_view( $post = 0 ) {
  *
  * @since 1.0.0
  */
-function incassoos_admin_load_do_post_view() {
+function incassoos_admin_load_post_view() {
 
 	// Bail when not a get request
 	if ( 'GET' != strtoupper( $_SERVER['REQUEST_METHOD'] ) )
@@ -903,18 +918,18 @@ function incassoos_admin_load_do_post_view() {
 	if ( ! $post_id || ! isset( $_REQUEST['action'] ) )
 		return;
 
-	// Define base request without
+	// Define base request without action
 	$base_args = array_diff_key( $_GET, array_flip( array( 'action' ) ) );
 	$base_url  = add_query_arg( $base_args, admin_url( 'post.php' ) );
 
 	// Edit: Redirect to view mode when the post is already collected or an Order
-	if ( 'edit' === $_REQUEST['action'] && incassoos_admin_do_post_view( $post_id ) ) {
+	if ( 'edit' === $_REQUEST['action'] && incassoos_admin_is_post_view( $post_id ) ) {
 		wp_redirect( add_query_arg( array( 'action' => 'view' ), $base_url ) );
 		exit();
 	}
 
 	// View: Redirect to edit mode when the post is not collected and not an Order
-	if ( 'view' === $_REQUEST['action'] && ! incassoos_admin_do_post_view( $post_id ) ) {
+	if ( 'view' === $_REQUEST['action'] && ! incassoos_admin_is_post_view( $post_id ) ) {
 		wp_redirect( add_query_arg( array( 'action' => 'edit' ), $base_url ) );
 		exit();
 	}
@@ -936,7 +951,7 @@ function incassoos_admin_post_action_view( $post_id ) {
 	       $post_type_object, $title, $is_IE, $post_ID, $user_ID, $action;
 
 	// Bail when the post is not collected or not an Order
-	if ( ! incassoos_admin_do_post_view( $post_id ) )
+	if ( ! incassoos_admin_is_post_view( $post_id ) )
 		return;
 
 	$post = get_post( $post_id );
@@ -1391,6 +1406,65 @@ function incassoos_admin_post_notices() {
 	}
 
 	echo '<div class="notice error is-dismissible"><p>' . sprintf( $prefix, $error ) . '</p></div>';
+}
+
+/** Multiple Posts ******************************************************/
+
+/**
+ * Return whether the admin posts should be viewed only, ie. remove editing elements.
+ *
+ * This mark helps the plugin know which pages require layout modifications
+ * to support view-only style admin interfaces.
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_is_posts_view'
+ *
+ * @param string $post_type Optional. Post type name. Defaults to the page's post type.
+ * @return bool View posts only.
+ */
+function incassoos_admin_is_posts_view( $post_type = '' ) {
+
+	// Default to the page's post type
+	if ( ! $post_type && function_exists( 'get_current_screen' ) ) {
+		$post_type = get_current_screen()->post_type;
+	}
+
+	$retval = false;
+
+	if ( $post_type && incassoos_is_plugin_post_type( $post_type ) ) {
+		$post_type_object = get_post_type_object( $post_type );
+		$retval           = ! current_user_can( $post_type_object->cap->edit_posts ) && current_user_can( $post_type_object->cap->view_posts );
+	}
+
+	return (bool) apply_filters( 'incassoos_admin_is_posts_view', $retval, $post_type );
+}
+
+/**
+ * When loading admin's post.php switch editing and viewing action
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_load_posts_view() {
+
+	// Bail when not a get request
+	if ( 'GET' != strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+
+	// Get the post_type query var
+	$post_type = isset( $_REQUEST['post_type'] ) ? $_REQUEST['post_type'] : false;
+
+	// Bail when post type is missing or we're not viewing posts
+	if ( ! $post_type || ! incassoos_admin_is_posts_view( $post_type ) )
+		return;
+
+	// Define base request without action
+	$base_args = array_diff_key( $_GET, array_flip( array( 'action' ) ) );
+	$base_url  = add_query_arg( $base_args, admin_url( 'page.php' ) );
+
+	// Load view page
+	// This page is a version of edit.php without links or options to edit posts.
+	include incassoos()->admin->admin_dir . '/view.php';
 }
 
 /** Taxonomies **********************************************************/

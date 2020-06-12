@@ -174,7 +174,7 @@ class Incassoos_Admin {
 			case 'incassoos_collection_admin' :
 
 				// Defer to viewing caps
-				$caps = array( 'edit_incassoos_collections' );
+				$caps = array( 'view_incassoos_collections' );
 
 				break;
 
@@ -182,7 +182,7 @@ class Incassoos_Admin {
 			case 'incassoos_activity_admin' :
 
 				// Defer to viewing caps
-				$caps = array( 'edit_incassoos_activities' );
+				$caps = array( 'view_incassoos_activities' );
 
 				break;
 
@@ -190,7 +190,7 @@ class Incassoos_Admin {
 			case 'incassoos_occasion_admin' :
 
 				// Defer to viewing caps
-				$caps = array( 'edit_incassoos_occasions' );
+				$caps = array( 'view_incassoos_occasions' );
 
 				break;
 
@@ -198,7 +198,7 @@ class Incassoos_Admin {
 			case 'incassoos_order_admin' :
 
 				// Defer to viewing caps
-				$caps = array( 'edit_incassoos_orders' );
+				$caps = array( 'view_incassoos_orders' );
 
 				break;
 
@@ -206,7 +206,7 @@ class Incassoos_Admin {
 			case 'incassoos_product_admin' :
 
 				// Defer to viewing caps
-				$caps = array( 'edit_incassoos_products' );
+				$caps = array( 'view_incassoos_products' );
 
 				break;
 
@@ -295,7 +295,7 @@ class Incassoos_Admin {
 		$scrn = get_current_screen();
 
 		// Add class for admin pages that are in post-view-only mode
-		if ( incassoos_admin_do_post_view( $GLOBALS['post'] ) ) {
+		if ( incassoos_admin_is_post_view( $GLOBALS['post'] ) ) {
 			$class .= ' incassoos-post-view';
 
 		// Add class for admin pages that are in post-edit mode
