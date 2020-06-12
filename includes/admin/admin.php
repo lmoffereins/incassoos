@@ -65,9 +65,10 @@ class Incassoos_Admin {
 
 		/** Core **************************************************************/
 
-		add_filter( 'incassoos_map_meta_caps', array( $this, 'map_meta_caps'    ), 10, 4 );
-		add_action( 'admin_enqueue_scripts',   array( $this, 'enqueue_scripts'  ), 10    );
-		add_filter( 'admin_body_class',        array( $this, 'admin_body_class' ), 10    );
+		add_filter( 'incassoos_map_meta_caps', array( $this, 'map_meta_caps'       ), 10, 4 );
+		add_action( 'admin_enqueue_scripts',   array( $this, 'enqueue_scripts'     ), 10    );
+		add_filter( 'admin_body_class',        array( $this, 'admin_body_class'    ), 10    );
+		add_filter( 'display_post_states',     array( $this, 'display_post_states' ), 10, 2 );
 
 		/** Posts *************************************************************/
 
@@ -304,6 +305,25 @@ class Incassoos_Admin {
 		}
 
 		return $class;
+	}
+
+	/**
+	 * Modify the list of displayed post states
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $states Post states
+	 * @param WP_Post $post Post object
+	 * @return array Post states
+	 */
+	public function display_post_states( $states, $post ) {
+
+		// Post is collected
+		if ( incassoos_is_post_collected( $post ) ) {
+			$states['collected'] = _x( 'Collected', 'post status', 'incassoos' );
+		}
+
+		return $states;
 	}
 
 	/** Posts ***********************************************************/
