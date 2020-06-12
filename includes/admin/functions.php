@@ -689,14 +689,14 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					// Display consumer (type) filter link
 					if ( $consumer ) {
 						printf(
-							'<span class="title"><a href="%s">%s</a></span>',
+							'<strong><span class="title"><a href="%s">%s</a></span>' . _post_states( get_post( $post_id ), false ) . '</strong>',
 							esc_url( add_query_arg( $query_arg, $consumer, $posts_url ) ),
 							incassoos_get_order_consumer_title( $post_id )
 						);
 
 					// Default to dash
 					} else {
-						echo '<span class="title">&mdash;</span>';
+						echo '<strong><span class="title">&mdash;</span></strong>';
 					}
 					break;
 				case 'products' :
