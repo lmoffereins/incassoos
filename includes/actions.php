@@ -125,7 +125,7 @@ add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_cl
 /** Admin *********************************************************************/
 
 if ( is_admin() ) {
-	add_action( 'incassoos_init', 'incassoos_admin', 10 );
+	add_action( 'incassoos_register', 'incassoos_admin', 5 );
 }
 
 /** Extend ********************************************************************/

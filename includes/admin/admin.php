@@ -65,8 +65,9 @@ class Incassoos_Admin {
 
 		/** Core **************************************************************/
 
-		add_action( 'admin_enqueue_scripts',     array( $this, 'enqueue_scripts'           ), 10    );
-		add_filter( 'admin_body_class',          array( $this, 'admin_body_class'          ), 10    );
+		add_filter( 'incassoos_map_meta_caps', array( $this, 'map_meta_caps'    ), 10, 4 );
+		add_action( 'admin_enqueue_scripts',   array( $this, 'enqueue_scripts'  ), 10    );
+		add_filter( 'admin_body_class',        array( $this, 'admin_body_class' ), 10    );
 
 		/** Posts *************************************************************/
 
@@ -118,6 +119,111 @@ class Incassoos_Admin {
 			|| 0 === strpos( $scrn->base, 'incassoos_page' )
 			|| 'toplevel_page_incassoos' === $scrn->base
 		);
+	}
+
+	/**
+	 * Modify the mapped caps for the admin meta capability
+	 *
+	 * @since 1.0.0
+	 *
+	 * @uses apply_filters() Calls 'incassoos_admin_map_meta_caps'
+	 *
+	 * @param array $caps Mapped caps
+	 * @param string $cap Required meta capability
+	 * @param int $user_id User ID
+	 * @param array $args Additional arguments
+	 * @return array Mapped caps
+	 */
+	public function map_meta_caps( $caps, $cap, $user_id = 0, $args = array() ) {
+
+		switch ( $cap ) {
+
+			/** Admin Pages *************************************************/
+
+			// Dashboard
+			case 'incassoos_admin_page-incassoos' :
+
+				// Defer to dashboard caps
+				$caps = array( 'view_incassoos_dashboard' );
+
+				break;
+
+			// Users
+			case 'incassoos_admin_page-incassoos-consumers' :
+
+				// Defer to consumers caps
+				$caps = array( 'edit_incassoos_consumers' );
+
+				break;
+
+			// Settings
+			case 'incassoos_admin_page-incassoos-settings' :
+
+				// Block when without settings
+				if ( ! incassoos_admin_page_has_settings( 'settings' ) ) {
+					$caps = array( 'do_not_allow' );
+
+				// Defer to settings caps
+				} else {
+					$caps = array( 'edit_incassoos_settings' );
+				}
+
+				break;
+
+			// Collection admin
+			case 'incassoos_collection_admin' :
+
+				// Defer to viewing caps
+				$caps = array( 'edit_incassoos_collections' );
+
+				break;
+
+			// Activity admin
+			case 'incassoos_activity_admin' :
+
+				// Defer to viewing caps
+				$caps = array( 'edit_incassoos_activities' );
+
+				break;
+
+			// Occasion admin
+			case 'incassoos_occasion_admin' :
+
+				// Defer to viewing caps
+				$caps = array( 'edit_incassoos_occasions' );
+
+				break;
+
+			// Order admin
+			case 'incassoos_order_admin' :
+
+				// Defer to viewing caps
+				$caps = array( 'edit_incassoos_orders' );
+
+				break;
+
+			// Product admin
+			case 'incassoos_product_admin' :
+
+				// Defer to viewing caps
+				$caps = array( 'edit_incassoos_products' );
+
+				break;
+
+			/** Settings Sections *******************************************/
+
+			case 'incassoos_settings_main' :
+			case 'incassoos_settings_collecting' :
+			case 'incassoos_settings_emails' :
+			case 'incassoos_settings_slugs' :
+
+				// Defer to collecting caps
+				$caps = array( 'collect_incassoos_collections' );
+
+				break;
+		}
+
+		return (array) apply_filters( 'incassoos_admin_map_meta_caps', $caps, $cap, $user_id, $args );
 	}
 
 	/**

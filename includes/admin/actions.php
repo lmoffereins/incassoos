@@ -23,7 +23,6 @@ add_action( 'incassoos_admin_init',        'incassoos_register_settings',       
 add_action( 'incassoos_admin_init',        'incassoos_setup_updater',              999    );
 add_action( 'incassoos_admin_menu',        'incassoos_register_admin_menu',         10    );
 add_action( 'incassoos_admin_head',        'incassoos_remove_admin_menu',           10    );
-add_filter( 'incassoos_map_meta_cap',      'incassoos_admin_map_meta_caps',         10, 4 );
 
 /** Post **********************************************************************/
 
