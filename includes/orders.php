@@ -362,6 +362,10 @@ function incassoos_get_order_consumer_title( $post = 0 ) {
 
 		if ( $user && $user->exists() ) {
 			$title = $user->display_name;
+
+		// Default to registered ID
+		} else {
+			$title = "[ID: $consumer]";
 		}
 
 	// Get consumer type title
