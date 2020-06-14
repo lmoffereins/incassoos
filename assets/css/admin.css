@@ -13,6 +13,7 @@
 	width: 80px;
 }
 
+.fixed .column-collected,
 .fixed .column-assets,
 .fixed .column-activity_date,
 .fixed .column-participants,
@@ -33,6 +34,11 @@
 
 .fixed .column-orders a {
 	display: none;
+}
+
+.fixed .column-collected span[title] {
+	-webkit-text-decoration: dotted underline;
+	text-decoration: dotted underline;
 }
 
 .fixed tr:hover .column-orders a.view {

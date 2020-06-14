@@ -429,6 +429,7 @@ function incassoos_admin_posts_add_columns( $columns, $post_type ) {
 
 			// Insert after title
 			$columns = array_slice( $columns, 0, $title_pos + 1 ) + array(
+				'collected' => esc_html_x( 'Collected', 'Admin column', 'incassoos' ),
 				'assets'    => esc_html_x( 'Assets',    'Admin column', 'incassoos' ),
 				'consumers' => esc_html_x( 'Consumers', 'Admin column', 'incassoos' ),
 				'total'     => esc_html_x( 'Total',     'Admin column', 'incassoos' ),
@@ -547,6 +548,15 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 		// Collection
 		case incassoos_get_collection_post_type() :
 			switch ( $column ) {
+				case 'collected' :
+					printf( '<span title="%s">%s</span>',
+						/**
+						 * @see WP_Posts_List_Table::column_date()
+						 */
+						esc_attr( incassoos_get_collection_date( $post_id, __( 'Y/m/d g:i:s a' ) ) ),
+						incassoos_get_collection_date( $post_id )
+					);
+					break;
 				case 'assets' :
 					$num_activities = incassoos_get_collection_activity_count( $post_id );
 					$num_occasions  = incassoos_get_collection_occasion_count( $post_id );
