@@ -476,13 +476,13 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<p>
 			<label><?php
-			if ( incassoos_is_collection_staged() ) {
+			if ( incassoos_is_collection_staged( $post ) ) {
 				esc_html_e( 'Staged:', 'incassoos' );
 			} else {
 				esc_html_e( 'Collected:', 'incassoos' );
 			} ?></label>
 			<span id="collection-date" class="value"><?php
-			if ( incassoos_is_collection_staged() ) {
+			if ( incassoos_is_collection_staged( $post ) ) {
 				incassoos_the_collection_staged( $post );
 			} else {
 				incassoos_the_collection_date( $post );
