@@ -792,7 +792,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 		unset( $actions['inline hide-if-no-js'] );
 
 		// Duplicate
-		if ( current_user_can( $post_type_object->cap->edit_posts ) ) {
+		if ( current_user_can( $post_type_object->cap->create_posts ) ) {
 			$actions['inc_duplicate'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_duplicate' ), admin_url( 'post.php' ) ), 'duplicate-activity_' . $post->ID ) ),
