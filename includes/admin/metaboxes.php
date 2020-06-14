@@ -492,7 +492,12 @@ function incassoos_admin_collection_details_metabox( $post ) {
 		<?php endif; ?>
 
 		<p>
-			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
+			<label><?php if ( incassoos_is_collection_collected( $post ) ) :
+				esc_html_e( 'Collector:', 'incassoos' );
+			else :
+				esc_html_e( 'Author:', 'incassoos' );
+			endif;
+			?></label>
 			<span id="collection-author" class="value"><?php incassoos_the_collection_author( $post ); ?></span>
 		</p>
 

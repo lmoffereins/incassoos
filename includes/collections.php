@@ -1800,8 +1800,12 @@ function incassoos_collect_collection( $post = 0 ) {
 	// Run action before collecting
 	do_action( 'incassoos_collect_collection', $post );
 
-	// Update collection status
-	wp_update_post( array( 'ID' => $post->ID, 'post_status' => incassoos_get_collected_status_id() ) );
+	// Update collection status and collector
+	wp_update_post( array(
+		'ID'          => $post->ID,
+		'post_status' => incassoos_get_collected_status_id(),
+		'post_author' => get_current_user_id()
+	) );
 
 	// TODO: Send emails to associated consumers through the action hook below
 	// incassoos_send_collection_emails( $post );
