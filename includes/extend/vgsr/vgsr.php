@@ -54,8 +54,9 @@ class Incassoos_VGSR {
 	 * @since 1.0.0
 	 */
 	private function includes() {
-		require( $this->plugin_dir . 'actions.php'   );
-		require( $this->plugin_dir . 'functions.php' );
+		require( $this->plugin_dir . 'actions.php'      );
+		require( $this->plugin_dir . 'capabilities.php' );
+		require( $this->plugin_dir . 'functions.php'    );
 	}
 
 	/**

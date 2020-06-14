@@ -15,8 +15,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'incassoos_register', 'incassoos_vgsr_register_consumer_types', 20 );
 add_action( 'incassoos_register', 'incassoos_vgsr_register_export_types',   20 );
 
-/** Utility *******************************************************************/
+/** Users *********************************************************************/
 
-add_action( 'incassoos_activation',        'incassoos_delete_rewrite_rules',       10    );
-add_action( 'incassoos_deactivation',      'incassoos_remove_caps',                10    );
-add_action( 'incassoos_deactivation',      'incassoos_delete_rewrite_rules',       10    );
+add_filter( 'incassoos_get_caps_for_role', 'incassoos_vgsr_filter_caps_for_role', 10, 2 );
+add_filter( 'incassoos_get_dynamic_roles', 'incassoos_vgsr_filter_dynamic_roles', 10    );
