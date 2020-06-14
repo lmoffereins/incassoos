@@ -924,7 +924,11 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Collection:', 'incassoos' ); ?></label>
-			<span id="activity-collection" class="value" title="<?php printf( esc_attr__( 'Collected on %s', 'incassoos' ), incassoos_get_activity_collection_date( $post ) ); ?>"><?php incassoos_the_activity_collection_link( $post ); ?></span>
+			<?php if ( ! incassoos_is_activity_collected( $post ) ) : ?>
+			<span id="activity-collection" class="value"><?php incassoos_the_activity_collection_hint( $post ); ?></span>
+			<?php else : ?>
+			<span id="activity-collection" class="value" title="<?php echo esc_attr( incassoos_get_activity_collection_hint( $post ) ); ?>"><?php incassoos_the_activity_collection_link( $post ); ?></span>
+			<?php endif; ?>
 		</p>
 
 		<?php endif; ?>
@@ -1215,7 +1219,11 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Collection:', 'incassoos' ); ?></label>
-			<span id="occasion-collection" class="value" title="<?php printf( esc_attr__( 'Collected on %s', 'incassoos' ), incassoos_get_occasion_collection_date( $post ) ); ?>"><?php incassoos_the_occasion_collection_link( $post ); ?></span>
+			<?php if ( ! incassoos_is_occasion_collected( $post ) ) : ?>
+			<span id="occasion-collection" class="value"><?php incassoos_the_occasion_collection_hint( $post ); ?></span>
+			<?php else : ?>
+			<span id="occasion-collection" class="value" title="<?php echo esc_attr( incassoos_get_occasion_collection_hint( $post ) ); ?>"><?php incassoos_the_occasion_collection_link( $post ); ?></span>
+			<?php endif; ?>
 		</p>
 
 		<?php endif; ?>

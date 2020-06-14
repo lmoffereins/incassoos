@@ -1125,6 +1125,32 @@ function incassoos_get_order_collection_link( $post = 0 ) {
 	return $link;
 }
 
+/**
+ * Output the Order's Collection hint
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_order_collection_hint( $post = 0 ) {
+	echo incassoos_get_order_collection_hint( $post );
+}
+
+/**
+ * Return the Order's Collection hint
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Order's Collection hint
+ */
+function incassoos_get_order_collection_hint( $post = 0 ) {
+	$collection = incassoos_get_order_collection( $post );
+	$hint       = incassoos_get_collection_hint( $collection ); // Provides default value
+
+	return $hint;
+}
+
 /** Update ********************************************************************/
 
 /**

@@ -615,9 +615,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					if ( $collection = incassoos_get_activity_collection_id( $post_id ) ) {
 						printf( '<a href="%s" title="%s">%s</a>',
 							esc_url( add_query_arg( 'collection', $collection, $posts_url ) ),
-							incassoos_is_collection_collected( $collection )
-								? sprintf( esc_attr__( 'Collected on %s', 'incassoos' ), incassoos_get_collection_date( $collection ) )
-								: esc_attr__( 'Not yet collected', 'incassoos' ),
+							esc_attr( incassoos_get_collection_hint( $collection ) ),
 							incassoos_get_collection_title( $collection )
 						);
 
@@ -658,9 +656,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					if ( $collection = incassoos_get_occasion_collection_id( $post_id ) ) {
 						printf( '<a href="%s" title="%s">%s</a>',
 							esc_url( add_query_arg( 'collection', $collection, $posts_url ) ),
-							incassoos_is_collection_collected( $collection )
-								? sprintf( esc_attr__( 'Collected on %s', 'incassoos'), incassoos_get_collection_date( $collection ) )
-								: esc_attr__( 'Not yet collected', 'incassoos'),
+							esc_attr( incassoos_get_collection_hint( $collection ) ),
 							incassoos_get_collection_title( $collection )
 						);
 
@@ -710,8 +706,9 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					// Display Occasion link
 					if ( $occasion = incassoos_get_order_occasion( $post_id ) ) {
 						printf(
-							'<a href="%s">%s</a>',
+							'<a href="%s" title="%s">%s</a>',
 							esc_url( add_query_arg( 'occasion', $occasion->ID, $posts_url ) ),
+							esc_attr( incassoos_get_occasion_collection_hint( $occasion ) ),
 							incassoos_get_occasion_title( $occasion )
 						);
 					} else {

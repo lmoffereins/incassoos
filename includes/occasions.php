@@ -1327,6 +1327,32 @@ function incassoos_get_occasion_collection_link( $post = 0 ) {
 	return $link;
 }
 
+/**
+ * Output the Occasion's Collection hint
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_occasion_collection_hint( $post = 0 ) {
+	echo incassoos_get_occasion_collection_hint( $post );
+}
+
+/**
+ * Return the Occasion's Collection hint
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Occasion's Collection hint
+ */
+function incassoos_get_occasion_collection_hint( $post = 0 ) {
+	$collection = incassoos_get_occasion_collection( $post );
+	$hint       = incassoos_get_collection_hint( $collection ); // Provides default value
+
+	return $hint;
+}
+
 /** Update ********************************************************************/
 
 /**

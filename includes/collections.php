@@ -563,6 +563,39 @@ function incassoos_is_collection_collectable( $post = 0 ) {
 	return (bool) apply_filters( 'incassoos_is_collection_collectable', $collectable, $post );	
 }
 
+/**
+ * Output the Collection's hint
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_collection_hint( $post = 0 ) {
+	echo incassoos_get_collection_hint( $post );
+}
+
+/**
+ * Return the Collection's hint
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_collection_hint'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Collection hint.
+ */
+function incassoos_get_collection_hint( $post = 0 ) {
+	$post = incassoos_get_collection( $post );
+	$hint = esc_html__( 'Not yet collected', 'incassoos' );
+
+	// Get total from raw calculation
+	if ( $post && incassoos_is_collection_collected( $post ) ) {
+		$hint = sprintf( esc_html__( 'Collected on %s', 'incassoos' ), incassoos_get_collection_date( $post ) );
+	}
+
+	return apply_filters( 'incassoos_get_collection_hint', $hint, $post );
+}
+
 /** Assets ********************************************************************/
 
 /**
