@@ -1370,6 +1370,66 @@ function incassoos_app_get_default_occasion_title() {
 	return apply_filters( 'incassoos_app_get_default_occasion_title', __( 'Drinks', 'incassoos' ) );
 }
 
+/** Security ******************************************************************/
+
+/**
+ * Return the redacted version of an IBAN
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_redact_iban'
+ *
+ * @param  string $iban IBAN
+ * @return string Redacted IBAN
+ */
+function incassoos_redact_iban( $iban ) {
+	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 2, 4 ) ), $iban );
+}
+
+/**
+ * Return a redacted version of a text
+ *
+ * The returned value may be smaller in length, because the redaction will replace
+ * all non-kept parts of the input with just the `$redaction` content.
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_redact_text'
+ *
+ * @param  string    $input Text to redact
+ * @param  int|array $keep  Optional. Amount of trailing characters to not redact. Provide two values in an
+ *                           array to keep leading characters as well.
+ * @param  string    $redaction Optional. Characters to use for redaction. Defaults to '****'.
+ * @return string Redacted text
+ */
+function incassoos_redact_text( $input, $keep = 4, $redaction = '****' ) {
+	$keep     = array_map( 'absint', array_values( (array) $keep ) );
+	$redacted = '';
+
+	// Default to keep 0 leading characters
+	if ( 1 === count( $keep ) ) {
+		$keep = array_merge( array( 0 ), $keep );
+	}
+
+	if ( $input ) {
+
+		// Ignore leading keeps when the total keep lengths match the input's
+		if ( strlen( $input ) <= array_sum( $keep ) ) {
+			$keep[0] = 0;
+		}
+
+		// Require a non-empty redaction
+		if ( ! $redaction ) {
+			$redaction = '****';
+		}
+
+		// Create redacted text
+		$redacted = substr( $input, 0, $keep[0] ) . $redaction . substr( $input, strlen( $input ) - $keep[1] );
+	}
+
+	return apply_filters( 'incassoos_redact_text', $redacted, $input, $keep, $redaction );
+}
+
 /** Export ********************************************************************/
 
 /**
