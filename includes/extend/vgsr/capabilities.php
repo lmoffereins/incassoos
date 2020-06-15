@@ -2,7 +2,7 @@
 
 /**
  * Incassoos VGSR Capability Functions
- * 
+ *
  * @package Incassoos
  * @subpackage VGSR
  */
@@ -51,7 +51,6 @@ function incassoos_vgsr_filter_caps_for_role( $caps, $role ) {
 				'delete_incassoos_activities'     => false,
 
 				// Activity Category
-				'view_incassoos_activity_cats'    => false,
 				'manage_incassoos_activity_cats'  => false,
 
 				// Occasion
@@ -61,7 +60,6 @@ function incassoos_vgsr_filter_caps_for_role( $caps, $role ) {
 				'delete_incassoos_occasions'      => false,
 
 				// Occasion Type
-				'view_incassoos_occasion_types'   => false,
 				'manage_incassoos_occasion_types' => false,
 
 				// Order
@@ -77,7 +75,6 @@ function incassoos_vgsr_filter_caps_for_role( $caps, $role ) {
 				'delete_incassoos_products'       => false,
 
 				// Product Category
-				'view_incassoos_product_cats'     => false,
 				'manage_incassoos_product_cats'   => false,
 			);
 
