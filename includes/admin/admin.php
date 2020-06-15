@@ -161,7 +161,7 @@ class Incassoos_Admin {
 			case 'incassoos_admin_page-incassoos-settings' :
 
 				// Block when without settings
-				if ( ! incassoos_admin_page_has_settings( 'settings' ) ) {
+				if ( ! incassoos_admin_page_has_settings( 'incassoos' ) ) {
 					$caps = array( 'do_not_allow' );
 
 				// Defer to settings caps
