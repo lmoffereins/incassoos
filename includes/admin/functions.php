@@ -957,7 +957,7 @@ function incassoos_admin_post_action_view( $post_id ) {
 	global $parent_file, $submenu_file, $post_new_file, $post, $post_type,
 	       $post_type_object, $title, $is_IE, $post_ID, $user_ID, $action;
 
-	// Bail when the post is not collected or not an Order
+	// Bail when the post is not in view mode
 	if ( ! incassoos_admin_is_post_view( $post_id ) )
 		return;
 

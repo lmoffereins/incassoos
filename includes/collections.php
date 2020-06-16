@@ -1215,7 +1215,7 @@ function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $args =
  * Return the Collection's raw assets
  *
  * Raw assets contain the lowest level objects with registered consumer prices. This
- * excludes Occasions, since they are only collections of Orders.
+ * excludes Occasions, since they are only bundles of Orders.
  * 
  * @since 1.0.0
  *
@@ -1263,7 +1263,7 @@ function incassoos_get_collection_raw_assets( $post = 0, $args = array() ) {
  * Return the Collection's consumer raw assets
  *
  * Raw assets contain the lowest level objects with registered consumer prices. This
- * excludes Occasions, since these are only collections of Orders.
+ * excludes Occasions, since these are only bundles of Orders.
  * 
  * @since 1.0.0
  *

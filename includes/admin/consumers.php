@@ -24,16 +24,24 @@ function incassoos_admin_get_consumers_fields( $field = '' ) {
 
 	// Define fields
 	$fields = apply_filters( 'incassoos_admin_get_consumers_fields', array(
+
+		// IBAN
 		'_incassoos_iban'   => array(
 			'label' => __( 'IBAN', 'incassoos' ),
 		),
+
+		// BIC
 		'_incassoos_bic'    => array(
 			'label' => __( 'BIC', 'incassoos' ),
 		),
+
+		// Don't show
 		'_incassoos_noshow' => array(
 			'label' => __( "Don't show", 'incassoos' ),
 			'type'  => 'checkbox'
 		),
+
+		// Consumption limit
 		'_incassoos_consumption_limit' => array(
 			'label' => __( 'Consumption limit', 'incassoos' ),
 			'type'  => 'price'
@@ -105,11 +113,15 @@ function incassoos_admin_consumers_input_callback( $field ) {
 	$input  = '';
 
 	switch ( $_field['type'] ) {
+
+		// Checkbox
 		case 'checkbox' :
 			if ( ! $_field['options'] ) {
 				$input = '<input type="checkbox" name="' . esc_attr( $field ) . '" value="1" />';
 				break;
 			}
+
+		// Radio
 		case 'radio' :
 			foreach ( $_field['options'] as $option => $opt_label ) {
 				$id = esc_attr( $field ) . '-' . esc_attr( $option );
@@ -122,6 +134,8 @@ function incassoos_admin_consumers_input_callback( $field ) {
 				$input .= '<label for="' . $id . '">' . $opt_label . '</label>';
 			}
 			break;
+
+		// Select
 		case 'select' :
 			$input = '<select name="' . esc_attr( $field ) . '">';
 			foreach ( $_field['options'] as $option => $opt_label ) {
@@ -129,12 +143,18 @@ function incassoos_admin_consumers_input_callback( $field ) {
 			}
 			$input .= '</select>';
 			break;
+
+		// Textarea
 		case 'textarea' :
 			$input = '<textarea name="' . esc_attr( $field ) . '"></textarea>';
 			break;
+
+		// Price
 		case 'price' :
 			$input = '<input type="number" min="0" step="0.01" name="' . esc_attr( $field ) . '" value="" />';
 			break;
+
+		// Other
 		default :
 			$type = $_field['type'] ? esc_attr( $_field['type'] ) : 'text';
 			$input = '<input type="' . $type . '" name="' . esc_attr( $field ) . '" value="" />';

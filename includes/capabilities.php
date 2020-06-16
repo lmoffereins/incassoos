@@ -1033,9 +1033,9 @@ function incassoos_add_plugin_roles( $wp_roles = null ) {
 /**
  * Helper function to add filter to option_wp_user_roles
  *
- * @since 1.0.0
- *
  * @see _incassoos_reinit_dynamic_roles()
+ *
+ * @since 1.0.0
  *
  * @global WPDB $wpdb
  */
@@ -1243,9 +1243,9 @@ function incassoos_get_roles_for_user( $user_id = 0 ) {
 /**
  * Helper function to add filter to wp_capabilities user meta
  *
- * @since 1.0.0
- *
  * @see _incassoos_add_dynamic_user_roles()
+ *
+ * @since 1.0.0
  *
  * @global WPDB $wpdb
  */
