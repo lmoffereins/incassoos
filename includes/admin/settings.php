@@ -210,6 +210,14 @@ function incassoos_admin_get_settings_fields() {
 
 		'incassoos_settings_email' => array(
 
+			// Sender email address
+			'_incassoos_sender_email_address' => array(
+				'title'             => esc_html__( 'Sender Email Address', 'incassoos' ),
+				'callback'          => 'incassoos_admin_setting_callback_sender_email_address',
+				'sanitize_callback' => 'sanitize_email',
+				'args'              => array()
+			),
+
 			// Custom salutation
 			'_incassoos_custom_email_salutation' => array(
 				'title'             => esc_html__( 'Custom Salutation', 'incassoos' ),
@@ -536,6 +544,18 @@ function incassoos_admin_setting_callback_sepa_creditor_id() { ?>
 function incassoos_admin_setting_callback_email_section() { ?>
 
 	<p><?php esc_html_e( "Define modifications for outgoing emails.", 'incassoos' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Outgoing email address setting field
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_setting_callback_sender_email_address() { ?>
+
+	<input name="_incassoos_sender_email_address" id="_incassoos_sender_email_address" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_sender_email_address', '' ); ?>" />
 
 	<?php
 }
