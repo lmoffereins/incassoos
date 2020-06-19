@@ -40,6 +40,7 @@ add_action( 'post_action_inc_reopen',      'incassoos_admin_post_action_reopen',
 add_action( 'post_action_inc_stage',       'incassoos_admin_post_action_stage',      10    );
 add_action( 'post_action_inc_unstage',     'incassoos_admin_post_action_unstage',    10    );
 add_action( 'post_action_inc_collect',     'incassoos_admin_post_action_collect',    10    );
+add_action( 'post_action_inc_email',       'incassoos_admin_post_action_email',      10    );
 add_action( 'post_action_inc_duplicate',   'incassoos_admin_post_action_duplicate',  10    );
 add_action( 'redirect_post_location',      'incassoos_admin_redirect_post_location', 10, 2 );
 add_action( 'add_meta_boxes',              'incassoos_admin_add_meta_boxes',         10, 2 );

@@ -443,12 +443,14 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	// Permissions
 	$can_stage   = current_user_can( 'stage_incassoos_collection',   $post->ID );
 	$can_unstage = current_user_can( 'unstage_incassoos_collection', $post->ID );
+	$can_collect = current_user_can( 'collect_incassoos_collection', $post->ID );
 
 	// Collecting action urls
 	$base_url    = add_query_arg( array( 'post' => $post->ID ), admin_url( 'post.php' ) );
 	$stage_url   = wp_nonce_url( add_query_arg( array( 'action' => 'inc_stage'   ), $base_url ), 'stage-collection_'   . $post->ID );
 	$unstage_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_unstage' ), $base_url ), 'unstage-collection_' . $post->ID );
 	$collect_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect' ), $base_url ), 'collect-collection_' . $post->ID );
+	$email_url   = wp_nonce_url( add_query_arg( array( 'action' => 'inc_email'   ), $base_url ), 'email-collection_'   . $post->ID );
 
 	// Export
 	$export_types = incassoos_get_export_types();
@@ -501,6 +503,15 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<span id="collection-author" class="value"><?php incassoos_the_collection_author( $post ); ?></span>
 		</p>
 
+		<?php if ( $can_collect ) : ?>
+
+		<p>
+			<label><?php esc_html_e( 'Email:', 'incassoos' ); ?></label>
+			<span id="collection-email" class="value"><a href="<?php echo esc_url( $email_url ); ?>" class="button button-secondary button-small"><?php esc_html_e( 'Send test email', 'incassoos' ); ?></a></span>
+		</p>
+
+		<?php endif; ?>
+
 		<?php do_action( 'incassoos_collection_details_metabox', $post ); ?>
 
 		<?php if ( ! incassoos_is_collection_locked( $post ) ) : ?>
@@ -552,7 +563,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php elseif ( $can_unstage ) : ?>
 				<a class="button button-secondary button-large" id="unstage-collection" href="<?php echo esc_url( $unstage_url ); ?>"><?php esc_html_e( 'Unstage', 'incassoos' ); ?></a>
 			<?php endif; ?>
-			<?php if ( current_user_can( 'collect_incassoos_collection', $post->ID ) ) : ?>
+			<?php if ( $can_collect ) : ?>
 				<a class="button button-primary button-large" id="collect-collection" href="<?php echo esc_url( $collect_url ); ?>"><?php esc_html_e( 'Submit', 'incassoos' ); ?></a>
 			<?php elseif ( $can_export ) : ?>
 				<?php wp_nonce_field( 'export_collection-' . $post->ID, 'collection_export_nonce' ); ?>

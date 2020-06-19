@@ -1200,6 +1200,46 @@ function incassoos_admin_post_action_collect( $post_id ) {
 }
 
 /**
+ * Parse the admin email action for a Collection
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed $post_id Post ID
+ */
+function incassoos_admin_post_action_email( $post_id ) {
+	$post = incassoos_get_collection( $post_id );
+
+	// Bail when the post is not a Collection
+	if ( ! $post )
+		return;
+
+	// Nonce check
+	check_admin_referer( 'email-collection_' . $post->ID );
+
+	// Bail when the user cannot collect
+	if ( ! current_user_can( 'collect_incassoos_collection', $post->ID ) ) {
+		wp_die( __( 'Sorry, you are not allowed to collect this item.', 'incassoos' ) );
+	}
+
+	// Bail when the Collection is trashed
+	if ( 'trash' == $post->post_status ) {
+		wp_die( __( 'You can&#8217;t collect this item because it is in the Trash. Please restore it and try again.', 'incassoos' ) );
+	}
+
+	// Send-it
+	$success = incassoos_send_collection_test_email( $post );
+
+	// Something went wrong
+	if ( ! $success ) {
+		wp_die( __( 'Sorry, something went wrong. The requested action could not be executed.', 'incassoos' ) );
+	}
+
+	// Redirect to Collection page
+	wp_redirect( add_query_arg( array( 'message' => 14 ), incassoos_get_collection_url( $post ) ) );
+	exit();
+}
+
+/**
  * Parse the admin duplicate action for an Activity
  *
  * @since 1.0.0
@@ -1259,9 +1299,10 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 8 => __( 'Collection submitted.', 'incassoos' ),
 
 		// Custom
-		11 => __( 'Collection staged.',    'incassoos' ),
-		12 => __( 'Collection unstaged.',  'incassoos' ),
-		13 => __( 'Collection collected.', 'incassoos' ),
+		11 => __( 'Collection staged.',          'incassoos' ),
+		12 => __( 'Collection unstaged.',        'incassoos' ),
+		13 => __( 'Collection collected.',       'incassoos' ),
+		14 => __( 'Collection test email sent.', 'incassoos' ),
 	);
 
 	// Activity
