@@ -1317,6 +1317,18 @@ function incassoos_get_sepa_creditor_id( $default = '' ) {
 }
 
 /**
+ * Return the sender email address
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $default Optional. Default return value.
+ * @return string Sender email address
+ */
+function incassoos_get_sender_email_address( $default = '' ) {
+	return apply_filters( 'incassoos_get_sender_email_address', get_option( '_incassoos_sender_email_address', $default ) );
+}
+
+/**
  * Return the custom email salutation
  *
  * @since 1.0.0
@@ -1583,6 +1595,46 @@ function incassoos_get_export_type_title( $type ) {
 	}
 
 	return apply_filters( 'incassoos_get_export_type_title', $title, $export_type );
+}
+
+/** Email *********************************************************************/
+
+/**
+ * Send an email in the context of the plugin
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_send_email_args'
+ *
+ * @param  array  $args Email parameters
+ * @return bool Was the email sent?
+ */
+function incassoos_send_email( $args = array() ) {
+
+	// Parse default attributes
+	$args = wp_parse_args( $args, array(
+		'to'          => incassoos_get_sender_email_address(), // By default send to self, for safety reasons
+		'from'        => incassoos_get_sender_email_address(),
+		'subject'     => '',
+		'message'     => '',
+		'headers'     => array(),
+		'attachments' => array()
+	) );
+
+	// Set the From header
+	$args['headers']['from'] = 'From: <' . $args['from'] . '>';
+
+	// Assume all mails are in HTML
+	$args['headers']['content-type'] = 'Content-Type: text/html';
+
+	$args        = apply_filters( 'incassoos_send_email_args', $args );
+	$to          = $args['to'];
+	$subject     = $args['subject'];
+	$message     = $args['message'];
+	$headers     = $args['headers'];
+	$attachments = $args['attachments'];
+
+	return wp_mail( $to, $subject, $message, $headers, $attachments );
 }
 
 /** Files *********************************************************************/
