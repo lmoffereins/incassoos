@@ -1822,6 +1822,41 @@ function incassoos_collect_collection( $post = 0 ) {
 /** Email *********************************************************************/
 
 /**
+ * Send a Collection's email for testing purposes
+ *
+ * The email contains the content of a randomly selected consumer.
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Was the email sent?
+ */
+function incassoos_send_collection_test_email( $post = 0 ) {
+	$post = incassoos_get_collection( $post );
+	$args = array();
+	$sent = false;
+
+	if ( $post ) {
+
+		// Provide post object to later filters
+		$args['post'] = $post;
+
+		// Find a random Collection's consumer
+		$consumers = incassoos_get_collection_consumers( $post );
+		$random    = array_rand( $consumers );
+
+		$args['subject'] = incassoos_get_collection_transaction_description( $post );
+		$args['message'] = incassoos_get_collection_email_content( $consumers[ $random ], $post );
+	}
+
+	if ( $args ) {
+		$sent = incassoos_send_email( $args );
+	}
+
+	return $sent;
+}
+
+/**
  * Return the Collection's transaction description
  *
  * When the setting for transaction description is empty, the Collection's title
