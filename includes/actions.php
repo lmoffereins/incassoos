@@ -113,8 +113,8 @@ add_filter( 'wp_setup_nav_menu_item',                  'incassoos_setup_nav_menu
 
 add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_salutation',          5, 2 );
 add_filter( 'incassoos_collection_email_content', 'incassoos_the_collection_content',              10    );
-add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_amounts_table',      20, 2 );
-add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_withdrawal_mention', 50, 2 );
+add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_amounts_table',      40, 2 );
+add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_withdrawal_mention', 70, 2 );
 add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_closing',            90, 2 );
 
 /** Widgets *******************************************************************/

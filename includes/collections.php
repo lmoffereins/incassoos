@@ -1847,9 +1847,8 @@ function incassoos_send_collection_test_email( $post = 0 ) {
 
 		$args['subject'] = incassoos_get_collection_transaction_description( $post );
 		$args['message'] = incassoos_get_collection_email_content( $consumers[ $random ], $post );
-	}
 
-	if ( $args ) {
+		// Send the email
 		$sent = incassoos_send_email( $args );
 	}
 
@@ -1955,12 +1954,15 @@ function incassoos_collection_email_amounts_table( $post, $user ) {
 	add_filter(    'incassoos_get_activity_date', 'incassoos_filter_activity_date',  10, 3 );
 	remove_filter( 'the_title',                   'incassoos_filter_occasion_title', 10, 2 );
 
+	// Get the relevant date
+	$collection_date = incassoos_get_collection_date( $post );
+	if ( ! $collection_date ) {
+		$collection_date = wp_date( get_option( 'date_format' ) );
+	}
+
 	?>
 
-	<p><?php printf(
-		esc_html__( 'As registered per %s, you will be charged for the following expenses:', 'incassoos' ),
-		incassoos_get_collection_date( $post )
-	); ?></p>
+	<p><?php printf( esc_html__( 'As registered per %s, you will be charged for the following expenses:', 'incassoos' ), $collection_date ); ?></p>
 
 	<table cellspacing="0" cellpadding="0" border="0" width="100%">
 		<tr>
@@ -2013,7 +2015,7 @@ function incassoos_collection_email_withdrawal_mention( $post, $user ) {
 	?>
 
 	<p><?php printf(
-		esc_html__( 'The total amount of %1$s will be withdrawn from your account (%2$s) on %3$s.', 'incassoos' ),
+		esc_html__( 'The total amount of %1$s will be withdrawn from your account (%2$s) on or around %3$s.', 'incassoos' ),
 		incassoos_get_format_currency( $total ),
 		incassoos_get_user_iban( $user ),
 		incassoos_get_collection_date( $post )
