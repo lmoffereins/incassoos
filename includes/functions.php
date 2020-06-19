@@ -1615,6 +1615,7 @@ function incassoos_send_email( $args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'to'          => incassoos_get_sender_email_address(), // By default send to self, for safety reasons
 		'from'        => incassoos_get_sender_email_address(),
+		'from_name'   => incassoos_get_account_holder(),
 		'subject'     => '',
 		'message'     => '',
 		'headers'     => array(),
@@ -1622,7 +1623,7 @@ function incassoos_send_email( $args = array() ) {
 	) );
 
 	// Set the From header
-	$args['headers']['from'] = 'From: <' . $args['from'] . '>';
+	$args['headers']['from'] = sprintf( ! empty( $args['from_name'] ) ? 'From: "%s" <%s>' : 'From: %2$s', $args['from_name'], $args['from'] );
 
 	// Assume all mails are in HTML
 	$args['headers']['content-type'] = 'Content-Type: text/html';
