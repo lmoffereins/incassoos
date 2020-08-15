@@ -397,6 +397,8 @@ function incassoos_admin_view_form_after_title( $post ) { ?>
 function incassoos_admin_view_form_after_editor( $post ) {
 	$widget_title   = _x( 'Content', 'Post metabox title', 'incassoos' );
 	$widget_content = apply_filters( 'the_content', $post->post_content );
+	$box = array( 'id' => 'postdivrich', 'title' => $widget_title );
+	$widget_classes = 'postbox ' . postbox_classes( $box['id'], get_current_screen()->id );
 
 	// Bail when there is no content
 	if ( ! $widget_content )
@@ -405,14 +407,28 @@ function incassoos_admin_view_form_after_editor( $post ) {
 	?>
 
 	<div class="meta-box-sortables">
-		<div id="postdivrich" class="postbox">
+		<div id="postdivrich" class="<?php echo $widget_classes; ?>">
 			<?php
-				echo '<button type="button" class="handlediv" aria-expanded="true">';
-				echo '<span class="screen-reader-text">' . sprintf( __( 'Toggle panel: %s' ), $widget_title ) . '</span>';
-				echo '<span class="toggle-indicator" aria-hidden="true"></span>';
-				echo '</button>';
+				echo '<div class="postbox-header">';
+				echo '<h2 class="hndle">';
+				echo "{$box['title']}";
+				echo "</h2>\n";
 
-				echo "<h2 class='hndle'><span>{$widget_title}</span></h2>\n";
+				echo '<div class="handle-actions hide-if-no-js">';
+					// Ignored the up-down move buttons to prevent confusion.
+
+					echo '<button type="button" class="handlediv" aria-expanded="true">';
+					echo '<span class="screen-reader-text">' . sprintf(
+						/* translators: %s: Meta box title. */
+						__( 'Toggle panel: %s' ),
+						$widget_title
+					) . '</span>';
+					echo '<span class="toggle-indicator" aria-hidden="true"></span>';
+					echo '</button>';
+
+					echo '</div>';
+				echo '</div>';
+
 				echo '<div class="inside">' . "\n";
 				echo $widget_content;
 				echo "</div>\n";

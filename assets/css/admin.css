@@ -58,6 +58,14 @@
 	color: #555;
 }
 
+/* Metaboxes */
+
+/* WP 5.5+: Cancel flex display because headings may have span.count */
+body.incassoos-post-view #poststuff h2.hndle,
+body.incassoos-post-edit #poststuff h2.hndle {
+	display: block;
+}
+
 /* Content Metabox */
 
 body.incassoos-post-view #postdivrich .inside {
