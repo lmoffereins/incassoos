@@ -307,7 +307,7 @@ body.incassoos-post-view #postdivrich .inside {
 	width: calc( 100% - 24px );
 }
 
-.incassoos-post-edit .incassoos-item-list .products .product input + label {
+.incassoos-post-edit .incassoos-item-list .products .order-product input + label {
 	width: calc( 100% - 76px );
 	padding-top: 4px;
 	padding-bottom: 5px;
@@ -580,14 +580,15 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	vertical-align: middle;
 }
 
-.incassoos-item-list .products .product input.value {
+.incassoos-item-list .products .order-product input.value {
 	width: 52px;
 	margin: 5px 8px 5px 0px;
 }
 
-.incassoos-item-list .products .product .order-product-amount:after {
+.incassoos-item-list .products .order-product .order-product-amount:after {
 	content: '×';
 	margin-left: 8px;
+	margin-right: 4px;
 }
 
 .incassoos-item-list .users .consumer .input {
@@ -618,11 +619,11 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	opacity: .6
 }
 
-.incassoos-item-list .products .product .price:before {
+.incassoos-item-list .products .price:before {
 	content: '(';
 }
 
-.incassoos-item-list .products .product .price:after {
+.incassoos-item-list .products .price:after {
 	content: ')';
 }
 
