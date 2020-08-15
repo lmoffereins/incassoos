@@ -178,11 +178,11 @@ jQuery(document).ready( function($) {
 
 			// Default for All and None
 			if ( 'all' === filter ) {
-				$actPtcptList.find( '.activity-participant .select-user' ).attr( 'checked', select );
+				$actPtcptList.find( '.activity-participant .select-user' ).prop( 'checked', select );
 			} else {
 				$actPtcptList.find( '.activity-participant .select-user' ).filter( function( i, el ) {
 					return ( -1 !== $(el).attr( 'data-matches' ).split( ',' ).indexOf( filter ) ) !== exclude;
-				}).attr( 'checked', select );
+				}).prop( 'checked', select );
 			}
 
 			// Update count and total
@@ -212,13 +212,13 @@ jQuery(document).ready( function($) {
 		// Toggle group users selection
 		.on( 'click', '.select-group-users', function() {
 			var $el = $(this),
-			    selected = 'true' === $el.attr( 'data-selected' ) || false;
+			    selected = 'true' === $el.attr( 'data-selected' );
 
 			// Set the data-selected property
 			$el.attr( 'data-selected', ! selected )
 
 				// Toggle the users
-				.parents( '.group' ).first().find( '.activity-participant .select-user' ).attr( 'checked', ! selected );
+				.parents( '.group' ).first().find( '.activity-participant .select-user' ).prop( 'checked', ! selected );
 
 			// Update count and total
 			updateCount();
