@@ -430,6 +430,8 @@ function incassoos_the_order_product_count( $post = 0 ) {
 /**
  * Return the Order's product count
  *
+ * Counts negative amounts as actual absolute product counts.
+ *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_order_product_count'
@@ -443,7 +445,9 @@ function incassoos_get_order_product_count( $post = 0 ) {
 	$count    = 0;
 
 	foreach ( $products as $product ) {
-		$count += (int) $product['amount'];
+
+		// Handle negative amounts as actual absolute product counts
+		$count += absint( $product['amount'] );
 	}
 
 	return (int) apply_filters( 'incassoos_get_order_product_count', $count, $post );
