@@ -226,7 +226,11 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 
 		add_meta_box(
 			'incassoos_order_products',
-			esc_html__( 'Order Products', 'incassoos' ),
+			sprintf(
+				/* translators: counter */
+				esc_html__( 'Order Products %s', 'incassoos' ),
+				'<span class="count">(' . incassoos_get_order_product_count( $post ) . ')</span>'
+			),
 			'incassoos_admin_order_products_metabox',
 			null,
 			'normal',
@@ -1495,12 +1499,16 @@ function incassoos_admin_order_details_metabox( $post ) {
 			<?php endif; ?>
 		</p>
 
-		<?php if ( $is_post_view ) : ?>
-
 		<p>
 			<label><?php esc_html_e( 'Total:', 'incassoos' ); ?></label>
-			<span id="order-total" class="value"><?php incassoos_the_order_total( $post, true ); ?></span>
+			<span id="order-total" class="value">
+				<?php if ( 'post-new.php' !== $GLOBALS['pagenow'] ) : ?>
+					<span class="value"><?php incassoos_the_order_total( $post, true ); ?></span>
+				<?php endif; ?>
+			</span>
 		</p>
+
+		<?php if ( $is_post_view ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>

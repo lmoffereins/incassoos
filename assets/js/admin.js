@@ -270,6 +270,65 @@ jQuery(document).ready( function($) {
 		updateTotal();
 	}
 
+	/** Order ***********************************************************/
+
+	var $ordDtlsBox = $( '#incassoos_order_details' ),
+	    $ordTotalField = $ordDtlsBox.find( '#order-total' ).prepend( '<span class="new-value"></span>' ),
+	    $ordPrdBox = $( '#incassoos_order_products' );
+
+	// Keep selected count
+	$ordPrdBox.on( 'change', '.order-product .value', function() {
+
+		// Update count and total
+		updateCount({
+			$box: $ordPrdBox,
+			calculator: calculateOrdCount
+		});
+		updateTotal({
+			$totalField: $ordTotalField,
+			calculator: calculateOrdTotal
+		});
+	});
+
+	/**
+	 * Calculate the order's product count
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return {Float} Order product count
+	 */
+	function calculateOrdCount() {
+		var calculated = 0;
+
+		// Calculate total from activities
+		$.each( $ordPrdBox.find( '.order-product' ), function( i, el ) {
+			calculated += Math.abs( parseInt( $(el).find( '.value' ).val() ) );
+		});
+
+		return calculated;
+	}
+
+	/**
+	 * Calculate the order's total
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return {Float} Order total
+	 */
+	function calculateOrdTotal() {
+		var calculated = 0, $listItem;
+
+		// Calculate total from activities
+		$.each( $ordPrdBox.find( '.order-product' ), function( i, el ) {
+			$listItem = $(el);
+			calculated += parseFormattedCurrency( $listItem.find( '.price' ).text() || 0 ) * $listItem.find( '.value' ).val();
+		});
+
+		return calculated;
+	}
+
+	/** Generic methods *************************************************/
+
 	/**
 	 * Update the details metabox total value
 	 *
@@ -317,13 +376,21 @@ jQuery(document).ready( function($) {
 	 * @return {Void}
 	 */
 	function updateCount( options ) {
+		var count;
 
 		// Setup deafults for Activity participants
 		options = options || {};
 		options.$box = options.$box || $actPartBox;
 		options.countBy = options.countBy || '.activity-participant .select-user:checked';
 
-		options.$box.find( 'h2 .count' ).text( '(' + options.$box.find( options.countBy ).length + ')' );
+		// Calculate count
+		if ('function' === typeof options.calculator) {
+			count = options.calculator();
+		} else {
+			count = options.$box.find( options.countBy ).length;
+		}
+
+		options.$box.find( 'h2 .count' ).text( '(' + count + ')' );
 	}
 
 	/**
