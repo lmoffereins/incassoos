@@ -277,7 +277,10 @@ jQuery(document).ready( function($) {
 	    $ordPrdBox = $( '#incassoos_order_products' );
 
 	// Keep selected count
-	$ordPrdBox.on( 'change', '.order-product .value', function() {
+	$ordPrdBox.on( 'change', '.order-product .value', function( event ) {
+
+		// Set the product's is-selected class
+		$ordPrdBox.find( event.target ).parents( '.order-product' ).first().toggleClass( 'is-selected', !! parseInt( event.target.value ) );
 
 		// Update count and total
 		updateCount({
@@ -302,7 +305,7 @@ jQuery(document).ready( function($) {
 
 		// Calculate total from activities
 		$.each( $ordPrdBox.find( '.order-product' ), function( i, el ) {
-			calculated += Math.abs( parseInt( $(el).find( '.value' ).val() ) );
+			calculated += Math.abs( parseInt( $ordPrdBox.find( el ).find( '.value' ).val() ) );
 		});
 
 		return calculated;
@@ -320,7 +323,7 @@ jQuery(document).ready( function($) {
 
 		// Calculate total from activities
 		$.each( $ordPrdBox.find( '.order-product' ), function( i, el ) {
-			$listItem = $(el);
+			$listItem = $ordPrdBox.find( el );
 			calculated += parseFormattedCurrency( $listItem.find( '.price' ).text() || 0 ) * $listItem.find( '.value' ).val();
 		});
 

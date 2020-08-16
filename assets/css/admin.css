@@ -313,6 +313,10 @@ body.incassoos-post-view #postdivrich .inside {
 	padding-bottom: 5px;
 }
 
+.incassoos-post-edit .incassoos-item-list .products .order-product.is-selected input + label {
+	font-weight: bold;
+}
+
 .incassoos-item-list .item-date {
 	display: block;
 	color: #666;

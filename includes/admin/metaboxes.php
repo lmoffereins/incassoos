@@ -1546,9 +1546,9 @@ function incassoos_admin_order_products_metabox( $post ) {
 	}
 
 	// List item class
-	$item_class = array( 'order-product' );
+	$product_class = array( 'order-product' );
 	if ( ! $is_post_view ) {
-		$item_class[] = 'selector';
+		$product_class[] = 'selector';
 	}
 
 	?>
@@ -1562,7 +1562,11 @@ function incassoos_admin_order_products_metabox( $post ) {
 			foreach ( $products as $product ) :
 				$product_id = is_array( $product ) ? $product['id'] : (int) $product;
 				$amount_ordered = isset( $order_products[ $product_id ] ) ? $order_products[ $product_id ]['amount'] : 0;
+				$item_class = $product_class;
 
+				if ( ! $is_post_view && $amount_ordered ) {
+					$item_class[] = 'is-selected';
+				}
 			?>
 
 			<li id="post-<?php echo $product_id; ?>" class="<?php echo implode( ' ', $item_class ); ?>">
