@@ -100,6 +100,11 @@ class Incassoos_Admin {
 		add_action( "save_post_{$occasion}",   array( $this, 'occasion_save_metabox'   ), 10, 2 );
 		add_action( "save_post_{$order}",      array( $this, 'order_save_metabox'      ), 10, 2 );
 		add_action( "save_post_{$product}",    array( $this, 'product_save_metabox'    ), 10, 2 );
+
+		/** Ajax **************************************************************/
+
+		// No _nopriv_ equivalent - users must be logged in
+		add_action( 'wp_ajax_incassoos_suggest_user',  array( $this, 'suggest_user'  ) );
 	}
 
 	/** Public methods **************************************************/
@@ -241,7 +246,7 @@ class Incassoos_Admin {
 		/** Scripts *****************************************************/
 
 		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_script( 'incassoos-admin', incassoos()->assets_url . 'js/admin.js', array( 'jquery', 'jquery-ui-datepicker' ) );
+		wp_enqueue_script( 'incassoos-admin', incassoos()->assets_url . 'js/admin.js', array( 'jquery', 'jquery-ui-datepicker', 'suggest' ) );
 		wp_localize_script( 'incassoos-admin', 'incAdminL10n', array(
 			'settings' => array(
 				'formatCurrency'  => incassoos_get_currency_format_args(),
@@ -892,6 +897,77 @@ class Incassoos_Admin {
 				update_post_meta( $post_id, $meta, $_POST[ $posted_key ] );
 			}
 		}
+	}
+
+	/** Ajax ************************************************************/
+
+	/**
+	 * Ajax action for facilitating the user auto-suggest
+	 *
+	 * @see BBP_Admin::suggest_user()
+	 *
+	 * @since 1.0.0
+	 *
+	 * @global $wpdb WPDB
+	 */
+	public function suggest_user() {
+		global $wpdb;
+
+		// Do some very basic request checking
+		$request = ! empty( $_REQUEST['q'] )
+			? trim( $_REQUEST['q'] )
+			: '';
+
+		// Bail early if empty request
+		if ( empty( $request ) ) {
+			wp_die();
+		}
+
+		// Check the ajax nonce
+		check_ajax_referer( 'incassoos_suggest_user_nonce' );
+
+		// Sanitize the request value (possibly not strictly)
+		$suggest = sanitize_user( $request, false );
+
+		// Bail if searching for invalid user string
+		if ( empty( $suggest ) ) {
+			wp_die();
+		}
+
+		// These single characters should not trigger a user query
+		$disallowed_single_chars = array( '@', '.', '_', '-', '+', '!', '#', '$', '%', '&', '\\', '*', '+', '/', '=', '?', '^', '`', '{', '|', '}', '~' );
+
+		// Bail if request is only for the above single characters
+		if ( in_array( $suggest, $disallowed_single_chars, true ) ) {
+			wp_die();
+		}
+
+		// Fields to retrieve & search by
+		$fields = $search = array( 'ID', 'user_nicename' );
+
+		// Add user_email to searchable columns
+		array_push( $search, 'display_name', 'user_email' );
+
+		// Allow the maximum number of results to be filtered
+		$number = (int) apply_filters( 'incassoos_suggest_user_count', 10 );
+
+		// Query database for users based on above criteria
+		$users_query = incassoos_get_user_query( array(
+			'search'         => '*' . $wpdb->esc_like( $suggest ) . '*',
+			'fields'         => $fields,
+			'search_columns' => $search,
+			'orderby'        => 'ID',
+			'number'         => $number,
+			'count_total'    => false
+		) );
+
+		// If we found some users, loop through and output them to the AJAX
+		if ( ! empty( $users_query->results ) ) {
+			foreach ( (array) $users_query->results as $user ) {
+				printf( esc_html__( '%1$s - %2$s', 'incassoos' ), $user->ID, $user->user_nicename . "\n" );
+			}
+		}
+		die();
 	}
 }
 

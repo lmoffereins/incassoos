@@ -1469,7 +1469,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 			<label for="consumer"><?php esc_html_e( 'Consumer:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="text" name="consumer" id="consumer" value="<?php incassoos_the_order_consumer( $post ); ?>" />
+				<input type="text" name="consumer" id="consumer" value="<?php incassoos_the_order_consumer( $post ); ?>" data-ajax-url="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'incassoos_suggest_user' ), admin_url( 'admin-ajax.php', 'relative' ) ), 'incassoos_suggest_user_nonce' ) ); ?>"/>
 			<?php else : ?>
 				<span id="consumer" class="value"><?php incassoos_the_order_consumer_title( $post ); ?></span>
 			<?php endif; ?>

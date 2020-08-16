@@ -273,8 +273,18 @@ jQuery(document).ready( function($) {
 	/** Order ***********************************************************/
 
 	var $ordDtlsBox = $( '#incassoos_order_details' ),
+	    $ordConsumerField = $ordDtlsBox.find( '#consumer' ),
 	    $ordTotalField = $ordDtlsBox.find( '#order-total' ).prepend( '<span class="new-value"></span>' ),
 	    $ordPrdBox = $( '#incassoos_order_products' );
+
+	// Auto-suggest for users
+	$ordConsumerField.suggest( $ordConsumerField.data( 'ajax-url' ), {
+		minchars: 1, // Allow single-digit user IDs
+		onSelect: function() {
+			var value = this.value;
+			$ordConsumerField.val( value.substr( 0, value.indexOf( ' ' ) ) );
+		}
+	});
 
 	// Keep selected count
 	$ordPrdBox.on( 'change', '.order-product .value', function( event ) {
