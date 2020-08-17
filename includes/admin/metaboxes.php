@@ -1450,7 +1450,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 	// Get details
 	$is_post_view = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
-	$occasion_tax  = incassoos_get_occasion_post_type();
+	$consumer_type = incassoos_get_order_consumer_type( $post );
 
 	?>
 
@@ -1469,9 +1469,24 @@ function incassoos_admin_order_details_metabox( $post ) {
 			<label for="consumer"><?php esc_html_e( 'Consumer:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="text" name="consumer" id="consumer" value="<?php incassoos_the_order_consumer( $post ); ?>" data-ajax-url="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'incassoos_suggest_user' ), admin_url( 'admin-ajax.php', 'relative' ) ), 'incassoos_suggest_user_nonce' ) ); ?>"/>
+
+			<span class="detail-wrapper">
+				<select id="consumer_type" name="consumer_type">
+					<option value=""><?php esc_html_e( '&mdash; Consumer Type &mdash;', 'incassoos' ); ?></option>
+					<?php foreach ( incassoos_get_consumer_types() as $type ) : ?>
+					<option value="<?php echo $type; ?>" <?php selected( $type, $consumer_type ); ?>><?php incassoos_the_consumer_type_title( $type ); ?></option>
+					<?php endforeach; ?>
+				</select>
+
+				<span class="separator"><?php esc_html_e( '&mdash; or &mdash;', 'incassoos' ); ?></span>
+
+				<input type="text" id="consumer_id" name="consumer_id" value="<?php incassoos_the_order_consumer_id( $post ); ?>" data-ajax-url="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'incassoos_suggest_user' ), admin_url( 'admin-ajax.php', 'relative' ) ), 'incassoos_suggest_user_nonce' ) ); ?>" placeholder="<?php esc_html_e( 'Search consumer&hellip;', 'incassoos' ); ?>"/>
+			</span>
+
 			<?php else : ?>
-				<span id="consumer" class="value"><?php incassoos_the_order_consumer_title( $post ); ?></span>
+
+			<span id="consumer" class="value"><?php incassoos_the_order_consumer_title( $post ); ?></span>
+
 			<?php endif; ?>
 		</p>
 

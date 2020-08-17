@@ -216,9 +216,8 @@ function incassoos_validate_date( $value ) {
  * @return mixed|WP_Error Validated consumer id or error when invalid
  */
 function incassoos_validate_consumer_id( $value ) {
-	$error = new WP_Error( 'incassoos_user_invalid_id', __( 'Invalid consumer ID.', 'incassoos' ) );
 	if ( empty( $value ) ) {
-		return $error;
+		return new WP_Error( 'incassoos_user_invalid_id_or_type', __( 'Invalid consumer ID or type.', 'incassoos' ) );
 	}
 
 	// Consumer ID
@@ -226,7 +225,7 @@ function incassoos_validate_consumer_id( $value ) {
 		$user = get_userdata( (int) $value );
 
 		if ( empty( $user ) || ! $user->exists() ) {
-			return $error;
+			return new WP_Error( 'incassoos_user_invalid_id', __( 'Invalid consumer ID.', 'incassoos' ) );
 		}
 
 	// Consumer type

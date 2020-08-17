@@ -1338,14 +1338,15 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 8 => __( 'Order submitted.', 'incassoos' ),
 
 		 // Error codes
-		 'incassoos_order_time_locked'      => $time_lock
+		 'incassoos_order_time_locked'       => $time_lock
 			? sprintf( __( 'Sorry, the order cannot be edited beyond %d minutes after initial creation.', 'incassoos' ), $time_lock )
 			: __( 'Sorry, the order cannot be edited after initial creation.', 'incassoos' ),
-		 'incassoos_order_invalid_parent'   => __( 'Invalid occasion.', 'incassoos' ),
-		 'incassoos_order_locked_occasion'  => __( 'The occasion is closed for new orders.', 'incassoos' ),
-		 'incassoos_user_invalid_id'        => __( 'Invalid consumer ID.', 'incassoos' ),
-		 'incassoos_consumer_invalid_type'  => __( 'Invalid consumer type.', 'incassoos' ),
-		 'incassoos_order_invalid_products' => __( 'Invalid order products.', 'incassoos' ),
+		 'incassoos_order_invalid_parent'    => __( 'Invalid occasion.', 'incassoos' ),
+		 'incassoos_order_locked_occasion'   => __( 'The occasion is closed for new orders.', 'incassoos' ),
+		 'incassoos_user_invalid_id_or_type' => __( 'Invalid consumer ID or type.', 'incassoos' ),
+		 'incassoos_user_invalid_id'         => __( 'Invalid consumer ID.', 'incassoos' ),
+		 'incassoos_consumer_invalid_type'   => __( 'Invalid consumer type.', 'incassoos' ),
+		 'incassoos_order_invalid_products'  => __( 'Invalid order products.', 'incassoos' ),
 	);
 
 	// Product

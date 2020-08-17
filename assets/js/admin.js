@@ -273,7 +273,7 @@ jQuery(document).ready( function($) {
 	/** Order ***********************************************************/
 
 	var $ordDtlsBox = $( '#incassoos_order_details' ),
-	    $ordConsumerField = $ordDtlsBox.find( '#consumer' ),
+	    $ordConsumerField = $ordDtlsBox.find( '#consumer_id' ),
 	    $ordTotalField = $ordDtlsBox.find( '#order-total' ).prepend( '<span class="new-value"></span>' ),
 	    $ordPrdBox = $( '#incassoos_order_products' );
 

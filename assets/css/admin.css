@@ -163,6 +163,17 @@ body.incassoos-post-view #postdivrich .inside {
 	width: 70%;
 }
 
+.incassoos-object-details label + .detail-wrapper select {
+	width: 100%;
+}
+
+.incassoos-object-details label + .detail-wrapper .separator {
+	display: block;
+	width: 100%;
+	padding: 4px 0px 6px;
+	text-align: center;
+}
+
 .incassoos-object-details .value span {
 	display: block;
 }

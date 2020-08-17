@@ -825,10 +825,13 @@ class Incassoos_Admin {
 			 * Occasion is already saved in core through the `post_parent` name key.
 			 */
 
-			// Consumer
-			if ( isset( $_POST['consumer'] ) ) {
-				incassoos_update_order_consumer( $_POST['consumer'], $post_id );
+			// Consumer. Prefer ids over types.
+			$consumer = isset( $_POST['consumer_id'] ) ? $_POST['consumer_id'] : '';
+			if ( empty( $consumer ) && isset( $_POST['consumer_type'] ) ) {
+				$consumer = $_POST['consumer_type'];
 			}
+
+			incassoos_update_order_consumer( $consumer, $post_id );
 		}
 
 		// Bail when nonce does not verify

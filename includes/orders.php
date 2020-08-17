@@ -1313,6 +1313,8 @@ function incassoos_validate_order( $args = array() ) {
 	// Parse defaults
 	$args = wp_parse_args( $args, array(
 		'post_parent' => 0,
+		'consumer_id' => '',
+		'consumer_type' => '',
 		'consumer' => 0,
 		'products' => array()
 	) );
@@ -1331,6 +1333,15 @@ function incassoos_validate_order( $args = array() ) {
 			'incassoos_order_locked_occasion',
 			__( 'The occasion is closed for new orders.', 'incassoos' )
 		);
+	}
+
+	// Process alternative consumer inputs. Prefer ids over types.
+	if ( ! empty( $args['consumer_id'] ) ) {
+		$args['consumer'] = $args['consumer_id'];
+
+	// Try provided type
+	} elseif ( ! empty( $args['consumer_type'] ) ) {
+		$args['consumer'] = $args['consumer_type'];
 	}
 
 	// Validate consumer
