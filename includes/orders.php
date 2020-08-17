@@ -1185,6 +1185,11 @@ function incassoos_update_order_consumer( $consumer, $post = 0 ) {
 		// Save consumer type
 		} elseif ( $consumer_type = incassoos_get_consumer_type( $consumer ) ) {
 			$success = update_post_meta( $post->ID, 'consumer_type', $consumer_type->id );
+
+			// Remove any previous consumer ID
+			if ( $success ) {
+				delete_post_meta( $post->ID, 'consumer' );
+			}
 		}
 	}
 
