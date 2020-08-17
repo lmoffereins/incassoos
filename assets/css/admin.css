@@ -704,6 +704,20 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	}
 }
 
+@media only screen and (min-width: 1950px) {
+
+	#postbox-container-2 .incassoos-item-list:not(.no-list-columns) .list-columns {
+		columns: 4;
+	}
+}
+
+@media only screen and (min-width: 2500px) {
+
+	#postbox-container-2 .incassoos-item-list:not(.no-list-columns) .list-columns {
+		columns: 5;
+	}
+}
+
 /* Notes Metabox */
 
 .incassoos-post-edit #incassoos_notes .inside {
