@@ -224,14 +224,21 @@ function incassoos_prevent_insert_post( $retval, $postarr ) {
 		return $retval;
 	}
 
+	$validated = true;
+
 	// Order
 	if ( incassoos_get_order_post_type() === $postarr['post_type'] ) {
-
-		// When the order invalidates, prevent inserting
 		$validated = incassoos_validate_order( $postarr );
-		if ( is_wp_error( $validated ) ) {
-			$retval = true;
-		}
+	}
+
+	// Product
+	if ( incassoos_get_product_post_type() === $postarr['post_type'] ) {
+		$validated = incassoos_validate_product( $postarr );
+	}
+
+	// When the asset invalidates, prevent inserting
+	if ( is_wp_error( $validated ) ) {
+		$retval = true;
 	}
 
 	return $retval;

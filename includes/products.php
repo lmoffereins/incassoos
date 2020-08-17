@@ -441,3 +441,27 @@ function incassoos_update_product_price( $price, $post = 0 ) {
 
 	return $success;
 }
+
+/**
+ * Return whether the provided data is valid for a Product
+ *
+ * @since 1.0.0
+ *
+ * @param  array $args Order attributes to update
+ * @return WP_Error|bool Error object on invalidation, true when validated
+ */
+function incassoos_validate_product( $args = array() ) {
+
+	// Parse defaults
+	$args = wp_parse_args( $args, array(
+		'price' => 0
+	) );
+
+	// Validate price
+	$price = incassoos_validate_price( $args['price'] );
+	if ( is_wp_error( $price ) ) {
+		return $price;
+	}
+
+	return true;
+}

@@ -206,6 +206,28 @@ function incassoos_validate_date( $value ) {
 }
 
 /**
+ * Return whether the value is a valid price
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $value Value to validate
+ * @return string|WP_Error Datestamp or error when invalid
+ */
+function incassoos_validate_price( $value ) {
+	$value = floatval( $value );
+
+	if ( empty( $value ) ) {
+		return new WP_Error( 'incassoos_empty_price', __( 'Empty price.', 'incassoos' ) );
+	}
+
+	if ( $value <= 0 ) {
+		return new WP_Error( 'incassoos_invalid_price', __( 'Invalid price.', 'incassoos' ) );
+	}
+
+	return $value;
+}
+
+/**
  * Return whether the value is a valid order consumer identifier
  *
  * Checks for both user ids and consumer types.

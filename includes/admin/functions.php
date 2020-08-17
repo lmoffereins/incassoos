@@ -1356,6 +1356,10 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 6 => __( 'Product created.',   'incassoos' ),
 		 7 => __( 'Product saved.',     'incassoos' ),
 		 8 => __( 'Product submitted.', 'incassoos' ),
+
+		 // Error codes
+		 'incassoos_empty_price'   => __( 'Empty price.', 'incassoos' ),
+		 'incassoos_invalid_price' => __( 'Invalid price.', 'incassoos' ),
 	);
 
 	return $messages;
@@ -1372,6 +1376,7 @@ function incassoos_admin_redirect_post_location( $location, $post_id ) {
 
 	// Save post in admin
 	if ( isset( $_POST['save'] ) || isset( $_POST['publish'] ) ) {
+		$validated = true;
 
 		switch ( get_post_type( $post_id ) ) {
 
@@ -1380,15 +1385,25 @@ function incassoos_admin_redirect_post_location( $location, $post_id ) {
 
 				// Post was not saved. 
 				if ( 'auto-draft' === get_post_status( $post_id ) ) {
-
-					// Get the reported validation error. Return to sender.
 					$validated = incassoos_validate_order( $_POST );
-					if ( is_wp_error( $validated ) ) {
-						$location = add_query_arg( 'error', $validated->get_error_code(), wp_get_referer() );
-					}
 				}
 
 				break;
+
+			// Product
+			case incassoos_get_product_post_type() :
+
+				// Post was not saved.
+				if ( 'auto-draft' === get_post_status( $post_id ) ) {
+					$validated = incassoos_validate_product( $_POST );
+				}
+
+				break;
+		}
+
+		// Get the reported validation error. Return to sender.
+		if ( is_wp_error( $validated ) ) {
+			$location = add_query_arg( 'error', $validated->get_error_code(), wp_get_referer() );
 		}
 	}
 
@@ -1440,6 +1455,11 @@ function incassoos_admin_post_notices() {
 		// Order
 		case incassoos_get_order_post_type() :
 			$prefix = esc_html__( 'Order could not be saved: %s', 'incassoos' );
+			break;
+
+		// Product
+		case incassoos_get_product_post_type() :
+			$prefix = esc_html__( 'Product could not be saved: %s', 'incassoos' );
 			break;
 
 		default :
