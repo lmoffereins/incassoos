@@ -1483,3 +1483,34 @@ function incassoos_reopen_occasion( $post = 0 ) {
 
 	return true;
 }
+
+/**
+ * Return whether the provided data is valid for an Occasion
+ *
+ * @since 1.0.0
+ *
+ * @param  array $args Occasion attributes to update
+ * @return WP_Error|bool Error object on invalidation, true when validated
+ */
+function incassoos_validate_occasion( $args = array() ) {
+
+	// Parse defaults
+	$args = wp_parse_args( $args, array(
+		'post_title'    => '',
+		'occasion_date' => ''
+	) );
+
+	// Validate title
+	$title = incassoos_validate_title( $args['post_title'] );
+	if ( is_wp_error( $title ) ) {
+		return $title;
+	}
+
+	// Validate date
+	$date = incassoos_validate_date( $args['occasion_date'], 'd-m-Y' );
+	if ( is_wp_error( $date ) ) {
+		return $date;
+	}
+
+	return true;
+}

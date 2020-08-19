@@ -770,12 +770,12 @@ class Incassoos_Admin {
 
 			/**
 			 * Save posted inputs:
-			 * - Date
+			 * - Occasion Date
 			 * - Occasion Type taxonomy
 			 */
 
-			if ( isset( $_POST['occasion-date'] ) ) {
-				incassoos_update_occasion_date( $_POST['occasion-date'], $post_id );
+			if ( isset( $_POST['occasion_date'] ) ) {
+				incassoos_update_occasion_date( $_POST['occasion_date'], $post_id );
 			}
 
 			foreach ( array(

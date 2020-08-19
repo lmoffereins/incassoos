@@ -246,6 +246,11 @@ function incassoos_prevent_insert_post( $retval, $postarr ) {
 
 	$validated = true;
 
+	// Occasion
+	if ( incassoos_get_occasion_post_type() === $postarr['post_type'] ) {
+		$validated = incassoos_validate_occasion( $postarr );
+	}
+
 	// Order
 	if ( incassoos_get_order_post_type() === $postarr['post_type'] ) {
 		$validated = incassoos_validate_order( $postarr );
