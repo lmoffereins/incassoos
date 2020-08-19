@@ -193,10 +193,23 @@ function incassoos_sanitize_user_list( $list = '' ) {
  * @since 1.0.0
  *
  * @param string $value RFC3339 timestamp.
+ * @param string $format Date format to validate. Accepts 'd-m-Y' and 'Y-m-d'. Defaults to 'Y-m-d'.
  * @return string|WP_Error Datestamp or error when invalid
  */
-function incassoos_validate_date( $value ) {
-	$regex = '#^\d{4}-\d{2}-\d{2}$#';
+function incassoos_validate_date( $value, $format = 'Y-m-d' ) {
+
+	// Define format's regex
+	switch ( $format ) {
+		case 'd-m-Y' :
+			$regex = '#^\d{2}-\d{2}-\d{4}$#';
+			break;
+		default :
+			$regex = '#^\d{4}-\d{2}-\d{2}$#';
+	}
+
+	if ( empty( $value ) ) {
+		return new WP_Error( 'incassoos_empty_date', __( 'Empty date.', 'incassoos' ) );
+	}
 
 	if ( ! preg_match( $regex, $value, $matches ) ) {
 		return new WP_Error( 'incassoos_invalid_date', __( 'Invalid date.', 'incassoos' ) );
@@ -211,7 +224,7 @@ function incassoos_validate_date( $value ) {
  * @since 1.0.0
  *
  * @param mixed $value Value to validate
- * @return string|WP_Error Datestamp or error when invalid
+ * @return string|WP_Error Price or error when invalid
  */
 function incassoos_validate_price( $value ) {
 	$value = floatval( $value );
