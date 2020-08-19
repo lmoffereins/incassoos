@@ -211,6 +211,26 @@ function incassoos_get_object_post_type( $object ) {
 /**
  * Modify whether the post should be prevented from inserting
  *
+ * This function checks whether the inserted data for the non-draft post is
+ * valid. When invalidated, the function prevents the inserting of the post
+ * by returning `true` to the 'wp_insert_post_empty_content' filter. Said
+ * filter signals whether the post is considered 'empty', but it has no
+ * customizable error message.
+ *
+ * To display the proper error message to the user, the following functions
+ * are put in place to handle this for the post-new.php admin page:
+ * - @see {incassoos_admin_redirect_post_location()} Defines redirect url with error params.
+ * - @see {incassoos_admin_post_notices()} Displays error post notice.
+ * - @see {incassoos_admin_post_updated_messages()} Holds the relevant error messages.
+ *
+ * The filter in `wp_insert_post()` by default only defines 'empty' posts when
+ * its post type has support post title, content and excerpt. Since most plugin
+ * assets do not have support for each of those items, custom validaters are put
+ * in place to handle situations where they might be considered empty or should
+ * not be inserted at all.
+ *
+ * @see wp_insert_post()
+ *
  * @since 1.0.0
  *
  * @param  bool  $retval  Whether the post should not be inserted
