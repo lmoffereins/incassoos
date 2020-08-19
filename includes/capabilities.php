@@ -419,8 +419,8 @@ function incassoos_map_occasion_caps( $caps = array(), $cap = '', $user_id = 0, 
 			$post = incassoos_get_occasion( $args[0] );
 			if ( $post ) {
 
-				// Prevent closing locked occasions
-				if ( incassoos_is_occasion_locked( $post ) ) {
+				// Prevent closing locked or unpublished occasions
+				if ( incassoos_is_occasion_locked( $post ) || 'publish' !== $post->post_status ) {
 					$caps = array( 'do_not_allow' );
 
 				// Defer to editing caps
