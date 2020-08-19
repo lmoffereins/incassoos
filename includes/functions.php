@@ -188,24 +188,24 @@ function incassoos_get_object_type( $post_type = '' ) {
 }
 
 /**
- * Return the plugin's post type of the given object
+ * Return the plugin's post type of the given object type
  *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_object_post_type'
  *
- * @param  string $object Object name
- * @return string         Post type name
+ * @param  string $object_type Object type name
+ * @return string              Post type name
  */
-function incassoos_get_object_post_type( $object ) {
+function incassoos_get_object_post_type( $object_type ) {
 	$post_type = '';
-	$getter    = "incassoos_get_{$object}_post_type";
+	$getter    = "incassoos_get_{$object_type}_post_type";
 
 	if ( function_exists( $getter ) ) {
 		$post_type = call_user_func( $getter );
 	}
 
-	return apply_filters( 'incassoos_get_object_post_type', $post_type, $object );
+	return apply_filters( 'incassoos_get_object_post_type', $post_type, $object_type );
 }
 
 /**
@@ -1112,24 +1112,24 @@ function incassoos_doing_rest() {
  *
  * @uses apply_filters() Calls 'incassoos_get_rest_url'
  *
- * @param  string $object Object name.
- * @return string         Rest url
+ * @param  string $object_type Object type name.
+ * @return string Rest url
  */
-function incassoos_get_rest_url( $object ) {
+function incassoos_get_rest_url( $object_type ) {
 
 	// Define variable(s)
-	$post_type = incassoos_get_object_post_type( $object );
+	$post_type = incassoos_get_object_post_type( $object_type );
 	$namespace = incassoos_get_rest_namespace();
 	$url       = '';
 
 	if ( $post_type ) {
 		$post_type = get_post_type_object( $post_type );
 		$url = trailingslashit( get_rest_url( null, $namespace . '/' . $post_type->rest_base ) );
-	} elseif ( 'consumer' === $object ) {
+	} elseif ( 'consumer' === $object_type ) {
 		$url = trailingslashit( get_rest_url( null, $namespace . '/' . incassoos_get_consumers_rest_base() ) );
 	}
 
-	return apply_filters( 'incassoos_get_rest_url', $url, $object );
+	return apply_filters( 'incassoos_get_rest_url', $url, $object_type );
 }
 
 /**
