@@ -209,6 +209,21 @@ function incassoos_get_object_post_type( $object_type ) {
 }
 
 /**
+ * Return whether the post is considered published
+ *
+ * Checks if the post has any non-draft status.
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Post ID or object
+ * @return bool Is the post published?
+ */
+function incassoos_is_post_published( $post = 0 ) {
+	$post = get_post( $post );
+	return (bool) apply_filters( 'incassoos_is_post_published', ! in_array( $post->post_status, array( 'auto-draft', 'draft' ), true ), $post );
+}
+
+/**
  * Modify whether the post should be prevented from inserting
  *
  * This function checks whether the inserted data for the non-draft post is
