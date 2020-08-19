@@ -188,6 +188,22 @@ function incassoos_sanitize_user_list( $list = '' ) {
 /** Validators ****************************************************************/
 
 /**
+ * Validates a title
+ *
+ * @since 1.0.0
+ *
+ * @param string $value Post title
+ * @return string|WP_Error Title or error when invalid
+ */
+function incassoos_validate_title( $value ) {
+	if ( empty( $value ) ) {
+		return new WP_Error( 'incassoos_empty_title', __( 'Empty title.', 'incassoos' ) );
+	}
+
+	return $value;
+}
+
+/**
  * Validates an RFC3339 time as a datestamp.
  *
  * @since 1.0.0
