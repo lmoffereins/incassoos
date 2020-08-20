@@ -1312,6 +1312,12 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 6 => __( 'Activity created.',   'incassoos' ),
 		 7 => __( 'Activity saved.',     'incassoos' ),
 		 8 => __( 'Activity submitted.', 'incassoos' ),
+
+		// Error codes
+		'incassoos_empty_title'   => __( 'Empty title.', 'incassoos' ),
+		'incassoos_invalid_date'  => __( 'Invalid activity date.', 'incassoos' ),
+		'incassoos_empty_price'   => __( 'Empty price.', 'incassoos' ),
+		'incassoos_invalid_price' => __( 'Invalid price.', 'incassoos' ),
 	);
 
 	// Occasion
@@ -1382,9 +1388,19 @@ function incassoos_admin_redirect_post_location( $location, $post_id ) {
 
 	// Save post in admin
 	if ( isset( $_POST['save'] ) || isset( $_POST['publish'] ) ) {
-		$validated = true;
+		$validated = false;
 
 		switch ( get_post_type( $post_id ) ) {
+
+			// Activity
+			case incassoos_get_activity_post_type() :
+
+				// Post was not saved.
+				if ( 'auto-draft' === get_post_status( $post_id ) ) {
+					$validated = incassoos_validate_activity( $_POST );
+				}
+
+				break;
 
 			// Occasion
 			case incassoos_get_occasion_post_type() :

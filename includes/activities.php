@@ -1065,3 +1065,42 @@ function incassoos_update_activity_date( $date, $post = 0 ) {
 
 	return $success;
 }
+
+/**
+ * Return whether the provided data is valid for an Activity
+ *
+ * @since 1.0.0
+ *
+ * @param  array $args Activity attributes to update
+ * @return WP_Error|bool Error object on invalidation, true when validated
+ */
+function incassoos_validate_activity( $args = array() ) {
+	$update = isset( $args['ID'] ) && ! empty( $args['ID'] );
+
+	// Parse defaults
+	$args = wp_parse_args( $args, array(
+		'post_title'    => '',
+		'activity_date' => $update ? incassoos_get_activity_date( $args['ID'], 'd-m-Y' ) : '',
+		'price'         => $update ? incassoos_get_activity_price( $args['ID'], null ) : 0
+	) );
+
+	// Validate title
+	$title = incassoos_validate_title( $args['post_title'] );
+	if ( is_wp_error( $title ) ) {
+		return $title;
+	}
+
+	// Validate date. May be empty
+	$date = incassoos_validate_date( $args['activity_date'], 'd-m-Y' );
+	if ( ! empty( $args['activity_date'] ) && is_wp_error( $date ) ) {
+		return $date;
+	}
+
+	// Validate price
+	$price = incassoos_validate_price( $args['price'] );
+	if ( is_wp_error( $price ) ) {
+		return $price;
+	}
+
+	return true;
+}

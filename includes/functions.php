@@ -248,18 +248,23 @@ function incassoos_is_post_published( $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @param  bool  $retval  Whether the post should not be inserted
+ * @param  bool  $prevent Whether the post should not be inserted
  * @param  array $postarr Original post insert data
  * @return bool  Should the post not be inserted?
  */
-function incassoos_prevent_insert_post( $retval, $postarr ) {
+function incassoos_prevent_insert_post( $prevent, $postarr ) {
 
 	// Ignore auto-drafts being created when opening post-new.php
 	if ( 'auto-draft' === $postarr['post_status'] ) {
-		return $retval;
+		return $prevent;
 	}
 
-	$validated = true;
+	$validated = false;
+
+	// Activity
+	if ( incassoos_get_activity_post_type() === $postarr['post_type'] ) {
+		$validated = incassoos_validate_activity( $postarr );
+	}
 
 	// Occasion
 	if ( incassoos_get_occasion_post_type() === $postarr['post_type'] ) {
@@ -278,10 +283,10 @@ function incassoos_prevent_insert_post( $retval, $postarr ) {
 
 	// When the asset invalidates, prevent inserting
 	if ( is_wp_error( $validated ) ) {
-		$retval = true;
+		$prevent = true;
 	}
 
-	return $retval;
+	return $prevent;
 }
 
 /**
