@@ -188,7 +188,7 @@ function incassoos_sanitize_user_list( $list = '' ) {
 /** Validators ****************************************************************/
 
 /**
- * Validates a title
+ * Validates a post title
  *
  * @since 1.0.0
  *

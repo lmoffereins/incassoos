@@ -1303,6 +1303,10 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		12 => __( 'Collection unstaged.',        'incassoos' ),
 		13 => __( 'Collection collected.',       'incassoos' ),
 		14 => __( 'Collection test email sent.', 'incassoos' ),
+
+		// Error codes
+		'incassoos_empty_title'   => __( 'Empty title.', 'incassoos' ),
+		'incassoos_empty_content' => __( 'Empty collection message.', 'incassoos' ),
 	);
 
 	// Activity
@@ -1385,53 +1389,14 @@ function incassoos_admin_post_updated_messages( $messages ) {
  * @return string The destination url
  */
 function incassoos_admin_redirect_post_location( $location, $post_id ) {
+	$is_save_or_publish = isset( $_POST['save'] ) || isset( $_POST['publish'] );
+	$is_autodraft = 'auto-draft' === get_post_status( $post_id );
 
 	// Save post in admin
-	if ( isset( $_POST['save'] ) || isset( $_POST['publish'] ) ) {
-		$validated = false;
+	if ( $is_save_or_publish && $is_autodraft ) {
 
-		switch ( get_post_type( $post_id ) ) {
-
-			// Activity
-			case incassoos_get_activity_post_type() :
-
-				// Post was not saved.
-				if ( 'auto-draft' === get_post_status( $post_id ) ) {
-					$validated = incassoos_validate_activity( $_POST );
-				}
-
-				break;
-
-			// Occasion
-			case incassoos_get_occasion_post_type() :
-
-				// Post was not saved.
-				if ( 'auto-draft' === get_post_status( $post_id ) ) {
-					$validated = incassoos_validate_occasion( $_POST );
-				}
-
-				break;
-
-			// Order
-			case incassoos_get_order_post_type() :
-
-				// Post was not saved.
-				if ( 'auto-draft' === get_post_status( $post_id ) ) {
-					$validated = incassoos_validate_order( $_POST );
-				}
-
-				break;
-
-			// Product
-			case incassoos_get_product_post_type() :
-
-				// Post was not saved.
-				if ( 'auto-draft' === get_post_status( $post_id ) ) {
-					$validated = incassoos_validate_product( $_POST );
-				}
-
-				break;
-		}
+		// Validate post
+		$validated = incassoos_validate_post( $_POST, get_post_type( $post_id ) );
 
 		// Get the reported validation error. Return to sender.
 		if ( is_wp_error( $validated ) ) {
@@ -1467,36 +1432,19 @@ function incassoos_admin_post_notices() {
 		'attachment' => array()
 	) );
 
-	switch ( $scrn->post_type ) {
+	$types = array(
+		incassoos_get_collection_post_type() => esc_html__( 'Collection could not be saved: %s', 'incassoos' ),
+		incassoos_get_activity_post_type()   => esc_html__( 'Activity could not be saved: %s', 'incassoos' ),
+		incassoos_get_occasion_post_type()   => esc_html__( 'Occasion could not be saved: %s', 'incassoos' ),
+		incassoos_get_order_post_type()      => esc_html__( 'Order could not be saved: %s', 'incassoos' ),
+		incassoos_get_product_post_type()    => esc_html__( 'Product could not be saved: %s', 'incassoos' ),
+	);
 
-		// Collection
-		case incassoos_get_collection_post_type() :
-			$prefix = esc_html__( 'Collection could not be saved: %s', 'incassoos' );
-			break;
-
-		// Activity
-		case incassoos_get_activity_post_type() :
-			$prefix = esc_html__( 'Activity could not be saved: %s', 'incassoos' );
-			break;
-
-		// Occasion
-		case incassoos_get_occasion_post_type() :
-			$prefix = esc_html__( 'Occasion could not be saved: %s', 'incassoos' );
-			break;
-
-		// Order
-		case incassoos_get_order_post_type() :
-			$prefix = esc_html__( 'Order could not be saved: %s', 'incassoos' );
-			break;
-
-		// Product
-		case incassoos_get_product_post_type() :
-			$prefix = esc_html__( 'Product could not be saved: %s', 'incassoos' );
-			break;
-
-		default :
-			$prefix = esc_html__( 'Post could not be saved: %s', 'incassoos' );
-			break;
+	// Get error prefix
+	if ( isset( $types[ $scrn->post_type ] ) ) {
+		$prefix = $types[ $scrn->post_type ];
+	} else {
+		$prefix = esc_html__( 'Post could not be saved: %s', 'incassoos' );
 	}
 
 	// Get error for display

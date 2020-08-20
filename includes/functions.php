@@ -209,6 +209,45 @@ function incassoos_get_object_post_type( $object_type ) {
 }
 
 /**
+ * Return the validation result of the post data for the given post type
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_validate_post'
+ *
+ * @param  array  $postarr Post data.
+ * @param  string $post_type Optional. Post type. Defaults to the current post type.
+ * @return WP_Error|bool Error object on invalidation, true when validated, false when not validated.
+ */
+function incassoos_validate_post( $postarr, $post_type = '' ) {
+	$validated = false;
+
+	// Derive post type from post data
+	if ( ! $post_type && isset( $postarr['post_type'] ) ) {
+		$post_type = $postarr['post_type'];
+	}
+
+	// Default to the current post type
+	if ( ! $post_type ) {
+		$post_type = get_post_type();
+	}
+
+	$types = array(
+		incassoos_get_collection_post_type() => 'incassoos_validate_collection',
+		incassoos_get_activity_post_type()   => 'incassoos_validate_activity',
+		incassoos_get_occasion_post_type()   => 'incassoos_validate_occasion',
+		incassoos_get_order_post_type()      => 'incassoos_validate_order',
+		incassoos_get_product_post_type()    => 'incassoos_validate_product',
+	);
+
+	if ( isset( $types[ $post_type ] ) ) {
+		$validated = call_user_func_array( $types[ $post_type ], array( $postarr ) );
+	}
+
+	return apply_filters( 'incassoos_validate_post', $validated, $postarr, $post_type );
+}
+
+/**
  * Return whether the post is considered published
  *
  * Checks if the post has any non-draft status.
@@ -259,27 +298,8 @@ function incassoos_prevent_insert_post( $prevent, $postarr ) {
 		return $prevent;
 	}
 
-	$validated = false;
-
-	// Activity
-	if ( incassoos_get_activity_post_type() === $postarr['post_type'] ) {
-		$validated = incassoos_validate_activity( $postarr );
-	}
-
-	// Occasion
-	if ( incassoos_get_occasion_post_type() === $postarr['post_type'] ) {
-		$validated = incassoos_validate_occasion( $postarr );
-	}
-
-	// Order
-	if ( incassoos_get_order_post_type() === $postarr['post_type'] ) {
-		$validated = incassoos_validate_order( $postarr );
-	}
-
-	// Product
-	if ( incassoos_get_product_post_type() === $postarr['post_type'] ) {
-		$validated = incassoos_validate_product( $postarr );
-	}
+	// Validate post
+	$validated = incassoos_validate_post( $postarr );
 
 	// When the asset invalidates, prevent inserting
 	if ( is_wp_error( $validated ) ) {

@@ -1819,6 +1819,31 @@ function incassoos_collect_collection( $post = 0 ) {
 	return true;
 }
 
+/**
+ * Return whether the provided data is valid for an Collection
+ *
+ * @since 1.0.0
+ *
+ * @param  array $args Collection attributes to update
+ * @return WP_Error|bool Error object on invalidation, true when validated
+ */
+function incassoos_validate_collection( $args = array() ) {
+	$update = isset( $args['ID'] ) && ! empty( $args['ID'] );
+
+	// Parse defaults
+	$args = wp_parse_args( $args, array(
+		'post_title' => ''
+	) );
+
+	// Validate title
+	$title = incassoos_validate_title( $args['post_title'] );
+	if ( is_wp_error( $title ) ) {
+		return $title;
+	}
+
+	return true;
+}
+
 /** Email *********************************************************************/
 
 /**
