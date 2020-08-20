@@ -685,9 +685,18 @@ class Incassoos_Admin {
 
 			/**
 			 * Save posted inputs:
-			 * - Activity Category taxonomy
+			 * - Activity date
 			 * - Price
+			 * - Activity Category taxonomy
 			 */
+
+			if ( isset( $_POST['activity_date'] ) ) {
+				incassoos_update_activity_date( $_POST['activity_date'], $post_id );
+			}
+
+			if ( isset( $_POST['price'] ) ) {
+				update_post_meta( $post_id, 'price', $_POST['price'] );
+			}
 
 			foreach ( array(
 				incassoos_get_activity_cat_tax_id(),
@@ -705,14 +714,6 @@ class Incassoos_Admin {
 				} elseif ( $terms = wp_get_object_terms( $post_id ) ) {
 					wp_remove_object_terms( $post_id, $terms, $taxonomy );
 				}
-			}
-
-			if ( isset( $_POST['activity-date'] ) ) {
-				incassoos_update_activity_date( $_POST['activity-date'], $post_id );
-			}
-
-			if ( isset( $_POST['price'] ) ) {
-				update_post_meta( $post_id, 'price', $_POST['price'] );
 			}
 		}
 

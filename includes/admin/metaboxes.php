@@ -82,7 +82,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		);
 
 		// Display consumers
-		if ( incassoos_get_collection_total( $post ) ) {
+		if ( incassoos_collection_has_assets( $post ) ) {
 			add_meta_box(
 				'incassoos_collection_consumers',
 				sprintf(
@@ -458,6 +458,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	// Get details
 	$is_post_view     = incassoos_admin_is_post_view( $post );
+	$is_published     = incassoos_is_post_published( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
 	// Permissions
@@ -480,16 +481,11 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
+		<?php if ( $is_published ) : ?>
+
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
 			<span id="collection-created" class="value"><?php incassoos_the_collection_created( $post ); ?></span>
-		</p>
-
-		<?php if ( ! $can_stage ) : ?>
-
-		<p>
-			<label><?php esc_html_e( 'Total:', 'incassoos' ); ?></label>
-			<span id="collection-total" class="value"><?php incassoos_the_collection_total( $post, true ); ?></span>
 		</p>
 
 		<?php endif; ?>
@@ -513,6 +509,21 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<?php endif; ?>
 
+		<?php if ( ! $can_stage ) : ?>
+
+		<p>
+			<label><?php esc_html_e( 'Total:', 'incassoos' ); ?></label>
+			<span id="collection-total">
+				<?php if ( 'post-new.php' !== $GLOBALS['pagenow'] ) : ?>
+					<span class="value"><?php incassoos_the_collection_total( $post, true ); ?></span>
+				<?php endif; ?>
+			</span>
+		</p>
+
+		<?php endif; ?>
+
+		<?php if ( $is_published ) : ?>
+
 		<p>
 			<label><?php if ( incassoos_is_collection_collected( $post ) ) :
 				esc_html_e( 'Collector:', 'incassoos' );
@@ -522,6 +533,8 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			?></label>
 			<span id="collection-author" class="value"><?php incassoos_the_collection_author( $post ); ?></span>
 		</p>
+
+		<?php endif; ?>
 
 		<?php if ( $can_collect ) : ?>
 
@@ -534,7 +547,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<?php do_action( 'incassoos_collection_details_metabox', $post ); ?>
 
-		<?php if ( ! incassoos_is_collection_locked( $post ) ) : ?>
+		<?php if ( ! incassoos_is_collection_locked( $post ) && incassoos_collection_has_assets( $post ) ) : ?>
 
 		<p class="warning">
 			<?php if ( ! current_user_can( $post_type_object->cap->edit_posts ) ) {
@@ -670,7 +683,7 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 
 		<?php else : ?>
 
-		<p><?php esc_html_e( 'There are no collectable activities found.', 'incassoos' ); ?></p>
+		<ul><li><?php esc_html_e( 'There are no collectable activities found.', 'incassoos' ); ?></li></ul>
 
 		<?php endif; ?>
 	</div>
@@ -748,7 +761,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 
 		<?php else : ?>
 
-		<p><?php esc_html_e( 'There are no collectable occasions found.', 'incassoos' ); ?></p>
+		<ul><li><?php esc_html_e( 'There are no collectable occasions found.', 'incassoos' ); ?></li></ul>
 
 		<?php endif; ?>
 	</div>
@@ -870,6 +883,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 	// Get details
 	$is_post_view     = incassoos_admin_is_post_view( $post );
+	$is_published     = incassoos_is_post_published( $post );
 	$activity_cat_tax = incassoos_get_activity_cat_tax_id();
 	$format_args      = incassoos_get_currency_format_args();
 
@@ -877,10 +891,14 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
+		<?php if ( $is_published ) : ?>
+
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
 			<span id="activity-created" class="value"><?php incassoos_the_activity_created( $post ); ?></span>
 		</p>
+
+		<?php endif; ?>
 
 		<?php if ( ! $is_post_view || incassoos_get_activity_date( $post ) ) : ?>
 
@@ -888,7 +906,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<label for="activity-date"><?php esc_html_e( 'Date:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="text" name="activity-date" id="activity-date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post->ID, 'activity_date', true ) ) ); ?>" class="datepicker" />
+				<input type="text" id="activity-date" name="activity_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post->ID, 'activity_date', true ) ) ); ?>" class="datepicker" />
 			<?php else : ?>
 				<span id="activity-date" class="value"><?php incassoos_the_activity_date( $post ); ?></span>
 			<?php endif; ?>
@@ -951,10 +969,14 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			</span>
 		</p>
 
+		<?php if ( $is_published ) : ?>
+
 		<p>
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
 			<span id="activity-author" class="value"><?php incassoos_the_activity_author( $post ); ?></span>
 		</p>
+
+		<?php endif; ?>
 
 		<?php if ( $is_post_view ) : ?>
 
@@ -1153,6 +1175,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 	// Get details
 	$is_post_view      = incassoos_admin_is_post_view( $post );
+	$is_published      = incassoos_is_post_published( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
 
 	// Permissions
@@ -1168,7 +1191,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
-		<?php if ( ! incassoos_is_occasion_same_date_created( $post ) ) : ?>
+		<?php if ( $is_published && ! incassoos_is_occasion_same_date_created( $post ) ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
@@ -1212,6 +1235,8 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 		<?php endif; ?>
 
+		<?php if ( $is_published ) : ?>
+
 		<p>
 			<label><?php esc_html_e( 'Content:', 'incassoos' ); ?></label>
 			<span class="value">
@@ -1245,6 +1270,8 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
 			<span id="occasion-author" class="value"><?php incassoos_the_occasion_author( $post ); ?></span>
 		</p>
+
+		<?php endif; ?>
 
 		<?php if ( $is_post_view ) : ?>
 
@@ -1331,7 +1358,7 @@ function incassoos_admin_occasion_products_metabox( $post ) {
 
 		<?php else : ?>
 
-		<p><?php esc_html_e( 'There are no consumed products found.', 'incassoos' ); ?></p>
+		<ul><li><?php esc_html_e( 'There are no consumed products found.', 'incassoos' ); ?></li></ul>
 
 		<?php endif; ?>
 	</div>
@@ -1449,14 +1476,15 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 function incassoos_admin_order_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
+	$is_post_view  = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
+	$is_published  = incassoos_is_post_published( $post );
 	$consumer_type = incassoos_get_order_consumer_type( $post );
 
 	?>
 
 	<div class="incassoos-object-details">
 
-		<?php if ( $is_post_view ) : ?>
+		<?php if ( $is_published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
@@ -1523,7 +1551,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 			</span>
 		</p>
 
-		<?php if ( $is_post_view ) : ?>
+		<?php if ( $is_published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
