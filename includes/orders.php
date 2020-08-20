@@ -1309,14 +1309,15 @@ function incassoos_update_order_products( $products, $post = 0 ) {
  * @return WP_Error|bool Error object on invalidation, true when validated
  */
 function incassoos_validate_order( $args = array() ) {
+	$update = isset( $args['ID'] ) && ! empty( $args['ID'] );
 
 	// Parse defaults
 	$args = wp_parse_args( $args, array(
-		'post_parent' => 0,
-		'consumer_id' => '',
-		'consumer_type' => '',
-		'consumer' => 0,
-		'products' => array()
+		'post_parent'   => 0,
+		'consumer_id'   => $update ? incassoos_get_order_consumer_id( $args['ID'] ) : 0,
+		'consumer_type' => $update ? incassoos_get_order_consumer_type( $args['ID'] ) : '',
+		'consumer'      => $update ? incassoos_get_order_consumer( $args['ID'] ) : 0,
+		'products'      => $update ? incassoos_get_order_products( $args['ID'] ) : array()
 	) );
 
 	// Parent is not an Occasion
