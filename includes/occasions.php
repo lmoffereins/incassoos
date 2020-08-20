@@ -1493,11 +1493,12 @@ function incassoos_reopen_occasion( $post = 0 ) {
  * @return WP_Error|bool Error object on invalidation, true when validated
  */
 function incassoos_validate_occasion( $args = array() ) {
+	$update = isset( $args['ID'] ) && ! empty( $args['ID'] );
 
 	// Parse defaults
 	$args = wp_parse_args( $args, array(
 		'post_title'    => '',
-		'occasion_date' => ''
+		'occasion_date' => $update ? incassoos_get_occasion_date( $args['ID'], 'd-m-Y' ) : ''
 	) );
 
 	// Validate title
