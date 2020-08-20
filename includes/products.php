@@ -447,15 +447,23 @@ function incassoos_update_product_price( $price, $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @param  array $args Order attributes to update
+ * @param  array $args Product attributes to update
  * @return WP_Error|bool Error object on invalidation, true when validated
  */
 function incassoos_validate_product( $args = array() ) {
+	$update = isset( $args['ID'] ) && ! empty( $args['ID'] );
 
 	// Parse defaults
 	$args = wp_parse_args( $args, array(
-		'price' => 0
+		'post_title' => '',
+		'price'      => $update ? incassoos_get_product_price( $args['ID'], null ) : 0
 	) );
+
+	// Validate title
+	$title = incassoos_validate_title( $args['post_title'] );
+	if ( is_wp_error( $title ) ) {
+		return $title;
+	}
 
 	// Validate price
 	$price = incassoos_validate_price( $args['price'] );
