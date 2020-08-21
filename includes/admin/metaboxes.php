@@ -1667,16 +1667,21 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 	// Get taxonomies
 	$product_cat_tax = incassoos_get_product_cat_tax_id( $post );
+	$is_published    = incassoos_is_post_published( $post );
 	$price           = incassoos_get_product_price( $post );
 
 	?>
 
 	<div class="incassoos-object-details">
 
+		<?php if ( $is_published ) : ?>
+
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
 			<span id="product-created" class="value"><?php incassoos_the_product_created( $post ); ?></span>
 		</p>
+
+		<?php endif; ?>
 
 		<p>
 			<label for="price"><?php esc_html_e( 'Price:', 'incassoos' ); ?></label>
