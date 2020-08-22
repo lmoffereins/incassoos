@@ -570,7 +570,7 @@ jQuery(document).ready( function($) {
 		})
 
 		// Cancel inline edit
-		.on( 'click', '.consumer.toggled, .submit .cancel', function() {
+		.on( 'click', '.consumer.toggled .consumer-name, .submit .cancel', function() {
 
 			// Focus parent again
 			$( this ).parents( '.consumer' ).find( '.consumer-name' ).focus();
