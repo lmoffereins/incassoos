@@ -96,6 +96,10 @@ final class Incassoos {
 		// Languages
 		$this->lang_dir             = trailingslashit( $this->plugin_dir . 'languages' );
 
+		// Resources
+		$this->resources_dir        = trailingslashit( $this->plugin_dir . 'resources' );
+		$this->resources_url        = trailingslashit( $this->plugin_url . 'resources' );
+
 		/** Identifiers *************************************************/
 
 		// Post type
