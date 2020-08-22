@@ -189,19 +189,11 @@ function incassoos_admin_get_settings_fields() {
 				'args'              => array()
 			),
 
-			// Account BIC
-			'_incassoos_account_bic' => array(
-				'title'             => esc_html__( 'Account BIC', 'incassoos' ),
-				'callback'          => 'incassoos_admin_setting_callback_account_bic',
-				'sanitize_callback' => 'incassoos_sanitize_bic',
-				'args'              => array()
-			),
-
 			// SEPA Creditor Identifier
 			'_incassoos_sepa_creditor_id' => array(
 				'title'             => esc_html__( 'SEPA Creditor Identifier', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_sepa_creditor_id',
-				'sanitize_callback' => 'incassoos_sanitize_bic', // TODO: something else
+				'sanitize_callback' => '', // TODO: something else
 				'args'              => array()
 			),
 		),
@@ -506,18 +498,6 @@ function incassoos_admin_setting_callback_account_holder() { ?>
 function incassoos_admin_setting_callback_account_iban() { ?>
 
 	<input name="_incassoos_account_iban" id="_incassoos_account_iban" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_account_iban', '' ); ?>" />
-
-	<?php
-}
-
-/**
- * Organisatsion creditor BIC setting field
- *
- * @since 1.0.0
- */
-function incassoos_admin_setting_callback_account_bic() { ?>
-
-	<input name="_incassoos_account_bic" id="_incassoos_account_bic" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_account_bic', '' ); ?>" />
 
 	<?php
 }

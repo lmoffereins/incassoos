@@ -1350,30 +1350,11 @@ function incassoos_get_account_holder( $default = '' ) {
  *
  * @since 1.0.0
  *
- * @param mixed $default Optional. Default return value.
+ * @param  mixed $default Optional. Default return value.
  * @return string Account IBAN
  */
 function incassoos_get_account_iban( $default = '' ) {
 	return apply_filters( 'incassoos_get_account_iban', get_option( '_incassoos_account_iban', $default ) );
-}
-
-/**
- * Return the Account BIC
- *
- * @since 1.0.0
- *
- * @param mixed $default Optional. Default return value.
- * @return string Account BIC
- */
-function incassoos_get_account_bic( $default = '' ) {
-	$bic = apply_filters( 'incassoos_get_account_bic', get_option( '_incassoos_account_bic', $default ) );
-
-	// Get BIC from IBAN
-	if ( ! $bic && $iban = incassoos_get_account_iban() ) {
-		$bic = incassoos_get_bic_from_iban( $iban );
-	}
-
-	return $bic;
 }
 
 /**

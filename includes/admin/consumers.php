@@ -30,11 +30,6 @@ function incassoos_admin_get_consumers_fields( $field = '' ) {
 			'label' => __( 'IBAN', 'incassoos' ),
 		),
 
-		// BIC
-		'_incassoos_bic'    => array(
-			'label' => __( 'BIC', 'incassoos' ),
-		),
-
 		// Don't show
 		'_incassoos_noshow' => array(
 			'label' => __( "Don't show", 'incassoos' ),

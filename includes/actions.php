@@ -99,8 +99,6 @@ add_filter( 'incassoos_map_meta_caps',     'incassoos_map_occasion_caps',       
 add_filter( 'incassoos_map_meta_caps',     'incassoos_map_order_caps',                10, 4 );
 add_filter( 'incassoos_map_meta_caps',     'incassoos_map_product_caps',              10, 4 );
 add_filter( 'incassoos_map_meta_caps',     'incassoos_map_generic_caps',              10, 4 );
-add_filter( 'get_user_metadata',           'incassoos_filter_get_bic_meta',           10, 4 );
-add_filter( 'update_user_metadata',        'incassoos_filter_update_bic_meta',        10, 5 );
 
 /** Menu **********************************************************************/
 

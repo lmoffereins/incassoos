@@ -39,12 +39,13 @@ class Incassoos_SEPA_XML_File extends Incassoos_SEPA_XML_Parser {
 		$this->post = incassoos_get_collection( $post, true );
 
 		if ( $this->post ) {
+			$iban = incassoos_get_account_iban();
 			$args = array(
 				'party'        => array(
 					'organization' => incassoos_get_organization_name(),
 					'name'         => incassoos_get_account_holder(),
-					'iban'         => incassoos_get_account_iban(),
-					'bic'          => incassoos_get_account_bic(),
+					'iban'         => $iban,
+					'bic'          => incassoos_get_bic_from_iban( $iban ),
 					'creditor_id'  => incassoos_get_sepa_creditor_id(),
 					'currency'     => incassoos_get_currency(),
 				),
@@ -83,14 +84,15 @@ class Incassoos_SEPA_XML_File extends Incassoos_SEPA_XML_Parser {
 		$retval = array();
 
 		foreach ( $users as $user ) {
+			$iban     = incassoos_get_user_iban( $user->ID );
 			$retval[] = array(
 				'amount'      => incassoos_get_collection_consumer_total( $user->ID, $this->post ),
 				'description' => incassoos_get_collection_transaction_description( $this->post ),
 				'party'       => array(
 					'id'   => $user->ID,
 					'name' => incassoos_get_user_display_name( $user->ID ),
-					'iban' => incassoos_get_user_iban( $user->ID ),
-					'bic'  => incassoos_get_user_bic( $user->ID ),
+					'iban' => $iban,
+					'bic'  => incassoos_get_bic_from_iban( $iban )
 				)
 			);
 		}

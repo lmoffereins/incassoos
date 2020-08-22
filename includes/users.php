@@ -171,28 +171,6 @@ function incassoos_get_user_iban( $user = false, $by = 'id' ) {
 }
 
 /**
- * Return the user BIC
- *
- * @since 1.0.0
- *
- * @uses apply_filters() Calls 'incassoos_get_user_bic'
- *
- * @param  mixed $user_id User object or property. Defaults to the current user ID.
- * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
- * @return string User BIC
- */
-function incassoos_get_user_bic( $user = false, $by = 'id' ) {
-	$user = incassoos_get_user( $user, $by );
-	$bic  = '';
-
-	if ( $user ) {
-		$bic = $user->get( '_incassoos_bic' );
-	}
-
-	return apply_filters( 'incassoos_get_user_bic', $bic, $user );
-}
-
-/**
  * Return the user consumption limit
  *
  * @since 1.0.0

@@ -148,44 +148,6 @@ function incassoos_sanitize_iban( $iban = '', $validate = true ) {
 }
 
 /**
- * Sanitize BIC format when saving the settings page.
- *
- * @since 1.0.0
- *
- * @uses apply_filters() Calls 'incassoos_sanitize_bic'
- *
- * @param string $content
- * @param string $iban Optional. IBAN to get the BIC from.
- * @return string
- */
-function incassoos_sanitize_bic( $content = '', $iban = '' ) {
-
-	// Get BIC from IBAN
-	if ( $iban && $bic = incassoos_get_bic_from_iban( $iban ) ) {
-		$value = $bic;
-	}
-
-	// Sanitize otherwise
-	if ( ! $value ) {
-
-		// Parse accented characters
-		$value = remove_accents( $content );
-
-		// Don't allow chars outside of upper alphanumeric
-		$value = preg_replace( '/[^A-Z0-9]/', '', strtoupper( $value ) );
-
-		// Trim off whitespace
-		$value = trim( $value );
-	}
-
-	// Limit string length to 70 chars
-	$value = substr( $value, 0, 69 );
-
-	// Filter the result and return
-	return apply_filters( 'incassoos_sanitize_bic', $value, $content, $iban );
-}
-
-/**
  * Return the BIC from the IBAN
  *
  * @since 1.0.0
@@ -229,57 +191,6 @@ function incassoos_get_bic_from_iban( $iban = '' ) {
 	}
 
 	return apply_filters( 'incassoos_get_bic_from_iban', $bic, $iban );
-}
-
-/**
- * Short-circuit the meta get logic for the user's BIC meta
- *
- * @since 1.0.0
- *
- * @param  mixed  $retval   Meta short-circuit value
- * @param  int    $user_id  User ID
- * @param  string $meta_key Meta key
- * @param  bool   $single   Whether to return a single value
- * @return mixed  User BIC meta short-circuit value.
- */
-function incassoos_filter_get_bic_meta( $retval, $user_id, $meta_key, $single ) {
-
-	// Short-circuit BIC	
-	if ( '_incassoos_bic' === $meta_key ) {
-
-		// Get BIC from IBAN
-		if ( $bic = incassoos_get_bic_from_iban( incassoos_get_user_iban( $user_id ) ) ) {
-			$retval = $single ? $bic : array( $bic );
-		}
-	}
-
-	return $retval;
-}
-
-/**
- * Short-circuit the meta update logic for the user's BIC meta
- *
- * @since 1.0.0
- *
- * @param  mixed  $retval     Meta short-circuit value
- * @param  int    $user_id    User ID
- * @param  string $meta_key   Meta key
- * @param  mixed  $meta_value Meta value
- * @param  mixed  $prev_value Previous value
- * @return mixed  User BIC meta update short-circuit value.
- */
-function incassoos_filter_update_bic_meta( $retval, $user_id, $meta_key, $meta_value, $prev_value ) {
-
-	// Short-circuit BIC	
-	if ( '_incassoos_bic' === $meta_key ) {
-
-		// Get BIC from IBAN, prevent update, delete record
-		if ( $bic = incassoos_get_bic_from_iban( incassoos_get_user_iban( $user_id ) ) ) {
-			$retval = delete_user_meta( $user_id, $meta_key );
-		}
-	}
-
-	return $retval;	
 }
 
 /**
