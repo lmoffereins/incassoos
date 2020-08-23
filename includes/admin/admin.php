@@ -298,7 +298,14 @@ class Incassoos_Admin {
 	 * @return string Admin body class
 	 */
 	public function admin_body_class( $class ) {
+
+		// Get the current screen
 		$scrn = get_current_screen();
+
+		// Main admin class
+		if ( 0 === strpos( $scrn->base, 'incassoos' ) ) {
+			$class .= ' incassoos';
+		}
 
 		// Add class for admin pages that are in post-view-only mode
 		if ( incassoos_admin_is_post_view( $GLOBALS['post'] ) ) {
