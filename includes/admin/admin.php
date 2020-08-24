@@ -303,7 +303,7 @@ class Incassoos_Admin {
 		$scrn = get_current_screen();
 
 		// Main admin class
-		if ( 0 === strpos( $scrn->base, 'incassoos' ) ) {
+		if ( incassoos_admin_is_plugin_page() ) {
 			$class .= ' incassoos';
 		}
 

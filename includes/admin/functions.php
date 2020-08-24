@@ -224,6 +224,46 @@ function incassoos_admin_removable_query_args( $args ) {
 }
 
 /**
+ * Return whether the current admin page is a plugin page
+ *
+ * @since 1.0.0
+ *
+ * @global $parent_file Parent base
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_is_plugin_page'
+ *
+ * @return bool Is this a plugin page?
+ */
+function incassoos_admin_is_plugin_page() {
+	$is     = false;
+	$scrn   = get_current_screen();
+
+	/**
+	 * The screen's parentage is not set untill before the '*_admin_notices' hooks.
+	 *
+	 * @see wp-admin/admin-header.php
+	 */
+	$parent = empty( $scrn->parent_base ) ? $GLOBALS['parent_file'] : $scrn->parent_base;
+
+	// Plugin page
+	if ( 'incassoos' === $parent || 0 === strpos( $scrn->base, 'incassoos' ) ) {
+		$is = true;
+	}
+
+	// Post type page
+	if ( incassoos_is_plugin_post_type( $scrn->post_type ) ) {
+		$is = true;
+	}
+
+	// Taxonomy page
+	if ( incassoos_is_plugin_taxonomy( $scrn->taxonomy ) ) {
+		$is = true;
+	}
+
+	return (bool) apply_filters( 'incassoos_admin_is_plugin_page', $is );
+}
+
+/**
  * Output the contents of the main admin page
  *
  * @since 1.0.0
