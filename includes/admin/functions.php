@@ -195,8 +195,7 @@ function incassoos_admin_submenu_taxonomy( $taxonomy = '', $function = '' ) {
 
 
 /**
- * Remove the individual recount and converter menus.
- * They are grouped together by h2 tabs
+ * Remove the individual page menu items
  *
  * @since 1.0.0
  */
@@ -273,29 +272,59 @@ function incassoos_admin_is_plugin_page() {
 function incassoos_admin_page() { ?>
 
 	<div class="wrap">
+		<?php incassoos_admin_header(); ?>
 
-		<h1><?php esc_html_e( 'Incassoos', 'incassoos' ); ?></h1>
+		<div class="incassoos-admin-content">
+			<h1 class="page-title"><?php incassoos_admin_the_page_title(); ?></h1>
 
-		<h2 class="nav-tab-wrapper"><?php incassoos_admin_page_tabs(); ?></h2>
-
-		<?php do_action( 'incassoos_admin_page-' . incassoos_admin_page_get_current_page() ); ?>
+			<?php do_action( 'incassoos_admin_page-' . incassoos_admin_get_current_page() ); ?>
+		</div>
 
 	</div>
 
 	<?php
-
 }
 
 /**
- * Display the admin settings page tabs items
+ * Output the contents of the admin header
  *
  * @since 1.0.0
  */
-function incassoos_admin_page_tabs() {
+function incassoos_admin_header() {
+
+	// Bail when this is not a plugin page
+	if ( ! incassoos_admin_is_plugin_page() )
+		return;
+
+	// Define home url
+	$pages     = incassoos_admin_get_pages();
+	$home_page = $pages ? ( function_exists( 'array_key_first' ) ? array_key_first( $pages ) : array_keys( $pages )[0] ) : false;
+	$home_url  = empty( $home_page ) ? '' : esc_url( add_query_arg( array( 'page' => $home_page ), admin_url( 'admin.php' ) ) );
+
+	?>
+
+	<div class="incassoos-admin-header">
+		<span class="plugin-title">
+			<i class="icon dashicons dashicons-forms"></i>
+			<a href="<?php echo $home_url; ?>"><?php esc_html_e( 'Incassoos', 'incassoos' ); ?></a>
+		</span>
+
+		<div class="nav-wrapper"><?php incassoos_admin_page_nav(); ?></div>
+	</div>
+
+	<?php
+}
+
+/**
+ * Output the admin settings page tabs items
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_page_nav() {
 
 	// Get the admin pages
-	$pages = incassoos_admin_page_get_pages();
-	$page  = incassoos_admin_page_get_current_page();
+	$pages = incassoos_admin_get_pages();
+	$page  = incassoos_admin_get_current_page();
 
 	// Walk registered pages
 	foreach ( $pages as $slug => $label ) {
@@ -305,8 +334,8 @@ function incassoos_admin_page_tabs() {
 			continue;
 
 		// Print the tab item
-		printf( '<a class="nav-tab%s" href="%s">%s</a>',
-			( $page === $slug ) ? ' nav-tab-active' : '',
+		printf( '<a class="nav-item%s" href="%s">%s</a>',
+			( $page === $slug ) ? ' nav-item-active' : '',
 			esc_url( add_query_arg( array( 'page' => $slug ), admin_url( 'admin.php' ) ) ),
 			$label
 		);
@@ -314,14 +343,46 @@ function incassoos_admin_page_tabs() {
 }
 
 /**
+ * Display the admin page title
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_the_page_title() {
+	echo incassoos_admin_get_page_title();
+}
+
+/**
+ * Return the admin page title
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_get_page_title'
+ *
+ * @return string Admin page title
+ */
+function incassoos_admin_get_page_title() {
+
+	// Get the admin pages
+	$pages = incassoos_admin_get_pages();
+	$page  = incassoos_admin_get_current_page();
+	$title = '';
+
+	if ( isset( $pages[ $page ] ) ) {
+		$title = $pages[ $page ];
+	}
+
+	return apply_filters( 'incassoos_admin_get_page_title', $title );
+}
+
+/**
  * Return the admin page pages
  *
  * @since 0.0.7
  *
- * @uses apply_filters() Calls 'incassoos_admin_page_get_pages'
+ * @uses apply_filters() Calls 'incassoos_admin_get_pages'
  * @return array Tabs as $page-slug => $label
  */
-function incassoos_admin_page_get_pages() {
+function incassoos_admin_get_pages() {
 
 	// Setup return value
 	$pages = array(
@@ -334,7 +395,7 @@ function incassoos_admin_page_get_pages() {
 		$pages['incassoos-settings'] = esc_html__( 'Settings', 'incassoos' );
 	}
 
-	$pages = (array) apply_filters( 'incassoos_admin_page_get_pages', $pages );
+	$pages = (array) apply_filters( 'incassoos_admin_get_pages', $pages );
 
 	// Limit pages by user capability to match menu page's caps
 	foreach ( array_keys( $pages ) as $page ) {
@@ -353,8 +414,8 @@ function incassoos_admin_page_get_pages() {
  *
  * @return bool Haz admin page pages?
  */
-function incassoos_admin_page_has_pages() {
-	return (bool) incassoos_admin_page_get_pages();
+function incassoos_admin_has_pages() {
+	return (bool) incassoos_admin_get_pages();
 }
 
 /**
@@ -364,15 +425,9 @@ function incassoos_admin_page_has_pages() {
  *
  * @return string The current admin page. Defaults to the first page.
  */
-function incassoos_admin_page_get_current_page() {
-
-	$pages = array_keys( incassoos_admin_page_get_pages() );
-	$page  = ( isset( $_GET['page'] ) && in_array( $_GET['page'], $pages ) ) ? $_GET['page'] : false;
-
-	// Default to the first page
-	if ( ! $page && $pages ) {
-		$page = reset( $pages );
-	}
+function incassoos_admin_get_current_page() {
+	$pages = array_keys( incassoos_admin_get_pages() );
+	$page  = ( isset( $_GET['page'] ) && in_array( $_GET['page'], $pages ) ) ? $_GET['page'] : '';
 
 	return $page;
 }

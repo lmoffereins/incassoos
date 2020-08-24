@@ -5,6 +5,68 @@
  * @subpackage Administration
  */
 
+/* Header */
+
+.incassoos-admin-header {
+	position: absolute;
+	display: flex;
+	top: 0px;
+	right: 0px;
+	left: -20px;
+	height: 44px;
+	padding: 0px 20px 0px 22px;
+	background: #fff;
+	border-bottom: 1px solid #ccd0d4;
+}
+
+.incassoos-admin-header .plugin-title {
+	display: flex;
+	flex: 1;
+	padding: 0px;
+	font-size: 16px;
+}
+
+.incassoos-admin-header .plugin-title .icon {
+	margin-right: 5px;
+	align-self: center;
+}
+
+.incassoos-admin-header .plugin-title a,
+.incassoos-admin-header .nav-item {
+	display: inline-block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.incassoos-admin-header .plugin-title a {
+	padding: 13px 0px;
+}
+
+.incassoos-admin-header .nav-wrapper {
+	display: inline-block;
+	margin: 0px;
+	padding: 0px;
+	color: #757575;
+}
+
+.incassoos-admin-header .nav-item {
+	padding: 0px 12px;
+	line-height: 44px;
+}
+
+.incassoos-admin-header .nav-item:hover {
+	background: #f5f5f5;
+	color: #444;
+}
+
+.incassoos-admin-header .nav-item-active {
+	font-weight: 600;
+}
+
+body.incassoos #wpbody-content {
+	margin-top: 45px;
+}
+
 /* List Table */
 
 .fixed .column-price,

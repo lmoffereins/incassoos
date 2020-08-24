@@ -810,7 +810,7 @@ function incassoos_admin_settings_notices() {
 function incassoos_admin_settings_page() {
 
 	// Get the settings page name
-	$settings_page = incassoos_admin_page_get_current_page();
+	$settings_page = incassoos_admin_get_current_page();
 	if ( 'incassoos-settings' === $settings_page ) {
 		$settings_page = 'incassoos';
 	}
