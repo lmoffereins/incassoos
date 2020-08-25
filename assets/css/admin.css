@@ -805,10 +805,6 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 
 /* Dashboard Page */
 
-.toplevel_page_incassoos h2.nav-tab-wrapper {
-	margin-bottom: 6px;
-}
-
 #incassoos_dashboard_status ul,
 #incassoos_dashboard_history ul {
 	margin: 0;
@@ -865,6 +861,11 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 #incassoos_dashboard_status .order-count a:before,
 #incassoos_dashboard_history .order-count a:before {
 	content: '\f481'; /* dashicons-clipboard */
+}
+
+#incassoos_dashboard_actions .main span {
+	display: inline-block;
+	margin: 0px 5px 10px 0px;
 }
 
 /** Consumers Page **/
