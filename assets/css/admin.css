@@ -805,24 +805,20 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 
 /* Dashboard Page */
 
-#incassoos_dashboard_status ul,
-#incassoos_dashboard_history ul {
+#incassoos_dashboard_status ul {
 	margin: 0;
 	display: inline-block;
 	width: 100%;
 }
 
-#incassoos_dashboard_status li,
-#incassoos_dashboard_history li {
+#incassoos_dashboard_status li {
 	width: 50%;
 	float: left;
 	margin-bottom: 10px;
 }
 
 #incassoos_dashboard_status li a:before,
-#incassoos_dashboard_history li a:before,
-#incassoos_dashboard_status li span:before,
-#incassoos_dashboard_history li span:before {
+#incassoos_dashboard_status li span:before {
 	color: #606a73;
 	font: normal 20px/1 dashicons;
 	speak: none;
@@ -836,41 +832,69 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 #incassoos_dashboard_status li a:before,
-#incassoos_dashboard_history li a:before,
-#incassoos_dashboard_status li span:before,
-#incassoos_dashboard_history li span:before {
+#incassoos_dashboard_status li span:before {
 	content: '\f159';
 	padding: 0 5px 0 0;
 }
 
-#incassoos_dashboard_status .collection-count a:before,
-#incassoos_dashboard_history .collection-count a:before {
+#incassoos_dashboard_status .collection-count a:before {
 	content: '\f480'; /* dashicons-archive */
 }
 
-#incassoos_dashboard_status .activity-count a:before,
-#incassoos_dashboard_history .activity-count a:before {
+#incassoos_dashboard_status .activity-count a:before {
 	content: '\f180'; /* dashicons-screenoptions */
 }
 
-#incassoos_dashboard_status .occasion-count a:before,
-#incassoos_dashboard_history .occasion-count a:before {
+#incassoos_dashboard_status .occasion-count a:before {
 	content: '\f227'; /* dashicons-flag */
 }
 
-#incassoos_dashboard_status .order-count a:before,
-#incassoos_dashboard_history .order-count a:before {
+#incassoos_dashboard_status .order-count a:before {
 	content: '\f481'; /* dashicons-clipboard */
 }
 
-#incassoos_dashboard_status .product-count a:before,
-#incassoos_dashboard_history .product-count a:before {
+#incassoos_dashboard_status .product-count a:before {
 	content: '\f16f'; /* dashicons-coffee */
 }
 
 #incassoos_dashboard_actions .main span {
 	display: inline-block;
 	margin: 0px 5px 10px 0px;
+}
+
+#incassoos_dashboard_recent .inside,
+#incassoos_dashboard_uncollected .inside {
+	margin: 0;
+	padding-bottom: 0;
+}
+
+#incassoos_dashboard_recent .recent-posts li,
+#incassoos_dashboard_uncollected .recent-posts li {
+	display: flex;
+	margin-bottom: 8px;
+}
+
+#incassoos_dashboard_recent .recent-posts span,
+#incassoos_dashboard_uncollected .recent-posts span {
+	display: inline-block;
+	color: #72777c;
+}
+
+#incassoos_dashboard_recent .recent-posts a,
+#incassoos_dashboard_uncollected .recent-posts a {
+	flex: 1;
+}
+
+#incassoos_dashboard_recent .recent-posts .post-date,
+#incassoos_dashboard_uncollected .recent-posts .post-date {
+	margin-right: 5px;
+	min-width: 130px;
+}
+
+#incassoos_dashboard_recent .recent-posts .post-total,
+#incassoos_dashboard_uncollected .recent-posts .post-total {
+	margin-left: 5px;
+	text-align: right;
 }
 
 /** Consumers Page **/
