@@ -10,6 +10,8 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** IBAN **********************************************************************/
+
 /**
  * Sanitize IBAN format when saving the settings page.
  *
@@ -145,6 +147,20 @@ function incassoos_sanitize_iban( $iban = '', $validate = true ) {
 
 	// Filter the result and return
 	return apply_filters( 'incassoos_sanitize_iban', $value, $iban, $validate );
+}
+
+/**
+ * Return the redacted version of an IBAN
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_redact_iban'
+ *
+ * @param  string $iban IBAN
+ * @return string Redacted IBAN
+ */
+function incassoos_redact_iban( $iban ) {
+	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 'keep' => array( 2, 3 ), 'length' => true ) ), $iban );
 }
 
 /**
