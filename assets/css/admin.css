@@ -823,7 +823,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 #incassoos_dashboard_history li a:before,
 #incassoos_dashboard_status li span:before,
 #incassoos_dashboard_history li span:before {
-	color: #82878c;
+	color: #606a73;
 	font: normal 20px/1 dashicons;
 	speak: none;
 	display: inline-block;
@@ -845,7 +845,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 
 #incassoos_dashboard_status .collection-count a:before,
 #incassoos_dashboard_history .collection-count a:before {
-	/*content: ''; /* dashicons-? */
+	content: '\f480'; /* dashicons-archive */
 }
 
 #incassoos_dashboard_status .activity-count a:before,
@@ -853,14 +853,19 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	content: '\f180'; /* dashicons-screenoptions */
 }
 
-#incassoos_dashboard_status .product-count a:before,
-#incassoos_dashboard_history .product-count a:before {
-	content: '\f511'; /* dashicons-carrot */
+#incassoos_dashboard_status .occasion-count a:before,
+#incassoos_dashboard_history .occasion-count a:before {
+	content: '\f227'; /* dashicons-flag */
 }
 
 #incassoos_dashboard_status .order-count a:before,
 #incassoos_dashboard_history .order-count a:before {
 	content: '\f481'; /* dashicons-clipboard */
+}
+
+#incassoos_dashboard_status .product-count a:before,
+#incassoos_dashboard_history .product-count a:before {
+	content: '\f16f'; /* dashicons-coffee */
 }
 
 #incassoos_dashboard_actions .main span {
