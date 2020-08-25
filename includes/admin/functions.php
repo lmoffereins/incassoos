@@ -272,14 +272,9 @@ function incassoos_admin_is_plugin_page() {
 function incassoos_admin_page() { ?>
 
 	<div class="wrap">
-		<?php incassoos_admin_header(); ?>
+		<h1 class="page-title"><?php incassoos_admin_the_page_title(); ?></h1>
 
-		<div class="incassoos-admin-content">
-			<h1 class="page-title"><?php incassoos_admin_the_page_title(); ?></h1>
-
-			<?php do_action( 'incassoos_admin_page-' . incassoos_admin_get_current_page() ); ?>
-		</div>
-
+		<?php do_action( 'incassoos_admin_page-' . incassoos_admin_get_current_page() ); ?>
 	</div>
 
 	<?php
