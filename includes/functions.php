@@ -1448,28 +1448,40 @@ function incassoos_app_get_default_occasion_title() {
  * @return string Redacted IBAN
  */
 function incassoos_redact_iban( $iban ) {
-	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 2, 4 ) ), $iban );
+	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 'keep' => array( 2, 3 ), 'length' => true ) ), $iban );
 }
 
 /**
  * Return a redacted version of a text
  *
- * The returned value may be smaller in length, because the redaction will replace
- * all non-kept parts of the input with just the `$redaction` content.
+ * The returned value may be smaller in length, depending on how
+ * the `$length` parameter is used.
  *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_redact_text'
  *
- * @param  string    $input Text to redact
- * @param  int|array $keep  Optional. Amount of trailing characters to not redact. Provide two values in an
- *                           array to keep leading characters as well.
- * @param  string    $redaction Optional. Characters to use for redaction. Defaults to '****'.
+ * @param  string $input Text to apply redaction to
+ * @param  array  $args  Additional parameters {
+ *  - $keep   int|array Optional. Amount of trailing characters to not redact. Provide two values in an
+ *                      array to keep leading characters as well.
+ *  - $char   string    Optional. Character to use for redaction. Defaults to 'X'.
+ *  - $length bool|int  Optional. The length of the applied redaction. Provide True to apply the exact
+ *                      length of the redacted text. Defaults to 4.
+ * }
  * @return string Redacted text
  */
-function incassoos_redact_text( $input, $keep = 4, $redaction = '****' ) {
-	$keep     = array_map( 'absint', array_values( (array) $keep ) );
+function incassoos_redact_text( $input, $args = array() ) {
+
+	// Parse defaults
+	$args = wp_parse_args( $args, array(
+		'keep'   => 4,
+		'char'   => 'X',
+		'length' => 4
+	) );
+
 	$redacted = '';
+	$keep     = array_map( 'absint', array_values( (array) $args['keep'] ) );
 
 	// Default to keep 0 leading characters
 	if ( 1 === count( $keep ) ) {
@@ -1483,16 +1495,14 @@ function incassoos_redact_text( $input, $keep = 4, $redaction = '****' ) {
 			$keep[0] = 0;
 		}
 
-		// Require a non-empty redaction
-		if ( ! $redaction ) {
-			$redaction = '****';
-		}
+		// Define redaction
+		$redaction = str_repeat( $args['char'], ( true === $args['length'] ) ? strlen( $input ) - $keep[0] - $keep[1] : (int) $args['length'] );
 
 		// Create redacted text
 		$redacted = substr( $input, 0, $keep[0] ) . $redaction . substr( $input, strlen( $input ) - $keep[1] );
 	}
 
-	return apply_filters( 'incassoos_redact_text', $redacted, $input, $keep, $redaction );
+	return apply_filters( 'incassoos_redact_text', $redacted, $input, $args );
 }
 
 /** Export ********************************************************************/
