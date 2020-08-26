@@ -66,6 +66,7 @@ add_action( 'incassoos_app_footer',        'wp_print_footer_scripts',           
 add_filter( 'the_title',                    'incassoos_filter_occasion_title',      10, 2 );
 add_filter( 'list_pages',                   'incassoos_filter_occasion_title',      10, 2 );
 add_filter( 'the_title',                    'incassoos_filter_order_title',         10, 2 );
+add_filter( 'post_type_link',               'incassoos_filter_post_type_link',      10, 4 );
 add_filter( 'wp_insert_post_empty_content', 'incassoos_prevent_insert_post',        10, 2 );
 add_filter( 'wp_insert_post_data',          'incassoos_insert_post_data',           10, 2 );
 add_action( 'post_updated',                 'incassoos_update_product_menu_orders', 20, 3 );

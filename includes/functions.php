@@ -209,6 +209,29 @@ function incassoos_get_object_post_type( $object_type ) {
 }
 
 /**
+ * Modify the post type link
+ *
+ * @since 1.0.0
+ *
+ * @param  string  $post_link Post link
+ * @param  WP_Post $post      Post object
+ * @param  bool    $leavename [description]
+ * @param  bool    $sample    [description]
+ * @return string Post link
+ */
+function incassoos_filter_post_type_link( $post_link, $post, $leavename, $sample ) {
+
+	// Concerning plugin post types
+	if ( incassoos_is_plugin_post_type( $post->post_type ) ) {
+
+		// Refer to the post's admin page
+		$post_link = add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) );
+	}
+
+	return $post_link;
+}
+
+/**
  * Return the validation result of the post data for the given post type
  *
  * @since 1.0.0
