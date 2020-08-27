@@ -609,6 +609,23 @@ function incassoos_increment_post_title( $post = 0 ) {
 /** Taxonomies ****************************************************************/
 
 /**
+ * Return the set of plugin taxonomy names
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_plugin_taxonomies'
+ *
+ * @return array Plugin taxonomies
+ */
+function incassoos_get_plugin_taxonomies() {
+	return apply_filters( 'incassoos_get_plugin_taxonomies', array(
+		incassoos_get_activity_cat_tax_id(),
+		incassoos_get_occasion_type_tax_id(),
+		incassoos_get_product_cat_tax_id()
+	) );
+}
+
+/**
  * Return whether the given taxonomy belongs to the plugin
  *
  * @since 1.0.0
@@ -621,11 +638,7 @@ function incassoos_increment_post_title( $post = 0 ) {
 function incassoos_is_plugin_taxonomy( $taxonomy = '' ) {
 
 	// Check taxonomy
-	$is = in_array( $taxonomy, array(
-		incassoos_get_activity_cat_tax_id(),
-		incassoos_get_occasion_type_tax_id(),
-		incassoos_get_product_cat_tax_id()
-	), true );
+	$is = in_array( $taxonomy, incassoos_get_plugin_taxonomies(), true );
 
 	return apply_filters( 'incassoos_is_plugin_taxonomy', $is, $taxonomy );
 }
