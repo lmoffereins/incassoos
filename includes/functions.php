@@ -126,6 +126,25 @@ function incassoos_get_app_url() {
 /** Posts *********************************************************************/
 
 /**
+ * Return the plugin post type names
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_plugin_post_types'
+ *
+ * @return array Plugin post types
+ */
+function incassoos_get_plugin_post_types() {
+	return apply_filters( 'incassoos_get_plugin_post_types', array(
+		incassoos_get_collection_post_type(),
+		incassoos_get_activity_post_type(),
+		incassoos_get_occasion_post_type(),
+		incassoos_get_order_post_type(),
+		incassoos_get_product_post_type()
+	) );
+}
+
+/**
  * Return whether the given post type belongs to the plugin
  *
  * @since 1.0.0
@@ -143,13 +162,7 @@ function incassoos_is_plugin_post_type( $post_type = '' ) {
 	}
 
 	// Check post type
-	$is = in_array( $post_type, array(
-		incassoos_get_collection_post_type(),
-		incassoos_get_activity_post_type(),
-		incassoos_get_occasion_post_type(),
-		incassoos_get_order_post_type(),
-		incassoos_get_product_post_type()
-	), true );
+	$is = in_array( $post_type, incassoos_get_plugin_post_types(), true );
 
 	return (bool) apply_filters( 'incassoos_is_plugin_post_type', $is, $post_type );
 }
