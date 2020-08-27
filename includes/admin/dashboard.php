@@ -178,15 +178,16 @@ function incassoos_admin_dashboard_recent_widget() {
 	echo '<div class="main">';
 
 	$recent_collections = incassoos_admin_dashboard_recent_posts( array(
-		'id'         => 'recently-collected',
-		'title'      => esc_html__( 'Recently collected', 'incassoos' ),
-		'total_cb'   => 'incassoos_get_collection_total',
-		'max'        => 5,
-		'status'     => incassoos_get_collected_status_id(),
-		'post_type'  => incassoos_get_collection_post_type(),
-		'order'      => 'DESC',
-		'orderby'    => 'meta_collected',
-		'meta_query' => array(
+		'id'          => 'recently-collected',
+		'title'       => esc_html__( 'Recently collected', 'incassoos' ),
+		'detail_cb'   => 'incassoos_get_collection_total',
+		'detail_args' => array( 0, true ),
+		'max'         => 5,
+		'status'      => incassoos_get_collected_status_id(),
+		'post_type'   => incassoos_get_collection_post_type(),
+		'order'       => 'DESC',
+		'orderby'     => 'meta_collected',
+		'meta_query'  => array(
 			'relation'       => 'AND',
 			'meta_collected' => array(
 				'key'     => 'collected',
@@ -196,13 +197,14 @@ function incassoos_admin_dashboard_recent_widget() {
 	) );
 
 	$recent_orders = incassoos_admin_dashboard_recent_posts( array(
-		'id'        => 'recently-ordered',
-		'title'     => esc_html__( 'Recently ordered', 'incassoos' ),
-		'total_cb'   => 'incassoos_get_order_total',
-		'max'       => 10,
-		'status'    => 'any',
-		'post_type' => incassoos_get_order_post_type(),
-		'order'     => 'DESC'
+		'id'          => 'recently-ordered',
+		'title'       => esc_html__( 'Recently ordered', 'incassoos' ),
+		'detail_cb'   => 'incassoos_get_order_total',
+		'detail_args' => array( 0, true ),
+		'max'         => 10,
+		'status'      => 'any',
+		'post_type'   => incassoos_get_order_post_type(),
+		'order'       => 'DESC'
 	) );
 
 	if ( ! $recent_collections && ! $recent_orders ) {
@@ -226,7 +228,8 @@ function incassoos_admin_dashboard_uncollected_widget() {
 	$recent_collections = incassoos_admin_dashboard_recent_posts( array(
 		'id'             => 'recently-collected',
 		'title'          => esc_html__( '%d Collections', 'incassoos' ),
-		'total_cb'       => 'incassoos_get_collection_total',
+		'detail_cb'      => 'incassoos_get_collection_total',
+		'detail_args'    => array( 0, true ),
 		'count_in_title' => true,
 		'max'            => -1,
 		'status'         => array( 'publish', incassoos_get_staged_status_id() ),
@@ -237,7 +240,8 @@ function incassoos_admin_dashboard_uncollected_widget() {
 	$recent_activities = incassoos_admin_dashboard_recent_posts( array(
 		'id'             => 'uncollected-activities',
 		'title'          => esc_html__( '%d Activities', 'incassoos' ),
-		'total_cb'       => 'incassoos_get_activity_total',
+		'detail_cb'      => 'incassoos_get_activity_total',
+		'detail_args'    => array( 0, true ),
 		'count_in_title' => true,
 		'max'            => -1,
 		'status'         => 'publish',
@@ -248,7 +252,8 @@ function incassoos_admin_dashboard_uncollected_widget() {
 	$recent_occasions = incassoos_admin_dashboard_recent_posts( array(
 		'id'             => 'uncollected-occasions',
 		'title'          => esc_html__( '%d Occasions', 'incassoos' ),
-		'total_cb'       => 'incassoos_get_occasion_total',
+		'detail_cb'      => 'incassoos_get_occasion_total',
+		'detail_args'    => array( 0, true ),
 		'count_in_title' => true,
 		'max'            => -1,
 		'status'         => 'publish',
@@ -304,8 +309,9 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 	 * @since 4.2.0
 	 *
 	 * @param array $query_args The arguments passed to WP_Query to produce the list of posts.
+	 * @param array $args       The initial function arguments.
 	 */
-	$query_args = apply_filters( 'dashboard_recent_posts_query_args', $query_args );
+	$query_args = apply_filters( 'incassoos_admin_dashboard_recent_posts_query_args', $query_args, $args );
 	$posts      = new WP_Query( $query_args );
 
 	if ( $posts->have_posts() ) {
@@ -343,8 +349,8 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 			// Use the post edit link for those who can edit, the permalink otherwise.
 			$recent_post_link = current_user_can( 'edit_post', get_the_ID() ) ? get_edit_post_link() : get_permalink();
 
-			// Get the post's total
-			$post_total = isset( $args['total_cb'] ) && is_callable( $args['total_cb'] ) ? call_user_func_array( $args['total_cb'], array( 0, true ) ) : false;
+			// Get the post's detail
+			$post_detail = isset( $args['detail_cb'] ) && is_callable( $args['detail_cb'] ) ? call_user_func_array( $args['detail_cb'], $args['detail_args'] ) : false;
 
 			$draft_or_post_title = _draft_or_post_title();
 			printf( '<li><span class="post-date">%1$s</span> <a href="%2$s" aria-label="%3$s">%4$s</a> %5$s</li>',
@@ -354,7 +360,7 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 				/* translators: %s: Post title. */
 				esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;' ), $draft_or_post_title ) ),
 				$draft_or_post_title,
-				! empty( $post_total ) ? '<span class="post-total">' . $post_total . '</span>' : ''
+				! empty( $post_detail ) ? '<span class="post-detail">' . $post_detail . '</span>' : ''
 			);
 		}
 
