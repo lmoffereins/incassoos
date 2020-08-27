@@ -622,6 +622,8 @@ function incassoos_is_plugin_taxonomy( $taxonomy = '' ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_filter_term_link'
+ *
  * @param  string $url Term url
  * @param  WP_Term $term Term object
  * @param  string $taxonomy Taxonomy name
@@ -629,28 +631,27 @@ function incassoos_is_plugin_taxonomy( $taxonomy = '' ) {
  */
 function incassoos_filter_term_link( $url, $term, $taxonomy ) {
 
-	// Define base admin url
-	$admin_url = add_query_arg( array( 'taxonomy' => $taxonomy, 'term' => $term->slug ), admin_url( 'edit.php' ) );
+	// Concerning plugin taxonomies
+	if ( incassoos_is_plugin_taxonomy( $taxonomy ) ) {
 
-	switch ( $taxonomy ) {
+		// Map taxonomies to post types
+		$types = array(
+			incassoos_get_activity_cat_tax_id()  => incassoos_get_activity_post_type(),
+			incassoos_get_occasion_type_tax_id() => incassoos_get_occasion_post_type(),
+			incassoos_get_product_cat_tax_id()   => incassoos_get_product_post_type()
+		);
 
-		// Activity Category
-		case incassoos_get_activity_cat_tax_id() :
-			$url = add_query_arg( 'post_type', incassoos_get_activity_post_type(), $admin_url );
-			break;
-
-		// Occasion Type
-		case incassoos_get_occasion_type_tax_id() :
-			$url = add_query_arg( 'post_type', incassoos_get_occasion_post_type(), $admin_url );
-			break;
-
-		// Product Category
-		case incassoos_get_product_cat_tax_id() :
-			$url = add_query_arg( 'post_type', incassoos_get_product_post_type(), $admin_url );
-			break;
+		// Define base admin url
+		if ( isset( $types[ $taxonomy ] ) ) {
+			$url = add_query_arg( array(
+				'post_type' => $types[ $taxonomy ],
+				'taxonomy'  => $taxonomy,
+				'term'      => $term->slug
+			), admin_url( 'edit.php' ) );
+		}
 	}
 
-	return $url;
+	return apply_filters( 'incassoos_filter_term_link', $url, $term, $taxonomy );
 }
 
 /**
