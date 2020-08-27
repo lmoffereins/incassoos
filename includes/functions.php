@@ -213,6 +213,8 @@ function incassoos_get_object_post_type( $object_type ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_filter_post_type_link'
+ *
  * @param  string  $post_link Post link
  * @param  WP_Post $post      Post object
  * @param  bool    $leavename [description]
@@ -228,7 +230,7 @@ function incassoos_filter_post_type_link( $post_link, $post, $leavename, $sample
 		$post_link = add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) );
 	}
 
-	return $post_link;
+	return apply_filters( 'incassoos_filter_post_type_link', $post_link, $post, $leavename, $sample );
 }
 
 /**
