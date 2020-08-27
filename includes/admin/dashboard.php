@@ -197,13 +197,13 @@ function incassoos_admin_dashboard_recent_widget() {
 	) );
 
 	$recent_orders = incassoos_admin_dashboard_recent_posts( array(
-		'id'          => 'recently-ordered',
-		'title'       => esc_html__( 'Recently ordered', 'incassoos' ),
-		'detail_cb'   => 'incassoos_get_order_total',
-		'detail_args' => array( 0, true ),
-		'max'         => 10,
+		'id'          => 'recently-created',
+		'title'       => esc_html__( 'Recently created', 'incassoos' ),
+		'detail_cb'   => 'incassoos_get_post_type_label',
+		'detail_args' => array(),
+		'max'         => 15,
 		'status'      => 'any',
-		'post_type'   => incassoos_get_order_post_type(),
+		'post_type'   => incassoos_get_plugin_post_types(),
 		'order'       => 'DESC'
 	) );
 

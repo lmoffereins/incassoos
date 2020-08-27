@@ -222,6 +222,32 @@ function incassoos_get_object_post_type( $object_type ) {
 }
 
 /**
+ * Return a label for the post type
+ *
+ * @since 1.0.0
+ *
+ * @param  string $post_type  Optional. Post type name.
+ * @param  string $label_type Optional. Label type. Defaults to 'singular_name'.
+ * @return string Post type label
+ */
+function incassoos_get_post_type_label( $post_type = '', $label_type = 'singular_name' ) {
+
+	// Default to the current post type
+	if ( empty( $post_type ) ) {
+		$post_type = get_post_type();
+	}
+
+	$label = '';
+	$pto   = get_post_type_object( $post_type );
+
+	if ( $pto && isset( $pto->labels->{$label_type} ) ) {
+		$label = $pto->labels->{$label_type};
+	}
+
+	return $label;
+}
+
+/**
  * Modify the post type link
  *
  * @since 1.0.0
