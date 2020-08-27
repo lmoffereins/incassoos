@@ -1368,6 +1368,8 @@ function incassoos_rest_remove_schema_properties( $schema, $properties = array()
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_currency'
+ *
  * @param mixed $default Optional. Default return value.
  * @return string Currency
  */
@@ -1379,6 +1381,8 @@ function incassoos_get_currency( $default = 'USD' ) {
  * Return the order time lock in minutes
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_order_time_lock'
  *
  * @param mixed $default Optional. Default return value.
  * @return int Order time lock in minutes
@@ -1392,6 +1396,8 @@ function incassoos_get_order_time_lock( $default = 0 ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_transaction_description'
+ *
  * @param mixed $default Optional. Default return value.
  * @return string Transaction description
  */
@@ -1403,6 +1409,8 @@ function incassoos_get_transaction_description( $default = '' ) {
  * Return the Organization name
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_organization_name'
  *
  * @param mixed $default Optional. Default return value.
  * @return string Organization name
@@ -1416,6 +1424,8 @@ function incassoos_get_organization_name( $default = '' ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_account_holder'
+ *
  * @param mixed $default Optional. Default return value.
  * @return string Account Holder name
  */
@@ -1427,6 +1437,8 @@ function incassoos_get_account_holder( $default = '' ) {
  * Return the Account IBAN
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_account_iban'
  *
  * @param  mixed $default Optional. Default return value.
  * @return string Account IBAN
@@ -1440,6 +1452,8 @@ function incassoos_get_account_iban( $default = '' ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_sepa_creditor_id'
+ *
  * @param mixed $default Optional. Default return value.
  * @return string SEPA Creditor Identifier
  */
@@ -1452,6 +1466,8 @@ function incassoos_get_sepa_creditor_id( $default = '' ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_sender_email_address'
+ *
  * @param mixed $default Optional. Default return value.
  * @return string Sender email address
  */
@@ -1463,6 +1479,8 @@ function incassoos_get_sender_email_address( $default = '' ) {
  * Return the custom email salutation
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_custom_email_salutation'
  *
  * @param mixed $default Optional. Default return value.
  * @return string Custom email salutation
@@ -1484,6 +1502,8 @@ function incassoos_get_custom_email_salutation( $user, $default = '' ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_custom_email_closing'
+ *
  * @param mixed $default Optional. Default return value.
  * @return string Custom email closing
  */
@@ -1496,6 +1516,8 @@ function incassoos_get_custom_email_closing( $default = '' ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_app_get_default_occassion_selector_tab'
+ *
  * @return string Occassion Selector tab id
  */
 function incassoos_app_get_default_occassion_selector_tab() {
@@ -1506,6 +1528,8 @@ function incassoos_app_get_default_occassion_selector_tab() {
  * Return the App's default Occasion title
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_app_get_default_occasion_title'
  *
  * @return string Occassion title
  */
