@@ -135,6 +135,7 @@ final class Incassoos {
 
 		/** Core ********************************************************/
 
+		require( $this->includes_dir . 'accounts.php'     );
 		require( $this->includes_dir . 'actions.php'      );
 		require( $this->includes_dir . 'activities.php'   );
 		require( $this->includes_dir . 'capabilities.php' );
