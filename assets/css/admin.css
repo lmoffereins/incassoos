@@ -850,7 +850,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 #incassoos_dashboard_status .order-count a:before {
-	content: '\f481'; /* dashicons-clipboard */
+	content: '\f187'; /* dashicons-food */
 }
 
 #incassoos_dashboard_status .product-count a:before {
