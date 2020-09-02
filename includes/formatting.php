@@ -239,6 +239,19 @@ function incassoos_redact_text( $input, $args = array() ) {
 	return apply_filters( 'incassoos_redact_text', $redacted, $input, $args );
 }
 
+/**
+ * Return whether the given value is already redacted
+ *
+ * @since 1.0.0
+ *
+ * @param  string $input Value to check
+ * @param  array  $args  Redaction parameters. See {@see incassoos_redact_text()}.
+ * @return bool Is value redacted?
+ */
+function incassoos_is_value_redacted( $input, $args = array() ) {
+	return ! empty( $input ) && $input === incassoos_redact_text( $input, $args );
+}
+
 /** Validation ****************************************************************/
 
 /**
