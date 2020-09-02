@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @uses apply_filters() Calls 'incassoos_sanitize_iban'
  *
- * @param string $iban
+ * @param string $input Value to sanitize
  * @param bool $validate Optional. Whether to validate the IBAN. Defaults to true.
  * @return string
  */
-function incassoos_sanitize_iban( $iban = '', $validate = true ) {
+function incassoos_sanitize_iban( $input = '', $validate = true ) {
 
 	// Only allow alphanumeric
-	$value = preg_replace( '/[^a-zA-Z0-9]/', '', trim( $iban ) );
+	$value = preg_replace( '/[^a-zA-Z0-9]/', '', trim( $input ) );
 
 	/**
 	 * Define the country's specific IBAN regexes.
@@ -146,7 +146,7 @@ function incassoos_sanitize_iban( $iban = '', $validate = true ) {
 	}
 
 	// Filter the result and return
-	return apply_filters( 'incassoos_sanitize_iban', $value, $iban, $validate );
+	return apply_filters( 'incassoos_sanitize_iban', $value, $input, $validate );
 }
 
 /**
@@ -161,6 +161,18 @@ function incassoos_sanitize_iban( $iban = '', $validate = true ) {
  */
 function incassoos_redact_iban( $iban ) {
 	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 'keep' => array( 2, 3 ), 'length' => true ) ), $iban );
+}
+
+/**
+ * Return whether the IBAN value is already redacted
+ *
+ * @since 1.0.0
+ *
+ * @param  string $iban IBAN
+ * @return bool Is IBAN redacted?
+ */
+function incassoos_is_iban_redacted( $iban ) {
+	return $iban === incassoos_redact_iban( $iban );
 }
 
 /**
