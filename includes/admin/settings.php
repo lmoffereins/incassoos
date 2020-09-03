@@ -776,7 +776,7 @@ function incassoos_admin_load_settings_page() {
 }
 
 /**
- * Display admin notices on the settings page
+ * Display custom admin notices on the settings page
  *
  * @since 1.0.0
  */
@@ -787,10 +787,6 @@ function incassoos_admin_settings_notices() {
 		return;
 
 	$messages = array();
-
-	if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] ) {
-		$messages[] = '<strong>' . esc_html__( 'Settings saved.', 'incassoos' ) . '</strong>';
-	}
 
 	// JWT Authorization
 	if ( isset( $_GET['tokens-invalidated'] ) && $_GET['tokens-invalidated'] ) {
@@ -814,6 +810,9 @@ function incassoos_admin_settings_page() {
 	if ( 'incassoos-settings' === $settings_page ) {
 		$settings_page = 'incassoos';
 	}
+
+	// Display settings errors
+	settings_errors();
 
 	?>
 
