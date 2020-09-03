@@ -185,7 +185,7 @@ function incassoos_admin_get_settings_fields() {
 			'_incassoos_account_iban' => array(
 				'title'             => esc_html__( 'Account IBAN', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_account_iban',
-				'sanitize_callback' => 'incassoos_sanitize_iban',
+				'sanitize_callback' => 'incassoos_sanitize_account_iban',
 				'args'              => array()
 			),
 
@@ -193,7 +193,7 @@ function incassoos_admin_get_settings_fields() {
 			'_incassoos_sepa_creditor_id' => array(
 				'title'             => esc_html__( 'SEPA Creditor Identifier', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_sepa_creditor_id',
-				'sanitize_callback' => '', // TODO: something else
+				'sanitize_callback' => 'incassoos_sanitize_sepa_creditor_id',
 				'args'              => array()
 			),
 		),

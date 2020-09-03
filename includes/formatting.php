@@ -252,6 +252,126 @@ function incassoos_is_value_redacted( $input, $args = array() ) {
 	return ! empty( $input ) && $input === incassoos_redact_text( $input, $args );
 }
 
+/** Settings **************************************************************/
+
+/**
+ * Filter the value of the Account IBAN option before update
+ *
+ * When the value is valid, an encrypted version is saved separately while the option's
+ * value is redacted before update.
+ *
+ * Definition of defaults for the `$old_value` and `$option` parameters is applied because
+ * the registration of filtering of `sanitize_option_$option` in `register_setting()` does
+ * not provide the proper arguments to send those parameters along to the sanitizer.
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed  $value     Input value
+ * @param  mixed  $old_value Previous option value. Defaults to null.
+ * @param  string $option    Option name. Defaults to the option's name.
+ * @return mixed Modified value
+ */
+function incassoos_sanitize_account_iban( $value, $old_value = null, $option = '_incassoos_account_iban' ) {
+
+	// Short-circuit when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return incassoos_sanitize_iban( $value, true );
+	}
+
+	// Consider 'pre_update_option_*' context where filter params are in a different order
+	if ( '_incassoos_account_iban' === $old_value ) {
+		$_option = $old_value;
+		$old_value = $option;
+		$option = $_option;
+	}
+
+	// Sanitize and validate IBAN value
+	$iban = incassoos_sanitize_iban( $value, true );
+
+	// Only apply security when not already applied
+	$is_redacted = incassoos_is_iban_redacted( $value );
+
+	if ( ! $is_redacted && $iban ) {
+
+		// Store encrypted version separately
+		update_option( '_incassoos_encrypted_account_iban', incassoos_encrypt_value( $iban ) );
+
+		// Apply redaction
+		$value = incassoos_redact_iban( $iban );
+
+	// Invalid value, block update
+	} else {
+		$value = get_option( $option );
+	}
+
+	// Report settings error
+	if ( ! $is_redacted && ! $iban && function_exists( 'add_settings_error' ) ) {
+		add_settings_error( $option, "invalid_{$option}", esc_html__( 'Invalid value for Account IBAN.', 'incassoos' ) );
+	}
+
+	return $value;
+}
+
+/**
+ * Return the arguments for redaction of the SEPA Creditor Identifier option
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_sepa_creditor_id_redact_args'
+ *
+ * @return array Redact arguments
+ */
+function incassoos_get_sepa_creditor_id_redact_args() {
+	return apply_filters( 'incassoos_get_sepa_creditor_id_redact_args', array( 'keep' => array( 2, 4 ), 'length' => true ) );
+}
+
+/**
+ * Filter the value of the SEPA Creditor Identifier option before update
+ *
+ * When the value is valid, an encrypted version is saved separately while the option's
+ * value is redacted before update.
+ *
+ * Definition of defaults for the `$old_value` and `$option` parameters is applied because
+ * the registration of filtering of `sanitize_option_$option` in `register_setting()` does
+ * not provide the proper arguments to send those parameters along to the sanitizer.
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed  $value     Input value
+ * @param  mixed  $old_value Previous option value. Defaults to null.
+ * @param  string $option    Option name. Defaults to the option's name.
+ * @return mixed Modified value
+ */
+function incassoos_sanitize_sepa_creditor_id( $value, $old_value = null, $option = '_incassoos_sepa_creditor_id' ) {
+
+	// Short-circuit when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return $value;
+	}
+
+	// Consider 'pre_update_option_*' context where filter params are in a different order
+	if ( '_incassoos_sepa_creditor_id' === $old_value ) {
+		$_option = $old_value;
+		$old_value = $option;
+		$option = $_option;
+	}
+
+	// Define the option's redaction args
+	$redact_args = incassoos_get_sepa_creditor_id_redact_args();
+
+	// Only apply security when not already applied
+	if ( ! incassoos_is_value_redacted( $value, $redact_args ) ) {
+
+		// Store encrypted version separately
+		update_option( '_incassoos_encrypted_sepa_creditor_id', incassoos_encrypt_value( $value ) );
+
+		// Apply redaction
+		$value = incassoos_redact_text( $value, $redact_args );
+	}
+
+	return $value;
+}
+
 /** Validation ****************************************************************/
 
 /**
