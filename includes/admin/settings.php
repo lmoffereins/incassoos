@@ -15,9 +15,11 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register plugin settings
  *
+ * @see incassoos_register_settings()
+ *
  * @since 1.0.0
  */
-function incassoos_register_settings() {
+function incassoos_admin_register_settings() {
 
 	// Bail if no sections available
 	$sections = incassoos_admin_get_settings_sections();
@@ -54,16 +56,15 @@ function incassoos_register_settings() {
 				add_settings_field( $field_id, $field['title'], $field['callback'], $page, $section_id, $field['args'] );
 			}
 
-			// Register the setting
-			if ( ! empty( $field['sanitize_callback'] ) ) {
-				register_setting( $page, $field_id, $field['sanitize_callback'] );
-			}
+			/**
+			 * Setting is registered in {@see incassoos_register_settings()}.
+			 */
 		}
 	}
 }
 
 /**
- * Return admin settings sections
+ * Return plugin settings sections
  *
  * @since 1.0.0
  *
@@ -118,7 +119,7 @@ function incassoos_admin_get_settings_sections() {
 }
 
 /**
- * Return admin settings fields
+ * Return plugin settings fields
  *
  * @since 1.0.0
  *

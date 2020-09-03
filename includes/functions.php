@@ -1364,6 +1364,52 @@ function incassoos_rest_remove_schema_properties( $schema, $properties = array()
 /** Settings ******************************************************************/
 
 /**
+ * Register plugin settings
+ *
+ * @see incassoos_admin_register_settings()
+ *
+ * @since 1.0.0
+ */
+function incassoos_register_settings() {
+
+	// Make settings functionality available
+	require_once incassoos()->admin->admin_dir . 'settings.php';
+
+	// Bail if no sections available
+	$sections = incassoos_admin_get_settings_sections();
+	if ( empty( $sections ) )
+		return false;
+
+	// Loop through sections
+	foreach ( (array) $sections as $section_id => $section ) {
+
+		// Only add section and fields if section has fields
+		$fields = incassoos_admin_get_settings_fields_for_section( $section_id );
+		if ( empty( $fields ) )
+			continue;
+
+		// Define section page
+		if ( ! empty( $section['page'] ) ) {
+			$page = $section['page'];
+		} else {
+			$page = 'incassoos';
+		}
+
+		// Loop through fields for this section
+		foreach ( (array) $fields as $field_id => $field ) {
+
+			// Set default sanitizer
+			if ( ! isset( $field['sanitize_callback'] ) ) {
+				$field['sanitize_callback'] = '';
+			}
+
+			// Register the setting
+			register_setting( $page, $field_id, $field['sanitize_callback'] );
+		}
+	}
+}
+
+/**
  * Return the currency
  *
  * @since 1.0.0

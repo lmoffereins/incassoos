@@ -30,6 +30,10 @@ add_action( 'incassoos_activation',        'incassoos_delete_rewrite_rules',    
 add_action( 'incassoos_deactivation',      'incassoos_remove_caps',                10    );
 add_action( 'incassoos_deactivation',      'incassoos_delete_rewrite_rules',       10    );
 
+/** Core **********************************************************************/
+
+add_action( 'incassoos_init',              'incassoos_register_settings',          10    );
+
 /** Query *********************************************************************/
 
 add_action( 'parse_query',                 'incassoos_parse_query',                 2    ); // Early for overrides

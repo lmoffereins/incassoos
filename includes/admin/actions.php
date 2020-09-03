@@ -19,7 +19,7 @@ add_action( 'admin_notices',               'incassoos_admin_notices',           
 
 /** Core **********************************************************************/
 
-add_action( 'incassoos_admin_init',        'incassoos_register_settings',           10    );
+add_action( 'incassoos_admin_init',        'incassoos_admin_register_settings',     10    );
 add_action( 'incassoos_admin_init',        'incassoos_setup_updater',              999    );
 add_action( 'incassoos_admin_menu',        'incassoos_register_admin_menu',         10    );
 add_action( 'incassoos_admin_head',        'incassoos_remove_admin_menu',           10    );
