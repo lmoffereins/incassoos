@@ -1373,7 +1373,7 @@ function incassoos_rest_remove_schema_properties( $schema, $properties = array()
 function incassoos_register_settings() {
 
 	// Make settings functionality available
-	require_once incassoos()->admin->admin_dir . 'settings.php';
+	require_once incassoos()->includes_dir . 'admin/settings.php';
 
 	// Bail if no sections available
 	$sections = incassoos_admin_get_settings_sections();
