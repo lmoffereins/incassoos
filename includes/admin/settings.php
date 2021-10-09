@@ -245,7 +245,7 @@ function incassoos_admin_get_settings_fields() {
 				'args'              => array(
 					'setting'     => '_incassoos_app_slug',
 					'default'     => 'incassoos',
-					'description' => esc_html__( "This slug will only be used when the 'Home page' setting is not enabled.", 'incassoos' )
+					'description' => esc_html__( "This slug will only be used when the 'Front page' setting is not enabled.", 'incassoos' )
 				)
 			),
 		),
