@@ -36,6 +36,7 @@ add_action( 'incassoos_init',              'incassoos_register_settings',       
 
 /** Query *********************************************************************/
 
+add_action( 'parse_request',               'incassoos_parse_request',              10    );
 add_action( 'parse_query',                 'incassoos_parse_query',                 2    ); // Early for overrides
 add_action( 'parse_query',                 'incassoos_parse_query_vars',           10    );
 add_filter( 'posts_search',                'incassoos_posts_search',               10, 2 );

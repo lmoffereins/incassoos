@@ -10,6 +10,33 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** Request *******************************************************************/
+
+/**
+ * Add checks for plugin conditions to parse_request action
+ *
+ * @since 1.0.0
+ *
+ * @param WP $wp
+ */
+function incassoos_parse_request( $wp ) {
+
+	// Bail when in admin
+	if ( is_admin() )
+		return;
+
+	// Is this the front page?
+	if ( empty( $wp->query_vars ) ) {
+
+		// Is the application on the front page?
+		if ( incassoos_is_app_on_front() ) {
+
+			// Set query variable
+			$wp->query_vars[ incassoos_get_app_rewrite_id() ] = 1;
+		}
+	}
+}
+
 /** Query *********************************************************************/
 
 /**
@@ -32,9 +59,6 @@ function incassoos_parse_query( $posts_query ) {
 	// Bail when in admin
 	if ( is_admin() )
 		return;
-
-	// Get plugin
-	$plugin = incassoos();
 
 	// Get query variable(s)
 	$is_app = $posts_query->get( incassoos_get_app_rewrite_id() );
@@ -266,7 +290,7 @@ function incassoos_bypass_wp_query( $retval, $query ) {
 /** Is_* **********************************************************************/
 
 /**
- * Check if current page is the App page
+ * Check if current page is the Application page
  *
  * @since 1.0.0
  *
@@ -378,7 +402,7 @@ function incassoos_document_title_parts( $title = array() ) {
 
 	// App page
 	if ( incassoos_is_app() ) {
-		$title['title'] = esc_html_x( 'App', 'App page document title', 'incassoos' );
+		$title['title'] = esc_html_x( 'Application', 'Application page document title', 'incassoos' );
 	}
 
 	return $title;

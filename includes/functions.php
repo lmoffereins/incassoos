@@ -99,7 +99,7 @@ function incassoos_delete_rewrite_rules() {
 /** Slugs *********************************************************************/
 
 /**
- * Return the slug for the app interface
+ * Return the slug for the application interface
  *
  * @since 1.0.0
  *
@@ -110,6 +110,18 @@ function incassoos_get_app_slug() {
 	return apply_filters( 'incassoos_get_app_slug', get_option( '_incassoos_app_slug', 'incassoos' ) );
 }
 
+/**
+ * Return whether the application interface is shown on the front page
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_app_on_front'
+ * @return bool Is the app shown on the front page?
+ */
+function incassoos_is_app_on_front() {
+	return (bool) apply_filters( 'incassoos_is_app_on_front', get_option( '_incassoos_app_on_front', 'incassoos' ) );
+}
+
 /** URLs **********************************************************************/
 
 /**
@@ -117,10 +129,11 @@ function incassoos_get_app_slug() {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_app_url'
  * @return string Url
  */
 function incassoos_get_app_url() {
-	return home_url( user_trailingslashit( incassoos_get_app_slug() ) );
+	return apply_filters( 'incassoos_get_app_url', incassoos_is_app_on_front() ? home_url() : home_url( user_trailingslashit( incassoos_get_app_slug() ) ) );
 }
 
 /** Posts *********************************************************************/

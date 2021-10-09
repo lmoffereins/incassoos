@@ -521,7 +521,7 @@ final class Incassoos {
 	 * @since 1.0.0
 	 */
 	public function add_rewrite_tags() {
-		add_rewrite_tag( '%' . incassoos_get_app_rewrite_id() . '%', '([1]{1,})' ); // App page tag
+		add_rewrite_tag( '%' . incassoos_get_app_rewrite_id() . '%', '([1]{1,})' ); // Application page tag
 	}
 
 	/**
@@ -549,7 +549,9 @@ final class Incassoos {
 		/** Add *********************************************************/
 
 		// Page rules
-		add_rewrite_rule( $app_slug . $root_rule, 'index.php?' . $app_id . '=1', $priority );
+		if ( ! incassoos_is_app_on_front() ) {
+			add_rewrite_rule( $app_slug . $root_rule, 'index.php?' . $app_id . '=1', $priority );
+		}
 	}
 }
 

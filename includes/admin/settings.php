@@ -237,14 +237,15 @@ function incassoos_admin_get_settings_fields() {
 
 		'incassoos_settings_slugs' => array(
 
-			// App
+			// Application slug
 			'_incassoos_app_slug' => array(
-				'title'             => esc_html__( 'App UI', 'incassoos' ),
+				'title'             => esc_html__( 'Application UI', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_slug',
 				'sanitize_callback' => 'incassoos_sanitize_slug',
 				'args'              => array(
-					'setting' => '_incassoos_app_slug',
-					'default' => 'incassoos'
+					'setting'     => '_incassoos_app_slug',
+					'default'     => 'incassoos',
+					'description' => esc_html__( "This slug will only be used when the 'Home page' setting is not enabled.", 'incassoos' )
 				)
 			),
 		),
@@ -252,6 +253,14 @@ function incassoos_admin_get_settings_fields() {
 		/** Application Section *******************************************/
 
 		'incassoos_settings_application' => array(
+
+			// Application on front page
+			'_incassoos_app_on_front' => array(
+				'title'             => esc_html__( 'Front page', 'incassoos' ),
+				'callback'          => 'incassoos_admin_setting_callback_app_on_front',
+				'sanitize_callback' => 'intval',
+				'args'              => array()
+			),
 
 			// JWT Authentication
 			'_incassoos_jwt_auth_enabled' => array(
@@ -626,7 +635,20 @@ function incassoos_admin_setting_callback_slug( $args = array() ) {
  */
 function incassoos_admin_setting_callback_application_section() { ?>
 
-	<p><?php esc_html_e( 'Manage authentication settings for the use of Incassoos applications outside of the website.', 'incassoos' ); ?></p>
+	<p><?php esc_html_e( 'Manage settings for the use of the Incassoos application on the website and connected apps outside of the website.', 'incassoos' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Application on front page setting field
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_setting_callback_app_on_front() { ?>
+
+	<input name="_incassoos_app_on_front" id="_incassoos_app_on_front" type="checkbox" value="1" <?php checked( get_option( '_incassoos_app_on_front', false ) ); ?>>
+	<label for="_incassoos_app_on_front"><?php esc_html_e( 'Put the Incassoos application on the front page of this site.', 'incassoos' ); ?></label>
 
 	<?php
 }
