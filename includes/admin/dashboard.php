@@ -353,7 +353,7 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 			$post_detail = isset( $args['detail_cb'] ) && is_callable( $args['detail_cb'] ) ? call_user_func_array( $args['detail_cb'], $args['detail_args'] ) : false;
 
 			$draft_or_post_title = _draft_or_post_title();
-			printf( '<li><span class="post-date">%1$s</span> <a href="%2$s" aria-label="%3$s">%4$s</a> %5$s</li>',
+			printf( '<li><span class="post-date">%1$s</span> <a class="post-link" href="%2$s" aria-label="%3$s" title="%4$s">%4$s</a> %5$s</li>',
 				/* translators: 1: Relative date, 2: Time. */
 				sprintf( _x( '%1$s, %2$s', 'dashboard' ), $relative, get_the_time() ),
 				$recent_post_link,

@@ -880,20 +880,23 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	color: #72777c;
 }
 
-#incassoos_dashboard_recent .recent-posts a,
-#incassoos_dashboard_uncollected .recent-posts a {
+#incassoos_dashboard_recent .recent-posts .post-link,
+#incassoos_dashboard_uncollected .recent-posts .post-link {
 	flex: 1;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: pre;
 }
 
 #incassoos_dashboard_recent .recent-posts .post-date,
 #incassoos_dashboard_uncollected .recent-posts .post-date {
 	margin-right: 5px;
-	min-width: 130px;
+	min-width: 120px;
 }
 
 #incassoos_dashboard_recent .recent-posts .post-detail,
 #incassoos_dashboard_uncollected .recent-posts .post-detail {
-	margin-left: 5px;
+	margin-left: 10px;
 	text-align: right;
 }
 
