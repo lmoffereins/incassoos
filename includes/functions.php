@@ -822,13 +822,18 @@ function incassoos_nav_menu_get_items() {
 	// Setup nav menu items
 	$items = (array) apply_filters( 'incassoos_nav_menu_get_items', array(
 
-		// App interface
+		// Application
 		'app' => array(
-			'title'       => esc_html__( 'Incassoos App', 'incassoos' ),
-			'type_label'  => esc_html_x( 'Incassoos', 'Menu type label', 'incassoos' ),
+			'title'       => esc_html_x( 'Application', 'Menu item label', 'incassoos' ),
 			'url'         => incassoos_get_app_url(),
-			'is_current'  => true//incassoos_is_app(),
+			'is_current'  => incassoos_is_app()
 		),
+
+		// Administration
+		'admin' => array(
+			'title'       => esc_html_x( 'Administration', 'Menu item label', 'incassoos' ),
+			'url'         => add_query_arg( 'page', 'incassoos', admin_url( 'admin.php' ) )
+		)
 	) );
 
 	// Set default arguments
@@ -951,36 +956,34 @@ function incassoos_nav_menu_metabox( $object, $box ) {
 	$walker = new Walker_Nav_Menu_Checklist();
 	$args   = array( 'walker' => $walker );
 
-	?>
-	<div id="incassoos-menu" class="posttypediv">
+	$tab_name     = 'incassoos-tab';
+	$removed_args = array(
+		'action',
+		'customlink-tab',
+		'edit-menu-item',
+		'menu-item',
+		'page-tab',
+		'_wpnonce',
+	);
+	$view_all_url = esc_url( add_query_arg( $tab_name, 'all', remove_query_arg( $removed_args ) ) );
 
-		<div id="tabs-panel-incassoos-menu" class="tabs-panel tabs-panel-active">
-			<ul id="incassoos-menu-checklist" class="categorychecklist form-no-clear">
+	?>
+	<div id="posttype-incassoos" class="posttypediv">
+
+		<div id="incassoos-all" class="tabs-panel tabs-panel-view-all tabs-panel-active" role="region" aria-label="<?php echo esc_attr_x( 'All items', 'Menu administration label', 'incassoos' ); ?>" tabindex="0">
+			<ul id="incassooschecklist" data-wp-lists="list:incassoos" class="categorychecklist form-no-clear">
 				<?php echo walk_nav_menu_tree( array_map( 'wp_setup_nav_menu_item', incassoos_nav_menu_get_items() ), 0, (object) $args ); ?>
 			</ul>
 		</div><!-- /.tabs-panel -->
 
-		<p class="button-controls wp-clearfix">
-			<span class="list-controls">
-				<a href="<?php
-					echo esc_url( add_query_arg(
-						array(
-							'selectall' => 1,
-						),
-						remove_query_arg( array(
-							'action',
-							'customlink-tab',
-							'edit-menu-item',
-							'menu-item',
-							'page-tab',
-							'_wpnonce',
-						) )
-					));
-				?>#incassoos-menu" class="select-all aria-button-if-js"><?php _e( 'Select All' ); ?></a>
+		<p class="button-controls wp-clearfix" data-items-type="posttype-incassoos">
+			<span class="list-controls hide-if-no-js">
+				<input type="checkbox"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> id="<?php echo esc_attr( $tab_name ); ?>" class="select-all" />
+				<label for="<?php echo esc_attr( $tab_name ); ?>"><?php _e( 'Select All' ); ?></label>
 			</span>
 
 			<span class="add-to-menu">
-				<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu' ); ?>" name="add-incassoos-menu-item" id="submit-incassoos-menu" />
+				<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu' ); ?>" name="add-incassoos-menu-item" id="submit-posttype-incassoos" />
 				<span class="spinner"></span>
 			</span>
 		</p>

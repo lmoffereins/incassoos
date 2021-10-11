@@ -313,7 +313,7 @@ final class Incassoos {
 				'query_var'             => false,
 				'exclude_from_search'   => true,
 				'show_ui'               => current_user_can( 'incassoos_occasion_admin' ),
-				'show_in_nav_menus'     => true,
+				'show_in_nav_menus'     => false,
 				'can_export'            => true,
 				'menu_icon'             => 'dashicons-screenoptions',
 			)
@@ -336,7 +336,7 @@ final class Incassoos {
 				'query_var'             => false,
 				'exclude_from_search'   => true,
 				'show_ui'               => current_user_can( 'incassoos_order_admin' ),
-				'show_in_nav_menus'     => true,
+				'show_in_nav_menus'     => false,
 				'can_export'            => true,
 				'menu_icon'             => 'dashicons-screenoptions',
 			)
