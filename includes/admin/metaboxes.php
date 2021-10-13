@@ -467,13 +467,13 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$can_collect = current_user_can( 'collect_incassoos_collection', $post->ID );
 
 	// Collecting action urls
-	$base_url    = add_query_arg( array( 'post' => $post->ID ), admin_url( 'post.php' ) );
-	$stage_url   = wp_nonce_url( add_query_arg( array( 'action' => 'inc_stage'   ), $base_url ), 'stage-collection_'   . $post->ID );
-	$unstage_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_unstage' ), $base_url ), 'unstage-collection_' . $post->ID );
-	$collect_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect' ), $base_url ), 'collect-collection_' . $post->ID );
-	$email_url   = wp_nonce_url( add_query_arg( array( 'action' => 'inc_email'   ), $base_url ), 'email-collection_'   . $post->ID );
+	$base_url       = add_query_arg( array( 'post' => $post->ID ), admin_url( 'post.php' ) );
+	$stage_url      = wp_nonce_url( add_query_arg( array( 'action' => 'inc_stage'      ), $base_url ), 'stage-collection_'      . $post->ID );
+	$unstage_url    = wp_nonce_url( add_query_arg( array( 'action' => 'inc_unstage'    ), $base_url ), 'unstage-collection_'    . $post->ID );
+	$collect_url    = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect'    ), $base_url ), 'collect-collection_'    . $post->ID );
+	$test_email_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_test_email' ), $base_url ), 'test-email-collection_' . $post->ID );
 
-	// Export
+	// Export options
 	$export_types = incassoos_get_export_types();
 	$can_export   = current_user_can( 'export_incassoos_collection', $post->ID ) && ! empty( $export_types );
 
@@ -540,7 +540,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Email:', 'incassoos' ); ?></label>
-			<span id="collection-email" class="value"><a href="<?php echo esc_url( $email_url ); ?>" class="button button-secondary button-small"><?php esc_html_e( 'Send test email', 'incassoos' ); ?></a></span>
+			<span id="collection-email" class="value"><a href="<?php echo esc_url( $test_email_url ); ?>" class="button button-secondary button-small"><?php esc_html_e( 'Send test email', 'incassoos' ); ?></a></span>
 		</p>
 
 		<?php endif; ?>

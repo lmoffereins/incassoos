@@ -1767,6 +1767,15 @@ function incassoos_get_export_type_title( $type ) {
  * @return bool Was the email sent?
  */
 function incassoos_send_email( $args = array() ) {
+	$original_args = $args;
+
+	// Set mail-to to the provided user
+	if ( ! empty( $args['user_id'] ) && empty( $args['to'] ) ) {
+		$user = get_user_by( 'id', $args['user_id'] );
+		if ( $user ) {
+			$args['to'] = $user->user_email;
+		}
+	}
 
 	// Parse default attributes
 	$args = wp_parse_args( $args, array(
@@ -1785,7 +1794,7 @@ function incassoos_send_email( $args = array() ) {
 	// Assume all mails are in HTML
 	$args['headers']['content-type'] = 'Content-Type: text/html';
 
-	$args        = apply_filters( 'incassoos_send_email_args', $args );
+	$args        = apply_filters( 'incassoos_send_email_args', $args, $original_args );
 	$to          = $args['to'];
 	$subject     = $args['subject'];
 	$message     = $args['message'];

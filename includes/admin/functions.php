@@ -1290,13 +1290,13 @@ function incassoos_admin_post_action_collect( $post_id ) {
 }
 
 /**
- * Parse the admin email action for a Collection
+ * Parse the admin test email action for a Collection
  *
  * @since 1.0.0
  *
  * @param  mixed $post_id Post ID
  */
-function incassoos_admin_post_action_email( $post_id ) {
+function incassoos_admin_post_action_test_email( $post_id ) {
 	$post = incassoos_get_collection( $post_id );
 
 	// Bail when the post is not a Collection
@@ -1304,7 +1304,7 @@ function incassoos_admin_post_action_email( $post_id ) {
 		return;
 
 	// Nonce check
-	check_admin_referer( 'email-collection_' . $post->ID );
+	check_admin_referer( 'test-email-collection_' . $post->ID );
 
 	// Bail when the user cannot collect
 	if ( ! current_user_can( 'collect_incassoos_collection', $post->ID ) ) {
