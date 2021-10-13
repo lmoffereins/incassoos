@@ -66,7 +66,11 @@ class Incassoos_SEPA_XML_File extends Incassoos_SEPA_XML_Parser {
 	 */
 	public function get_filename() {
 		if ( $this->post ) {
-			return sprintf( '%s-SEPA-%s.xml', $this->party->organization, incassoos_get_collection_date( $this->post, 'Y-m-d' ) );
+			return sprintf( '%s-SEPA-%s-%s.xml',
+				$this->party->organization,
+				incassoos_get_collection_title( $this->post ),
+				incassoos_get_collection_date( $this->post, 'Ymd' )
+			);
 		} else {
 			return parent::get_filename();
 		}

@@ -82,8 +82,8 @@ class Incassoos_VGSR_SFC_File {
 		if ( $this->post ) {
 			return sprintf( '%s-SFC-%s-%s.sfc',
 				incassoos_get_organization_name(),
-				incassoos_get_collection_date( $this->post, 'Y-m-d' ),
-				incassoos_get_collection_title( $this->post )
+				incassoos_get_collection_title( $this->post ),
+				incassoos_get_collection_date( $this->post, 'Ymd' )
 			);
 		}
 	}
