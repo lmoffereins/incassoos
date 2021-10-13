@@ -32,7 +32,7 @@ class Incassoos_SEPA_XML_Parser {
 	 * @since 1.0.0
 	 * @var boolean
 	 */
-	private $_debit = true;
+	private $is_debit = true;
 
 	/**
 	 * Author party details.
@@ -101,11 +101,11 @@ class Incassoos_SEPA_XML_Parser {
 	public function __construct( $args = array(), $debit = true ) {
 
 		// Init XML object
-		$this->xml = new DOMDocument('1.0', 'UTF-8');
+		$this->xml = new DOMDocument( '1.0', 'UTF-8' );
 		$this->xml->formatOutput = true;
 
 		// Set debit status
-		$this->_debit = (bool) $debit;
+		$this->is_debit = (bool) $debit;
 
 		// Parse arguments
 		if ( $args ) {
@@ -243,7 +243,7 @@ class Incassoos_SEPA_XML_Parser {
 	 * @return boolean Is this a Direct Debit?
 	 */
 	public function is_debit() {
-		return $this->_debit;
+		return $this->is_debit;
 	}
 
 	/**
@@ -254,7 +254,7 @@ class Incassoos_SEPA_XML_Parser {
 	 * @return boolean Is this a Credit Transfer?
 	 */
 	public function is_credit() {
-		return ! $this->_debit;
+		return ! $this->is_debit;
 	}
 
 	/**
@@ -265,7 +265,7 @@ class Incassoos_SEPA_XML_Parser {
 	 * @return string PAIN code
 	 */
 	public function get_pain() {
-		return $this->_debit
+		return $this->is_debit()
 			? '008.001.02'  // Direct Debit PAIN
 			: '001.001.03'; // Credit Transfer PAIN
 	}
@@ -283,7 +283,7 @@ class Incassoos_SEPA_XML_Parser {
 
 		// Reset errors list
 		$this->errors = array();
-		$errors = array();
+		$failed_details = array();
 
 		// Party details
 		foreach ( array(
@@ -295,24 +295,19 @@ class Incassoos_SEPA_XML_Parser {
 			'currency',
 		) as $detail ) {
 			if ( empty( $this->party->{$detail} ) ) {
-				$errors[] = "<code>{$detail}</code>";
+				$failed_details[] = "<code>{$detail}</code>";
 			}
 		}
 
 		// Construct error message
-		$this->errors[] = sprintf(
-			_n(
-				'The file is missing a valid value for its %s detail.',
-				'The file is missing a valid value for its %s details.',
-				count( $errors ),
-				'incassoos'
-			),
-			count( $errors ) > 1 ? wp_sprintf_l( '%l', $errors ) : $errors[0]
-		);
+		if ( $failed_details ) {
+			$detail_list = count( $failed_details ) > 1 ? wp_sprintf_l( '%l', $failed_details ) : $failed_details[0];
+			$this->errors[] = sprintf( esc_html__( 'The file has an invalid value for the following detail(s) of the creditor/organization: %s', 'incassoos' ), $detail_list );
+		}
 
 		// Transaction errors
 		foreach ( $this->_transactions as $t ) {
-			$errors = array();
+			$failed_details = array();
 
 			// Check presence required details
 			foreach ( array(
@@ -323,48 +318,27 @@ class Incassoos_SEPA_XML_Parser {
 				'bic',
 			) as $detail ) {
 				if ( empty( $t->{$detail} ) && empty( $t->party->{$detail} ) ) {
-					$errors[] = "<code>{$detail}</code>";
+					$failed_details[] = "<code>{$detail}</code>";
 				}
 			}
 
 			// Skip when no errors were found
-			if ( ! $errors )
+			if ( ! $failed_details )
 				continue;
 
-			// Setup error message
+			// Setup error message, by party name...
 			if ( ! empty( $t->party->name ) ) {
-				$message = sprintf(
-					_n(
-						'The transaction for %1$s is missing a valid value for their %2$s detail.',
-						'The transaction for %1$s is missing a valid value for their %2$s details.',
-						count( $errors ),
-						'incassoos'
-					),
-					'<span class="party">' . $t->party->name . '</span>',
-					'%s'
-				);
+				$message = sprintf( esc_html__( 'The transaction for %1$s has an invalid value for the following detail(s): %2$s', 'incassoos' ), '<span class="party">' . $t->party->name . '</span>', '%s' );
+			// ... by party id
 			} elseif ( ! empty( $t->party->id ) ) {
-				$message = sprintf(
-					_n(
-						'The transaction for party with id %1$s is missing a valid value for their %2$s detail.',
-						'The transaction for party with id %1$s is missing a valid value for their %2$s details.',
-						count( $errors ),
-						'incassoos'
-					),
-					$t->part->id,
-					'%s'
-				);
+				$message = sprintf( esc_html__( 'The transaction for party with ID %1$s has an invalid value for the following detail(s): %2$s', 'incassoos' ), $t->part->id, '%s' );
+			// ... without party
 			} else {
-				$message = _n(
-					'A transaction is missing a valid value for its %s detail.',
-					'A transaction is missing a valid value for its %s details.',
-					count( $errors ),
-					'incassoos'
-				);
+				$message = esc_html__( 'A transaction has an invalid value for the following detail(s): %s', 'incassoos' );
 			}
 
 			// Construct error message
-			$this->errors[] = sprintf( $message, count( $errors ) > 1 ? wp_sprintf_l( '%l', $errors ) : $errors[0] );
+			$this->errors[] = sprintf( $message, count( $failed_details ) > 1 ? wp_sprintf_l( '%l', $failed_details ) : $failed_details[0] );
 		}
 
 		return ! $this->has_errors();
@@ -428,7 +402,7 @@ class Incassoos_SEPA_XML_Parser {
 	 * @return string SEPA XML filename
 	 */
 	public function get_filename() {
-		return sprintf( '%s-SEPA-%s-%s.xml', $this->party->organization, date( 'Ymd', $this->_collection_date ), date( 'Y-m-d' ) );
+		return sprintf( '%s-SEPA-%s-%s.xml', $this->party->organization, date( 'Ymd', $this->_collection_date ), date( 'Ymd' ) );
 	}
 
 	/**
@@ -522,7 +496,7 @@ class Incassoos_SEPA_XML_Parser {
 		return wp_parse_args( $this->payment_tags, array(
 			'PmtInfId' => 'PmtInfId-001',                      // Payment information identifier
 			'PmtMtd'   => $this->is_debit() ? 'DD' : 'CT',     // Payment method
-			'PmtTpInf' => array(                               // ?
+			'PmtTpInf' => array(                               // Payment type information
 				'SvcLvl' => array(                             // Service level
 					'Cd' => 'SEPA',                            // SEPA scheme
 				),
@@ -531,7 +505,7 @@ class Incassoos_SEPA_XML_Parser {
 				),
 				'SeqTp'  => 'FRST',                            // Sequence type (FRST: first, RCUR: recurring, FNAL: final, OOFF: one-off)
 			),
-			'ReqdColltnDt' => $this->get_due_date(),           // Collection due date
+			'ReqdColltnDt' => $this->get_due_date(),           // Requested collection due date
 			'Cdtr'     => array(                               // Creditor details
 				'Nm' => $this->party->name,                    // Creditor's name
 			),
@@ -546,11 +520,11 @@ class Incassoos_SEPA_XML_Parser {
 				),
 			),
 			'CdtrSchmeId' => array(                            // Creditor schema identifier
-				'Id' => array(                                 // ?
-					'PrvtId' => array(                         // ?
-						'Othr' => array(                       // ?
-							'Id' => $this->party->creditor_id, // ?
-							'SchmeNm' => array(                // ?
+				'Id' => array(                                 // Identifier set
+					'PrvtId' => array(                         // Private entity
+						'Othr' => array(                       // Other details
+							'Id' => $this->party->creditor_id, // Creditor identifier
+							'SchmeNm' => array(                // Scheme name
 								'Prtry' => 'SEPA',             // ?
 							),
 						),
@@ -783,7 +757,7 @@ class Incassoos_SEPA_XML_Parser {
 	 * @return string Transaction identifier
 	 */
 	private function get_unique_transaction_id() {
-		return sprintf( '%s-%s-%s', date( 'Y-m-d' ), $this->get_transaction()->party->mandate, '0001' );
+		return sprintf( '%s-%s-%s', date( 'Ymd' ), $this->get_transaction()->party->mandate, '0001' );
  	}
 }
 
