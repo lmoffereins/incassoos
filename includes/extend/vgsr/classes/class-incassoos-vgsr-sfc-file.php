@@ -40,7 +40,7 @@ class Incassoos_VGSR_SFC_File {
 	public function __construct( $post = 0 ) {
 
 		// Require the Collection to be collected
-		$this->post = incassoos_get_collection( $post, true );
+		$this->post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
 	}
 
 	/**

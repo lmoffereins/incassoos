@@ -101,10 +101,14 @@ function incassoos_get_collected_status_id() {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  null|bool $collected Optional. The required Collection's collected status.
+ * @param  array $args {
+ *     Optional. Additional post requirements.
+ *
+ *     @type bool $is_collected Whether the Collection should be collected.
+ * }
  * @return WP_Post|bool Collection post object or False when not found.
  */
-function incassoos_get_collection( $post = 0, $collected = null ) {
+function incassoos_get_collection( $post = 0, $args = array() ) {
 
 	// Get the post
 	$post = get_post( $post );
@@ -114,10 +118,10 @@ function incassoos_get_collection( $post = 0, $collected = null ) {
 		$post = false;
 
 	// Check collected status
-	} elseif ( null !== $collected ) {
+	} elseif ( isset( $args['is_collected'] ) ) {
 
 		// Return false when collection status does not match the request
-		if ( (bool) $collected !== incassoos_is_collection_collected( $post ) ) {
+		if ( (bool) $args['is_collected'] !== incassoos_is_collection_collected( $post ) ) {
 			$post = false;
 		}
 	}
@@ -1682,7 +1686,7 @@ function incassoos_update_collection_consumer_totals( $post = 0 ) {
 function incassoos_stage_collection( $post = 0 ) {
 	global $wpdb;
 
-	$post = incassoos_get_collection( $post, false );
+	$post = incassoos_get_collection( $post, array( 'is_collected' => false ) );
 
 	// Bail when the Collection wasn't found
 	if ( ! $post )
@@ -1737,7 +1741,7 @@ function incassoos_stage_collection( $post = 0 ) {
 function incassoos_unstage_collection( $post = 0 ) {
 	global $wpdb;
 
-	$post = incassoos_get_collection( $post, false );
+	$post = incassoos_get_collection( $post, array( 'is_collected' => false ) );
 
 	// Bail when the Collection wasn't found
 	if ( ! $post )
@@ -1787,7 +1791,7 @@ function incassoos_unstage_collection( $post = 0 ) {
 function incassoos_collect_collection( $post = 0 ) {
 	global $wpdb;
 
-	$post = incassoos_get_collection( $post, false );
+	$post = incassoos_get_collection( $post, array( 'is_collected' => false ) );
 
 	// Bail when the Collection wasn't found
 	if ( ! $post )

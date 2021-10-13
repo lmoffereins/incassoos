@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @param int $post_id Post ID
  */
 function incassoos_export_collection_file( $post_id ) {
-	$post = incassoos_get_collection( $post_id, true );
+	$post = incassoos_get_collection( $post_id, array( 'is_collected' => true ) );
 
 	// Bail when the post is not a collected Collection
 	if ( ! $post )
