@@ -397,6 +397,50 @@ function incassoos_get_collection_date( $post = 0, $format = false ) {
 }
 
 /**
+ * Output the Collection's withdrawal date
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ */
+function incassoos_the_collection_withdrawal_date( $post = 0, $format = false ) {
+	echo incassoos_get_collection_withdrawal_date( $post );
+}
+
+/**
+ * Return the Collection's withdrawal date
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_collection_withdrawal_date'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return string Collection's withdrawal date.
+ */
+function incassoos_get_collection_withdrawal_date( $post = 0, $format = false ) {
+	$post  = incassoos_get_collection( $post );
+	$delay = incassoos_get_default_collection_withdrawal_delay();
+	$date  = incassoos_get_collection_date( $post, $delay ? 'Y-m-d' : $format );
+
+	// Default to the registered date format
+	if ( empty( $format ) ) {
+		$format = get_option( 'date_format' );
+	}
+
+	if ( $date ) {
+		if ( $delay ) {
+			$date = date( $format, strtotime( $date . " + {$delay} day" ) );
+		}
+	} else {
+		$date = '';
+	}
+
+	return apply_filters( 'incassoos_get_collection_withdrawal_date', $date, $post, $format );
+}
+
+/**
  * Output the Collection's total value
  * 
  * @since 1.0.0
@@ -2052,7 +2096,7 @@ function incassoos_collection_email_withdrawal_mention( $post, $user ) {
 		esc_html__( 'The total amount of %1$s will be withdrawn from your account (%2$s) on or around %3$s.', 'incassoos' ),
 		incassoos_get_format_currency( $total ),
 		incassoos_get_user_iban( $user ),
-		incassoos_get_collection_date( $post )
+		incassoos_get_collection_withdrawal_date( $post )
 	); ?></p>
 
 	<?php

@@ -1574,6 +1574,20 @@ function incassoos_get_custom_email_closing( $default = '' ) {
 }
 
 /**
+ * Return the default collection withdrawal delay in days
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_default_collection_withdrawal_delay'
+ *
+ * @param mixed $default Optional. Default return value.
+ * @return string Default collection withdrawal delay
+ */
+function incassoos_get_default_collection_withdrawal_delay( $default = 5 ) {
+	return apply_filters( 'incassoos_get_default_collection_withdrawal_delay', get_option( '_incassoos_default_collection_withdrawal_delay', $default ) );
+}
+
+/**
  * Return the App's default Occasion Selector tab
  *
  * @since 1.0.0
