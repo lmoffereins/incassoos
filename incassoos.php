@@ -99,26 +99,26 @@ final class Incassoos {
 		/** Identifiers *************************************************/
 
 		// Post type
-		$this->collection_post_type = apply_filters( 'inc_collection_post_type', 'inc_collection' );
-		$this->activity_post_type   = apply_filters( 'inc_activity_post_type',   'inc_activity'   );
-		$this->occasion_post_type   = apply_filters( 'inc_occasion_post_type',   'inc_occasion'   );
-		$this->order_post_type      = apply_filters( 'inc_order_post_type',      'inc_order'      );
-		$this->product_post_type    = apply_filters( 'inc_product_post_type',    'inc_product'    );
+		$this->collection_post_type = apply_filters( 'incassoos_collection_post_type', 'inc_collection' );
+		$this->activity_post_type   = apply_filters( 'incassoos_activity_post_type',   'inc_activity'   );
+		$this->occasion_post_type   = apply_filters( 'incassoos_occasion_post_type',   'inc_occasion'   );
+		$this->order_post_type      = apply_filters( 'incassoos_order_post_type',      'inc_order'      );
+		$this->product_post_type    = apply_filters( 'incassoos_product_post_type',    'inc_product'    );
 
 		// Taxonomy
-		$this->activity_cat_tax_id  = apply_filters( 'inc_activity_cat_tax',  'inc_activity_category' );
-		$this->occasion_type_tax_id = apply_filters( 'inc_occasion_type_tax', 'inc_occasion_type'     );
-		$this->product_cat_tax_id   = apply_filters( 'inc_product_cat_tax',   'inc_product_category'  );
+		$this->activity_cat_tax_id  = apply_filters( 'incassoos_activity_cat_tax',  'inc_activity_category' );
+		$this->occasion_type_tax_id = apply_filters( 'incassoos_occasion_type_tax', 'inc_occasion_type'     );
+		$this->product_cat_tax_id   = apply_filters( 'incassoos_product_cat_tax',   'inc_product_category'  );
 
 		// Status
-		$this->staged_status_id     = apply_filters( 'inc_staged_post_status',    'staged'    );
-		$this->collected_status_id  = apply_filters( 'inc_collected_post_status', 'collected' );
+		$this->staged_status_id     = apply_filters( 'incassoos_staged_post_status',    'staged'    );
+		$this->collected_status_id  = apply_filters( 'incassoos_collected_post_status', 'collected' );
 
 		// Consumer type
-		$this->guest_consumer_type  = apply_filters( 'inc_guest_consumer_type', 'guest' );
+		$this->guest_consumer_type  = apply_filters( 'incassoos_guest_consumer_type', 'guest' );
 
 		// Export type
-		$this->sepa_export_type     = apply_filters( 'inc_sepa_export_type', 'inc_sepa' );
+		$this->sepa_export_type     = apply_filters( 'incassoos_sepa_export_type', 'inc_sepa' );
 
 		/** Misc ********************************************************/
 

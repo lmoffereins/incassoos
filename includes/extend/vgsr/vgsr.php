@@ -44,8 +44,8 @@ class Incassoos_VGSR {
 		/** Identifiers *******************************************************/
 
 		// Consumer type
-		$this->cash_consumer_type         = apply_filters( 'inc_vgsr_cash_consumer_type',         'cash'         );
-		$this->on_the_house_consumer_type = apply_filters( 'inc_vgsr_on_the_house_consumer_type', 'on_the_house' );
+		$this->cash_consumer_type         = apply_filters( 'incassoos_vgsr_cash_consumer_type',         'cash'         );
+		$this->on_the_house_consumer_type = apply_filters( 'incassoos_vgsr_on_the_house_consumer_type', 'on_the_house' );
 	}
 
 	/**
