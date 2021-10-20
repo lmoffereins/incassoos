@@ -278,7 +278,8 @@ function incassoos_sanitize_account_iban( $value, $old_value = null, $option = '
 		return incassoos_sanitize_iban( $value, true );
 	}
 
-	// Consider 'pre_update_option_*' context where filter params are in a different order
+	// Consider 'pre_update_option_*' context where filter params are in a different order:
+	// 1. sanitized value, 2. option name, 3. original value
 	if ( '_incassoos_account_iban' === $old_value ) {
 		$_option = $old_value;
 		$old_value = $option;
@@ -349,7 +350,8 @@ function incassoos_sanitize_sepa_creditor_id( $value, $old_value = null, $option
 		return $value;
 	}
 
-	// Consider 'pre_update_option_*' context where filter params are in a different order
+	// Consider 'pre_update_option_*' context where filter params are in a different order:
+	// 1. sanitized value, 2. option name, 3. original value
 	if ( '_incassoos_sepa_creditor_id' === $old_value ) {
 		$_option = $old_value;
 		$old_value = $option;
