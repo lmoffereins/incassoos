@@ -200,8 +200,8 @@ function incassoos_sanitize_user_list( $list = '' ) {
  *  - $keep   int|array Optional. Amount of trailing characters to not redact. Provide two values in an
  *                      array to keep leading characters as well.
  *  - $char   string    Optional. Character to use for redaction. Defaults to 'X'.
- *  - $length bool|int  Optional. The length of the applied redaction. Provide True to apply the exact
- *                      length of the redacted text. Defaults to 4.
+ *  - $length bool|int  Optional. The length of the applied redaction. When True the exact length of the
+ *                      redacted text is applied. Defaults to True.
  * }
  * @return string Redacted text
  */
@@ -211,7 +211,7 @@ function incassoos_redact_text( $input, $args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'keep'   => 4,
 		'char'   => 'X',
-		'length' => 4
+		'length' => true
 	) );
 
 	$redacted = '';
@@ -219,7 +219,7 @@ function incassoos_redact_text( $input, $args = array() ) {
 
 	// Default to keep 0 leading characters
 	if ( 1 === count( $keep ) ) {
-		$keep = array_merge( array( 0 ), $keep );
+		$keep = array( 0, $keep[0] );
 	}
 
 	if ( $input ) {

@@ -160,7 +160,7 @@ function incassoos_sanitize_iban( $input = '', $validate = true ) {
  * @return string Redacted IBAN
  */
 function incassoos_redact_iban( $iban ) {
-	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 'keep' => array( 2, 3 ), 'length' => true ) ), $iban );
+	return apply_filters( 'incassoos_redact_iban', incassoos_redact_text( $iban, array( 'keep' => array( 2, 3 ) ) ), $iban );
 }
 
 /**
