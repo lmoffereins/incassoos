@@ -1948,16 +1948,16 @@ function incassoos_enable_encryption() {
 		return $keys;
 	}
 
-	// Put keys into vars
+	// Put keys into vars `$encryption_key` and `$decryption_key`
 	extract( $keys );
 
 	// Store the public encryption key
-	update_option( '_incasoos_encryption_key', $encryption_key );
+	update_option( '_incassoos_encryption_key', $encryption_key );
 
-	// Hook
-	do_action( 'incassoos_enable_encryption', $encryption_key, $decryption_key );
+	// Hook after
+	do_action( 'incassoos_enable_encryption' );
 
-	return true;
+	return $decryption_key;
 }
 
 /**
@@ -1966,12 +1966,12 @@ function incassoos_enable_encryption() {
  * @since 1.0.0
  *
  * @uses do_action() Calls 'incassoos_disable_encryption'
+ * @uses do_action() Calls 'incassoos_disabled_encryption'
  *
- * @param  string $decryption_key    Decrypt key
- * @param  array  $decrypt_values Optional. Values to decrypt.
- * @return array|WP_Error Optionally decrypted values or error object
+ * @param  string $decryption_key Decryption key
+ * @return bool|WP_Error Disabling success error object
  */
-function incassoos_disable_encryption( $decryption_key, $decrypt_values = array() ) {
+function incassoos_disable_encryption( $decryption_key ) {
 
 	// Validate decryption key
 	$validated = incassoos_validate_decryption_key( $decryption_key );
@@ -1979,21 +1979,23 @@ function incassoos_disable_encryption( $decryption_key, $decrypt_values = array(
 		return $validated;
 	}
 
-	// Hook before
+	// Force False on the check for whether encryption is enabled. Not untill
+	// the encryption key option is deleted will `incassoos_is_encryption_enabled()`
+	// return True. However, the encryption key must remain available to be
+	// able to decrypt encrypted values using `incassoos_decrypt_value()`.
+	add_filter( 'incassoos_is_encryption_enabled', '__return_false' );
+
+	// Hook before. Use this for decrypting data while the encryption key
+	// still exists in the database
 	do_action( 'incassoos_disable_encryption', $decryption_key );
 
-	// Decrypt provided values
-	foreach ( $decrypt_values as $key => $value ) {
-		$decrypt_values[ $key ] = incassoos_decrypt_value( $value, $decryption_key );
-	}
-
 	// Remove public encryption key
-	delete_option( '_incasoos_encryption_key' );
+	delete_option( '_incassoos_encryption_key' );
 
 	// Hook after
-	do_action( 'incassoos_disabled_encryption', $decryption_key );
+	do_action( 'incassoos_disabled_encryption' );
 
-	return $decrypt_values;
+	return true;
 }
 
 /**
@@ -2044,7 +2046,7 @@ function incassoos_generate_encryption_keys( $password = null ) {
  * @return string Encryption key
  */
 function incassoos_get_encryption_key() {
-	return base64_decode( get_option( '_incasoos_encryption_key' ) );
+	return base64_decode( get_option( '_incassoos_encryption_key' ) );
 }
 
 /**
@@ -2117,12 +2119,17 @@ function incassoos_encrypt_value( $input ) {
 			// Encrypt input
 			$encrypted = sodium_crypto_box_seal( $input, incassoos_get_encryption_key() );
 
-		// Fail silently
-		} catch ( Exception $exception ) {}
+			// Set encrypted value
+			if ( $encrypted ) {
+				$input = base64_encode( $encrypted );
+			}
 
-		// Set encrypted value
-		if ( $encrypted ) {
-			$input = base64_encode( $encrypted );
+		// Setup error when encrypting failed
+		} catch ( Exception $exception ) {
+			$input = new WP_Error(
+				'incassoos_encrypt_value_error',
+				sprintf( esc_html__( 'Encrypting the value resulted in an error: %s', 'incassoos' ), $exception->getMessage() )
+			);
 		}
 	}
 
@@ -2134,14 +2141,14 @@ function incassoos_encrypt_value( $input ) {
  *
  * @since 1.0.0
  *
- * @param  string $input       Value to decrypt
+ * @param  string $input          Value to decrypt
  * @param  string $decryption_key Decryption key
  * @return string Decrypted string
  */
 function incassoos_decrypt_value( $input, $decryption_key ) {
 
 	// When encryption is enabled
-	if ( incassoos_is_encryption_enabled() ) {
+	if ( incassoos_is_encryption_enabled() || doing_action( 'incassoos_disable_encryption' ) ) {
 		try {
 
 			// Construct keypair
@@ -2153,12 +2160,17 @@ function incassoos_decrypt_value( $input, $decryption_key ) {
 			// Decrypt input
 			$decrypted = sodium_crypto_box_seal_open( base64_decode( $input ), $keypair );
 
-		// Fail silently
-		} catch ( Exception $exception ) {}
+			// Set decrypted value
+			if ( $decrypted ) {
+				$input = $decrypted;
+			}
 
-		// Set decrypted value
-		if ( $decrypted ) {
-			$input = $decrypted;
+		// Setup error when decrypting failed
+		} catch ( Exception $exception ) {
+			$input = new WP_Error(
+				'incassoos_decrypt_value_error',
+				sprintf( esc_html__( 'Decrypting the value resulted in an error: %s', 'incassoos' ), $exception->getMessage() )
+			);
 		}
 	}
 
