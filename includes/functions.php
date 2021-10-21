@@ -2117,7 +2117,7 @@ function incassoos_encrypt_value( $input ) {
 		try {
 
 			// Encrypt input
-			$encrypted = sodium_crypto_box_seal( $input, incassoos_get_encryption_key() );
+			$encrypted = sodium_crypto_box_seal( (string) $input, incassoos_get_encryption_key() );
 
 			// Set encrypted value
 			if ( $encrypted ) {
@@ -2142,7 +2142,7 @@ function incassoos_encrypt_value( $input ) {
  * @since 1.0.0
  *
  * @param  string $input          Value to decrypt
- * @param  string $decryption_key Decryption key
+ * @param  string $decryption_key The decryption key
  * @return string Decrypted string
  */
 function incassoos_decrypt_value( $input, $decryption_key ) {
@@ -2175,4 +2175,239 @@ function incassoos_decrypt_value( $input, $decryption_key ) {
 	}
 
 	return $input;
+}
+
+/**
+ * Return the list of encryptable options
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_encryptable_options'
+ * @return array Encryptable options
+ */
+function incassoos_get_encryptable_options() {
+
+	/**
+	 * Filter the list of encryptable options
+	 *
+	 * Options can be added in one of the following ways:
+	 * - Just the option name. The equiavalent encrypted value will be stored with
+	 *   the '_encrypted' suffix added to the option name.
+	 * - The option name as key with its encryption option name as value.
+	 * - The option name as key and encryption parameters in an array {
+	 *    string $encrypted_option_name Optional. Encrypted option name. Defaults to the
+	 *                                   plain option name with an '_encrypted' suffix.
+	 *    string $redact_callback       Optional. Callback name for redacting the original
+	 *                                   value. Defaults to `incassoos_redact_text`.
+	 *    array  $redact_callback_args  Optional. Additional arguments for the redaction
+	 *                                   callback. Defaults to an empty array.
+	 *    string $is_redacted_callback  Optional. Callback name for checking whether the
+	 *                                   value is redacted. Defaults to `incassoos_is_value_redacted`.
+	 *   }
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $options Encryptable options
+	 */
+	$options = (array) apply_filters( 'incassoos_get_encryptable_options', array(
+
+		// The IBAN of the organization
+		'_incassoos_account_iban'     => array(
+			'encrypted_option_name' => '_incassoos_encrypted_account_iban',
+			'redact_callback'       => 'incassoos_redact_iban',
+			'is_redacted_callback'  => 'incassoos_is_iban_redacted'
+		),
+
+		// The SEPA Creditor Identifier of the organization
+		'_incassoos_sepa_creditor_id' => array(
+			'encrypted_option_name' => '_incassoos_encrypted_sepa_creditor_id',
+			'redact_callback_args'  => array( 'keep' => array( 2, 4 ) )
+		)
+	) );
+
+	$parsed_options = array();
+
+	// Parse defaults
+	foreach ( $options as $option_name => $args ) {
+
+		// Provided just the plain option name
+		if ( is_numeric( $option_name ) && is_string( $args ) ) {
+			$option_name = $args;
+			$args        = array();
+		} elseif ( is_string( $args ) ) {
+			$args = array( 'encrypted_option_name' => $args );
+		}
+
+		$parsed_options[ $option_name ] = wp_parse_args( $args, array(
+			'encrypted_option_name' => "{$option_name}_encrypted",
+			'redact_callback'       => 'incassoos_redact_text',
+			'redact_callback_args'  => array(),
+			'is_redacted_callback'  => 'incassoos_is_value_redacted'
+		) );
+	}
+
+	return $parsed_options;
+}
+
+/**
+ * Return the details of a single encryptable option
+ *
+ * @since 1.0.0
+ *
+ * @param  string $option Option name
+ * @return array|bool Option details or False when not found
+ */
+function incassoos_get_encryptable_option( $option ) {
+
+	// Define retval
+	$retval = false;
+
+	// Get encryptable options
+	$options = incassoos_get_encryptable_options();
+
+	// Find the option
+	if ( isset( $options[ $option ] ) ) {
+		$retval = $options[ $option ];
+	}
+
+	return $retval;
+}
+
+/**
+ * Register actions and filters for encryptable data
+ *
+ * @since 1.0.0
+ */
+function incassoos_register_encryptable_data() {
+
+	// Get encryptable options
+	$options = incassoos_get_encryptable_options();
+
+	// Register encryption actions on `add_option()`
+	foreach ( $options as $option => $args ) {
+		add_action( "add_option_{$option}", 'incassoos_encrypt_for_add_option', 10, 2 );
+	}
+
+	// Register encryption filters on `update_option()`
+	foreach ( $options as $option => $args ) {
+		add_filter( "pre_update_option_{$option}", 'incassoos_encrypt_for_update_option', 10, 3 );
+	}
+}
+
+/**
+ * Encrypt an option when it is added
+ *
+ * @since 1.0.0
+ *
+ * @param string $option Option name
+ * @param mixed  $value  Option value
+ */
+function incassoos_encrypt_for_add_option( $option, $value ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return $value;
+	}
+
+	// Re-update option which will trigger the encryption
+	update_option( $option, $value );
+}
+
+/**
+ * Encrypt an option when it is updated
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed  $value     Option value
+ * @param  mixed  $old_value Previous option value
+ * @param  string $option    Option name
+ * @return mixed Redacted or untouched option value
+ */
+function incassoos_encrypt_for_update_option( $value, $old_value, $option ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return $value;
+	}
+
+	// Get encryptable option
+	$args = incassoos_get_encryptable_option( $option );
+
+	// Bail when option is not encryptable
+	if ( ! $args ) {
+		return $value;
+	}
+
+	// Ignore redacted values to prevent encryption of already encrypted data
+	if ( call_user_func_array( $args['is_redacted_callback'], array( $value, $args['redact_callback_args'] ) ) ) {
+		return $value;
+	}
+
+	// Encrypt the value
+	$encrypted_value = incassoos_encrypt_value( $value );
+
+	// Bail when encryption failed
+	if ( is_wp_error( $encrypted_value ) ) {
+		wp_die( $encrypted_value );
+	}
+
+	// Store encrypted option
+	update_option( $args['encrypted_option_name'], $encrypted_value );
+
+	// Set redacted value for saving
+	$value = call_user_func_array( $args['redact_callback'], array( $value, $args['redact_callback_args'] ) );
+
+	return $value;
+}
+
+/**
+ * Apply encryption to the encryptable data collectively
+ *
+ * @since 1.0.0
+ */
+function incassoos_encrypt_encryptable_data() {
+
+	// Walk encryptable options
+	foreach ( incassoos_get_encryptable_options() as $option_name => $args ) {
+
+		// Get plain option value
+		if ( $plain_value = get_option( $option_name, false ) ) {
+
+			// Re-update the option which will trigger the encryption
+			update_option( $option_name, $plain_value );
+		}
+	}
+}
+
+/**
+ * Decrypt the encrypted encryptable data collectively
+ *
+ * @since 1.0.0
+ *
+ * @param string $decryption_key The decryption key
+ */
+function incassoos_decrypt_encryptable_data( $decryption_key ) {
+
+	// Walk encryptable options
+	foreach ( incassoos_get_encryptable_options() as $option_name => $args ) {
+
+		// Get encrypted option value
+		$encrypted_value = get_option( $args['encrypted_option_name'], false );
+		if ( $encrypted_value ) {
+
+			// Decrypt option value
+			$decrypted_value = incassoos_decrypt_value( $encrypted_value, $decryption_key );
+
+			// Bail when an error occurred
+			if ( is_wp_error( $decrypted_value ) ) {
+				wp_die( $decrypted_value );
+			}
+
+			// Overwrite redacted option with the decrypted value
+			update_option( $option_name, $decrypted_value );
+
+			// Remove encrypted option
+			delete_option( $args['encrypted_option_name'] );
+		}
+	}
 }
