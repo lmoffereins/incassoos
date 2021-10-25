@@ -1912,10 +1912,11 @@ function incassoos_get_file_type( $filename ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_is_encryption_supported'
  * @return bool Is encryption supported?
  */
 function incassoos_is_encryption_supported() {
-	return function_exists( 'sodium_crypto_box_seal' );
+	return apply_filters( 'incassoos_is_encryption_supported', function_exists( 'sodium_crypto_box_seal' ) );
 }
 
 /**

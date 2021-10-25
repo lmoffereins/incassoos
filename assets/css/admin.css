@@ -900,6 +900,52 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	text-align: right;
 }
 
+/** Page Information Box **/
+
+body.incassoos .page-information-box {
+	display: flex;
+	margin: 10vh auto;
+	width: 400px;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* See WordPress/.login .button.wp-hide-pw */
+body.incassoos .button-in-input {
+	background: 0 0;
+	border: 1px solid transparent;
+	box-shadow: none;
+	font-size: 14px;
+	line-height: 2;
+	width: 2.5rem;
+	height: 1.5rem;
+	margin: 0;
+	padding: 5px 9px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	/* dashicons */
+	display: inline-block;
+	font: normal 20px/1 dashicons;
+	vertical-align: bottom;
+	speak: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-decoration: none !important;
+}
+
+body.incassoos .button-in-input:hover {
+	background: 0 0;
+	border: 1px solid transparent; /* overrides @WordPress/.wp-core-ui .button:hover */
+}
+
+body.incassoos .button-in-input:focus {
+	background: 0 0;
+	border-color: #007cba;
+	box-shadow: 0 0 0 1px #007cba;
+	outline: 2px solid transparent;
+}
+
 /** Consumers Page **/
 
 body.incassoos_page_incassoos-consumers .users .consumer {
@@ -1020,3 +1066,52 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 body.incassoos_page_incassoos-settings .wp-editor-wrap {
 	width: 600px;
 }
+
+/** Encryption Page **/
+
+body.incassoos_page_incassoos-encryption .encryption-form {
+	margin: 1em 0;
+	counter-reset: encryption-step;
+}
+
+body.incassoos_page_incassoos-encryption .step-item:not(.active-step) {
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+	top: -9999px;
+}
+
+body.incassoos_page_incassoos-encryption .step-title:before {
+	counter-increment: encryption-step;
+	content: "\00a0" counter(encryption-step) ".";
+	content: "\00a0" counter(encryption-step) "." / "";
+	margin-right: 4px;
+}
+
+body.incassoos_page_incassoos-encryption .step-description {
+	display: contents;
+}
+
+body.incassoos_page_incassoos-encryption .step-description ul {
+	list-style: disc;
+	padding-left: 2em;
+}
+
+body.incassoos_page_incassoos-encryption .step-navigation {
+	margin-top: 25px;
+}
+
+body.incassoos_page_incassoos-encryption #encryption-step-activated label,
+body.incassoos_page_incassoos-encryption #encryption-step-are-you-sure label {
+	position: relative;
+	display: block;
+}
+
+body.incassoos_page_incassoos-encryption #decryption-key {
+	padding-right: 2.5rem;
+	width: 100%;
+}
+
+body.incassoos_page_incassoos-encryption #copy-decryption-key:after {
+	content: '\f105'; /* dashicons-admin-page */
+	/*content: '\f481'; /* dashicons-clipboard */

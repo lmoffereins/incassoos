@@ -48,7 +48,7 @@ function incassoos_register_admin_menu() {
 	$hooks[] = incassoos_admin_submenu_post_type( incassoos_get_product_post_type()    );
 
 	// Consumers page
-	$hooks[] = add_submenu_page(
+	$hooks[] = $consumers_page = add_submenu_page(
 		'incassoos',
 		esc_html__( 'Incassoos Consumers', 'incassoos' ),
 		esc_html__( 'Consumers', 'incassoos' ),
@@ -71,11 +71,23 @@ function incassoos_register_admin_menu() {
 		add_action( "load-{$settings_page}", 'incassoos_admin_load_settings_page' );
 	}
 
+	// Encryption page
+	$hooks[] = add_submenu_page(
+		'incassoos',
+		esc_html__( 'Incassoos Encryption', 'incassoos' ),
+		esc_html__( 'Encryption', 'incassoos' ),
+		'incassoos_admin_page-incassoos-encryption',
+		'incassoos-encryption',
+		'incassoos_admin_page'
+	);
+
 	// Register admin page hooks
-	add_action( "load-{$dashboard}",                        'incassoos_admin_load_dashboard_page' );
-	add_action( 'incassoos_admin_page-incassoos',           'incassoos_admin_dashboard_page'      );
-	add_action( 'incassoos_admin_page-incassoos-consumers', 'incassoos_admin_consumers_page'      );
-	add_action( 'incassoos_admin_page-incassoos-settings',  'incassoos_admin_settings_page'       );
+	add_action( "load-{$dashboard}",                         'incassoos_admin_load_dashboard_page' );
+	add_action( "load-{$consumers_page}",                    'incassoos_admin_load_consumers_page' );
+	add_action( 'incassoos_admin_page-incassoos',            'incassoos_admin_dashboard_page'      );
+	add_action( 'incassoos_admin_page-incassoos-consumers',  'incassoos_admin_consumers_page'      );
+	add_action( 'incassoos_admin_page-incassoos-settings',   'incassoos_admin_settings_page'       );
+	add_action( 'incassoos_admin_page-incassoos-encryption', 'incassoos_admin_encryption_page'     );
 
 	foreach ( $hooks as $hook ) {
 		add_action( "admin_head-{$hook}", 'incassoos_admin_menu_highlight' );
@@ -200,8 +212,9 @@ function incassoos_admin_submenu_taxonomy( $taxonomy = '', $function = '' ) {
  * @since 1.0.0
  */
 function incassoos_remove_admin_menu() {
-	remove_submenu_page( 'incassoos', 'incassoos-consumers' );
-	remove_submenu_page( 'incassoos', 'incassoos-settings'  );
+	remove_submenu_page( 'incassoos', 'incassoos-consumers'  );
+	remove_submenu_page( 'incassoos', 'incassoos-settings'   );
+	remove_submenu_page( 'incassoos', 'incassoos-encryption' );
 }
 
 /** Pages ***************************************************************/
@@ -269,12 +282,22 @@ function incassoos_admin_is_plugin_page() {
  *
  * @uses do_action() Calls 'incassoos_admin_page-{$page}'
  */
-function incassoos_admin_page() { ?>
+function incassoos_admin_page() {
+	$pages        = incassoos_admin_get_pages();
+	$current_page = incassoos_admin_get_current_page();
+
+	?>
 
 	<div class="wrap">
+
+		<?php if ( ! isset( $pages[ $current_page ]['hide_page_title'] ) || ! $pages[ $current_page ]['hide_page_title'] ) : ?>
+
 		<h1 class="page-title"><?php incassoos_admin_the_page_title(); ?></h1>
 
-		<?php do_action( 'incassoos_admin_page-' . incassoos_admin_get_current_page() ); ?>
+		<?php endif; ?>
+
+		<?php do_action( "incassoos_admin_page-{$current_page}" ); ?>
+
 	</div>
 
 	<?php
@@ -322,17 +345,17 @@ function incassoos_admin_page_nav() {
 	$page  = incassoos_admin_get_current_page();
 
 	// Walk registered pages
-	foreach ( $pages as $slug => $label ) {
+	foreach ( $pages as $slug => $args ) {
 
 		// Skip empty pages
-		if ( empty( $label ) )
+		if ( empty( $args ) || ! isset( $args['page_title'] ) )
 			continue;
 
 		// Print the tab item
-		printf( '<a class="nav-item%s" href="%s">%s</a>',
-			( $page === $slug ) ? ' nav-item-active' : '',
+		printf( '<a class="nav-item nav-item-%s" href="%s">%s</a>',
+			( $page === $slug ) ? "{$slug} nav-item-active" : $slug,
 			esc_url( add_query_arg( array( 'page' => $slug ), admin_url( 'admin.php' ) ) ),
-			$label
+			$args['page_title']
 		);
 	}
 }
@@ -343,7 +366,7 @@ function incassoos_admin_page_nav() {
  * @since 1.0.0
  */
 function incassoos_admin_the_page_title() {
-	echo incassoos_admin_get_page_title();
+	echo esc_html( incassoos_admin_get_page_title() );
 }
 
 /**
@@ -356,14 +379,12 @@ function incassoos_admin_the_page_title() {
  * @return string Admin page title
  */
 function incassoos_admin_get_page_title() {
+	$pages        = incassoos_admin_get_pages();
+	$current_page = incassoos_admin_get_current_page();
+	$title        = '';
 
-	// Get the admin pages
-	$pages = incassoos_admin_get_pages();
-	$page  = incassoos_admin_get_current_page();
-	$title = '';
-
-	if ( isset( $pages[ $page ] ) ) {
-		$title = $pages[ $page ];
+	if ( isset( $pages[ $current_page ] ) ) {
+		$title = $pages[ $current_page ]['page_title'];
 	}
 
 	return apply_filters( 'incassoos_admin_get_page_title', $title );
@@ -381,13 +402,24 @@ function incassoos_admin_get_pages() {
 
 	// Setup return value
 	$pages = array(
-		'incassoos'           => esc_html__( 'Dashboard', 'incassoos' ),
-		'incassoos-consumers' => esc_html__( 'Consumers', 'incassoos' )
+		'incassoos'            => __( 'Dashboard', 'incassoos' ),
+		'incassoos-consumers'  => array(
+			'page_title'             => __( 'Consumers', 'incassoos' ),
+		),
+		'incassoos-settings'   => __( 'Settings', 'incassoos' ),
+		'incassoos-encryption' => array(
+			'page_title'             => __( 'Encryption', 'incassoos' ),
+			'hide_page_title'        => true
+		)
 	);
 
 	// Add the settings page
-	if ( incassoos_admin_page_has_settings( 'incassoos' ) ) {
-		$pages['incassoos-settings'] = esc_html__( 'Settings', 'incassoos' );
+	if ( ! incassoos_admin_page_has_settings( 'incassoos' ) ) {
+		unset( $pages['incassoos-settings'] );
+	}
+
+	foreach ( $pages as $page => $args ) {
+		$pages[ $page ] = is_array( $args ) ? $args : array( 'page_title' => $args );
 	}
 
 	$pages = (array) apply_filters( 'incassoos_admin_get_pages', $pages );
@@ -421,10 +453,10 @@ function incassoos_admin_has_pages() {
  * @return string The current admin page. Defaults to the first page.
  */
 function incassoos_admin_get_current_page() {
-	$pages = array_keys( incassoos_admin_get_pages() );
-	$page  = ( isset( $_GET['page'] ) && in_array( $_GET['page'], $pages ) ) ? $_GET['page'] : '';
+	$pages        = array_keys( incassoos_admin_get_pages() );
+	$current_page = ( isset( $_GET['page'] ) && in_array( $_GET['page'], $pages ) ) ? $_GET['page'] : $pages[0];
 
-	return $page;
+	return $current_page;
 }
 
 /** Posts ***************************************************************/

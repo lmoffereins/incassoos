@@ -70,6 +70,7 @@ add_filter( 'incassoos_admin_get_settings_fields', 'incassoos_admin_jwt_auth_set
 add_filter( 'incassoos_admin_get_settings_fields', 'incassoos_admin_user_roles_settings_fields', 10 );
 add_action( 'incassoos_admin_notices',             'incassoos_admin_settings_notices',           10 );
 
-/** Users *********************************************************************/
+/** Ajax **********************************************************************/
 
-add_action( 'load-incassoos_page_incassoos-consumers', 'incassoos_admin_load_consumers_page', 10 );
+add_action( 'wp_ajax_incassoos_enable_encryption',  'incassoos_admin_ajax_enable_encryption',  10 );
+add_action( 'wp_ajax_incassoos_disable_encryption', 'incassoos_admin_ajax_disable_encryption', 10 );
