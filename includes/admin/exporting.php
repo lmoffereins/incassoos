@@ -47,7 +47,7 @@ function incassoos_export_collection_file( $post_id ) {
 
 	// Log any errors
 	if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
-		set_transient( 'inc_export_errors-' . $post->ID, $file->get_errors() );
+		set_transient( 'incassoos_export_errors-' . $post->ID, $file->get_errors() );
 
 	// Offer file download
 	} else {
@@ -69,7 +69,7 @@ function incassoos_export_collection_file( $post_id ) {
 function incassoos_export_error_notice( $post ) {
 
 	// Bail when no errors are logged
-	if ( ! $transient = get_transient( 'inc_export_errors-' . $post->ID ) )
+	if ( ! $transient = get_transient( 'incassoos_export_errors-' . $post->ID ) )
 		return;
 
 	?>
@@ -97,5 +97,5 @@ function incassoos_export_error_notice( $post ) {
 	<?php
 
 	// Remove logged errors afterwards
-	delete_transient( 'inc_export_errors-' . $post->ID );
+	delete_transient( 'incassoos_export_errors-' . $post->ID );
 }
