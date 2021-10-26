@@ -319,6 +319,40 @@ function incassoos_get_user_match_ids_list( $user = false, $by = 'id' ) {
 	return implode( ',', incassoos_get_user_match_ids( $user, $by ) );
 }
 
+/**
+ * Return whether the user can view the post (type)
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_user_can_view_post'
+ *
+ * @param WP_Post|int|string $post Post object or ID or post type to check for.
+ * @param int                $user Optional. User object or ID. Defaults to the current user ID.
+ * @return bool User can view the post (type)
+ */
+function incassoos_user_can_view_post( $post, $user = 0 ) {
+	$user   = incassoos_get_user( $user );
+	$retval = false;
+
+	// Post type
+	if ( $user && is_string( $post ) && post_type_exists( $post ) ) {
+		$post_type_object = get_post_type_object( $post );
+		$cap              = property_exists( $post_type_object->cap, 'view_posts' );
+		$retval           = user_can( $user->ID, $cap ? $post_type_object->cap->view_posts : $post_type_object->cap->edit_posts );
+
+	// Single post
+	} elseif ( $user ) {
+		$post = get_post( $post );
+		if ( $post ) {
+			$post_type_object = get_post_type_object( $post->post_type );
+			$cap              = property_exists( $post_type_object->cap, 'view_post' );
+			$retval           = user_can( $user->ID, $cap ? $post_type_object->cap->view_post : $post_type_object->cap->edit_post, $post->ID );
+		}
+	}
+
+	return apply_filters( 'incassoos_user_can_view_post', $retval, $post, $user );
+}
+
 /** Listings ******************************************************************/
 
 function incassoos_get_top_spenders( $args = array() ) {
