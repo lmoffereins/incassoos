@@ -222,46 +222,56 @@ function incassoos_admin_dashboard_recent_widget() {
  * @since 1.0.0
  */
 function incassoos_admin_dashboard_uncollected_widget() {
+	$recent_collections = $recent_activities = $recent_occasions = false;
 
 	echo '<div class="main">';
 
-	$recent_collections = incassoos_admin_dashboard_recent_posts( array(
-		'id'             => 'recently-collected',
-		'title'          => esc_html__( '%d Collections', 'incassoos' ),
-		'detail_cb'      => 'incassoos_get_collection_total',
-		'detail_args'    => array( 0, true ),
-		'count_in_title' => true,
-		'max'            => -1,
-		'status'         => array( 'publish', incassoos_get_staged_status_id() ),
-		'post_type'      => incassoos_get_collection_post_type(),
-		'order'          => 'DESC',
-	) );
+	// Collections
+	if ( current_user_can( 'view_incassoos_collections' ) ) {
+		$recent_collections = incassoos_admin_dashboard_recent_posts( array(
+			'id'             => 'recently-collected',
+			'title'          => esc_html__( '%d Collections', 'incassoos' ),
+			'detail_cb'      => 'incassoos_get_collection_total',
+			'detail_args'    => array( 0, true ),
+			'count_in_title' => true,
+			'max'            => -1,
+			'status'         => array( 'publish', incassoos_get_staged_status_id() ),
+			'post_type'      => incassoos_get_collection_post_type(),
+			'order'          => 'DESC',
+		) );
+	}
 
-	$recent_activities = incassoos_admin_dashboard_recent_posts( array(
-		'id'             => 'uncollected-activities',
-		'title'          => esc_html__( '%d Activities', 'incassoos' ),
-		'detail_cb'      => 'incassoos_get_activity_total',
-		'detail_args'    => array( 0, true ),
-		'count_in_title' => true,
-		'max'            => -1,
-		'status'         => 'publish',
-		'post_type'      => incassoos_get_activity_post_type(),
-		'order'          => 'DESC',
-	) );
+	// Activities
+	if ( current_user_can( 'view_incassoos_activities' ) ) {
+		$recent_activities = incassoos_admin_dashboard_recent_posts( array(
+			'id'             => 'uncollected-activities',
+			'title'          => esc_html__( '%d Activities', 'incassoos' ),
+			'detail_cb'      => 'incassoos_get_activity_total',
+			'detail_args'    => array( 0, true ),
+			'count_in_title' => true,
+			'max'            => -1,
+			'status'         => 'publish',
+			'post_type'      => incassoos_get_activity_post_type(),
+			'order'          => 'DESC',
+		) );
+	}
 
-	$recent_occasions = incassoos_admin_dashboard_recent_posts( array(
-		'id'             => 'uncollected-occasions',
-		'title'          => esc_html__( '%d Occasions', 'incassoos' ),
-		'detail_cb'      => 'incassoos_get_occasion_total',
-		'detail_args'    => array( 0, true ),
-		'count_in_title' => true,
-		'max'            => -1,
-		'status'         => 'publish',
-		'post_type'      => incassoos_get_occasion_post_type(),
-		'order'          => 'DESC',
-	) );
+	// Occasions
+	if ( current_user_can( 'view_incassoos_occasions' ) ) {
+		$recent_occasions = incassoos_admin_dashboard_recent_posts( array(
+			'id'             => 'uncollected-occasions',
+			'title'          => esc_html__( '%d Occasions', 'incassoos' ),
+			'detail_cb'      => 'incassoos_get_occasion_total',
+			'detail_args'    => array( 0, true ),
+			'count_in_title' => true,
+			'max'            => -1,
+			'status'         => 'publish',
+			'post_type'      => incassoos_get_occasion_post_type(),
+			'order'          => 'DESC',
+		) );
+	}
 
-	if ( ! $recent_collections && ! $recent_activities && ! $recent_occasions && ! $recent_orders ) {
+	if ( ! $recent_collections && ! $recent_activities && ! $recent_occasions ) {
 		echo '<div class="no-activity">';
 		echo '<p>' . esc_html__( 'No collectable items yet!', 'incassoos' ) . '</p>';
 		echo '</div>';
