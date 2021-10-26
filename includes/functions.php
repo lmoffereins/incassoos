@@ -1943,6 +1943,14 @@ function incassoos_enable_encryption() {
 		);
 	}
 
+	// Check capabilities
+	if ( ! current_user_can( 'decrypt_incassoos_data' ) ) {
+		return new WP_Error(
+			'incassoos_user_not_allowed_enable_encryption',
+			esc_html__( 'You are not allowed to enable encryption.', 'incassoos' )
+		);
+	}
+
 	// Generate encryption keys
 	$keys = incassoos_generate_encryption_keys();
 	if ( is_wp_error( $keys ) ) {
@@ -1978,6 +1986,14 @@ function incassoos_disable_encryption( $decryption_key ) {
 	$validated = incassoos_validate_decryption_key( $decryption_key );
 	if ( is_wp_error( $validated ) ) {
 		return $validated;
+	}
+
+	// Check capabilities
+	if ( ! current_user_can( 'decrypt_incassoos_data' ) ) {
+		return new WP_Error(
+			'incassoos_user_not_allowed_disable_encryption',
+			esc_html__( 'You are not allowed to disable encryption.', 'incassoos' )
+		);
 	}
 
 	// Force False on the check for whether encryption is enabled. Not untill

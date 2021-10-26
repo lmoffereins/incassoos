@@ -703,6 +703,9 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'edit_incassoos_consumers'        => true,
 				'edit_incassoos_settings'         => true,
 
+				// Encryption
+				'decrypt_incassoos_data'          => true,
+
 				// REST API
 				'access_incassoos_rest_api'       => true,
 
@@ -758,6 +761,9 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'edit_incassoos_consumers'        => true,
 				'edit_incassoos_settings'         => true,
 
+				// Encryption
+				'decrypt_incassoos_data'          => false,
+
 				// REST API
 				'access_incassoos_rest_api'       => true,
 
@@ -812,6 +818,9 @@ function incassoos_get_caps_for_role( $role = '' ) {
 				'view_incassoos_dashboard'        => false,
 				'edit_incassoos_consumers'        => false,
 				'edit_incassoos_settings'         => false,
+
+				// Encryption
+				'decrypt_incassoos_data'          => false,
 
 				// REST API
 				'access_incassoos_rest_api'       => true,
