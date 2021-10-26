@@ -1982,6 +1982,14 @@ function incassoos_enable_encryption() {
  */
 function incassoos_disable_encryption( $decryption_key ) {
 
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return new WP_Error(
+			'incassoos_encryption_not_enabled',
+			esc_html__( 'Encryption is not enabled.', 'incassoos' )
+		);
+	}
+
 	// Validate decryption key
 	$validated = incassoos_validate_decryption_key( $decryption_key );
 	if ( is_wp_error( $validated ) ) {
@@ -2025,11 +2033,27 @@ function incassoos_disable_encryption( $decryption_key ) {
  */
 function incassoos_generate_encryption_keys( $password = null ) {
 
+	// Bail when encryption is already enabled
+	if ( incassoos_is_encryption_enabled() ) {
+		return new WP_Error(
+			'incassoos_encryption_already_enabled',
+			esc_html__( 'Encryption is already enabled.', 'incassoos' )
+		);
+	}
+
 	// Bail when encyrption is not supported
 	if ( ! incassoos_is_encryption_supported() ) {
 		return new WP_Error(
 			'incassoos_encryption_not_available',
-			esc_html__( 'Can not generate encryption keys because encryption is not available in this installation.', 'incassoos' )
+			esc_html__( 'Encryption is not available on this system.', 'incassoos' )
+		);
+	}
+
+	// Check capabilities
+	if ( ! current_user_can( 'decrypt_incassoos_data' ) ) {
+		return new WP_Error(
+			'incassoos_user_not_allowed_generate_encryption_keys',
+			esc_html__( 'You are not allowed to generate encryption keys.', 'incassoos' )
 		);
 	}
 
@@ -2166,6 +2190,15 @@ function incassoos_decrypt_value( $input, $decryption_key ) {
 
 	// When encryption is enabled
 	if ( incassoos_is_encryption_enabled() || doing_action( 'incassoos_disable_encryption' ) ) {
+
+		// Check capabilities
+		if ( ! current_user_can( 'decrypt_incassoos_data' ) ) {
+			return new WP_Error(
+				'incassoos_user_not_allowed_decrypt_data',
+				esc_html__( 'You are not allowed to decrypt data.', 'incassoos' )
+			);
+		}
+
 		try {
 
 			// Construct keypair
