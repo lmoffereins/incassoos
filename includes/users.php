@@ -353,6 +353,94 @@ function incassoos_user_can_view_post( $post, $user = 0 ) {
 	return apply_filters( 'incassoos_user_can_view_post', $retval, $post, $user );
 }
 
+/**
+ * Return whether the user can create posts of the post type
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_user_can_create_post'
+ *
+ * @param string $post_type Post type to check for.
+ * @param int    $user      Optional. User object or ID. Defaults to the current user ID.
+ * @return bool User can create posts of the post type
+ */
+function incassoos_user_can_create_post( $post_type, $user = 0 ) {
+	$user   = incassoos_get_user( $user );
+	$retval = false;
+
+	// Post type
+	if ( $user && post_type_exists( $post_type ) ) {
+		$post_type_object = get_post_type_object( $post_type );
+		$retval           = user_can( $user->ID, $post_type_object->cap->edit_posts );
+	}
+
+	return apply_filters( 'incassoos_user_can_create_post', $retval, $post_type, $user );
+}
+
+/**
+ * Return whether the user can edit the post (type)
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_user_can_edit_post'
+ *
+ * @param WP_Post|int|string $post Post object or ID or post type to check for.
+ * @param int                $user Optional. User object or ID. Defaults to the current user ID.
+ * @return bool User can edit the post (type)
+ */
+function incassoos_user_can_edit_post( $post, $user = 0 ) {
+	$user   = incassoos_get_user( $user );
+	$retval = false;
+
+	// Post type
+	if ( $user && is_string( $post ) && post_type_exists( $post ) ) {
+		$post_type_object = get_post_type_object( $post );
+		$retval           = user_can( $user->ID, $post_type_object->cap->edit_posts );
+
+	// Single post
+	} elseif ( $user ) {
+		$post = get_post( $post );
+		if ( $post ) {
+			$post_type_object = get_post_type_object( $post->post_type );
+			$retval           = user_can( $user->ID, $post_type_object->cap->edit_post, $post->ID );
+		}
+	}
+
+	return apply_filters( 'incassoos_user_can_edit_post', $retval, $post, $user );
+}
+
+/**
+ * Return whether the user can delete the post (type)
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_user_can_delete_post'
+ *
+ * @param WP_Post|int|string $post Post object or ID or post type to check for.
+ * @param int                $user Optional. User object or ID. Defaults to the current user ID.
+ * @return bool User can delete the post (type)
+ */
+function incassoos_user_can_delete_post( $post, $user = 0 ) {
+	$user   = incassoos_get_user( $user );
+	$retval = false;
+
+	// Post type
+	if ( $user && is_string( $post ) && post_type_exists( $post ) ) {
+		$post_type_object = get_post_type_object( $post );
+		$retval           = user_can( $user->ID, $post_type_object->cap->delete_posts );
+
+	// Single post
+	} elseif ( $user ) {
+		$post = get_post( $post );
+		if ( $post ) {
+			$post_type_object = get_post_type_object( $post->post_type );
+			$retval           = user_can( $user->ID, $post_type_object->cap->delete_post, $post->ID );
+		}
+	}
+
+	return apply_filters( 'incassoos_user_can_delete_post', $retval, $post, $user );
+}
+
 /** Listings ******************************************************************/
 
 function incassoos_get_top_spenders( $args = array() ) {
