@@ -174,40 +174,45 @@ function incassoos_admin_dashboard_status_widget() {
  * @since 1.0.0
  */
 function incassoos_admin_dashboard_recent_widget() {
+	$recently_collected = $recently_created = false;
 
 	echo '<div class="main">';
 
-	$recent_collections = incassoos_admin_dashboard_recent_posts( array(
-		'id'          => 'recently-collected',
-		'title'       => esc_html__( 'Recently collected', 'incassoos' ),
-		'detail_cb'   => 'incassoos_get_collection_total',
-		'detail_args' => array( 0, true ),
-		'max'         => 5,
-		'status'      => incassoos_get_collected_status_id(),
-		'post_type'   => incassoos_get_collection_post_type(),
-		'order'       => 'DESC',
-		'orderby'     => 'meta_collected',
-		'meta_query'  => array(
-			'relation'       => 'AND',
-			'meta_collected' => array(
-				'key'     => 'collected',
-				'compare' => 'EXISTS'
+	// Recently collected
+	if ( current_user_can( 'view_incassoos_collections' ) ) {
+		$recently_collected = incassoos_admin_dashboard_recent_posts( array(
+			'id'          => 'recently-collected',
+			'title'       => esc_html__( 'Recently collected', 'incassoos' ),
+			'detail_cb'   => 'incassoos_get_collection_total',
+			'detail_args' => array( 0, true ),
+			'max'         => 5,
+			'status'      => incassoos_get_collected_status_id(),
+			'post_type'   => incassoos_get_collection_post_type(),
+			'order'       => 'DESC',
+			'orderby'     => 'meta_collected',
+			'meta_query'  => array(
+				'relation'       => 'AND',
+				'meta_collected' => array(
+					'key'     => 'collected',
+					'compare' => 'EXISTS'
+				)
 			)
-		)
-	) );
+		) );
+	}
 
-	$recent_orders = incassoos_admin_dashboard_recent_posts( array(
+	// Recently created
+	$recently_created = incassoos_admin_dashboard_recent_posts( array(
 		'id'          => 'recently-created',
 		'title'       => esc_html__( 'Recently created', 'incassoos' ),
 		'detail_cb'   => 'incassoos_get_post_type_label',
 		'detail_args' => array(),
 		'max'         => 15,
 		'status'      => 'any',
-		'post_type'   => incassoos_get_plugin_post_types(),
+		'post_type'   => array_filter( incassoos_get_plugin_post_types(), 'incassoos_user_can_view_post' ),
 		'order'       => 'DESC'
 	) );
 
-	if ( ! $recent_collections && ! $recent_orders ) {
+	if ( ! $recently_collected && ! $recently_created ) {
 		echo '<div class="no-activity">';
 		echo '<p>' . esc_html__( 'No activity yet!' ) . '</p>';
 		echo '</div>';
@@ -316,7 +321,7 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 	/**
 	 * Filters the query arguments used for the Recent Posts widget.
 	 *
-	 * @since 4.2.0
+	 * @since 1.0.0
 	 *
 	 * @param array $query_args The arguments passed to WP_Query to produce the list of posts.
 	 * @param array $args       The initial function arguments.
