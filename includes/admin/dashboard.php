@@ -413,13 +413,13 @@ function incassoos_admin_dashboard_actions_widget() {
 	$actions = array();
 
 	// Assets
-	$assets = array(
+	$assets = array_filter( array(
 		incassoos_get_collection_post_type(),
 		incassoos_get_activity_post_type(),
 		incassoos_get_occasion_post_type(),
 		incassoos_get_order_post_type(),
 		incassoos_get_product_post_type()
-	);
+	), 'incassoos_user_can_create_post' );
 
 	// Define actions
 	foreach ( $assets as $post_type ) {
