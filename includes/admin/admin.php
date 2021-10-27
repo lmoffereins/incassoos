@@ -73,25 +73,25 @@ class Incassoos_Admin {
 
 		/** Posts *************************************************************/
 
-		$collection = incassoos_get_collection_post_type();
-		$coll_scrn  = "edit-{$collection}";
-		$activity   = incassoos_get_activity_post_type();
-		$actv_scrn  = "edit-{$activity}";
-		$occasion   = incassoos_get_occasion_post_type();
-		$occn_scrn  = "edit-{$occasion}";
-		$order      = incassoos_get_order_post_type();
-		$cons_scrn  = "edit-{$order}";
-		$product    = incassoos_get_product_post_type();
+		$collection        = incassoos_get_collection_post_type();
+		$collection_screen = "edit-{$collection}";
+		$activity          = incassoos_get_activity_post_type();
+		$activity_screen   = "edit-{$activity}";
+		$occasion          = incassoos_get_occasion_post_type();
+		$occasion_screen   = "edit-{$occasion}";
+		$order             = incassoos_get_order_post_type();
+		$order_screen      = "edit-{$order}";
+		$product           = incassoos_get_product_post_type();
 
-		add_filter( "views_edit-{$activity}",    array( $this, 'list_table_views'          ), 10    );
-		add_filter( "views_edit-{$occasion}",    array( $this, 'list_table_views'          ), 10    );
-		add_filter( "views_edit-{$order}",       array( $this, 'list_table_views'          ), 10    );
-		add_filter( "bulk_actions-{$coll_scrn}", array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( "bulk_actions-{$actv_scrn}", array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( "bulk_actions-{$occn_scrn}", array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( "bulk_actions-{$cons_scrn}", array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( 'list_table_primary_column', array( $this, 'list_table_primary_column' ), 10, 2 );
-		add_filter( 'parse_query',               array( $this, 'list_table_filter_posts'   ),  5    );
+		add_filter( "views_{$activity_screen}",          array( $this, 'list_table_views'          ), 10    );
+		add_filter( "views_{$occasion_screen}",          array( $this, 'list_table_views'          ), 10    );
+		add_filter( "views_{$order_screen}",             array( $this, 'list_table_views'          ), 10    );
+		add_filter( "bulk_actions-{$collection_screen}", array( $this, 'list_table_bulk_actions'   ), 10    );
+		add_filter( "bulk_actions-{$activity_screen}",   array( $this, 'list_table_bulk_actions'   ), 10    );
+		add_filter( "bulk_actions-{$occasion_screen}",   array( $this, 'list_table_bulk_actions'   ), 10    );
+		add_filter( "bulk_actions-{$order_screen}",      array( $this, 'list_table_bulk_actions'   ), 10    );
+		add_filter( 'list_table_primary_column',         array( $this, 'list_table_primary_column' ), 10, 2 );
+		add_filter( 'parse_query',                       array( $this, 'list_table_filter_posts'   ),  5    );
 
 		/** Single Post *******************************************************/
 
@@ -104,8 +104,8 @@ class Incassoos_Admin {
 
 		/** Ajax **************************************************************/
 
-		// No _nopriv_ equivalent - users must be logged in
-		add_action( 'wp_ajax_incassoos_suggest_user',  array( $this, 'suggest_user'  ) );
+		// No _nopriv_ equivalent - user must be logged in
+		add_action( 'wp_ajax_incassoos_suggest_user', array( $this, 'suggest_user' ) );
 	}
 
 	/** Public methods **************************************************/
