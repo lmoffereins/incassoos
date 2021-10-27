@@ -32,8 +32,8 @@ add_action( 'incassoos_deactivation',      'incassoos_delete_rewrite_rules',    
 
 /** Core **********************************************************************/
 
-add_action( 'incassoos_init',              'incassoos_register_settings',          10    );
-add_action( 'incassoos_init',              'incassoos_register_encryptable_data',  10    );
+add_action( 'incassoos_init',              'incassoos_register_settings',            10    );
+add_action( 'incassoos_init',              'incassoos_register_encryptable_options', 10    );
 
 /** Query *********************************************************************/
 
@@ -124,8 +124,8 @@ add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_cl
 
 /** Encryption ****************************************************************/
 
-add_action( 'incassoos_enable_encryption',  'incassoos_encrypt_encryptable_data', 10    );
-add_action( 'incassoos_disable_encryption', 'incassoos_decrypt_encryptable_data', 10    );
+add_action( 'incassoos_enable_encryption',  'incassoos_encrypt_encryptable_options', 10    );
+add_action( 'incassoos_disable_encryption', 'incassoos_decrypt_encryptable_options', 10    );
 
 /** Widgets *******************************************************************/
 

@@ -2324,39 +2324,44 @@ function incassoos_get_encryptable_option( $option ) {
 }
 
 /**
- * Register actions and filters for encryptable data
+ * Register actions and filters for encryptable options
  *
  * @since 1.0.0
  */
-function incassoos_register_encryptable_data() {
+function incassoos_register_encryptable_options() {
 
 	// Get encryptable options
 	$options = incassoos_get_encryptable_options();
 
 	// Register encryption actions on `add_option()`
 	foreach ( $options as $option => $args ) {
-		add_action( "add_option_{$option}", 'incassoos_encrypt_for_add_option', 10, 2 );
+		add_action( "add_option_{$option}", 'incassoos_encryption_for_add_option', 10, 2 );
 	}
 
 	// Register encryption filters on `update_option()`
 	foreach ( $options as $option => $args ) {
-		add_filter( "pre_update_option_{$option}", 'incassoos_encrypt_for_update_option', 10, 3 );
+		add_filter( "pre_update_option_{$option}", 'incassoos_encryption_for_update_option', 10, 3 );
+	}
+
+	// Register encryption actions for `delete_option()`
+	foreach ( $options as $option => $args ) {
+		add_action( "delete_option_{$option}", 'incassoos_encryption_for_delete_option', 10 );
 	}
 }
 
 /**
- * Encrypt an option when it is added
+ * Apply encryption when an option is added
  *
  * @since 1.0.0
  *
  * @param string $option Option name
  * @param mixed  $value  Option value
  */
-function incassoos_encrypt_for_add_option( $option, $value ) {
+function incassoos_encryption_for_add_option( $option, $value ) {
 
 	// Bail when encryption is not enabled
 	if ( ! incassoos_is_encryption_enabled() ) {
-		return $value;
+		return;
 	}
 
 	// Re-update option which will trigger the encryption
@@ -2364,7 +2369,7 @@ function incassoos_encrypt_for_add_option( $option, $value ) {
 }
 
 /**
- * Encrypt an option when it is updated
+ * Apply encryption when an option is updated
  *
  * @since 1.0.0
  *
@@ -2373,7 +2378,7 @@ function incassoos_encrypt_for_add_option( $option, $value ) {
  * @param  string $option    Option name
  * @return mixed Redacted or untouched option value
  */
-function incassoos_encrypt_for_update_option( $value, $old_value, $option ) {
+function incassoos_encryption_for_update_option( $value, $old_value, $option ) {
 
 	// Bail when encryption is not enabled
 	if ( ! incassoos_is_encryption_enabled() ) {
@@ -2411,11 +2416,34 @@ function incassoos_encrypt_for_update_option( $value, $old_value, $option ) {
 }
 
 /**
- * Apply encryption to the encryptable data collectively
+ * Remove associated encryption when an option is deleted
+ *
+ * @since 1.0.0
+ *
+ * @param string $option Option name
+ */
+function incassoos_encryption_for_delete_option( $option ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return;
+	}
+
+	// Get encryptable option
+	$args = incassoos_get_encryptable_option( $option );
+
+	// Delete associated encrypted option
+	if ( $args ) {
+		delete_option( $args['encrypted_option_name'] );
+	}
+}
+
+/**
+ * Apply encryption to the encryptable options collectively
  *
  * @since 1.0.0
  */
-function incassoos_encrypt_encryptable_data() {
+function incassoos_encrypt_encryptable_options() {
 
 	// Walk encryptable options
 	foreach ( incassoos_get_encryptable_options() as $option_name => $args ) {
@@ -2430,13 +2458,13 @@ function incassoos_encrypt_encryptable_data() {
 }
 
 /**
- * Decrypt the encrypted encryptable data collectively
+ * Decrypt the encrypted encryptable options collectively
  *
  * @since 1.0.0
  *
  * @param string $decryption_key The decryption key
  */
-function incassoos_decrypt_encryptable_data( $decryption_key ) {
+function incassoos_decrypt_encryptable_options( $decryption_key ) {
 
 	// Walk encryptable options
 	foreach ( incassoos_get_encryptable_options() as $option_name => $args ) {
