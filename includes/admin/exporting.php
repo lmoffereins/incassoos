@@ -21,8 +21,9 @@ function incassoos_export_collection_file( $post_id ) {
 	$post = incassoos_get_collection( $post_id, array( 'is_collected' => true ) );
 
 	// Bail when the post is not a collected Collection
-	if ( ! $post )
+	if ( ! $post ) {
 		return;
+	}
 
 	// Nonce check
 	check_admin_referer( 'export_collection-' . $post->ID, 'collection_export_nonce' );
@@ -30,28 +31,38 @@ function incassoos_export_collection_file( $post_id ) {
 	// Export type
 	$type_id     = isset( $_POST['export-type'] ) ? $_POST['export-type'] : '';
 	$export_type = incassoos_get_export_type( $type_id );
+	$errors      = array();
 
 	// Bail when the export type does not exist
-	if ( ! $type_id || ! $export_type )
-		return;
+	if ( ! $type_id || ! $export_type ) {
+		$errors[] = esc_html__( 'Invalid export type selected.', 'incassoos' );
+	} else {
 
-	// Get export class
-	$class = $export_type->class_name;
+		// Get export class
+		$class = $export_type->class_name;
 
-	// Bail when the class is not present
-	if ( ! class_exists( $class ) )
-		return;
+		// Bail when the class is not present
+		if ( ! class_exists( $class ) ) {
+			$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
+		} else {
 
-	// Construct file
-	$file = new $class( $post );
+			// Construct file
+			$file = new $class( $post );
+
+			// Bail when construction failed
+			if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
+				$errors = array_merge( $errors, $file->get_errors() );
+
+			// Offer file download
+			} else {
+				incassoos_download_text_file( $file );
+			}
+		}
+	}
 
 	// Log any errors
-	if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
-		set_transient( 'incassoos_export_errors-' . $post->ID, $file->get_errors() );
-
-	// Offer file download
-	} else {
-		incassoos_download_text_file( $file );
+	if ( ! empty( $errors ) ) {
+		set_transient( 'incassoos_export_errors-' . $post->ID, $errors );
 	}
 
 	// Still here? Redirect to the Collection's page
@@ -69,7 +80,7 @@ function incassoos_export_collection_file( $post_id ) {
 function incassoos_export_error_notice( $post ) {
 
 	// Bail when no errors are logged
-	if ( ! $transient = get_transient( 'incassoos_export_errors-' . $post->ID ) )
+	if ( ! $errors = get_transient( 'incassoos_export_errors-' . $post->ID ) )
 		return;
 
 	?>
@@ -78,20 +89,22 @@ function incassoos_export_error_notice( $post ) {
 		<?php /* translators: 1. error amount 2. toggle link */ ?>
 		<p><?php printf(
 			_n(
-				'The file could not be exported due to %1$d error. %2$s',
+				'Error: %2$s',
 				'The file could not be exported due to %1$d errors. %2$s',
-				count( $transient ),
+				count( $errors ),
 				'incassoos'
 			),
-			count( $transient ),
-			sprintf( '<button type="button" class="button-link">%s</button>', esc_html__( 'Show errors', 'incassoos' ) )
+			count( $errors ),
+			count( $errors ) > 1
+				? sprintf( '<button type="button" class="button-link">%s</button>', esc_html__( 'Show errors', 'incassoos' ) )
+				: $errors[0]
 		); ?></p>
 
-		<?php foreach ( $transient as $message ) : ?>
+		<?php if ( count( $errors ) > 1 ) : foreach ( $errors as $message ) : ?>
 
 		<p><?php echo $message; ?></p>
 
-		<?php endforeach; ?>
+		<?php endforeach; endif; ?>
 	</div>
 
 	<?php
