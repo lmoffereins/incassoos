@@ -122,6 +122,7 @@ final class Incassoos {
 
 		/** Misc ********************************************************/
 
+		$this->encryptable          = new stdClass();
 		$this->extend               = new stdClass();
 		$this->domain               = 'incassoos';
 	}

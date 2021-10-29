@@ -122,11 +122,6 @@ add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_am
 add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_withdrawal_mention', 70, 2 );
 add_filter( 'incassoos_collection_email_content', 'incassoos_collection_email_closing',            90, 2 );
 
-/** Encryption ****************************************************************/
-
-add_action( 'incassoos_enable_encryption',  'incassoos_encrypt_encryptable_options', 10    );
-add_action( 'incassoos_disable_encryption', 'incassoos_decrypt_encryptable_options', 10    );
-
 /** Widgets *******************************************************************/
 
 // add_action( 'incassoos_widgets_init', array( 'Incassoos_Enrollments_Widget', 'register' ) );
