@@ -317,6 +317,13 @@ class Incassoos_Admin {
 			$class .= ' incassoos-post-edit';
 		}
 
+		// Encryption is enabled
+		if ( incassoos_is_encryption_enabled() ) {
+			$class .= ' incassoos-encryption-enabled';
+		} else {
+			$class .= ' incassoos-encryption-disabled';
+		}
+
 		return $class;
 	}
 
