@@ -474,7 +474,10 @@ function incassoos_admin_manage_posts_tablenav( $which ) {
 	if ( 'top' !== $which )
 		return;
 
-	switch ( get_current_screen()->post_type ) {
+	// Get the current post type
+	$post_type = get_current_screen()->post_type;
+
+	switch ( $post_type ) {
 
 		// Activity
 		case incassoos_get_activity_post_type() :
@@ -483,7 +486,10 @@ function incassoos_admin_manage_posts_tablenav( $which ) {
 
 			// Display link to manage categories
 			if ( current_user_can( $tax_object->cap->manage_terms ) ) {
-				printf( '<div class="alignleft actions incassoos-activity-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . $tax_object->name, esc_html__( 'Manage Activity Categories', 'incassoos' ) );
+				printf( '<div class="alignleft actions incassoos-activity-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>',
+					'edit-tags.php?taxonomy=' . $tax_object->name . '&post_type=' . $post_type,
+					esc_html__( 'Manage Activity Categories', 'incassoos' )
+				);
 			}
 
 			break;
@@ -495,7 +501,10 @@ function incassoos_admin_manage_posts_tablenav( $which ) {
 
 			// Display link to manage types
 			if ( current_user_can( $tax_object->cap->manage_terms ) ) {
-				printf( '<div class="alignleft actions incassoos-occasion-type-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . $tax_object->name, esc_html__( 'Manage Occasion Types', 'incassoos' ) );
+				printf( '<div class="alignleft actions incassoos-occasion-type-link"><a href="%s" class="wp-core-ui button">%s</a></div>',
+					'edit-tags.php?taxonomy=' . $tax_object->name . '&post_type=' . $post_type,
+					esc_html__( 'Manage Occasion Types', 'incassoos' )
+				);
 			}
 
 			break;
@@ -507,7 +516,10 @@ function incassoos_admin_manage_posts_tablenav( $which ) {
 
 			// Display link to manage categories
 			if ( current_user_can( $tax_object->cap->manage_terms ) ) {
-				printf( '<div class="alignleft actions incassoos-product-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>', 'edit-tags.php?taxonomy=' . $tax_object->name, esc_html__( 'Manage Product Categories', 'incassoos' ) );
+				printf( '<div class="alignleft actions incassoos-product-cat-link"><a href="%s" class="wp-core-ui button">%s</a></div>',
+					'edit-tags.php?taxonomy=' . $tax_object->name . '&post_type=' . $post_type,
+					esc_html__( 'Manage Product Categories', 'incassoos' )
+				);
 			}
 
 			break;
