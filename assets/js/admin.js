@@ -587,7 +587,7 @@ jQuery(document).ready( function($) {
 
 			toggleGroups({
 				$parent: $consumerList,
-				show: $consumerList.is( 'showing-visible' ),
+				show: $consumerList.is( '.showing-visible' ),
 				filterBy: '.consumer:not(.noshow)',
 				toggleClassName: 'hidden'
 			});
