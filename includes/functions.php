@@ -355,7 +355,7 @@ function incassoos_is_post_published( $post = 0 ) {
  * - @see {incassoos_admin_post_updated_messages()} Holds the relevant error messages.
  *
  * The filter in `wp_insert_post()` by default only defines 'empty' posts when
- * its post type has support post title, content and excerpt. Since most plugin
+ * its post type has support for post title, content and excerpt. Since most plugin
  * assets do not have support for each of those items, custom validaters are put
  * in place to handle situations where they might be considered empty or should
  * not be inserted at all.
@@ -523,11 +523,28 @@ function incassoos_duplicate_post( $post = 0 ) {
 
 	$post        = get_post( $post );
 	$new_post_id = false;
+	$tax_input   = array();
+	$meta_input  = array();
 
 	if ( $post ) {
 
 		// Run action before duplicating
 		do_action( 'incassoos_duplicate_post', $post );
+
+		// Collect post taxonomies
+		foreach ( get_object_taxonomies( $post->post_type ) as $taxonomy ) {
+			$tax_input[ $taxonomy ] = wp_get_object_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) );
+		}
+
+		// Collect post meta
+		$meta_input = get_post_meta( $post->ID );
+
+		// Remove unique metas
+		foreach ( $meta_input as $meta_key => $meta_value ) {
+			if ( in_array( $meta_key, array( '_edit_last', '_edit_lock', '_wp_old_slug' ) ) ) {
+				unset( $meta_input[ $meta_key ] );
+			}
+		}
 
 		// Setup duplicate post details
 		$args = apply_filters( 'incassoos_duplicate_post_args', array(
@@ -544,41 +561,31 @@ function incassoos_duplicate_post( $post = 0 ) {
 			'comment_status' => $post->comment_status,
 			'ping_status'    => $post->ping_status,
 			'to_ping'        => $post->to_ping,
+			'tax_input'      => $tax_input
+			// Do not provide meta_input to `wp_insert_post()` because it uses `update_post_meta()`
+			// when `add_post_meta()` is preferred. This is done below after the post is created.
 		), $post );
 
+		// Add meta input to the root args for use in custom plugin validation
+		foreach ( $meta_input as $meta_key => $meta_values ) {
+			$args[ $meta_key ] = $meta_values;
+		}
+
 		// Insert the new post
-		$new_post_id = wp_insert_post( $args );
+		$new_post_id = wp_insert_post( $args, true );
 
 		if ( $new_post_id && ! is_wp_error( $new_post_id ) ) {
 
-			// Duplicate taxonomies
-			foreach ( get_object_taxonomies( $post->post_type ) as $taxonomy ) {
-				wp_set_object_terms( $new_post_id, wp_get_object_terms( $post->ID, $taxonomy, array( 'fields' => 'ids' ) ), $taxonomy );
-			}
-
-			// Duplicate meta
-			$post_meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $post->ID ) );
-
-			// Remove unique metas
-			$post_meta = array_filter( $post_meta, function( $m ) {
-				return ! in_array( $m->meta_key, array( '_edit_last', '_edit_lock', '_wp_old_slug' ) );
-			} );
-
-			if ( $post_meta ) {
-				$meta_sql = "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES";
-
-				foreach ( array_values( $post_meta ) as $k => $meta ) {
-					$meta_sql .= $k > 0 ? ', ' : '';
-					$meta_sql .= $wpdb->prepare( " (%d, %s, %s)", $new_post_id, $meta->meta_key, $meta->meta_value );
+			// Add post meta. Values from `get_post_meta()` come in arrays.
+			foreach ( $meta_input as $meta_key => $meta_values ) {
+				foreach ( $meta_values as $meta_value ) {
+					add_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_value ) );
 				}
-
-				// Run meta query
-				$wpdb->query( $meta_sql );
 			}
-		}
 
-		// Run action after duplicating
-		do_action( 'incassoos_duplicated_post', $new_post_id, $post );
+			// Run action after duplicating
+			do_action( 'incassoos_duplicated_post', $new_post_id, $post );
+		}
 	}
 
 	// Parse errors to false
