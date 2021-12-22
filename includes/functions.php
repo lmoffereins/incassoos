@@ -568,7 +568,9 @@ function incassoos_duplicate_post( $post = 0 ) {
 
 		// Add meta input to the root args for use in custom plugin validation
 		foreach ( $meta_input as $meta_key => $meta_values ) {
-			$args[ $meta_key ] = $meta_values;
+
+			// Values from `get_post_meta()` come in arrays. Single meta values should not be handled as arrays.
+			$args[ $meta_key ] = 1 === count( $meta_values ) ? maybe_unserialize( $meta_values[0] ) : $meta_values;
 		}
 
 		// Insert the new post
