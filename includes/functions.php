@@ -1086,6 +1086,35 @@ function incassoos_customize_nav_menu_searched_items( $items, $args ) {
 	return $items;
 }
 
+/** Admin Bar *****************************************************************/
+
+/**
+ * Modify the admin bar
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Admin_Bar $wp_admin_bar The admin bar object
+ */
+function incassoos_admin_bar_menu( $wp_admin_bar ) {
+
+	// When on multisite
+	if ( is_user_logged_in() && is_multisite() ) {
+
+		// Get the parent menu id
+		$menu_id = 'blog-' . get_current_blog_id();
+
+		// Add link to the plugin dashboard
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => $menu_id,
+				'id'     => $menu_id . '-incassoos',
+				'title'  => __( 'Incassoos', 'incassoos' ),
+				'href'   => add_query_arg( 'page', 'incassoos', admin_url( 'admin.php' ) )
+			)
+		);
+	}
+}
+
 /** REST **********************************************************************/
 
 /**
