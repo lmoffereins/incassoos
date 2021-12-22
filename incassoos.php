@@ -382,7 +382,7 @@ final class Incassoos {
 			array(
 				'labels'                => incassoos_get_activity_cat_tax_labels(),
 				'capabilities'          => incassoos_get_activity_cat_tax_caps(),
-				'update_count_callback' => '_update_post_term_count',
+				'update_count_callback' => 'incassoos_update_activity_term_count',
 				'hierarchical'          => false,
 				'public'                => false,
 				'rewrite'               => false,
@@ -404,7 +404,7 @@ final class Incassoos {
 			array(
 				'labels'                => incassoos_get_occasion_type_tax_labels(),
 				'capabilities'          => incassoos_get_occasion_type_tax_caps(),
-				'update_count_callback' => '_update_post_term_count',
+				'update_count_callback' => 'incassoos_update_occasion_term_count',
 				'hierarchical'          => false,
 				'public'                => false,
 				'rewrite'               => false,

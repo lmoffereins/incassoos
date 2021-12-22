@@ -173,6 +173,36 @@ function incassoos_get_default_occasion_type() {
 	return apply_filters( 'incassoos_get_default_occasion_type', $term );
 }
 
+/**
+ * Will update term count based on the Occasion post type with custom post statuses
+ *
+ * @since 1.0.0
+ *
+ * @see _update_post_term_count()
+ *
+ * @global WPDB $wpdb
+ *
+ * @param array  $terms    Term ids
+ * @param string $taxonomy Taxonomy
+ */
+function incassoos_update_occasion_term_count( $terms, $taxonomy ) {
+    global $wpdb;
+
+    // Get post statuses for Occasions
+    $post_statuses = array( 'publish', incassoos_get_collected_status_id() );
+
+    foreach ( (array) $terms as $term ) {
+        $count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id AND post_type = %s AND post_status IN ('" . implode( "', '", $post_statuses ) . "') AND term_taxonomy_id = %d", incassoos_get_occasion_post_type(), $term ) );
+
+        /** This action is documented in wp-includes/taxonomy.php */
+        do_action( 'edit_term_taxonomy', $term, $taxonomy->name );
+        $wpdb->update( $wpdb->term_taxonomy, compact( 'count' ), array( 'term_taxonomy_id' => $term ) );
+
+        /** This action is documented in wp-includes/taxonomy.php */
+        do_action( 'edited_term_taxonomy', $term, $taxonomy->name );
+    }
+}
+
 /** Template ******************************************************************/
 
 /**
