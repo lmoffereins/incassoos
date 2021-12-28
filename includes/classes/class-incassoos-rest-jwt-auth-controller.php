@@ -73,23 +73,26 @@ class Incassoos_REST_JWT_Auth_Controller {
 
 		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
 			array(
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => array( $this, 'tokenate' )
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'tokenate' ),
+				'permission_callback' => '__return_true',
 			),
 			'schema' => array( $this, 'get_item_schema' )
 		) );
 
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/validate', array(
 			array(
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => array( $this, 'validate' )
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'validate' ),
+				'permission_callback' => '__return_true',
 			)
 		) );
 
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/invalidate', array(
 			array(
-				'methods'  => WP_REST_Server::CREATABLE,
-				'callback' => array( $this, 'invalidate' )
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'invalidate' ),
+				'permission_callback' => '__return_true',
 			)
 		) );
 	}
