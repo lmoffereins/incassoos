@@ -952,16 +952,12 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 		<?php endif; ?>
 
-		<?php if ( $is_post_view ) : ?>
-
 		<p>
 			<label><?php esc_html_e( 'Count:', 'incassoos' ); ?></label>
 			<span id="activity-participant-count">
 				<span class="value"><?php incassoos_the_activity_participant_count( $post ); ?></span>
 			</span>
 		</p>
-
-		<?php endif; ?>
 
 		<p>
 			<label><?php esc_html_e( 'Total:', 'incassoos' ); ?></label>

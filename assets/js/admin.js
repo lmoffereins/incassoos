@@ -140,6 +140,7 @@ jQuery(document).ready( function($) {
 
 	var $actDtlsBox = $( '#incassoos_activity_details' ),
 	    $actPriceField = $actDtlsBox.find( 'input#price' ),
+	    $actCountField = $actDtlsBox.find( '#activity-participant-count' ).prepend( '<span class="new-value"></span>' ),
 	    $actTotalField = $actDtlsBox.find( '#activity-total' ).prepend( '<span class="new-value"></span>' ),
 	    $actPartBox = $( '#incassoos_activity_participants' ),
 	    $actPtcptList = $actPartBox.find( '.incassoos-item-list' ),
@@ -395,6 +396,7 @@ jQuery(document).ready( function($) {
 		options = options || {};
 		options.$box = options.$box || $actPartBox;
 		options.countBy = options.countBy || '.activity-participant .select-user:checked';
+		options.$countField = options.$countField || $actCountField;
 
 		// Calculate count
 		if ('function' === typeof options.calculator) {
@@ -404,6 +406,7 @@ jQuery(document).ready( function($) {
 		}
 
 		options.$box.find( 'h2 .count' ).text( '(' + count + ')' );
+		options.$countField.find( '.new-value' ).html( count );
 	}
 
 	/**
