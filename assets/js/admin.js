@@ -33,7 +33,7 @@ jQuery(document).ready( function($) {
 		})
 
 		// Show (un)limit searched items
-		.on( 'keyup change search input', '#consumer-search', function() {
+		.on( 'keyup change search input', '#item-search', function() {
 
 			// Create regex from search string
 			var reg = new RegExp( this.value.replace( / /g, '' ), 'gi' );
