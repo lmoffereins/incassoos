@@ -787,9 +787,9 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 	?>
 
 	<div class="incassoos-item-list">
-		<div id="select-matches" class="hide-if-no-js">
-			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
-			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+		<div id="select-matches" class="item-list-header hide-if-no-js">
+			<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
 
 			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
@@ -1028,49 +1028,16 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	?>
 
 	<div class="incassoos-item-list">
-		<div id="select-matches" class="hide-if-no-js">
-			<?php if ( ! $is_post_view ) :
-
-				// Get match options
-				$matches     = incassoos_get_user_match_options();
-				$selectors   = array_filter( $matches, function( $g ) { return ( false === strpos( $g, '_' ) ); }, ARRAY_FILTER_USE_KEY ); // PHP 5.6+
-				$deselectors = array_diff_key( $matches, $selectors );
-
-			?>
+		<div id="select-matches" class="item-list-header hide-if-no-js">
+			<?php if ( ! $is_post_view ) : ?>
 
 			<label for="participant-quick-select" class="screen-reader-text"><?php esc_html_e( 'Quick select participants', 'incassoos' ); ?></label>
-			<select id="participant-quick-select">
-				<option value="-1"><?php esc_html_e( '&mdash; Quick select &mdash;', 'incassoos' ); ?></option>
-
-				<?php if ( $selectors && $deselectors ) : ?>
-
-				<optgroup label="<?php esc_attr_e( 'Selecting', 'incassoos' ); ?>">
-					<?php foreach ( $selectors as $match_id => $label ) : ?>
-						<option value="<?php echo esc_attr( $match_id ); ?>"><?php echo esc_html( $label ); ?></option>
-					<?php endforeach; ?>
-				</optgroup>
-
-				<optgroup label="<?php esc_attr_e( 'Deselecting', 'incassoos' ); ?>">
-					<?php foreach ( $deselectors as $match_id => $label ) : ?>
-						<option value="<?php echo esc_attr( $match_id ); ?>"><?php echo esc_html( $label ); ?></option>
-					<?php endforeach; ?>
-				</optgroup>
-
-				<?php else : ?>
-
-				<?php foreach ( $matches as $match_id => $label ) : ?>
-
-				<option value="<?php echo esc_attr( $match_id ); ?>"><?php echo esc_html( $label ); ?></option>
-
-				<?php endforeach; ?>
-
-				<?php endif; ?>
-			</select>
+			<?php incassoos_dropdown_user_matches( array( 'id' => 'participant-quick-select' ) ); ?>
 
 			<?php endif; ?>
 
-			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search participants', 'incassoos' ); ?></label>
-			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search participants&hellip;', 'incassoos' ); ?>" />
+			<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search participants', 'incassoos' ); ?></label>
+			<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search participants&hellip;', 'incassoos' ); ?>" />
 
 			<?php if ( ! $is_post_view ) : ?>
 
@@ -1379,9 +1346,9 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 	?>
 
 	<div class="incassoos-item-list">
-		<div id="select-matches" class="hide-if-no-js">
-			<label for="consumer-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
-			<input type="search" id="consumer-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+		<div id="select-matches" class="item-list-header hide-if-no-js">
+			<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
 
 			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>

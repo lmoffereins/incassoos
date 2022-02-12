@@ -240,6 +240,78 @@ function incassoos_get_user_list_group( $user = false, $by = 'id' ) {
 }
 
 /**
+ * Display or return user match dropdown element
+ *
+ * Don't forget to load the appropriate javascript to enable the user matching.
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_dropdown_user_matches'
+ *
+ * @param  array $args Dropdown arguments
+ * @return string HTML dropdown list of user matches
+ */
+function incassoos_dropdown_user_matches( $args = array() ) {
+
+	// Parse default args
+	$parsed_args = wp_parse_args( $args, array(
+		'echo'              => 1,
+		'id'                => 'user-quick-select',
+		'class'             => 'postform',
+		'tab_index'         => 0,
+		'option_none_value' => __( '&mdash; Quick select &mdash;', 'incassoos' )
+	));
+
+	// Get match options
+	$matches     = incassoos_get_user_match_options();
+	$selectors   = array_filter( $matches, function( $g ) { return ( false === strpos( $g, '_' ) ); }, ARRAY_FILTER_USE_KEY ); // PHP 5.6+
+	$deselectors = array_diff_key( $matches, $selectors );
+
+	$class = esc_attr( $parsed_args['class'] );
+	$id    = esc_attr( $parsed_args['id'] );
+
+	$tab_index = $parsed_args['tab_index'];
+	$tab_index_attribute = '';
+	if ( (int) $tab_index > 0 ) {
+		$tab_index_attribute = " tabindex=\"$tab_index\"";
+	}
+
+	$output  = "<select id='$id' class='$class' $tab_index_attribute>\n";
+	$output .= '<option value="-1">' . esc_html( $parsed_args['option_none_value'] ) . '</option>';
+
+	if ( $selectors && $deselectors ) {
+
+		// Selectors
+		$output .= '<optgroup label="' . esc_attr__( 'Selecting', 'incassoos' ) . '">';
+		foreach ( $selectors as $match_id => $label ) {
+			$output .= '<option value="' . esc_attr( $match_id ) . '">' . esc_html( $label ) . '</option>';
+		}
+		$output .= '</optgroup>';
+
+		// Deselectors
+		$output .= '<optgroup label="'. esc_attr__( 'Deselecting', 'incassoos' ) . '">';
+		foreach ( $deselectors as $match_id => $label ) {
+			$output .= '<option value="' . esc_attr( $match_id ) . '">' . esc_html( $label ) . '</option>';
+		}
+		$output .= '</optgroup>';
+
+	} else {
+		foreach ( $matches as $match_id => $label ) {
+			$output .= '<option value="' . esc_attr( $match_id ) . '">' . esc_html( $label ) . '</option>';
+		}
+	}
+
+	$output .= '</select>';
+	$output = apply_filters( 'incassoos_dropdown_user_matches', $output, $parsed_args );
+
+	if ( $parsed_args['echo'] ) {
+		echo $output;
+	}
+
+	return $output;
+}
+
+/**
  * Return list of user match selection options
  *
  * @since 1.0.0

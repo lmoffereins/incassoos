@@ -486,7 +486,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	overflow: hidden;
 }
 
-.incassoos-item-list #select-matches {
+.incassoos-item-list .item-list-header {
 	display: flex;
 	align-items: start;
 	flex-wrap: wrap;
@@ -494,26 +494,26 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	border-bottom: 1px solid #eee;
 }
 
-.incassoos-item-list #select-matches #consumer-search {
+.incassoos-item-list .item-list-header #item-search {
 	height: 28px;
 	padding: 4px 5px;
 	line-height: 28px;
 	vertical-align: middle;
 }
 
-.incassoos-item-list #select-matches #show-selected,
-.incassoos-item-list #select-matches #show-visible {
+.incassoos-item-list .item-list-header #show-selected,
+.incassoos-item-list .item-list-header #show-visible {
 	padding: 4px 0px;
 }
 
-.incassoos-item-list #select-matches #reverse-group-order,
-.incassoos-item-list #select-matches #toggle-list-columns {
+.incassoos-item-list .item-list-header #reverse-group-order,
+.incassoos-item-list .item-list-header #toggle-list-columns {
 	padding: 3px 3px 3.5px;
 	margin: 1px 0px 0px 2px;
 }
 
 /* Any sibling following the search box */
-.incassoos-item-list #select-matches #consumer-search + * {
+.incassoos-item-list .item-list-header #item-search + * {
 	margin: 0px 6px 0px auto; /* auto applies float:right in flexbox */
 }
 
@@ -736,18 +736,18 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 		/*width: calc( 100% - 33px );*/
 	}
 
-	.incassoos-item-list #select-matches #consumer-search {
+	.incassoos-item-list .item-list-header #item-search {
 		height: 36px;
 		font-size: 16px;
 	}
 
-	.incassoos-item-list #select-matches #show-selected,
-	.incassoos-item-list #select-matches #show-visible {
+	.incassoos-item-list .item-list-header #show-selected,
+	.incassoos-item-list .item-list-header #show-visible {
 		font-size: 16px;
 	}
 
-	.incassoos-item-list #select-matches #reverse-group-order,
-	.incassoos-item-list #select-matches #toggle-list-columns {
+	.incassoos-item-list .item-list-header #reverse-group-order,
+	.incassoos-item-list .item-list-header #toggle-list-columns {
 		margin-top: 4px;
 	}
 }
