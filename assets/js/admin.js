@@ -52,6 +52,54 @@ jQuery(document).ready( function($) {
 			});
 		})
 
+		// Quick select items
+		.on( 'change', '.quick-select', function() {
+			var filterVal = $(this).val(),
+				// Deselect when filter leads with an underscore
+			    select = ( 0 !== filterVal.indexOf( '_' ) ),
+			    filter = select ? filterVal : filterVal.substring( 1 ),
+			    // Exclude items when filter leads with an exclamation mark
+			    exclude = ( 0 === filter.indexOf( '!' ) );
+
+			// Correct filter when excluding
+			filter = exclude ? filter.substring( 1 ) : filter;
+
+			// Bail when selecting no value
+			if ( '-1' === filter ) {
+				return;
+			}
+
+			// Default for All and None
+			if ( 'all' === filter ) {
+				$consumerList.find( '.select-user' ).prop( 'checked', select );
+			} else {
+				$consumerList.find( '.select-user' ).filter( function( i, el ) {
+					return ( -1 !== $(el).attr( 'data-matches' ).split( ',' ).indexOf( filter ) ) !== exclude;
+				}).prop( 'checked', select );
+			}
+
+			// Update count and total
+			updateCount();
+			toggleGroups();
+			updateTotal();
+		})
+
+		// Toggle group users selection
+		.on( 'click', '.select-group-users', function() {
+			var $el = $(this),
+			    selected = 'true' === $el.attr( 'data-selected' );
+
+			// Set the data-selected property
+			$el.attr( 'data-selected', ! selected )
+
+				// Toggle the users
+				.parents( '.group' ).first().find( '.select-user' ).prop( 'checked', ! selected );
+
+			// Update count and total
+			updateCount();
+			updateTotal();
+		})
+
 		// Reverse groups order
 		.on( 'click', '#reverse-group-order', function() {
 			var $list = $consumerList.find( '.groups' );
@@ -160,38 +208,6 @@ jQuery(document).ready( function($) {
 	});
 
 	$actPtcptList
-		// Quick select participants
-		.on( 'change', '#participant-quick-select', function() {
-			var filterVal = $(this).val(),
-				// Deselect when filter leads with an underscore
-			    select = ( 0 !== filterVal.indexOf( '_' ) ),
-			    filter = select ? filterVal : filterVal.substring( 1 ),
-			    // Exclude items when filter leads with an exclamation mark
-			    exclude = ( 0 === filter.indexOf( '!' ) );
-
-			// Correct filter when excluding
-			filter = exclude ? filter.substring( 1 ) : filter;
-
-			// Bail when selecting no value
-			if ( '-1' === filter ) {
-				return;
-			}
-
-			// Default for All and None
-			if ( 'all' === filter ) {
-				$actPtcptList.find( '.activity-participant .select-user' ).prop( 'checked', select );
-			} else {
-				$actPtcptList.find( '.activity-participant .select-user' ).filter( function( i, el ) {
-					return ( -1 !== $(el).attr( 'data-matches' ).split( ',' ).indexOf( filter ) ) !== exclude;
-				}).prop( 'checked', select );
-			}
-
-			// Update count and total
-			updateCount();
-			toggleGroups();
-			updateTotal();
-		})
-
 		// Show (un)limit selected items
 		.on( 'click', '#show-selected', function() {
 			$actPtcptList
@@ -203,23 +219,7 @@ jQuery(document).ready( function($) {
 		})
 
 		// Keep selected count
-		.on( 'change', '.activity-participant .select-user', function() {
-
-			// Update count and total
-			updateCount();
-			updateTotal();
-		})
-
-		// Toggle group users selection
-		.on( 'click', '.select-group-users', function() {
-			var $el = $(this),
-			    selected = 'true' === $el.attr( 'data-selected' );
-
-			// Set the data-selected property
-			$el.attr( 'data-selected', ! selected )
-
-				// Toggle the users
-				.parents( '.group' ).first().find( '.activity-participant .select-user' ).prop( 'checked', ! selected );
+		.on( 'change', '.select-user', function() {
 
 			// Update count and total
 			updateCount();
