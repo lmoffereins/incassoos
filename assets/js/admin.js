@@ -55,9 +55,13 @@ jQuery(document).ready( function($) {
 		// Quick select items
 		.on( 'change', '.quick-select', function() {
 			var filterVal = $(this).val(),
-				// Deselect when filter leads with an underscore
-			    select = ( 0 !== filterVal.indexOf( '_' ) ),
-			    filter = select ? filterVal : filterVal.substring( 1 ),
+
+			    // Deselect when filter leads with an underscore
+			    selected = ( 0 !== filterVal.indexOf( '_' ) ),
+
+			    // Get filter name corrected for deselecting
+			    filter = selected ? filterVal : filterVal.substring( 1 ),
+
 			    // Exclude items when filter leads with an exclamation mark
 			    exclude = ( 0 === filter.indexOf( '!' ) );
 
@@ -71,11 +75,14 @@ jQuery(document).ready( function($) {
 
 			// Default for All and None
 			if ( 'all' === filter ) {
-				$consumerList.find( '.select-user' ).prop( 'checked', select );
+				$consumerList.find( '.consumer:not(.search-hide) .select-user' ).prop( 'checked', selected );
+
+				// Update group selection toggle states
+				$consumerList.find( '.select-group-users' ).attr( 'data-selected', selected );
 			} else {
-				$consumerList.find( '.select-user' ).filter( function( i, el ) {
+				$consumerList.find( '.consumer:not(.search-hide) .select-user' ).filter( function( i, el ) {
 					return ( -1 !== $(el).attr( 'data-matches' ).split( ',' ).indexOf( filter ) ) !== exclude;
-				}).prop( 'checked', select );
+				}).prop( 'checked', selected );
 			}
 
 			// Update count and total
@@ -84,7 +91,7 @@ jQuery(document).ready( function($) {
 			updateTotal();
 		})
 
-		// Toggle group users selection
+		// Toggle group selection
 		.on( 'click', '.select-group-users', function() {
 			var $el = $(this),
 			    selected = 'true' === $el.attr( 'data-selected' );
@@ -100,7 +107,7 @@ jQuery(document).ready( function($) {
 			updateTotal();
 		})
 
-		// Reverse groups order
+		// Reverse group order
 		.on( 'click', '#reverse-group-order', function() {
 			var $list = $consumerList.find( '.groups' );
 
