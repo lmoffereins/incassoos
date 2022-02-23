@@ -351,7 +351,8 @@ body.incassoos-post-view #postdivrich .inside {
 	padding-bottom: 12px;
 }
 
-.incassoos-item-list > ul > li:not(.selector) {
+.incassoos-item-list > ul > li:not(.selector),
+.incassoos-item-list ul .group {
 	padding-top: 5px;
 	padding-bottom: 10px;
 }
@@ -373,7 +374,7 @@ body.incassoos-post-view #postdivrich .inside {
 
 .incassoos-item-list label {
 	display: inline-block;
-	width: 100%;
+	/*width: 100%;*/
 }
 
 .incassoos-post-edit .incassoos-item-list li input + label {
@@ -502,7 +503,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 .incassoos-item-list .item-list-header #show-selected,
-.incassoos-item-list .item-list-header #show-visible {
+.incassoos-item-list .item-list-header #show-default-items {
 	padding: 4px 0px;
 }
 
@@ -518,7 +519,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 .incassoos-item-list #show-selected:after,
-.incassoos-item-list #show-visible:after,
+.incassoos-item-list #show-default-items:after,
 .incassoos-item-list #reverse-group-order:after,
 .incassoos-item-list #toggle-list-columns:after,
 .incassoos-item-list .activity-participant .toggle-custom-price:before {
@@ -532,14 +533,14 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 .incassoos-item-list #show-selected:after,
-.incassoos-item-list #show-visible:after {
+.incassoos-item-list #show-default-items:after {
 	content: '\f530';
 	color: #ddd;
 	margin: 0px 0px -2px 6px;
 }
 
 .incassoos-item-list.showing-selected #show-selected:after,
-.incassoos-item-list.showing-visible #show-visible:after {
+.incassoos-item-list.showing-default-items #show-default-items:after {
 	content: '\f177';
 	color: inherit;
 }
@@ -562,11 +563,12 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 .incassoos-item-list .search-hide,
 .incassoos-item-list.showing-selected .activity-participant .select-user:not(:checked),
 .incassoos-item-list.showing-selected .activity-participant .select-user:not(:checked) ~ *,
-.incassoos-item-list.showing-visible .consumer.noshow {
+.incassoos-item-list.showing-default-items .consumer.hide-in-list {
 	display: none;
 }
 
 .incassoos-item-list .sublist-header .select-group-users {
+	width: 100%;
 	color: inherit;
 	line-height: 20px;
 	text-decoration: none;
@@ -742,7 +744,7 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	}
 
 	.incassoos-item-list .item-list-header #show-selected,
-	.incassoos-item-list .item-list-header #show-visible {
+	.incassoos-item-list .item-list-header #show-default-items {
 		font-size: 16px;
 	}
 
@@ -948,6 +950,23 @@ body.incassoos .button-in-input:focus {
 
 /** Consumers Page **/
 
+body.incassoos_page_incassoos-consumers #toggle-bulk-edit {
+	margin-right: 8px;
+}
+
+body.incassoos_page_incassoos-consumers .import-export-consumers {
+	float: right;
+}
+
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) #bulk-action-selector,
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) #doaction,
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) #consumer-quick-select,
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) .select-group-users,
+body.incassoos_page_incassoos-consumers .incassoos-item-list.bulk-editing .select-group-users + .title,
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) .select-user {
+	display: none;
+}
+
 body.incassoos_page_incassoos-consumers .users .consumer {
 	margin: 0px;
 }
@@ -1006,12 +1025,12 @@ body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name:after 
 	opacity: .35;
 }
 
-body.incassoos_page_incassoos-consumers .users .consumer.noshow > .consumer-name:after {
+body.incassoos_page_incassoos-consumers .users .consumer.hide-in-list > .consumer-name:after {
 	content: '\f530'; /* dashicons-hidden */
 }
 
-body.incassoos_page_incassoos-consumers .users .consumer:not(.toggled) > .consumer-name:hover:after,
-body.incassoos_page_incassoos-consumers .users .consumer:not(.toggled) > .consumer-name:focus:after {
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) .users .consumer:not(.toggled) > .consumer-name:hover:after,
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) .users .consumer:not(.toggled) > .consumer-name:focus:after {
 	content: '\f464'; /* dashicons-edit */
 	opacity: 1;
 }
@@ -1020,8 +1039,22 @@ body.incassoos_page_incassoos-consumers .inline-edit {
 	padding: 5px 12px;
 }
 
-body.incassoos_page_incassoos-consumers .inline-edit-row fieldset label span.input-text-wrap {
-	margin-left: 7em;
+body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-gap: 0px 12px;
+}
+
+body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields > label {
+	display: contents; /* ignore this wrapper in the grid */
+}
+
+body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields span.title {
+	display: contents; /* makes text not wrap */
+}
+
+body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields span.input-text-wrap {
+	margin-left: 0px;
 }
 
 body.incassoos_page_incassoos-consumers .inline-edit .input-text-wrap label {
@@ -1045,6 +1078,13 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 		   -moz-column-rule: 1px solid #e5e5e5;
 		        column-rule: 1px solid #e5e5e5;
     }
+}
+
+@media screen and (max-width: 782px) {
+	body.incassoos_page_incassoos-consumers .tablenav {
+		height: 40px;
+		margin: 20px 0px 5px 0px;
+	}
 }
 
 @media only screen and (min-width: 1200px) {

@@ -257,7 +257,7 @@ function incassoos_dropdown_user_matches( $args = array() ) {
 	$parsed_args = wp_parse_args( $args, array(
 		'echo'              => 1,
 		'id'                => 'user-quick-select',
-		'class'             => 'postform',
+		'class'             => 'quick-select',
 		'tab_index'         => 0,
 		'option_none_value' => __( '&mdash; Quick select &mdash;', 'incassoos' )
 	));

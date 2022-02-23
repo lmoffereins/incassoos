@@ -526,12 +526,38 @@ jQuery(document).ready( function($) {
 	 */
 
 	var $consumersPage = $( 'body.incassoos_page_incassoos-consumers' ),
+	    $bulkEdit = $consumersPage.find( '#bulkedit' ),
 	    $inlineEdit = $consumersPage.find( '#inlineedit' );
 
 	$consumersPage
-		// Open inline edit
-		.on( 'click', '.consumer:not(.toggled) > .consumer-name', function() {
+		// Open bulk edit
+		.on( 'click', '.incassoos-item-list:not(.bulk-editing) #toggle-bulk-edit', function() {
 			consumersRemoveInlineEdit();
+			$consumersPage
+				.find( '.incassoos-item-list' ).addClass( 'bulk-editing' )
+				.find( '#toggle-bulk-edit' ).after( $bulkEdit.find( '.bulk-edit' ).clone().show() )
+		})
+
+		// Close bulk edit
+		.on( 'click', '.incassoos-item-list.bulk-editing #toggle-bulk-edit', function() {
+			consumersRemoveBulkEdit();
+			$consumersPage.find( '.select-user' ).prop( 'checked', false );
+		})
+
+		// Open inline edit
+		.on( 'click', '.consumer:not(.toggled) > .consumer-name', function( event ) {
+			consumersRemoveInlineEdit();
+
+			// When in bulk edit mode, ignore inline edit
+			if ( $consumersPage.find( '.incassoos-item-list.bulk-editing' ).length ) {
+				// When not selecting the checkbox, toggle it
+				if ( event.target.className !== 'select-user' ) {
+					var $cb = $( this ).find( '.select-user' );
+					$cb.prop( 'checked', ! $cb.prop( 'checked' ) );
+				}
+
+				return;
+			}
 
 			var $user   = $( this ).parent( 'li' ).addClass( 'toggled' ),
 			    $inline = $user.append( $inlineEdit.find( '.inline-edit' ).clone() ).find( '.inline-edit' ),
@@ -589,19 +615,30 @@ jQuery(document).ready( function($) {
 		})
 
 		// Show (un)limit visible items
-		.on( 'click', '#show-visible', function() {
+		.on( 'click', '#show-default-items', function() {
 			$consumerList
-				.toggleClass( 'showing-visible' )
-				.find( '#show-visible' )
-				.text( $consumerList.hasClass( 'showing-visible' ) ? l10n.showVisibleAll : l10n.showVisibleOnly );
+				.toggleClass( 'showing-default-items' )
+				.find( '#show-default-items' )
+				.text( $consumerList.hasClass( 'showing-default-items' ) ? l10n.showDefaultItemsAll : l10n.showDefaultItemsOnly );
 
 			toggleGroups({
 				$parent: $consumerList,
-				show: $consumerList.is( '.showing-visible' ),
-				filterBy: '.consumer:not(.noshow)',
+				show: $consumerList.is( '.showing-default-items' ),
+				filterBy: '.consumer:not(.hide-in-list)',
 				toggleClassName: 'hidden'
 			});
 		});
+
+	/**
+	 * Remove bulk editing from the users page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return {void}
+	 */
+	function consumersRemoveBulkEdit() {
+		$consumersPage.find( '.incassoos-item-list' ).removeClass( 'bulk-editing' ).find( '#toggle-bulk-edit' ).next( '.bulk-edit' ).remove();
+	}
 
 	/**
 	 * Remove inline editing from the users page

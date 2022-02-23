@@ -1070,9 +1070,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 				</h4>
 				<ul class="users">
 
-					<?php
-
-					foreach ( $group->users as $user ) :
+					<?php foreach ( $group->users as $user ) :
 						$_item_class = $item_class;
 						$has_custom_price = false;
 
@@ -1080,7 +1078,6 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 							$_item_class[] = 'has-custom-price';
 							$has_custom_price = true;
 						}
-
 					?>
 
 					<li id="user-<?php echo $user->ID; ?>" class="<?php echo implode( ' ', $_item_class ); ?>">

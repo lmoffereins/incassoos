@@ -323,7 +323,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $schema['properties']['show'] ) ) {
-			$data['show'] = ! $item->get( '_incassoos_noshow' );
+			$data['show'] = ! $item->get( '_incassoos_hide_in_list' );
 		}
 
 		if ( ! empty( $schema['properties']['consumptionLimit'] ) ) {
@@ -442,9 +442,9 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['show'] ) && isset( $request['show'] ) ) {
 			if ( $request['show'] ) {
-				delete_user_meta( $item->ID, '_incassoos_noshow' );
+				delete_user_meta( $item->ID, '_incassoos_hide_in_list' );
 			} else {
-				update_user_meta( $item->ID, '_incassoos_noshow', '1' );
+				update_user_meta( $item->ID, '_incassoos_hide_in_list', '1' );
 			}
 		}
 
