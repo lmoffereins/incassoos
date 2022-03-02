@@ -96,6 +96,8 @@ add_filter( 'term_link',                   'incassoos_filter_term_link',        
 
 /** User **********************************************************************/
 
+add_action( 'pre_get_users',               'incassoos_pre_get_users',                 10    );
+add_action( 'pre_user_query',              'incassoos_pre_user_query',                10    );
 add_action( 'incassoos_loaded',            'incassoos_filter_user_roles_option',      16    );
 add_action( 'incassoos_loaded',            'incassoos_filter_capabilities_user_meta', 16    );
 add_action( 'incassoos_roles_init',        'incassoos_add_plugin_roles',              10    );

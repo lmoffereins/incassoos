@@ -36,27 +36,6 @@ function incassoos_get_user( $user = false, $by = 'id' ) {
 }
 
 /**
- * Return user query object of users matching criteria
- *
- * @since 1.0.0
- *
- * @uses apply_filters() Calls 'incassoos_get_user_query_args'
- *
- * @param  array $args Optional. User query args for {@see get_users()}.
- * @return WP_User_Query User query
- */
-function incassoos_get_user_query( $args = array() ) {
-
-	// Enable filtering the user query arguments
-	$args = apply_filters( 'incassoos_get_user_query_args', $args );
-	$args = wp_parse_args( $args, array(
-		'orderby' => 'display_name'
-	) );
-
-	return new WP_User_Query( $args );
-}
-
-/**
  * Return list of users matching criteria
  *
  * @since 1.0.0
@@ -121,6 +100,80 @@ function incassoos_group_users( $users = array() ) {
 
 	return apply_filters( 'incassoos_group_users', $grouped, $users );
 }
+
+/** Query *****************************************************************/
+
+/**
+ * Return user query object of users matching criteria
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_user_query_args'
+ *
+ * @param  array $args Optional. User query args for {@see get_users()}.
+ * @return WP_User_Query User query
+ */
+function incassoos_get_user_query( $args = array() ) {
+
+	// Enable filtering the user query arguments
+	$args = apply_filters( 'incassoos_get_user_query_args', $args );
+	$args = wp_parse_args( $args, array(
+		'orderby' => 'display_name'
+	) );
+
+	return new WP_User_Query( $args );
+}
+
+/**
+ * Modify the user query before parsing the query vars
+ *
+ * @since 1.0.0
+ *
+ * @param WP_User_Query $users_query
+ */
+function incassoos_pre_get_users( $users_query ) {
+
+	// Filter shortcut for hide/show
+	if ( null !== $users_query->get( 'incassoos_hide_in_list' ) ) {
+		$meta_query = (array) $users_query->get( 'meta_query' ) ?: array();
+		$meta_query[] = array(
+			'key'     => '_incassoos_hide_in_list',
+			'value'   => array( '1' ),
+			'compare' => $users_query->get( 'incassoos_hide_in_list' ) ? 'IN' : 'NOT IN'
+		);
+		$users_query->set( 'meta_query', $meta_query );
+	}
+}
+
+/**
+ * Modify the user query when querying users
+ *
+ * @since 1.0.0
+ *
+ * @global $wpdb WPDB
+ *
+ * @uses apply_filters() Calls 'incassoos_pre_user_query'
+ *
+ * @param WP_User_Query $users_query
+ */
+function incassoos_pre_user_query( $users_query ) {
+	global $wpdb;
+
+	// Plugin implementation of non-exclusive 'include'
+	$include = $users_query->get( 'incassoos_include' );
+	if ( ! empty( $include ) ) {
+		$ids                      = implode( ',', wp_parse_id_list( $include ) );
+		$where_sql                = substr( $users_query->query_where, 6 ); // Remove leading 'WHERE '
+		$users_query->query_where = "WHERE $wpdb->users.ID IN ($ids) OR ($where_sql)";
+
+		// Catch-all to ensure unique rows
+		if ( ! empty( $users_query->meta_query->queries ) && 0 !== strpos( $users_query->query_fields, 'DISTINCT ' ) ) {
+			$users_query->query_fields = 'DISTINCT ' . $users_query->query_fields;
+		}
+	}
+}
+
+/** Template **************************************************************/
 
 /**
  * Return the user display name
