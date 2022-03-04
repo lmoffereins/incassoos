@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  * 
- * @param  mixed $user_id User object or identifier. Defaults to the current user ID.
+ * @param  mixed $user User object or identifier. Defaults to the current user ID.
  * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
  * @return WP_User|bool User object or false when not found.
  */
@@ -182,7 +182,7 @@ function incassoos_pre_user_query( $users_query ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_user_display_name'
  *
- * @param  mixed $user_id User object or identifier. Defaults to the current user ID.
+ * @param  mixed $user User object or identifier. Defaults to the current user ID.
  * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
  * @return string User display name
  */
@@ -208,7 +208,7 @@ function incassoos_get_user_display_name( $user = false, $by = 'id' ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_user_iban'
  *
- * @param  mixed $user_id User object or identifier. Defaults to the current user ID.
+ * @param  mixed $user User object or identifier. Defaults to the current user ID.
  * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
  * @return string User IBAN
  */
@@ -244,6 +244,30 @@ function incassoos_get_user_consumption_limit( $user = false, $by = 'id' ) {
 
 	return (float) apply_filters( 'incassoos_get_user_consumption_limit', $limit, $user );
 }
+
+/**
+ * Return whether the user is hidden by default
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_user_hide_by_default'
+ *
+ * @param  mixed $user_id User object or property. Defaults to the current user ID.
+ * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
+ * @return bool Hide user by default.
+ */
+function incassoos_user_hide_by_default( $user = false, $by = 'id' ) {
+	$user = incassoos_get_user( $user, $by );
+	$hide = false;
+
+	if ( $user ) {
+		$hide = (bool) $user->get( '_incassoos_hide_in_list', false );
+	}
+
+	return (bool) apply_filters( 'incassoos_user_hide_by_default', $hide, $user );
+}
+
+/** Lists *****************************************************************/
 
 /**
  * Return the user's group used for sub-listing

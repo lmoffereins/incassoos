@@ -788,8 +788,8 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 
 	<div class="incassoos-item-list">
 		<div id="select-matches" class="item-list-header hide-if-no-js">
-			<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
-			<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+			<label for="consumers-item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="consumers-item-search" class="list-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
 
 			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
@@ -1012,7 +1012,17 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	$is_post_view = incassoos_admin_is_post_view( $post );
 	$participants = incassoos_get_activity_participants( $post );
 	$users        = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
+	$hidden_users = array();
 	$prices       = get_post_meta( $post->ID, 'prices', true ) ?: array();
+
+	// Collect hidden users
+	if ( ! $is_post_view ) {
+		foreach ( $users as $user ) {
+			if ( incassoos_user_hide_by_default( $user ) && ! in_array( $user->ID, $participants ) ) {
+				$hidden_users[] = $user->ID;
+			}
+		}
+	}
 
 	// Price, without currency
 	$format_args     = incassoos_get_currency_format_args();
@@ -1027,7 +1037,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 	?>
 
-	<div class="incassoos-item-list">
+	<div class="incassoos-item-list showing-default-items">
 		<div id="select-matches" class="item-list-header hide-if-no-js">
 			<?php if ( ! $is_post_view ) : ?>
 
@@ -1036,8 +1046,8 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 			<?php endif; ?>
 
-			<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search participants', 'incassoos' ); ?></label>
-			<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search participants&hellip;', 'incassoos' ); ?>" />
+			<label for="participants-item-search" class="screen-reader-text"><?php esc_html_e( 'Search participants', 'incassoos' ); ?></label>
+			<input type="search" id="participants-item-search" class="list-search" placeholder="<?php esc_attr_e( 'Search participants&hellip;', 'incassoos' ); ?>" />
 
 			<?php if ( ! $is_post_view ) : ?>
 
@@ -1051,12 +1061,27 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 			<button type="button" id="toggle-list-columns" class="button-link" title="<?php esc_attr_e( 'Toggle list columns', 'incassoos' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Toggle list columns', 'incassoos' ); ?></span>
 			</button>
+
+			<?php if ( ! $is_post_view ) : ?>
+
+			<div class="add-participant-container">
+				<button type="button" id="open-add-participant" class="button-link" title="<?php esc_attr_e( 'Open add participant', 'incassoos' ); ?>">
+					<span class="screen-reader-text"><?php esc_html_e( 'Open add participant', 'incassoos' ); ?></span>
+				</button>
+			</div>
+
+			<?php endif; ?>
 		</div>
 
 		<ul class="sublist list-columns groups">
-			<?php foreach ( incassoos_group_users( $users ) as $group ) : ?>
+			<?php foreach ( incassoos_group_users( $users ) as $group ) :
 
-			<li id="group-<?php echo $group->id; ?>" class="group">
+				// Group is hidden when all users are hidden
+				$group_user_ids = wp_list_pluck( $group->users, 'ID' );
+				$hidden_group   = array_diff( $group_user_ids, $hidden_users ) ? "" : "hide-in-list";
+			?>
+
+			<li id="group-<?php echo $group->id; ?>" class="group <?php echo $hidden_group; ?>">
 				<h4 class="sublist-header item-content">
 					<?php if ( ! $is_post_view ) : ?>
 					
@@ -1077,6 +1102,10 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 						if ( incassoos_activity_participant_has_custom_price( $user->ID, $post ) ) {
 							$_item_class[] = 'has-custom-price';
 							$has_custom_price = true;
+						}
+
+						if ( in_array( $user->ID, $hidden_users ) ) {
+							$_item_class[] = 'hide-in-list';
 						}
 					?>
 
@@ -1114,6 +1143,14 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 			<?php endforeach; ?>
 		</ul>
+
+		<div style="display:none;" id="addparticipant">
+			<div class="add-participant">
+				<label for="add-participant-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+				<input type="search" id="add-participant-search" class="list-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" data-list=".add-participant .item-list" />
+				<ul class="item-list"></ul>
+			</div>
+		</div>
 	</div>
 
 	<?php wp_nonce_field( 'activity_participants_metabox', 'activity_participants_metabox_nonce' ); ?>
@@ -1344,8 +1381,8 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 
 	<div class="incassoos-item-list">
 		<div id="select-matches" class="item-list-header hide-if-no-js">
-			<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
-			<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+			<label for="consumers-item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+			<input type="search" id="consumers-item-search" class="list-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
 
 			<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>

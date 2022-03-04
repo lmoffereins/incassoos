@@ -316,8 +316,8 @@ function incassoos_admin_consumers_page() {
 
 				<?php endif; ?>
 
-				<label for="item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
-				<input type="search" id="item-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
+				<label for="consumers-item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
+				<input type="search" id="consumers-item-search" class="list-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
 
 				<button type="button" id="show-default-items" class="button-link"><?php esc_html_e( 'Show default', 'incassoos' ); ?></button>
 				<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
@@ -423,7 +423,7 @@ function incassoos_admin_consumers_list_class( $user ) {
 	$class = array();
 
 	// Add class for hidden consumers
-	if ( $user->get( '_incassoos_hide_in_list' ) ) {
+	if ( incassoos_user_hide_by_default( $user ) ) {
 		$class[] = 'hide-in-list';
 	}
 

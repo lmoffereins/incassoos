@@ -33,21 +33,24 @@ jQuery(document).ready( function($) {
 		})
 
 		// Show (un)limit searched items
-		.on( 'keyup change search input', '#item-search', function() {
+		.on( 'keyup change search input', '.list-search', function() {
+
+			// Get list to search from data attribute or default to consumer list
+			var $searchList = $( this.dataset.list || $consumerList );
 
 			// Create regex from search string
 			var reg = new RegExp( this.value.replace( / /g, '' ), 'gi' );
 
 			// Unhide all, filter unmatched usernames, and hide those
-			$consumerList
+			$searchList
 				.find( '.consumer' ).removeClass( 'search-hide' ).find( '.consumer-name' ).filter( function( i, el ) {
 					return ! el.innerHTML.replace( / /g, '' ).match( reg );
 				}).parents( '.consumer' ).addClass( 'search-hide' );
 
 			toggleGroups({
-				$parent: $consumerList,
+				$parent: $searchList,
 				show: this.value.length,
-				filterBy: '.consumer:not(.search-hide)',
+				filterBy: '.consumer:not(.search-hide):not(.hide-in-list)',
 				toggleClassName: 'search-hidden'
 			});
 		})
@@ -75,12 +78,12 @@ jQuery(document).ready( function($) {
 
 			// Default for All and None
 			if ( 'all' === filter ) {
-				$consumerList.find( '.consumer:not(.search-hide) .select-user' ).prop( 'checked', selected );
+				$consumerList.find( '.consumer:not(.search-hide):not(.hide-in-list) .select-user' ).prop( 'checked', selected );
 
 				// Update group selection toggle states
 				$consumerList.find( '.select-group-users' ).attr( 'data-selected', selected );
 			} else {
-				$consumerList.find( '.consumer:not(.search-hide) .select-user' ).filter( function( i, el ) {
+				$consumerList.find( '.consumer:not(.search-hide):not(.hide-in-list) .select-user' ).filter( function( i, el ) {
 					return ( -1 !== $(el).attr( 'data-matches' ).split( ',' ).indexOf( filter ) ) !== exclude;
 				}).prop( 'checked', selected );
 			}
@@ -100,7 +103,7 @@ jQuery(document).ready( function($) {
 			$el.attr( 'data-selected', ! selected )
 
 				// Toggle the users
-				.parents( '.group' ).first().find( '.select-user' ).prop( 'checked', ! selected );
+				.parents( '.group' ).first().find( '.select-user:not(.search-hide):not(.hide-in-list)' ).prop( 'checked', ! selected );
 
 			// Update count and total
 			updateCount();
@@ -148,7 +151,7 @@ jQuery(document).ready( function($) {
 		});
 		updateTotal({
 			$totalField: $colTotalField,
-			calculator: calculateColTotal
+			calculator: calculateCollectionTotal
 		});
 	});
 
@@ -162,7 +165,7 @@ jQuery(document).ready( function($) {
 		});
 		updateTotal({
 			$totalField: $colTotalField,
-			calculator: calculateColTotal
+			calculator: calculateCollectionTotal
 		});
 	});
 
@@ -173,7 +176,7 @@ jQuery(document).ready( function($) {
 	 *
 	 * @return {Float} Collection total
 	 */
-	function calculateColTotal() {
+	function calculateCollectionTotal() {
 		var calculated = 0, $listItem;
 
 		// Calculate total from activities
@@ -199,6 +202,7 @@ jQuery(document).ready( function($) {
 	    $actTotalField = $actDtlsBox.find( '#activity-total' ).prepend( '<span class="new-value"></span>' ),
 	    $actPartBox = $( '#incassoos_activity_participants' ),
 	    $actPtcptList = $actPartBox.find( '.incassoos-item-list' ),
+	    $addParticipant = $actPtcptList.find( '#addparticipant' ),
 	    $listItem;
 
 	// Price changes
@@ -225,6 +229,45 @@ jQuery(document).ready( function($) {
 			toggleGroups();
 		})
 
+		// Open add participant
+		.on( 'click', '.add-participant-container:not(.adding-participant) #open-add-participant', function() {
+			$actPtcptList
+				.find( '.add-participant-container' ).addClass( 'adding-participant' )
+				.append( $addParticipant.find( '.add-participant' ).clone().show() )
+				.find( '.list-search' ).focus().end()
+
+				// Collect all hidden list items on the page and list them in the box
+				// TODO: This doesn't scale well for large amounts of items.
+				.find( '.item-list' ).append( $actPtcptList.find( '.consumer.hide-in-list' ).parents( '.group' ).clone().removeClass([ 'hide-in-list', 'hidden' ]) )
+					.find( '.sublist-header .title' ).replaceWith( function() {
+						return $( '<span class="title"></span>' ).append( $( this ).contents() );
+					}).end()
+					.find( '.consumer:not(.hide-in-list' ).remove().end()
+					.find( '.consumer' ).removeClass([ 'hide-in-list', 'search-hide' ]).find( '.item-content' ).replaceWith( function() {
+						return $( '<button type="button" class="button-link consumer-name title"></button>' ).append( $( this ).find( '.consumer-name' ).contents() );
+					});
+		})
+
+		// Close add participant
+		.on( 'click', '.add-participant-container.adding-participant #open-add-participant', function() {
+			activityRemoveAddParticipant();
+		})
+
+		// Add participant and apply selection
+		.on( 'click', '.add-participant .consumer', function() {
+			var $this = $( this );
+			$actPtcptList
+				.find( '.sublist #' + this.id ).removeClass([ 'hide-in-list', 'search-hide' ]).find( '.select-user' ).attr( 'checked', true ).trigger( 'change' )
+				.parents( '.group' ).removeClass([ 'hide-in-list', 'hidden' ]);
+
+			// Remove group when this was the only item left
+			if ( $this.is( ':only-child' ) ) {
+				$this.parents( '.group' ).remove();
+			} else {
+				$this.remove();
+			}
+		})
+
 		// Keep selected count
 		.on( 'change', '.select-user', function() {
 
@@ -235,7 +278,7 @@ jQuery(document).ready( function($) {
 
 		// Toggle custom price input
 		.on( 'click', '.toggle-custom-price', function() {
-			actPtcptOpenCustomPrice( this );
+			activityParticipantOpenCustomPrice( this );
 		})
 
 		// Custom price changed
@@ -246,6 +289,35 @@ jQuery(document).ready( function($) {
 			updateTotal();
 		});
 
+	$(document)
+
+		// Close add participant
+		.on( 'keyup mouseup', function( event ) {
+
+			// Pressed Escape
+			if ( 'keyup' === event.type && 27 === event.keyCode ) {
+				activityRemoveAddParticipant();
+			} else {
+				var $box = $actPtcptList.find( '.add-participant-container.adding-participant .add-participant, .add-participant-container.adding-participant #open-add-participant' );
+
+				// Clicked outside of box
+				if ( 'mouseup' === event.type && ! $box.is( event.target ) && ! $box.has( event.target ).length ) {
+					activityRemoveAddParticipant();
+				}
+			}
+		});
+
+	/**
+	 * Remove adding participants from the activity page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return {void}
+	 */
+	function activityRemoveAddParticipant() {
+		$actPtcptList.find( '.add-participant-container' ).removeClass( 'adding-participant' ).find( '.add-participant' ).remove();
+	}
+
 	/**
 	 * Open or toggle the custom price field
 	 *
@@ -254,7 +326,7 @@ jQuery(document).ready( function($) {
 	 * @param  {HTMLElement} el    The element associated with the custom price.
 	 * @param  {Boolean}     force Optional. True to force open the price, False to toggle. Defaults to false.
 	 */
-	function actPtcptOpenCustomPrice( el, force ) {
+	function activityParticipantOpenCustomPrice( el, force ) {
 		force = force || false;
 
 		$listItem = $actPtcptList.find( el ).parents( '.activity-participant' ).first();
@@ -303,11 +375,11 @@ jQuery(document).ready( function($) {
 		// Update count and total
 		updateCount({
 			$box: $ordPrdBox,
-			calculator: calculateOrdCount
+			calculator: calculateOrderCount
 		});
 		updateTotal({
 			$totalField: $ordTotalField,
-			calculator: calculateOrdTotal
+			calculator: calculateOrderTotal
 		});
 	});
 
@@ -318,7 +390,7 @@ jQuery(document).ready( function($) {
 	 *
 	 * @return {Float} Order product count
 	 */
-	function calculateOrdCount() {
+	function calculateOrderCount() {
 		var calculated = 0;
 
 		// Calculate total from activities
@@ -336,7 +408,7 @@ jQuery(document).ready( function($) {
 	 *
 	 * @return {Float} Order total
 	 */
-	function calculateOrdTotal() {
+	function calculateOrderTotal() {
 		var calculated = 0, $listItem;
 
 		// Calculate total from activities
@@ -428,7 +500,7 @@ jQuery(document).ready( function($) {
 
 		// Setup defaults for Activity participants
 		options = options || {};
-		options.$parent         = options.$parent || $actPtcptList;
+		options.$parent         = options.$parent || $actPtcptList.find( '.groups' );
 		options.show            = options.show || $actPtcptList.is( '.showing-selected' );
 		options.filterBy        = options.filterBy || '.select-user:checked';
 		options.toggleClassName = options.toggleClassName || 'hidden';
@@ -535,7 +607,7 @@ jQuery(document).ready( function($) {
 			consumersRemoveInlineEdit();
 			$consumersPage
 				.find( '.incassoos-item-list' ).addClass( 'bulk-editing' )
-				.find( '#toggle-bulk-edit' ).after( $bulkEdit.find( '.bulk-edit' ).clone().show() )
+				.find( '#toggle-bulk-edit' ).after( $bulkEdit.find( '.bulk-edit' ).clone().show() );
 		})
 
 		// Close bulk edit
@@ -630,7 +702,7 @@ jQuery(document).ready( function($) {
 		});
 
 	/**
-	 * Remove bulk editing from the users page
+	 * Remove bulk editing from the consumers page
 	 *
 	 * @since 1.0.0
 	 *
@@ -641,7 +713,7 @@ jQuery(document).ready( function($) {
 	}
 
 	/**
-	 * Remove inline editing from the users page
+	 * Remove inline editing from the consumers page
 	 *
 	 * @since 1.0.0
 	 *
