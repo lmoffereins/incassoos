@@ -517,7 +517,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 
 .incassoos-item-list .item-list-header #show-selected,
 .incassoos-item-list .item-list-header #show-default-items {
-	padding: 4px 0px;
+	padding: 5px 3px 5.5px;
 }
 
 .incassoos-item-list .item-list-header #reverse-group-order,
