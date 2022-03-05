@@ -606,7 +606,7 @@ jQuery(document).ready( function($) {
 			consumersRemoveInlineEdit();
 			$consumersPage
 				.find( '.incassoos-item-list' ).addClass( 'bulk-editing' )
-				.find( '#toggle-bulk-edit' ).after( $bulkEdit.find( '.bulk-edit' ).clone().show() );
+				.find( '#toggle-bulk-edit' ).text( l10n.toggleCloseBulkEdit ).after( $bulkEdit.find( '.bulk-edit' ).clone().show() );
 		})
 
 		// Close bulk edit
@@ -708,7 +708,7 @@ jQuery(document).ready( function($) {
 	 * @return {void}
 	 */
 	function consumersRemoveBulkEdit() {
-		$consumersPage.find( '.incassoos-item-list' ).removeClass( 'bulk-editing' ).find( '#toggle-bulk-edit' ).next( '.bulk-edit' ).remove();
+		$consumersPage.find( '.incassoos-item-list' ).removeClass( 'bulk-editing' ).find( '#toggle-bulk-edit' ).text( l10n.toggleOpenBulkEdit ).next( '.bulk-edit' ).remove();
 	}
 
 	/**

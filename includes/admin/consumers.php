@@ -301,7 +301,7 @@ function incassoos_admin_consumers_page() {
 		<?php if ( $can_bulk_edit ) : ?>
 
 		<div id="select-meta" class="tablenav hide-if-no-js">
-			<button type="button" id="toggle-bulk-edit" class="button alignleft"><?php esc_html_e( 'Toggle bulk edit mode', 'incassoos' ); ?></button>
+			<button type="button" id="toggle-bulk-edit" class="button alignleft"><?php esc_html_e( 'Open bulk edit mode', 'incassoos' ); ?></button>
 		</div>
 
 		<?php endif; ?>

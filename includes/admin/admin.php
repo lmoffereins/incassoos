@@ -265,6 +265,8 @@ class Incassoos_Admin {
 				'termMetaDefault'      => _x( 'Default', 'Term meta',               'incassoos' ),
 				'toggleCloseErrors'    => _x( 'Hide errors', 'Notice toggle label', 'incassoos' ),
 				'toggleOpenErrors'     => _x( 'Show errors', 'Notice toggle label', 'incassoos' ),
+				'toggleCloseBulkEdit'  => __( 'Close bulk edit mode',               'incassoos' ),
+				'toggleOpenBulkEdit'   => __( 'Open bulk edit mode',                'incassoos' )
 			)
 		) );
 
