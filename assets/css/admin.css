@@ -510,7 +510,8 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 	border: 0px;
 }
 
-.incassoos-item-list .item-list-header > label:first-child + .list-search {
+.incassoos-item-list .item-list-header > label:first-child + .list-search,
+body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) .item-list-header > .list-search {
 	margin-left: -5px;
 }
 
@@ -1120,7 +1121,7 @@ body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name:after 
 	opacity: .35;
 }
 
-body.incassoos_page_incassoos-consumers .users .consumer.hide-in-list > .consumer-name:after {
+body.incassoos_page_incassoos-consumers .users .consumer.hide-by-default > .consumer-name:after {
 	content: '\f530'; /* dashicons-hidden */
 }
 

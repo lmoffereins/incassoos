@@ -290,7 +290,6 @@ jQuery(document).ready( function($) {
 		});
 
 	$(document)
-
 		// Close add participant
 		.on( 'keyup mouseup', function( event ) {
 

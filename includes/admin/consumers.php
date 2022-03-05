@@ -424,7 +424,7 @@ function incassoos_admin_consumers_list_class( $user ) {
 
 	// Add class for hidden consumers
 	if ( incassoos_user_hide_by_default( $user ) ) {
-		$class[] = 'hide-in-list';
+		$class[] = 'hide-by-default'; /* Don't use 'hide-in-list' which affects search differently in admin.js */
 	}
 
 	// Add class for missing IBAN
