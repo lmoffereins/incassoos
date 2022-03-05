@@ -432,14 +432,30 @@ body.incassoos-post-view #postdivrich .inside {
 
 .incassoos-item-list .assets .asset .title,
 .incassoos-item-list .users .consumer .title,
-.incassoos-item-list .products .product .label {
+.incassoos-item-list .products .product .title {
 	display: inline-block;
 	font-weight: 600;
 	vertical-align: middle;
 	flex: 1;
 	padding-right: 12px;
+	box-sizing: border-box;
+}
+
+.incassoos-item-list .products .product .title {
+	display: flex;
+	width: 90%; /* 100% does not flow correctly flex layout */
+}
+
+.incassoos-item-list .assets .asset .title,
+.incassoos-item-list .users .consumer .title,
+.incassoos-item-list .products .product .title .label {
 	text-overflow: ellipsis;
 	overflow: hidden;
+	white-space: pre;
+}
+
+.incassoos-item-list .products .product .title .price {
+	padding-left: 3px;
 	white-space: pre;
 }
 

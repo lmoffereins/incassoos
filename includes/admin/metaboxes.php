@@ -803,7 +803,7 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 			<?php foreach ( incassoos_group_users( $consumers ) as $group ) : ?>
 
 			<li id="group-<?php echo $group->id; ?>" class="group">
-				<h4 class="sublist-header"><?php echo esc_html( $group->name ); ?></h4>
+				<h4 class="sublist-header item-content"><?php echo esc_html( $group->name ); ?></h4>
 
 				<ul class="users">
 					<?php foreach ( $group->users as $user ) : ?>
@@ -1344,8 +1344,8 @@ function incassoos_admin_occasion_products_metabox( $post ) {
 			<?php foreach ( $products as $product ) : ?>
 
 			<li id="post-<?php echo $product->id; ?>" class="product occasion-product">
-				<span class="label">
-					<span class="title"><?php echo esc_html( $product->name ); ?></span>
+				<span class="title">
+					<span class="label"><?php echo esc_html( $product->name ); ?></span>
 					<span class="price"><?php incassoos_the_format_currency( $product->price ); ?></span>
 				</span>
 				<span class="total"><?php echo esc_html( $product->amount ); ?></span>
@@ -1396,7 +1396,7 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 			<?php foreach ( incassoos_group_users( $consumers ) as $group ) : ?>
 
 			<li id="group-<?php echo $group->id; ?>" class="group">
-				<h4 class="sublist-header"><?php echo esc_html( $group->name ); ?></h4>
+				<h4 class="sublist-header item-content"><?php echo esc_html( $group->name ); ?></h4>
 				<ul class="users">
 					<?php foreach ( $group->users as $user ) : ?>
 
