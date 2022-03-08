@@ -32,6 +32,13 @@ jQuery(document).ready( function($) {
 			$consumerList.find( '.open-details' ).not( this ).removeClass( 'opened' );
 		})
 
+		// Focus search when tapping list header
+		.on( 'click', '.item-list-header', function( event ) {
+			if ( ! $consumerList.find( '.item-list-header' ).find( event.target ).length ) {
+				$consumerList.find( '.item-list-header > .list-search' ).focus();
+			}
+		})
+
 		// Show (un)limit searched items
 		.on( 'keyup change search input', '.list-search', function() {
 
@@ -262,9 +269,9 @@ jQuery(document).ready( function($) {
 
 			// Remove group when this was the only item left
 			if ( $this.is( ':only-child' ) ) {
-				$this.parents( '.group' ).remove();
+				$this.parents( '.group' ).addClass( 'hide-in-list' );
 			} else {
-				$this.remove();
+				$this.addClass( 'hide-in-list' );
 			}
 		})
 
