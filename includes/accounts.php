@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /** IBAN **********************************************************************/
 
 /**
- * Sanitize IBAN format when saving the settings page.
+ * Sanitize text for the IBAN format
  *
  * @since 1.0.0
  *
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param string $input Value to sanitize
  * @param bool $validate Optional. Whether to validate the IBAN. Defaults to true.
- * @return string
+ * @return string Sanitized IBAN
  */
 function incassoos_sanitize_iban( $input = '', $validate = true ) {
 
@@ -119,7 +119,7 @@ function incassoos_sanitize_iban( $input = '', $validate = true ) {
 	}
 
 	// Validate IBAN by modulo 97
-	if ( $validate ) {
+	if ( $value && $validate ) {
 
 		// Move first 4 chars to the back. Replace chars with numbers
 		$check = substr( $value, 4 ) . substr( $value, 0, 4 );
@@ -147,6 +147,16 @@ function incassoos_sanitize_iban( $input = '', $validate = true ) {
 
 	// Filter the result and return
 	return apply_filters( 'incassoos_sanitize_iban', $value, $input, $validate );
+}
+
+/**
+ * Return whether the IBAN validates
+ *
+ * @param  string $iban IBAN
+ * @return bool Is IBAN validated?
+ */
+function incassoos_validate_iban( $iban ) {
+	return ! empty( $iban ) && $iban === incassoos_sanitize_iban( $iban );
 }
 
 /**
@@ -186,8 +196,13 @@ function incassoos_is_iban_redacted( $iban ) {
  * @return string BIC
  */
 function incassoos_get_bic_from_iban( $iban = '' ) {
-	$iban    = incassoos_sanitize_iban( $iban );
-	$country = $iban ? substr( $iban, 0, 2 ) : '';
+
+	// Bail when the IBAN does not validate
+	if ( ! incassoos_validate_iban( $iban ) ) {
+		return false;
+	}
+
+	$country = substr( $iban, 0, 2 );
 	$bic_map = array();
 	$bic     = '';
 
