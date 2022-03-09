@@ -2182,6 +2182,75 @@ function incassoos_validate_decryption_key( $decryption_key ) {
 }
 
 /**
+ * Return the decryption key from the user's session
+ *
+ * @since 1.0.0
+ *
+ * @return string|bool Decryption key or False when not set
+ */
+function incassoos_get_decryption_key() {
+	
+	// Bail early when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return true;
+	}
+
+	// Return key when defined
+	if ( isset( incassoos()->encryption->decryption_key ) ) {
+		return incassoos()->encryption->decryption_key;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Save the decryption key temporarily in the user's session
+ *
+ * @since 1.0.0
+ *
+ * @param string $decryption_key The decryption key
+ * @return bool|WP_Error Saving success or error object when failed
+ */
+function incassoos_set_decryption_key( $decryption_key ) {
+
+	// Bail early when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return true;
+	}
+
+	// Bail early when the decryption key was already set
+	if ( incassoos_get_decryption_key() ) {
+		return true;
+	}
+
+	// Define retval
+	$validated = incassoos_validate_decryption_key( $decryption_key );
+	if ( is_wp_error( $validated ) ) {
+		return $validated;
+	}
+
+	// Set decryption key in cache
+	incassoos()->encryption->decryption_key = $decryption_key;
+
+	return true;
+}
+
+/**
+ * Remove the decryption key from the user's session
+ *
+ * @since 1.0.0
+ *
+ * @return bool Deletion success
+ */
+function incassoos_delete_decryption_key() {
+
+	// Unset decryption key from cache
+	incassoos()->encryption->decryption_key = null;
+
+	return true;
+}
+
+/**
  * Return the encrypted version of a text
  *
  * @since 1.0.0
@@ -2276,8 +2345,8 @@ function incassoos_decrypt_value( $input, $decryption_key ) {
 function incassoos_get_encryptable_options() {
 
 	// Try to return items from cache
-	if ( ! empty( incassoos()->encryptable->options ) ) {
-		$encryptable = incassoos()->encryptable->options;
+	if ( ! empty( incassoos()->encryption->options ) ) {
+		$encryptable = incassoos()->encryption->options;
 	} else {
 		/**
 		 * Filter the list of encryptable options
@@ -2339,7 +2408,7 @@ function incassoos_get_encryptable_options() {
 		}
 
 		// Set items in cache
-		incassoos()->encryptable->options = $encryptable;
+		incassoos()->encryption->options = $encryptable;
 	}
 
 	return $encryptable;
