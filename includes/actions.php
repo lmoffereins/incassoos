@@ -32,8 +32,9 @@ add_action( 'incassoos_deactivation',      'incassoos_delete_rewrite_rules',    
 
 /** Core **********************************************************************/
 
-add_action( 'incassoos_init',              'incassoos_register_settings',            10    );
-add_action( 'incassoos_init',              'incassoos_register_encryptable_options', 10    );
+add_action( 'incassoos_init',              'incassoos_register_settings',             10    );
+add_action( 'incassoos_init',              'incassoos_register_encryptable_options',  10    );
+add_action( 'incassoos_init',              'incassoos_register_encryptable_usermeta', 10    );
 
 /** Query *********************************************************************/
 

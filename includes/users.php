@@ -216,6 +216,7 @@ function incassoos_get_user_iban( $user = false, $by = 'id' ) {
 	$user = incassoos_get_user( $user, $by );
 	$iban = '';
 
+	// Get IBAN. Value may be redacted when encryption is enabled
 	if ( $user ) {
 		$iban = $user->get( '_incassoos_iban' );
 	}
@@ -468,6 +469,8 @@ function incassoos_get_user_match_ids_list( $user = false, $by = 'id' ) {
 	return implode( ',', incassoos_get_user_match_ids( $user, $by ) );
 }
 
+/** Caps ******************************************************************/
+
 /**
  * Return whether the user can view the post (type)
  *
@@ -588,6 +591,378 @@ function incassoos_user_can_delete_post( $post, $user = 0 ) {
 	}
 
 	return apply_filters( 'incassoos_user_can_delete_post', $retval, $post, $user );
+}
+
+/** Security ******************************************************************/
+
+/**
+ * Return the list of encryptable usermeta
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_encryptable_usermeta'
+ *
+ * @param string $meta_key Optional. Provide meta key when requesting details
+ *                         of a single encryptable usermeta.
+ * @return array|bool All or single encryptable usermeta or False when not found
+ */
+function incassoos_get_encryptable_usermeta( $meta_key = '' ) {
+
+	// Try to return items from cache
+	if ( ! empty( incassoos()->encryption->usermeta ) ) {
+		$encryptable = incassoos()->encryption->usermeta;
+	} else {
+		/**
+		 * Filter the list of encryptable usermeta
+		 *
+		 * Usermeta can be added to the list in one of the following ways:
+		 * - Just the meta key. The suffix '_encrypted' will be added to the meta key for the
+		 *   equivalent encrypted usermeta.
+		 * - The meta key as array key with the name for the equivalent encrypted usermeta as array value.
+		 * - The meta key as array key with their encryption parameters in an array {
+		 *    string $meta_key_encrypted   Optional. Name for the encrypted usermeta. Defaults to the
+		 *                                 plain meta key with the suffix '_encrypted'.
+		 *    string $redact_callback      Optional. Callback name for redacting the original value.
+		 *                                 Defaults to `incassoos_redact_text`.
+		 *    array  $redact_callback_args Optional. Additional arguments for the redaction callback.
+		 *                                 Defaults to an empty array.
+		 *    string $is_redacted_callback Optional. Callback name for checking whether the value is
+		 *                                 redacted. Defaults to `incassoos_is_value_redacted`.
+		 *   }
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $usermeta Encryptable usermeta
+		 */
+		$usermeta = (array) apply_filters( 'incassoos_get_encryptable_usermeta', array(
+
+			// The IBAN of the user
+			'_incassoos_iban'             => array(
+				'meta_key_encrypted'   => '_incassoos_encrypted_iban',
+				'redact_callback'      => 'incassoos_redact_iban',
+				'is_redacted_callback' => 'incassoos_is_iban_redacted'
+			)
+		) );
+
+		$encryptable = array();
+
+		// Parse defaults
+		foreach ( $usermeta as $mkey => $args ) {
+
+			// Provided just the plain meta key
+			if ( is_numeric( $mkey ) && is_string( $args ) ) {
+				$mkey = $args;
+				$args     = array();
+			} elseif ( is_string( $args ) ) {
+				$args = array( 'meta_key_encrypted' => $args );
+			}
+
+			$encryptable[ $mkey ] = wp_parse_args( $args, array(
+				'meta_key_encrypted'   => "{$mkey}_encrypted",
+				'redact_callback'      => 'incassoos_redact_text',
+				'redact_callback_args' => array(),
+				'is_redacted_callback' => 'incassoos_is_value_redacted'
+			) );
+		}
+
+		// Set items in cache
+		incassoos()->encryption->usermeta = $encryptable;
+	}
+
+	// Single usermeta requested
+	if ( $meta_key ) {
+
+		// Define retval
+		$retval = false;
+
+		// Find the usermeta
+		if ( isset( $encryptable[ $meta_key ] ) ) {
+			$retval = $encryptable[ $meta_key ];
+		}
+
+		return $retval;
+	} else {
+		return $encryptable;
+	}
+}
+
+/**
+ * Register actions and filters for encryptable usermeta
+ *
+ * @since 1.0.0
+ */
+function incassoos_register_encryptable_usermeta() {
+
+	// Load encryptable usermeta into cache
+	incassoos_get_encryptable_usermeta();
+
+	// Register encryption action for `add_user_meta()`
+	add_action( 'added_user_meta', 'incassoos_encryption_for_add_user_meta', 10, 4 );
+
+	// Register encryption filter for `get_user_meta()`
+	add_action( 'get_user_metadata', 'incassoos_encryption_for_get_user_meta', 10, 4 );
+
+	/*
+	 * Register encryption filter for `update_user_meta()`
+	 *
+	 * User metadata cannot be modified directly before update - other than
+	 * through `sanitize_meta()` which is also used outside of `update_metadata()`.
+	 *
+	 * This filter will effectively short-circuit the usermeta update for
+	 * encryptable usermeta, while updating the redacted value and storing the
+	 * equivalent encrypted meta value.
+	 */
+	add_filter( 'update_user_metadata', 'incassoos_encryption_for_update_user_meta', 10, 5 );
+
+	// Register encryption action for `delete_user_meta()`
+	add_action( 'deleted_user_meta', 'incassoos_encryption_for_delete_user_meta', 10, 4 );
+
+	// Register actions for enabling/disabling encryption
+	add_action( 'incassoos_enable_encryption',  'incassoos_encrypt_encryptable_usermeta', 10 );
+	add_action( 'incassoos_disable_encryption', 'incassoos_decrypt_encryptable_usermeta', 10 );
+}
+
+/**
+ * Apply encryption when a user's metadata is added
+ *
+ * @since 1.0.0
+ *
+ * @param int    $mid      Meta ID
+ * @param int    $user_id  User ID
+ * @param string $meta_key Meta key
+ * @param mixed  $value    Meta value
+ */
+function incassoos_encryption_for_add_user_meta( $mid, $user_id, $meta_key, $value ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return;
+	}
+
+	// Get encryptable usermeta
+	$args = incassoos_get_encryptable_usermeta( $meta_key );
+
+	// Re-update the usermeta which will trigger the encryption
+	if ( $args ) {
+		update_user_meta( $user_id, $meta_key, $value );
+	}
+}
+
+/**
+ * Apply encryption when a user's metadata is added
+ *
+ * @since 1.0.0
+ *
+ * @param mixed  $value    Meta value
+ * @param int    $user_id  User ID
+ * @param string $meta_key Meta key
+ * @param bool   $single   Whether to return only the first value of the metadata.
+ * @return mixed Meta value
+ */
+function incassoos_encryption_for_get_user_meta( $value, $user_id, $meta_key, $single ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return $value;
+	}
+
+	// Get encryptable usermeta
+	$args = incassoos_get_encryptable_usermeta( $meta_key );
+
+	// Bail when usermeta is not encryptable
+	if ( ! $args ) {
+		return $value;
+	}
+
+	// Bail when user cannot decrypt data
+	if ( ! current_user_can( 'decrypt_incassoos_data' ) ) {
+		return $value;
+	}
+
+	// Look for decryption key
+	$decryption_key = incassoos_get_decryption_key();
+
+	// Bail when no decryption key is available
+	if ( ! $decryption_key ) {
+		return $value;
+	}
+
+	// Get encrypted usermeta value
+	$encrypted_value = get_user_meta( $user_id, $args['meta_key_encrypted'], $single );
+
+	// Decrypt usermeta value
+	if ( $encrypted_value ) {
+
+		// Support multi-value metadata
+		$decrypted_value = array();
+		foreach ( (array) $encrypted_value as $item ) {
+			$decrypted_item = incassoos_decrypt_value( $item, $decryption_key );
+
+			// Bail when an error occurred
+			if ( is_wp_error( $decrypted_item ) ) {
+				wp_die( $decrypted_item );
+			}
+
+			$decrypted_value[] = $decrypted_item;
+		}
+
+		// Set return value
+		$value = $single ? $decrypted_value[0] : $decrypted_value;
+	}
+
+	return $value;
+}
+
+/**
+ * Apply encryption when a user's metadata is updated
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed  $check      Whether to continue updating the metadata value
+ * @param  int    $user_id    User ID
+ * @param  string $meta_key   Meta key
+ * @param  mixed  $value      Meta value
+ * @param  mixed  $prev_value Previous meta value
+ * @return null|bool Whether to continue updating the metadata value
+ */
+function incassoos_encryption_for_update_user_meta( $check, $user_id, $meta_key, $value, $prev_value ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return $check;
+	}
+
+	// Get encryptable usermeta
+	$args = incassoos_get_encryptable_usermeta( $meta_key );
+
+	// Bail when usermeta is not encryptable
+	if ( ! $args ) {
+		return $check;
+	}
+
+	// Ignore redacted values to prevent encryption of already encrypted data
+	if ( call_user_func_array( $args['is_redacted_callback'], array( $value, $args['redact_callback_args'] ) ) ) {
+		return $check;
+	}
+
+	// Encrypt the value
+	$encrypted_value = incassoos_encrypt_value( $value );
+
+	// Bail when encryption failed
+	if ( is_wp_error( $encrypted_value ) ) {
+		wp_die( $encrypted_value );
+	}
+
+	// Store encrypted usermeta
+	update_user_meta( $user_id, $args['meta_key_encrypted'], $encrypted_value );
+
+	// Set redacted value for saving
+	$redacted_value = call_user_func_array( $args['redact_callback'], array( $value, $args['redact_callback_args'] ) );
+
+	// Store redacted usermeta
+	update_user_meta( $user_id, $meta_key, $redacted_value );
+
+	// Return success
+	return true;
+}
+
+/**
+ * Remove associated encryption when a user's metadata is deleted
+ *
+ * @since 1.0.0
+ *
+ * @param array  $mids     Deleted meta IDs
+ * @param int    $user_id  User ID
+ * @param string $meta_key Meta key
+ * @param string $value    Meta Value
+ */
+function incassoos_encryption_for_delete_user_meta( $mids, $user_id, $meta_key, $value ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return;
+	}
+
+	// Get encryptable usermeta
+	$args = incassoos_get_encryptable_usermeta( $meta_key );
+
+	// Delete associated encrypted usermeta
+	if ( $args ) {
+		delete_user_meta( $user_id, $args['meta_key_encrypted'] );
+	}
+}
+
+/**
+ * Apply encryption to the encryptable usermeta in bulk
+ *
+ * @since 1.0.0
+ *
+ * @global WPDB $wpdb
+ */
+function incassoos_encrypt_encryptable_usermeta() {
+	global $wpdb;
+
+	// Walk encryptable usermeta
+	foreach ( incassoos_get_encryptable_usermeta() as $meta_key => $args ) {
+
+		// Get affected users
+		$user_ids = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s", $meta_key ) );
+
+		// Walk users
+		foreach ( $user_ids as $user_id ) {
+
+			// Get plain meta value
+			$plain_value = get_user_meta( $user_id, $meta_key, true );
+			if ( $plain_value ) {
+
+				// Re-update the usermeta which will trigger the encryption
+				update_user_meta( $user_id, $meta_key, $plain_value );
+			}
+		}
+	}
+}
+
+/**
+ * Decrypt the encrypted encryptable usermeta in bulk
+ *
+ * @since 1.0.0
+ *
+ * @global WPDB $wpdb
+ *
+ * @param string $decryption_key The decryption key
+ */
+function incassoos_decrypt_encryptable_usermeta( $decryption_key ) {
+	global $wpdb;
+
+	// Walk encryptable usermeta
+	foreach ( incassoos_get_encryptable_usermeta() as $meta_key => $args ) {
+
+		// Get affected users
+		$user_ids = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = %s", $meta_key ) );
+
+		// Walk users
+		foreach ( $user_ids as $user_id ) {
+
+			// Get encrypted usermeta value
+			$encrypted_value = get_user_meta( $user_id, $args['meta_key_encrypted'], true );
+			if ( $encrypted_value ) {
+
+				// Decrypt meta value
+				$decrypted_value = incassoos_decrypt_value( $encrypted_value, $decryption_key );
+
+				// Bail when an error occurred
+				if ( is_wp_error( $decrypted_value ) ) {
+					wp_die( $decrypted_value );
+				}
+
+				// Overwrite redacted usermeta with the decrypted value
+				update_user_meta( $user_id, $meta_key, $decrypted_value );
+
+				// Remove encrypted usermeta
+				delete_user_meta( $user_id, $args['meta_key_encrypted'] );
+			}
+		}
+	}
 }
 
 /** Listings ******************************************************************/

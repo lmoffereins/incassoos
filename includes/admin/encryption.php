@@ -394,6 +394,7 @@ function incassoos_admin_get_encryptable_data() {
 	return apply_filters( 'incassoos_admin_get_encryptable_data', array(
 		'incassoos-iban-organization'             => esc_html__( 'The IBAN of the organization', 'incassoos' ),
 		'incassoos-sepa-creditor-id-organization' => esc_html__( 'The SEPA Creditor Identifier of the organization', 'incassoos' ),
+		'incassoos-iban-consumers'                => esc_html__( 'The IBAN of all consumers', 'incassoos' )
 	) );
 }
 
