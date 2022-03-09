@@ -2448,12 +2448,17 @@ function incassoos_register_encryptable_options() {
 	// Get encryptable options
 	$options = incassoos_get_encryptable_options();
 
-	// Register encryption actions on `add_option()`
+	// Register encryption actions for `add_option()`
 	foreach ( $options as $option => $args ) {
 		add_action( "add_option_{$option}", 'incassoos_encryption_for_add_option', 10, 2 );
 	}
 
-	// Register encryption filters on `update_option()`
+	// Register encryption filters for `get_option()`
+	foreach ( $options as $option => $args ) {
+		add_filter( "pre_option_{$option}", 'incassoos_encryption_for_get_option', 10, 3 );
+	}
+
+	// Register encryption filters for `update_option()`
 	foreach ( $options as $option => $args ) {
 		add_filter( "pre_update_option_{$option}", 'incassoos_encryption_for_update_option', 10, 3 );
 	}
@@ -2485,6 +2490,63 @@ function incassoos_encryption_for_add_option( $option, $value ) {
 
 	// Re-update the option which will trigger encryption
 	update_option( $option, $value );
+}
+
+/**
+ * Parse encryption when an option is requested
+ *
+ * @since 1.0.0
+ *
+ * @param mixed  $value   Option value
+ * @param string $option  Option name
+ * @param mixed  $default Default option value
+ * @return mixed 
+ */
+function incassoos_encryption_for_get_option( $value, $option, $default ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return $value;
+	}
+
+	// Get encryptable option
+	$args = incassoos_get_encryptable_option( $option );
+
+	// Bail when option is not encryptable
+	if ( ! $args ) {
+		return $value;
+	}
+
+	// Bail when user cannot decrypt data
+	if ( ! current_user_can( 'decrypt_incassoos_data' ) ) {
+		return $value;
+	}
+
+	// Look for decryption key
+	$decryption_key = incassoos_get_decryption_key();
+
+	// Bail when no decryption key is available
+	if ( ! $decryption_key ) {
+		return $value;
+	}
+
+	// Get encrypted option value
+	$encrypted_value = get_option( $args['option_name_encrypted'], false );
+
+	// Decrypt option value
+	if ( $encrypted_value ) {
+		$decrypted_value = incassoos_decrypt_value( $encrypted_value, $decryption_key );
+
+		// Bail when an error occurred
+		if ( is_wp_error( $decrypted_value ) ) {
+			wp_die( $decrypted_value );
+		}
+
+		// Set return value
+		$value = $decrypted_value;
+	}
+
+	return $value;
 }
 
 /**
@@ -2568,7 +2630,8 @@ function incassoos_encrypt_encryptable_options() {
 	foreach ( incassoos_get_encryptable_options() as $option_name => $args ) {
 
 		// Get plain option value
-		if ( $plain_value = get_option( $option_name, false ) ) {
+		$plain_value = get_option( $option_name, false );
+		if ( $plain_value ) {
 
 			// Re-update the option which will trigger encryption
 			update_option( $option_name, $plain_value );
