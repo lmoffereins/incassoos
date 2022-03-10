@@ -26,8 +26,13 @@ function incassoos_admin_encryption_page() { ?>
 
 		<div class="encryption-not-supported">
 			<p><?php _e( 'Encryption helps with securing <strong>sensitive data</strong> by obscuring the data when registering it in your database. If the database would ever get compromised, there is no value in the obscured data. Only using a <strong>password</strong> can the original sensitive data be accessed again.', 'incassoos' ); ?></p>
-			<div class="notice notice-warning inline"><p><?php esc_html_e( 'Encryption is currently not supported on your system.', 'incassoos' ); ?></p></div>
-			<p><?php esc_html_e( "To be able to use encryption in Incassoos on your system, please update your website's PHP version to 7.2 or greater or make sure you are using WordPress 5.2 or greater.", 'incassoos' ); ?></p>
+
+			<div class="notice notice-warning inline">
+				<p><?php printf( esc_html__( 'Encryption is currently not supported on %s.', 'incassoos' ), site_url() ); ?></p>
+			</div>
+
+			<p><?php printf( esc_html__( "To be able to use encryption in Incassoos on %s, please update the website's PHP version to 7.2 or greater or make sure the site uses WordPress 5.2 or greater.", 'incassoos' ), site_url() ); ?></p>
+
 			<p class="step-navigation">
 				<a class="button button-primary alignright" href="<?php echo add_query_arg( 'page', 'incassoos' ); ?>"><?php esc_html_e( 'Return to dashboard', 'incassoos' ); ?></a>
 			</p>
@@ -131,7 +136,7 @@ function incassoos_admin_encryption_page() { ?>
 				);
 			?>
 
-			<p><?php esc_html_e( 'This page provides a wizard for enabling data encryption for sensitive data in Incassoos on your system.', 'incassoos' ); ?></p>
+			<p><?php printf( esc_html__( 'This page provides a wizard for enabling data encryption for sensitive data in Incassoos on %s.', 'incassoos' ), site_url() ); ?></p>
 
 			<?php else :
 
@@ -139,7 +144,7 @@ function incassoos_admin_encryption_page() { ?>
 				$wizard = incassoos_admin_get_disable_encryption_steps();
 			?>
 
-			<p><?php esc_html_e( 'This page provides details of the encryption that is enabled for sensitive data in Incassoos on your system.', 'incassoos' ); ?></p>
+			<p><?php printf( esc_html__( 'This page provides details of the encryption that is enabled for sensitive data in Incassoos on %s.', 'incassoos' ), site_url() ); ?></p>
 
 			<?php endif; ?>
 
@@ -265,7 +270,7 @@ function incassoos_admin_get_enable_encryption_steps() {
 					'<li>' . __( 'The <strong>private key</strong> will be shown on screen for you to store separately from the system.', 'incassoos' ) . '</li>' .
 				'</ol>' .
 				'<p>' . esc_html__( 'After the keys are generated, the registered sensitive data will be encrypted as well.', 'incassoos' ) . '</p>' .
-				'<p>' . sprintf( esc_html__( 'Click the %s button to generate the keys and enable encryption in Incassoos on your system.', 'incassoos' ), "'" . esc_html__( 'Enable encryption', 'incassoos' ) . "'" ) . '</p>',
+				'<p>' . sprintf( esc_html__( 'Click the %1$s button to generate the keys and enable encryption in Incassoos on %2$s.', 'incassoos' ), "'" . esc_html__( 'Enable encryption', 'incassoos' ) . "'", site_url() ) . '</p>',
 			'prev_label'  => esc_html__( 'Back', 'incassoos' ),
 			'next'        => array(
 				'label'    => esc_html__( 'Enable encryption', 'incassoos' ),
@@ -289,7 +294,7 @@ function incassoos_admin_get_enable_encryption_steps() {
 					'<input type="text" id="decryption-key" class="regular-text" value="" />' .
 					'<button type="button" id="copy-decryption-key" class="button button-in-input hide-if-no-js" data-clipboard-target="#decryption-key" title="' . esc_html__( 'Copy to clipboard', 'incassoos' ) . '"><span class="screen-reader-text">' . esc_html__( 'Copy to clipboard', 'incassoos' ) . '</span></button>' .
 				'</label>' .
-				'<p>' . esc_html__( 'Treat the private key as a password and store it in a secure place. When you require access to the encrypted data, you will need to provide this password. The key is also required as a password when you should decide to disable encryption.', 'incassoos' ) . '</p>' .
+				'<p>' . esc_html__( 'Treat the private key as a password and store it in a secure place. When access to the encrypted data is required, this password must be provided. The key is also required as a password when you should decide to disable encryption.', 'incassoos' ) . '</p>' .
 				'<div class="notice notice-info inline"><p>' . esc_html__( 'NOTE: The private key is only available on this screen and cannot be retreived afterwards.', 'incassoos' ) . '</p></div>',
 			'next_label'  => esc_html__( 'Continue', 'incassoos' )
 		),
@@ -298,7 +303,7 @@ function incassoos_admin_get_enable_encryption_steps() {
 		'finish' => array(
 			'title'       => esc_html__( 'Encryption is enabled', 'incassoos' ),
 			'description' => 
-				'<p>' . esc_html__( 'Encryption is successfully enabled for Incassoos on your system.', 'incassoos' ) . '</p>' .
+				'<p>' . sprintf( esc_html__( 'Encryption is successfully enabled for Incassoos on %s.', 'incassoos' ), site_url() ) . '</p>' .
 				'<p>' . esc_html__( 'You can close the wizard.', 'incassoos' ) . '</p>',
 			'next'        => array(
 				'label' => esc_html__( 'Close wizard', 'incassoos' ),
@@ -349,12 +354,12 @@ function incassoos_admin_get_disable_encryption_steps() {
 		'are-you-sure' => array(
 			'title'       => esc_html__( 'Are you sure?', 'incassoos' ),
 			'description' =>
-				'<p>' . esc_html__( 'To confirm your decision to disable encryption, please provide the current decryption key below. This is both a security check and required to decrypt the currently encrypted data.', 'incassoos' ) . '</p>' .
+				'<p>' . esc_html__( 'To confirm your decision to disable encryption, please provide the current decryption key below. This is both a security check and a requirement for decrypting the currently encrypted data.', 'incassoos' ) . '</p>' .
 				'<label>' .
 					'<input type="password" id="decryption-key" name="decryption_key" class="regular-text" placeholder="' . esc_attr__( 'Enter decryption key', 'incassoos' ) . '" />' .
 					'<button type="button" id="toggle-password-visibility" class="button button-in-input password hide-if-no-js" title="' . esc_html__( 'Toggle password visibility', 'incassoos' ) . '"><span class="screen-reader-text">' . esc_html__( 'Toggle password visibility', 'incassoos' ) . '</span></button>' .
 				'</label>' .
-				'<p>' . sprintf( esc_html__( 'With the decryption key provided, click the %s button to disable encryption in Incassoos on your system.', 'incassoos' ), "'" . esc_html__( 'Disable encryption', 'incassoos' ) . "'" ) . '</p>',
+				'<p>' . sprintf( esc_html__( 'With the decryption key provided, click the %1$s button to disable encryption in Incassoos on %2$s.', 'incassoos' ), "'" . esc_html__( 'Disable encryption', 'incassoos' ) . "'", site_url() ) . '</p>',
 			'prev_label'  => esc_html__( 'Back', 'incassoos' ),
 			'next'        => array(
 				'label'    => esc_html__( 'Disable encryption', 'incassoos' ),
@@ -370,7 +375,7 @@ function incassoos_admin_get_disable_encryption_steps() {
 		'finish' => array(
 			'title'       => esc_html__( 'Encryption is disabled', 'incassoos' ),
 			'description' => 
-				'<p>' . esc_html__( 'Encryption is successfully disabled for Incassoos on your system.', 'incassoos' ) . '</p>' .
+				'<p>' . sprintf( esc_html__( 'Encryption is successfully disabled for Incassoos on %s.', 'incassoos' ), site_url() ) . '</p>' .
 				'<p>' . esc_html__( 'The following data have been restored to their original values:', 'incassoos' ) . '</p>' .
 				'<ul>' . array_reduce( incassoos_admin_get_encryptable_data(), function( $carry, $item ) {
 					return $carry . '<li>' . $item . '</li>';
