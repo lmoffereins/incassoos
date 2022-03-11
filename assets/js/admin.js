@@ -23,7 +23,8 @@ jQuery(document).ready( function($) {
 	/** Generic *********************************************************/
 
 	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_occasion_consumers, #incassoos_activity_participants, body.incassoos_page_incassoos-consumers' ),
-	    $consumerList = $consumerBox.find( '.incassoos-item-list' );
+	    $consumerList = $consumerBox.find( '.incassoos-item-list' ),
+	    consumerHiddenMatches = '.showing-default-items .hide-by-default, .search-hide, .hide-in-list';
 
 	$consumerList
 		// Toggling item details
@@ -55,10 +56,7 @@ jQuery(document).ready( function($) {
 				}).parents( '.consumer' ).addClass( 'search-hide' );
 
 			toggleGroups({
-				$parent: $searchList,
-				show: this.value.length,
-				filterBy: '.consumer:not(.search-hide):not(.hide-in-list)',
-				toggleClassName: 'search-hidden'
+				$parent: $searchList
 			});
 		})
 
@@ -85,12 +83,12 @@ jQuery(document).ready( function($) {
 
 			// Default for All and None
 			if ( 'all' === filter ) {
-				$consumerList.find( '.consumer:not(.search-hide):not(.hide-in-list) .select-user' ).prop( 'checked', selected );
+				$consumerList.find( '.consumer' ).not( consumerHiddenMatches ).find( '.select-user' ).prop( 'checked', selected );
 
 				// Update group selection toggle states
 				$consumerList.find( '.select-group-users' ).attr( 'data-selected', selected );
 			} else {
-				$consumerList.find( '.consumer:not(.search-hide):not(.hide-in-list) .select-user' ).filter( function( i, el ) {
+				$consumerList.find( '.consumer' ).not( consumerHiddenMatches ).find( '.select-user' ).filter( function( i, el ) {
 					return ( -1 !== $(el).attr( 'data-matches' ).split( ',' ).indexOf( filter ) ) !== exclude;
 				}).prop( 'checked', selected );
 			}
@@ -104,16 +102,17 @@ jQuery(document).ready( function($) {
 		// Toggle group selection
 		.on( 'click', '.select-group-users', function() {
 			var $el = $(this),
-			    selected = 'true' === $el.attr( 'data-selected' );
+			    selected = 'true' === $el.attr( 'data-selected' ) || $consumerList.is( '.showing-selected' );
 
 			// Set the data-selected property
 			$el.attr( 'data-selected', ! selected )
 
 				// Toggle the users
-				.parents( '.group' ).first().find( '.select-user:not(.search-hide):not(.hide-in-list)' ).prop( 'checked', ! selected );
+				.parents( '.group' ).first().find( '.consumer' ).not( consumerHiddenMatches ).find( '.select-user' ).prop( 'checked', ! selected );
 
 			// Update count and total
 			updateCount();
+			toggleGroups();
 			updateTotal();
 		})
 
@@ -223,6 +222,7 @@ jQuery(document).ready( function($) {
 
 		// Update total
 		updateTotal();
+		toggleGroups();
 	});
 
 	$actPtcptList
@@ -506,18 +506,18 @@ jQuery(document).ready( function($) {
 
 		// Setup defaults for Activity participants
 		options = options || {};
-		options.$parent         = options.$parent || $actPtcptList.find( '.groups' );
-		options.show            = options.show || $actPtcptList.is( '.showing-selected' );
-		options.filterBy        = options.filterBy || '.select-user:checked';
-		options.toggleClassName = options.toggleClassName || 'hidden';
+		options.$parent = options.$parent || $consumerList;
 
 		options.$parent
 			.find( '.group' )
-			.removeClass( options.toggleClassName ) // Reset visibility
-			.filter( function( i, el ) {
-				return ! $(el).find( options.filterBy ).length;
+			.removeClass( 'hidden' ) // Reset visibility for all
+			.filter( function() {
+				return ! $( this ).find( '.consumer' ).not( consumerHiddenMatches ).filter( function() {
+					var $el = $( this );
+					return $el.is( '.showing-selected .consumer' ) ? ! $el.find( '.select-user:not(:checked)' ).length : true; // Account for selected items when showing selected
+				}).length;
 			})
-			.toggleClass( options.toggleClassName, options.show ); // Set visibility
+			.toggleClass( 'hidden', true ); // Set visibility
 	}
 
 	/**
@@ -699,12 +699,7 @@ jQuery(document).ready( function($) {
 				.find( '#show-default-items' )
 				.text( $consumerList.hasClass( 'showing-default-items' ) ? l10n.showDefaultItemsAll : l10n.showDefaultItemsOnly );
 
-			toggleGroups({
-				$parent: $consumerList,
-				show: $consumerList.is( '.showing-default-items' ),
-				filterBy: '.consumer:not(.hide-in-list)',
-				toggleClassName: 'hidden'
-			});
+			toggleGroups();
 		});
 
 	/**

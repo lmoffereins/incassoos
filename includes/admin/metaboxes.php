@@ -835,7 +835,7 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 			<?php if ( $consumer_types ) : ?>
 
 			<li class="group">
-				<h4 class="sublist-header"><?php esc_html_e( 'Consumer Types', 'incassoos' ); ?></h4>
+				<h4 class="sublist-header item-content"><?php esc_html_e( 'Consumer Types', 'incassoos' ); ?></h4>
 				<ul class="users">
 					<?php foreach ( $consumer_types as $consumer_type ) : ?>
 
@@ -1037,7 +1037,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 	?>
 
-	<div class="incassoos-item-list showing-default-items">
+	<div class="incassoos-item-list">
 		<div id="select-matches" class="item-list-header hide-if-no-js">
 			<?php if ( ! $is_post_view ) : ?>
 

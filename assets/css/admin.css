@@ -328,14 +328,13 @@ body.incassoos-post-view #postdivrich .inside {
 	padding: 0px;
 }
 
-.incassoos-item-list .sublist > li {
+.incassoos-item-list .group {
 	padding-bottom: 0px;
 	display: inline-block;
 }
 
-.incassoos-item-list .sublist > li.hidden,
-.incassoos-item-list .sublist > li.search-hidden,
-.incassoos-item-list .item-list li.search-hidden {
+.incassoos-item-list .group.hidden,
+.incassoos-item-list .group.search-hidden {
 	position: absolute !important;
 	top: -9999px !important;
 	left: -9999px !important;
@@ -672,9 +671,10 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 }
 
 .incassoos-item-list .search-hide,
+.incassoos-item-list .hide-in-list,
 .incassoos-item-list.showing-selected .groups .activity-participant .select-user:not(:checked),
 .incassoos-item-list.showing-selected .groups .activity-participant .select-user:not(:checked) ~ *,
-.incassoos-item-list.showing-default-items .hide-in-list {
+.incassoos-item-list.showing-default-items .hide-by-default {
 	display: none;
 }
 
