@@ -1690,19 +1690,20 @@ function incassoos_register_export_type( $type_id, $args = array() ) {
 	// Parse defaults
 	$args['id'] = $type_id;
 	$args = wp_parse_args( $args, array(
-		'label'      => ucfirst( $type_id ),
-		'class_name' => ''
+		'label'                  => ucfirst( $type_id ),
+		'class_name'             => '',
+		'require_decryption_key' => false
 	) );
 
 	// Allow filtering
 	$export_type = apply_filters( 'incassoos_register_export_type', $args, $type_id, $original_args );
 
-	// Define consumer types collection
+	// Define list of export types
 	if ( ! isset( $plugin->export_types ) ) {
 		$plugin->export_types = array();
 	}
 
-	// Add type to collection
+	// Add type to list of types
 	$plugin->export_types[ $type_id ] = (object) $export_type;
 
 	return true;
@@ -1792,6 +1793,8 @@ function incassoos_the_export_type_title( $type ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_export_type_title'
+ *
  * @param  string $type Export type id
  * @return string Export type title
  */
@@ -1804,6 +1807,28 @@ function incassoos_get_export_type_title( $type ) {
 	}
 
 	return apply_filters( 'incassoos_get_export_type_title', $title, $export_type );
+}
+
+/**
+ * Return whether the export type requires the decryption key
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_export_type_require_decryption_key'
+ *
+ * @param  string $type Export type id
+ * @return bool Export type requires the decryption key
+ */
+function incassoos_get_export_type_require_decryption_key( $type ) {
+	$export_type = incassoos_get_export_type( $type );
+	$require    = false;
+
+	// Only require the decryption key when encryption is enabled
+	if ( $export_type && incassoos_is_encryption_enabled() ) {
+		$require = (bool) $export_type->require_decryption_key;
+	}
+
+	return (bool) apply_filters( 'incassoos_get_export_type_require_decryption_key', $require, $export_type );
 }
 
 /** Email *********************************************************************/

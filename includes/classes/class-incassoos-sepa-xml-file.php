@@ -35,6 +35,12 @@ class Incassoos_SEPA_XML_File extends Incassoos_SEPA_XML_Parser {
 	 */
 	public function __construct( $post = 0 ) {
 
+		// Require the decryption key
+		if ( incassoos_is_encryption_enabled() && ! incassoos_get_decryption_key() ) {
+			$this->errors[] = esc_html__( 'The required decryption key was not provided.', 'incassoos' );
+			return;
+		}
+
 		// Require the Collection to be collected
 		$this->post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
 

@@ -34,29 +34,45 @@ function incassoos_export_collection_file( $post_id ) {
 	$errors      = array();
 
 	// Bail when the export type does not exist
-	if ( ! $type_id || ! $export_type ) {
+	if ( ! $export_type ) {
 		$errors[] = esc_html__( 'Invalid export type selected.', 'incassoos' );
-	} else {
+	}
+
+	// Bail when the export class is not present
+	if ( empty( $errors ) && ! class_exists( $export_type->class_name ) ) {
+		$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
+	}
+
+	// Bail when the decryption key was required but not provided
+	if ( empty( $errors ) && incassoos_get_export_type_require_decryption_key( $type_id ) ) {
+		$decryption_key = isset( $_POST['export-decryption-key'] ) ? $_POST['export-decryption-key'] : false;
+
+		// Try to set the decryption key
+		$result = incassoos_set_decryption_key( $decryption_key );
+
+		if ( is_wp_error( $result ) ) {
+			$errors[] = $result->get_error_message();
+		} else if ( ! $result ) {
+			$errors[] = esc_html__( 'Invalid decryption key provided.', 'incassoos' );
+		}
+	}
+
+	// Continue when no errors were found
+	if ( empty( $errors ) ) {
 
 		// Get export class
 		$class = $export_type->class_name;
 
-		// Bail when the class is not present
-		if ( ! class_exists( $class ) ) {
-			$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
+		// Construct file
+		$file = new $class( $post );
+
+		// Bail when construction failed
+		if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
+			$errors = array_merge( $errors, $file->get_errors() );
+
+		// Offer file download
 		} else {
-
-			// Construct file
-			$file = new $class( $post );
-
-			// Bail when construction failed
-			if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
-				$errors = array_merge( $errors, $file->get_errors() );
-
-			// Offer file download
-			} else {
-				incassoos_download_text_file( $file );
-			}
+			incassoos_download_text_file( $file );
 		}
 	}
 
