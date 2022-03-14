@@ -581,10 +581,15 @@ function incassoos_admin_collection_details_metabox( $post ) {
 				<option value=""><?php esc_html_e( '&mdash; Export &mdash;', 'incassoos' ); ?></option>
 				<?php foreach ( $export_types as $type ) : ?>
 
-				<option value="<?php echo esc_attr( $type ); ?>"><?php incassoos_the_export_type_title( $type ); ?></option>
+				<option value="<?php echo esc_attr( $type ); ?>" data-require-decryption-key="<?php echo incassoos_get_export_type_require_decryption_key( $type ) ? 1 : 0; ?>"><?php incassoos_the_export_type_title( $type ); ?></option>
 
 				<?php endforeach; ?>
 			</select>
+
+			<div class="export-decryption-key">
+				<label class="screen-reader-text" for="export-decryption-key"><?php esc_html_e( 'Enter decryption key', 'incassoos' ); ?></label>
+				<input type="password" name="export-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
+			</div>
 		</div>
 
 		<?php endif; ?>
@@ -601,6 +606,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php elseif ( $can_export ) : ?>
 				<?php wp_nonce_field( 'export_collection-' . $post->ID, 'collection_export_nonce' ); ?>
 				<input type="hidden" name="action" value="inc_export" />
+				<label class="screen-reader-text" for="export-collection"><?php esc_html_e( 'Export', 'incassoos' ); ?></label>
 				<input type="submit" class="button button-secondary button-large" id="export-collection" name="export-collection" value="<?php esc_attr_e( 'Export', 'incassoos' ); ?>" />
 			<?php endif; ?>
 		</div>

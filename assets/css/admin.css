@@ -151,7 +151,7 @@ body.incassoos-post-view #postdivrich .inside {
 }
 
 #major-publishing-actions .publishing-notice {
-	float: left;
+	display: inline-block;
 	line-height: 28px;
 }
 
@@ -176,6 +176,18 @@ body.incassoos-post-view #postdivrich .inside {
 
 #major-publishing-actions #publishing-action .spinner {
 	float: left;
+}
+
+@media screen and (max-width: 782px) {
+
+	#major-publishing-actions #publishing-action {
+		line-height: 47px;
+	}
+
+	#major-publishing-actions #publishing-action .spinner {
+		float: none;
+		margin-top: -2px; /* Half of the Collect button's bottom margin. */
+	}
 }
 
 /* Details Metabox */
@@ -295,6 +307,46 @@ body.incassoos-post-view #postdivrich .inside {
 .incassoos-post-view .incassoos-object-details label,
 .incassoos-post-view .incassoos-item-list label {
 	cursor: inherit;
+}
+
+#incassoos_collection_details .publishing-notice.require-decryption-key {
+	margin-bottom: 10px;
+}
+
+#incassoos_collection_details .publishing-notice.require-decryption-key #collection-export-type {
+	max-width: 50%;
+}
+
+#incassoos_collection_details .publishing-notice .export-decryption-key {
+	display: none;
+	float: right;
+	width: 50%;
+}
+
+#incassoos_collection_details .publishing-notice.require-decryption-key .export-decryption-key {
+	display: inline-block;
+}
+
+#incassoos_collection_details .publishing-notice.require-decryption-key .export-decryption-key input {
+	text-align: left;
+	width: 100%;
+}
+
+/* single column */
+@media screen and (max-width: 850px) {
+
+	#incassoos_collection_details .publishing-notice.require-decryption-key {
+		margin-bottom: 0px;
+	}
+
+	#incassoos_collection_details .publishing-notice.require-decryption-key #collection-export-type {
+		width: auto;
+	}
+
+	#incassoos_collection_details .publishing-notice .export-decryption-key {
+		float: none;
+		width: auto;
+	}
 }
 
 /* Item list */
@@ -831,15 +883,6 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 }
 
 @media screen and (max-width: 782px) {
-
-	#major-publishing-actions #publishing-action {
-		line-height: 47px;
-	}
-
-	#major-publishing-actions #publishing-action .spinner {
-		float: none;
-		margin-top: -2px; /* Half of the Collect button's bottom margin. */
-	}
 
 	.incassoos-object-details label + span {
 		font-size: 16px;

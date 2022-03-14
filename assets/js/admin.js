@@ -142,9 +142,20 @@ jQuery(document).ready( function($) {
 	    $colTotalField = $colDtlsBox.find( '#collection-total' ).prepend( '<span class="new-value value"></span>' );
 
 	$colDtlsBox
-		// Collecting action
-		.on( 'click', '#collecting-action .button', function() {
+		// Publishing action
+		.on( 'click', '#publishing-action .button', function() {
 			$colDtlsBox.find( '#major-publishing-actions .spinner' ).addClass( 'is-active' );
+		})
+
+		// Export selection
+		.on( 'change', '#collection-export-type', function() {
+
+			// Show decryption key input when it is required
+			if ( !! parseInt( $( this ).find( '[value="' + this.value + '"]' )[0].dataset.requireDecryptionKey ) ) {
+				$colDtlsBox.find( '.publishing-notice' ).addClass( 'require-decryption-key' );
+			} else {
+				$colDtlsBox.find( '.publishing-notice' ).removeClass( 'require-decryption-key' );
+			}
 		});
 
 	// Keep selected count
