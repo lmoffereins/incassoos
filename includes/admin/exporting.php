@@ -43,6 +43,11 @@ function incassoos_export_collection_file( $post_id ) {
 		$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
 	}
 
+	// Bail when the user cannot export
+	if ( empty( $errors ) && ! current_user_can( 'export_incassoos_collection', $post->ID ) ) {
+		$errors[] = esc_html__( 'You are not allowed to export this Collection.', 'incassoos' );
+	}
+
 	// Bail when the decryption key was required but not provided
 	if ( empty( $errors ) && incassoos_get_export_type_require_decryption_key( $type_id ) ) {
 		$decryption_key = isset( $_POST['export-decryption-key'] ) ? $_POST['export-decryption-key'] : false;
