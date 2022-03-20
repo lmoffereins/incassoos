@@ -1671,16 +1671,16 @@ function incassoos_get_sepa_export_type_id() {
  *
  * @uses apply_filters Calls 'incassoos_register_export_type'
  *
- * @param  string $type_id Export type id.
- * @param  array  $args    Optional. Export type parameters.
+ * @param  string $export_type_id Export type id.
+ * @param  array  $args           Optional. Export type parameters.
  * @return bool Registration success.
  */
-function incassoos_register_export_type( $type_id, $args = array() ) {
-	$plugin  = incassoos();
-	$type_id = sanitize_title( $type_id );
+function incassoos_register_export_type( $export_type_id, $args = array() ) {
+	$plugin         = incassoos();
+	$export_type_id = sanitize_title( $export_type_id );
 
 	// Bail when type param is invalid
-	if ( empty( $type_id ) ) {
+	if ( empty( $export_type_id ) ) {
 		return false;
 	}
 
@@ -1688,15 +1688,21 @@ function incassoos_register_export_type( $type_id, $args = array() ) {
 	$original_args = $args;
 
 	// Parse defaults
-	$args['id'] = $type_id;
+	$args['id'] = $export_type_id;
 	$args = wp_parse_args( $args, array(
-		'label'                  => ucfirst( $type_id ),
+		'labels'                 => array(),
 		'class_name'             => '',
 		'require_decryption_key' => false
 	) );
 
+	// Parse labels
+	$args['labels'] = wp_parse_args( $args['labels'], array(
+		'name'        => ucfirst( $export_type_id ),
+		'export_file' => sprintf( esc_html__( 'Export %s', 'incassoos' ), $export_type_id )
+	) );
+
 	// Allow filtering
-	$export_type = apply_filters( 'incassoos_register_export_type', $args, $type_id, $original_args );
+	$export_type = apply_filters( 'incassoos_register_export_type', $args, $export_type_id, $original_args );
 
 	// Define list of export types
 	if ( ! isset( $plugin->export_types ) ) {
@@ -1704,7 +1710,7 @@ function incassoos_register_export_type( $type_id, $args = array() ) {
 	}
 
 	// Add type to list of types
-	$plugin->export_types[ $type_id ] = (object) $export_type;
+	$plugin->export_types[ $export_type_id ] = (object) $export_type;
 
 	return true;
 }
@@ -1714,11 +1720,11 @@ function incassoos_register_export_type( $type_id, $args = array() ) {
  *
  * @since 1.0.0
  *
- * @param  string $type_id Export type id.
+ * @param  string $export_type_id Export type id.
  * @return bool Unregistration success.
  */
-function incassoos_unregister_export_type( $type_id ) {
-	unset( incassoos()->export_types[ $type_id ] );
+function incassoos_unregister_export_type( $export_type_id ) {
+	unset( incassoos()->export_types[ $export_type_id ] );
 
 	return true;
 }
@@ -1730,12 +1736,12 @@ function incassoos_unregister_export_type( $type_id ) {
  *
  * @uses apply_filters Calls 'incassoos_get_export_type'
  *
- * @param  string $type Export type id or label.
+ * @param  string $export_type_id Export type id or label.
  * @return object|bool Export type object or False when not found.
  */
-function incassoos_get_export_type( $type = '' ) {
+function incassoos_get_export_type( $export_type_id = '' ) {
 	$plugin      = incassoos();
-	$type_id     = sanitize_title( $type );
+	$type_id     = sanitize_title( $export_type_id );
 	$type_object = false;
 
 	if ( ! isset( $plugin->export_types ) ) {
@@ -1747,11 +1753,11 @@ function incassoos_get_export_type( $type = '' ) {
 		$type_object = $plugin->export_types[ $type_id ];
 
 	// Get type by label
-	} elseif ( $type_id = array_search( $type, wp_list_pluck( $plugin->export_types, 'label' ) ) ) {
+	} elseif ( $type_id = array_search( $export_type_id, wp_list_pluck( $plugin->export_types, 'label' ) ) ) {
 		$type_object = $plugin->export_types[ $type_id ];
 	}
 
-	return apply_filters( 'incassoos_get_export_type', $type_object, $type );
+	return apply_filters( 'incassoos_get_export_type', $type_object, $export_type_id );
 }
 
 /**
@@ -1759,11 +1765,11 @@ function incassoos_get_export_type( $type = '' ) {
  *
  * @since 1.0.0
  *
- * @param  string $type Export type id or label
+ * @param  string $export_type_id Export type id or label
  * @return bool Does export type exist?
  */
-function incassoos_export_type_exists( $type ) {
-	return !! incassoos_get_export_type( $type );
+function incassoos_export_type_exists( $export_type_id ) {
+	return (bool) incassoos_get_export_type( $export_type_id );
 }
 
 /**
@@ -1778,35 +1784,37 @@ function incassoos_get_export_types() {
 }
 
 /**
- * Output the export type title
+ * Output the export type label
  *
  * @since 1.0.0
  *
- * @param  string $type Export type id
+ * @param  string $export_type_id Export type id
+ * @param  string $label_type     Optional. Label type key. Defaults to 'name'.
  */
-function incassoos_the_export_type_title( $type ) {
-	echo incassoos_get_export_type_title( $type );
+function incassoos_the_export_type_label( $export_type_id, $label_type = 'name' ) {
+	echo incassoos_get_export_type_label( $export_type_id, $label_type );
 }
 
 /**
- * Return the export type title
+ * Return the export type label
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_get_export_type_title'
+ * @uses apply_filters() Calls 'incassoos_get_export_type_label'
  *
- * @param  string $type Export type id
- * @return string Export type title
+ * @param  string $export_type_id Export type id
+ * @param  string $label_type     Optional. Label type key. Defaults to 'name'.
+ * @return string Export type label
  */
-function incassoos_get_export_type_title( $type ) {
-	$export_type = incassoos_get_export_type( $type );
-	$title       = ucfirst( $type );
+function incassoos_get_export_type_label( $export_type_id, $label_type = 'name' ) {
+	$export_type = incassoos_get_export_type( $export_type_id );
+	$label       = ucfirst( $export_type_id );
 
-	if ( $export_type ) {
-		$title = $export_type->label;
+	if ( $export_type && isset( $export_type->labels[ $label_type ] ) ) {
+		$label = $export_type->labels[ $label_type ];
 	}
 
-	return apply_filters( 'incassoos_get_export_type_title', $title, $export_type );
+	return apply_filters( 'incassoos_get_export_type_label', $label, $export_type, $label_type );
 }
 
 /**
@@ -1816,11 +1824,11 @@ function incassoos_get_export_type_title( $type ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_export_type_require_decryption_key'
  *
- * @param  string $type Export type id
+ * @param  string $export_type_id Export type id
  * @return bool Export type requires the decryption key
  */
-function incassoos_get_export_type_require_decryption_key( $type ) {
-	$export_type = incassoos_get_export_type( $type );
+function incassoos_get_export_type_require_decryption_key( $export_type_id ) {
+	$export_type = incassoos_get_export_type( $export_type_id );
 	$require    = false;
 
 	// Only require the decryption key when encryption is enabled
@@ -1829,6 +1837,98 @@ function incassoos_get_export_type_require_decryption_key( $type ) {
 	}
 
 	return (bool) apply_filters( 'incassoos_get_export_type_require_decryption_key', $require, $export_type );
+}
+
+/**
+ * Store file data for a subsequent export
+ *
+ * This is used when transferring export details between page calls.
+ *
+ * @since 1.0.0
+ *
+ * @param  array $export_details Export details to be saved
+ * @return string|bool File identifier when saved, false when saving failed
+ */
+function incassoos_save_export_details( $export_details = array() ) {
+
+	// Bail when data is not a non-empty array
+	if ( empty( $export_details ) || ! is_array( $export_details ) ) {
+		return false;
+	}
+
+	// Generate identifier for the file
+	$file_id = wp_generate_uuid4();
+
+	// Setup encryption parameters. Nonces are user- and time-dependent, but are only 10 chars long.
+	// Encryption requires the intialization vector (iv) to be 16 chars long.
+	$nonce = wp_create_nonce( "incassoos_export_details-{$file_id}" );
+	$iv    = substr( wp_hash( $nonce ), 0, 16 );
+
+	// Encrypt export details for it may contain private info
+	$export_details = base64_encode( openssl_encrypt( maybe_serialize( $export_details ), 'AES-256-CBC', $nonce, 0, $iv ) );
+
+	// Store transient for 30 minutes
+	$success = set_transient( $file_id, $export_details, 30 * MINUTE_IN_SECONDS );
+
+	// Bail when storing the transient failed
+	if ( ! $success ) {
+		return false;
+	}
+
+	return $file_id;
+}
+
+/**
+ * Get export details for a previously initiated export
+ *
+ * This is used when transferring export details between page calls.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $file_id File identifier
+ * @return array|bool Export details or false when details were not found
+ */
+function incassoos_get_export_details( $file_id ) {
+
+	// Bail when the file id is invalid
+	if ( ! wp_is_uuid( $file_id, 4 ) ) {
+		return false;
+	}
+
+	$transient = get_transient( $file_id );
+
+	// Bail when the tranient was not found
+	if ( ! $transient ) {
+		return false;
+	}
+
+	// Setup encryption parameters. Nonces are user- and time-dependent, but are only 10 chars long.
+	// Decryption requires the intialization vector (iv) to be 16 chars long.
+	$nonce = wp_create_nonce( "incassoos_export_details-{$file_id}" );
+	$iv    = substr( wp_hash( $nonce ), 0, 16 );
+
+	// Decrypt export details
+	$export_details = maybe_unserialize( openssl_decrypt( base64_decode( $transient ), 'AES-256-CBC', $nonce, 0, $iv ) );
+
+	return $export_details;
+}
+
+/**
+ * Delete export details for a previously initiated export
+ *
+ * @since 1.0.0
+ *
+ * @param  string $file_id File identifier
+ * @return bool Were the export details deleted successfully?
+ */
+function incassoos_delete_export_details( $file_id ) {
+
+	// Bail when the file id is invalid
+	if ( ! wp_is_uuid( $file_id, 4 ) ) {
+		return false;
+	}
+
+	return delete_transient( $file_id );
 }
 
 /** Email *********************************************************************/
@@ -1893,9 +1993,10 @@ function incassoos_send_email( $args = array() ) {
  */
 function incassoos_download_text_file( $file, $filename = '' ) {
 
-	// Invalid file
-	if ( ! $file )
+	// Bail when the file parameter is missing
+	if ( ! $file ) {
 		return false;
+	}
 
 	// File creator
 	if ( is_object( $file ) && method_exists( $file, 'get_file' ) ) {
@@ -1910,6 +2011,7 @@ function incassoos_download_text_file( $file, $filename = '' ) {
 	} elseif ( is_string( $file ) && $filename ) {
 		$content = $file;
 
+	// Bail when the parameters are invalid
 	} else {
 		return false;
 	}

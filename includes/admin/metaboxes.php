@@ -473,9 +473,9 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$collect_url    = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect'    ), $base_url ), 'collect-collection_'    . $post->ID );
 	$test_email_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_test_email' ), $base_url ), 'test-email-collection_' . $post->ID );
 
-	// Export options
-	$export_types = incassoos_get_export_types();
-	$can_export   = current_user_can( 'export_incassoos_collection', $post->ID ) && ! empty( $export_types );
+	// Action options
+	$action_types = incassoos_admin_get_collection_action_types( $post );
+	$can_doaction = ! empty( $action_types );
 
 	?>
 
@@ -561,7 +561,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_stage || $can_unstage || $can_export ) : ?>
+	<?php if ( $can_stage || $can_unstage || $can_doaction ) : ?>
 
 	<div id="major-publishing-actions">
 		<?php if ( $can_stage ) : ?>
@@ -573,22 +573,22 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			</span>
 		</div>
 
-		<?php elseif ( $can_export ) : ?>
+		<?php elseif ( $can_doaction ) : ?>
 
 		<div class="publishing-notice">
-			<label class="screen-reader-text" for="collection-export-type"><?php esc_html_e( 'Select collection export type', 'incassoos' ); ?></label>
-			<select id="collection-export-type" name="export-type">
-				<option value=""><?php esc_html_e( '&mdash; Export &mdash;', 'incassoos' ); ?></option>
-				<?php foreach ( $export_types as $type ) : ?>
+			<label class="screen-reader-text" for="collection-action-type"><?php esc_html_e( 'Select collection action type', 'incassoos' ); ?></label>
+			<?php incassoos_admin_dropdown_collection_action_types( $post ); ?>
 
-				<option value="<?php echo esc_attr( $type ); ?>" data-require-decryption-key="<?php echo incassoos_get_export_type_require_decryption_key( $type ) ? 1 : 0; ?>"><?php incassoos_the_export_type_title( $type ); ?></option>
+			<div class="action-confirmation">
+				<label>
+					<input type="checkbox" name="action-confirmation" value="1" />
+					<span><?php esc_html_e( 'Confirm action', 'incassoos' ); ?></span>
+				</label>
+			</div>
 
-				<?php endforeach; ?>
-			</select>
-
-			<div class="export-decryption-key">
-				<label class="screen-reader-text" for="export-decryption-key"><?php esc_html_e( 'Enter decryption key', 'incassoos' ); ?></label>
-				<input type="password" name="export-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
+			<div class="action-decryption-key">
+				<label for="action-decryption-key"><?php esc_html_e( 'Provide the decryption key', 'incassoos' ); ?></label>
+				<input type="password" name="action-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
 			</div>
 		</div>
 
@@ -603,11 +603,11 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php endif; ?>
 			<?php if ( $can_collect ) : ?>
 				<a class="button button-primary button-large" id="collect-collection" href="<?php echo esc_url( $collect_url ); ?>"><?php esc_html_e( 'Submit', 'incassoos' ); ?></a>
-			<?php elseif ( $can_export ) : ?>
-				<?php wp_nonce_field( 'export_collection-' . $post->ID, 'collection_export_nonce' ); ?>
-				<input type="hidden" name="action" value="inc_export" />
-				<label class="screen-reader-text" for="export-collection"><?php esc_html_e( 'Export', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="export-collection" name="export-collection" value="<?php esc_attr_e( 'Export', 'incassoos' ); ?>" />
+			<?php elseif ( $can_doaction ) : ?>
+				<?php wp_nonce_field( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' ); ?>
+				<input type="hidden" name="action" value="inc_doaction" />
+				<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Execute', 'incassoos' ); ?></label>
+				<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Execute', 'incassoos' ); ?>" />
 			<?php endif; ?>
 		</div>
 		<div class="clear"></div>

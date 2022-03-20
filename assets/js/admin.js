@@ -134,6 +134,13 @@ jQuery(document).ready( function($) {
 		$( '.datepicker' ).datepicker({ dateFormat: 'dd-mm-yy' });
 	}
 
+	// Trigger the first auto-download when present
+	$( 'body.incassoos [data-autostart-download]' ).first().each( function() {
+		if ( this.href ) {
+			window.location = this.href;
+		}
+	});
+
 	/** Collection ******************************************************/
 
 	var $colDtlsBox = $( '#incassoos_collection_details' ),
@@ -147,11 +154,19 @@ jQuery(document).ready( function($) {
 			$colDtlsBox.find( '#major-publishing-actions .spinner' ).addClass( 'is-active' );
 		})
 
-		// Export selection
-		.on( 'change', '#collection-export-type', function() {
+		// Action selection
+		.on( 'change', '#collection-action-type', function() {
+			var dataset = $( this ).find( '[value="' + this.value + '"]' )[0].dataset;
+
+			// Show confirmation input when it is required
+			if ( !! parseInt( dataset.requireConfirmation ) ) {
+				$colDtlsBox.find( '.publishing-notice' ).addClass( 'require-confirmation' );
+			} else {
+				$colDtlsBox.find( '.publishing-notice' ).removeClass( 'require-confirmation' );
+			}
 
 			// Show decryption key input when it is required
-			if ( !! parseInt( $( this ).find( '[value="' + this.value + '"]' )[0].dataset.requireDecryptionKey ) ) {
+			if ( !! parseInt( dataset.requireDecryptionKey ) ) {
 				$colDtlsBox.find( '.publishing-notice' ).addClass( 'require-decryption-key' );
 			} else {
 				$colDtlsBox.find( '.publishing-notice' ).removeClass( 'require-decryption-key' );

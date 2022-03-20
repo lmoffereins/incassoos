@@ -55,10 +55,12 @@ add_filter( 'term_name',                   'incassoos_admin_filter_term_name',  
 
 add_action( 'load-nav-menus.php',          'incassoos_admin_add_nav_menu_meta_box', 10    );
 
-/** Export ********************************************************************/
+/** Actions *******************************************************************/
 
-add_action( 'post_action_inc_export', 'incassoos_export_collection_file', 10 );
-add_action( 'edit_form_top',          'incassoos_export_error_notice',    10 );
+add_action( 'post_action_inc_doaction',            'incassoos_admin_post_doaction',            10 );
+add_action( 'incassoos_admin_collection_doaction', 'incassoos_admin_collection_doaction',      10 );
+add_action( 'post_action_inc_download',            'incassoos_admin_post_action_download',     10 );
+add_action( 'edit_form_top',                       'incassoos_admin_post_action_error_notice', 10 );
 
 /** Pages *********************************************************************/
 

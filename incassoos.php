@@ -510,7 +510,10 @@ final class Incassoos {
 		incassoos_register_export_type(
 			incassoos_get_sepa_export_type_id(),
 			array(
-				'label'                  => esc_html__( 'SEPA file', 'incassoos' ),
+				'labels'                 => array(
+					'name'        => esc_html__( 'SEPA file',        'incassoos' ),
+					'export_file' => esc_html__( 'Export SEPA file', 'incassoos' )
+				),
 				'class_name'             => 'Incassoos_SEPA_XML_File',
 				'require_decryption_key' => true
 			)

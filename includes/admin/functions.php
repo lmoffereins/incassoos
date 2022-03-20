@@ -1591,6 +1591,199 @@ function incassoos_admin_post_notices() {
 	echo '<div class="notice error is-dismissible"><p>' . sprintf( $prefix, $error ) . '</p></div>';
 }
 
+/**
+ * Run dedicated hook for the 'inc_doaction' post action on wp-admin/post.php
+ *
+ * @since 1.0.0
+ *
+ * @uses do_action() Calls 'incassoos_admin_{$object_type}_doaction'
+ *
+ * @param int $post_id Post ID
+ */
+function incassoos_admin_post_doaction( $post_id ) {
+	$post = get_post( $post_id );
+
+	// Bail when the post is not found
+	if ( ! $post ) {
+		return;
+	}
+
+	$object_type = incassoos_get_object_type( $post->post_type );
+
+	// Bail when this is not ours
+	if ( ! incassoos_is_plugin_post_type( $post->post_type ) || empty( $object_type ) ) {
+		return;
+	}
+
+	// Dynamic nonce check
+	check_admin_referer( "doaction_{$object_type}-{$post->ID}", "{$object_type}_doaction_nonce" );
+
+	// Run dedicated object type hook
+	if ( function_exists( "incassoos_admin_{$object_type}_doaction" ) ) {
+		call_user_func( "incassoos_admin_{$object_type}_doaction", $post_id );
+	}
+}
+
+/**
+ * Process the post action for a Collection
+ *
+ * @since 1.0.0
+ *
+ * @uses do_action() Calls 'incassoos_admin_collection_doaction-{$action_group}'
+ * @uses do_action() Calls 'incassoos_admin_collection_doaction-{$action}'
+ *
+ * @param int $post_id Post ID
+ */
+function incassoos_admin_collection_doaction( $post_id ) {
+	$post = incassoos_get_collection( $post_id );
+
+	// Bail when the post is not a Collection
+	if ( ! $post ) {
+		return;
+	}
+
+	// Nonce check
+	check_admin_referer( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' );
+
+	// Get and dissect action type
+	$action       = isset( $_POST['collection-action-type'] ) ? $_POST['collection-action-type'] : '';
+	$action_parts = explode( '-', $action );
+	$action_group = $action_parts[0];
+
+	// Handle action by action group
+	switch ( $action_group ) {
+		case 'export' :
+
+			// Start file export dryrun
+			incassoos_export_collection_file( $post->ID, array(
+
+				// Simulate whether the export could be run. Download will initiate on next page load.
+				'dryrun'         => true,
+
+				// Get export type from action
+				'export_type_id' => substr( $action, 7 ),
+
+				// Add decryption key when provided
+				'decryption_key' => isset( $_POST['action-decryption-key'] ) ? $_POST['action-decryption-key'] : false
+			) );
+
+			break;
+
+		default :
+			do_action( "incassoos_admin_collection_doaction-{$action_group}", $post, $action );
+			break;
+	}
+
+	// Still here? Handle action by action
+	do_action( "incassoos_admin_collection_doaction-{$action}", $post, $action );
+
+	// Still here? Redirect to the Collection's page
+	wp_redirect( incassoos_get_collection_url( $post ) );
+	exit();
+}
+
+/**
+ * Process a file download request
+ *
+ * Requires the 'file-id' parameter in the $_GET global.
+ *
+ * @since 1.0.0
+ *
+ * @param  int $post_id Post ID
+ * @return bool False when the download didn't start
+ */
+function incassoos_admin_post_action_download( $post_id ) {
+	$post    = get_post( $post_id );
+	$file_id = isset( $_REQUEST['file-id'] ) ? $_REQUEST['file-id'] : false;
+
+	// Bail when post or file is not provided
+	if ( ! $post || ! $file_id ) {
+		return;
+	}
+
+	// Get the previously stored export details
+	$export_details = incassoos_get_export_details( $file_id );
+
+	if ( $export_details ) {
+
+		// Offer download only once
+		incassoos_delete_export_details( $file_id );
+
+		// Make sure the 'dryrun' parameter is not activated
+		$export_details['dryrun'] = false;
+
+		// Start serving the download file
+		incassoos_export_collection_file( $post->ID, $export_details );
+	}
+
+	// Still here? Notify user
+	wp_die( sprintf( __( 'Sorry, the file you requested could not be downloaded. <a href="%s">Return to the post.</a>', 'incassoos' ), add_query_arg( array( 'post' => $post->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) ) );
+}
+
+/**
+ * Display the logged errors for the post action
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Post $post Post object
+ */
+function incassoos_admin_post_action_error_notice( $post ) {
+
+	// Find whether any feedback was defined
+	$feedback = get_transient( 'incassoos_post_action_feedback-' . $post->ID ) ;
+
+	// Bail when no feedback is logged
+	if ( ! $feedback ) {
+		return;
+	}
+
+	$errors  = isset( $feedback['errors']  ) ? $feedback['errors']  : false;
+	$success = isset( $feedback['success'] ) ? $feedback['success'] : false;
+
+	// Display error messages first
+	if ( $errors ) : ?>
+
+	<div class="notice notice-error is-dismissible incassoos-notice">
+		<?php /* translators: 1. error amount 2. toggle link */ ?>
+		<p><?php printf(
+			_n(
+				'Error: %2$s',
+				'The action could not be executed due to %1$d errors. %2$s',
+				count( $errors ),
+				'incassoos'
+			),
+			count( $errors ),
+			count( $errors ) > 1
+				? sprintf( '<button type="button" class="button-link">%s</button>', esc_html__( 'Show errors', 'incassoos' ) )
+				: $errors[0]
+		); ?></p>
+
+		<?php if ( count( $errors ) > 1 ) : foreach ( $errors as $message ) : ?>
+
+		<p><?php echo $message; ?></p>
+
+		<?php endforeach; endif; ?>
+	</div>
+
+	<?php endif;
+
+	// Display success messages second
+	if ( $success ) : ?>
+
+	<div class="notice notice-success is-dismissible incassoos-notice">
+		<?php foreach ( $success as $message ) : ?>
+
+		<p><?php echo $message; ?></p>
+
+		<?php endforeach; ?>
+	</div>
+
+	<?php endif;
+
+	// Remove logged feedback afterwards
+	delete_transient( 'incassoos_post_action_feedback-' . $post->ID );
+}
+
 /** Multiple Posts ******************************************************/
 
 /**
@@ -1725,6 +1918,130 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 	<?php endif;
 }
 
+/** Collection **********************************************************/
+
+/**
+ * Return the admin action types for the Collection
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() 'incassoos_admin_get_collection_action_types'
+ *
+ * @param  WP_Post|int $post Post object or ID
+ * @return array Post action types
+ */
+function incassoos_admin_get_collection_action_types( $post ) {
+	$post         = incassoos_get_collection( $post );
+	$action_types = array();
+
+	if ( $post ) {
+
+		// Distribution
+		$action_types['distribution_types'] = array(
+			'name'    => esc_html__( 'Distributing', 'incassoos' ),
+			'actions' => array(
+				'send-test_email'      => array( 'label' => esc_html__( 'Send test-email',      'incassoos' ) ),
+				'send-consumer_emails' => array( 'label' => esc_html__( 'Send consumer emails', 'incassoos' ), 'require_confirmation' => true )
+			)
+		);
+
+		// Export types
+		$action_types['export_types'] = array( 'name' => esc_html__( 'Exporting', 'incassoos' ), 'actions' => array() );
+		foreach ( incassoos_get_export_types() as $export_type_id ) {
+
+			// Skip when user cannot export
+			if ( ! current_user_can( 'export_incassoos_collection', $post->ID, $export_type_id ) ) {
+				continue;
+			}
+
+			// Add export action
+			$action_types['export_types']['actions'][ "export-{$export_type_id}" ] = array(
+				'label'                  => incassoos_get_export_type_label( $export_type_id, 'export_file' ),
+				'require_decryption_key' => incassoos_get_export_type_require_decryption_key( $export_type_id )
+			);
+		}
+	}
+
+	return apply_filters( 'incassoos_admin_get_collection_action_types', $action_types, $post );
+}
+
+/**
+ * Display or return collection actions dropdown element
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_dropdown_collection_action_types'
+ *
+ * @param  WP_Post|int $post Post object or ID
+ * @param  array       $args Dropdown arguments
+ * @return string HTML dropdown list of Collection actions
+ */
+function incassoos_admin_dropdown_collection_action_types( $post, $args = array() ) {
+	$post         = incassoos_get_collection( $post );
+	$action_types = incassoos_admin_get_collection_action_types( $post );
+	$output       = '';
+
+	// Bail when post and actions are not found
+	if ( ! $post || empty( $action_types ) ) {
+		return;
+	}
+
+	$parsed_args = wp_parse_args( $args, array(
+		'echo'              => 1,
+		'id'                => 'collection-action-type',
+		'class'             => '',
+		'tab_index'         => 0,
+		'option_none_value' => __( '&mdash; Actions &mdash;', 'incassoos' )
+	) );
+
+	// Find grouped and ungrouped action types
+	$grouped_actions   = array_filter( $action_types, function( $el ) { return isset( $el['name'] ) && isset( $el['actions'] ); } );
+	$ungrouped_actions = array_filter( $action_types, function( $el ) { return ! ( isset( $el['name'] ) && isset( $el['actions'] ) ); } );
+
+	// Append ungrouped action types
+	if ( ! empty( $ungrouped_actions ) ) {
+		$grouped_actions[] = array(
+			'name'    => esc_html__( 'Other', 'incassoos' ),
+			'actions' => $ungrouped_actions
+		);
+	}
+
+	$class = esc_attr( $parsed_args['class'] );
+	$id    = esc_attr( $parsed_args['id'] );
+	$name  = isset( $parsed_args['name'] ) ? esc_attr( $parsed_args['name'] ) : $id;
+
+	$tab_index = $parsed_args['tab_index'];
+	$tab_index_attribute = '';
+	if ( (int) $tab_index > 0 ) {
+		$tab_index_attribute = " tabindex=\"$tab_index\"";
+	}
+
+	$output  = "<select id='$id' name='$name' class='$class' $tab_index_attribute>\n";
+	$output .= '<option value="-1">' . esc_html( $parsed_args['option_none_value'] ) . '</option>';
+
+	// Grouped actions
+	foreach ( $grouped_actions as $group ) {
+		if ( ! empty( $group['actions'] ) ) {
+			$output .= '<optgroup label="'. esc_attr( $group['name'] ) . '">';
+			foreach ( $group['actions'] as $action_id => $args ) {
+				$require_confirmation   = isset( $args['require_confirmation'] )   ? ' data-require-confirmation="' . (int) $args['require_confirmation'] . '"'   : '';
+				$require_decryption_key = isset( $args['require_decryption_key'] ) ? ' data-require-decryption-key="' . (int) $args['require_decryption_key'] . '"' : '';
+				$output .= '<option value="' . esc_attr( $action_id ) . '"' . $require_confirmation . $require_decryption_key . '>' . esc_html( $args['label'] ) . '</option>';
+			}
+			$output .= '</optgroup>';
+		}
+	}
+
+	$output .= '</select>';
+	$output = apply_filters( 'incassoos_admin_dropdown_collection_action_types', $output, $parsed_args );
+
+	if ( $parsed_args['echo'] ) {
+		echo $output;
+	}
+
+	return $output;
+}
+
 /** Nav Menus ***********************************************************/
 
 /**
@@ -1734,4 +2051,109 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
  */
 function incassoos_admin_add_nav_menu_meta_box() {
 	add_meta_box( 'add-incassoos-nav-menu', __( 'Incassoos', 'incassoos' ), 'incassoos_nav_menu_metabox', 'nav-menus', 'side', 'default' );
+}
+
+/** Exporting ***********************************************************/
+
+/**
+ * Process the export file request for a collection
+ *
+ * @since 1.0.0
+ *
+ * @param int    $post_id        Post ID
+ * @param string $export_type_id Export type identifier
+ */
+function incassoos_export_collection_file( $post_id, $args = array() ) {
+	$post = incassoos_get_collection( $post_id, array( 'is_collected' => true ) );
+
+	// Bail when the post is not a collected Collection
+	if ( ! $post ) {
+		return false;
+	}
+
+	$parsed_args = wp_parse_args( $args, array(
+		'dryrun'         => false,
+		'export_type_id' => '',
+		'decryption_key' => false
+	) );
+
+	// Export type
+	$export_type = incassoos_get_export_type( $parsed_args['export_type_id'] );
+	$feedback    = array();
+	$errors      = array();
+
+	// Bail when the export type does not exist
+	if ( ! $export_type ) {
+		$errors[] = esc_html__( 'Invalid export type selected.', 'incassoos' );
+	}
+
+	// Bail when the export class is not present
+	if ( empty( $errors ) && ! class_exists( $export_type->class_name ) ) {
+		$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
+	}
+
+	// Bail when the user cannot export
+	if ( empty( $errors ) && ! current_user_can( 'export_incassoos_collection', $post->ID, $parsed_args['export_type_id'] ) ) {
+		$errors[] = esc_html__( 'You are not allowed to export this Collection.', 'incassoos' );
+	}
+
+	// Bail when the decryption key was required but not provided
+	if ( empty( $errors ) && incassoos_get_export_type_require_decryption_key( $parsed_args['export_type_id'] ) ) {
+
+		// Try to set the decryption key
+		$result = incassoos_set_decryption_key( $parsed_args['decryption_key'] );
+
+		if ( is_wp_error( $result ) ) {
+			$errors[] = $result->get_error_message();
+		} else if ( ! $result ) {
+			$errors[] = esc_html__( 'Invalid decryption key provided.', 'incassoos' );
+		}
+	}
+
+	// Continue when no errors were found
+	if ( empty( $errors ) ) {
+
+		// Get export class
+		$class = $export_type->class_name;
+
+		// Construct file
+		$file = new $class( $post );
+
+		// Bail when construction failed
+		if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
+			$errors = array_merge( $errors, $file->get_errors() );
+
+		// When dry-running without errors, delay download
+		} else if ( $parsed_args['dryrun'] ) {
+
+			// Save export details for download on next page load
+			$file_id = incassoos_save_export_details( $parsed_args );
+
+			// Report feedback
+			if ( $file_id ) {
+
+				// Setup download url
+				$download_url = add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_download', 'file-id' => $file_id ), admin_url( 'post.php' ) );
+
+				// Provide download hint
+				$feedback['success'] = array( sprintf( __( 'Your download will start shortly&hellip; <a data-autostart-download="1" href="%s">Click here if it doesn\'t.</a>', 'incassoos' ), $download_url ) );
+			} else {
+				$errors[] = esc_html__( 'Something went wrong preparing your download. Please try again.', 'incassoos' );
+			}
+
+		// Offer file download
+		} else {
+			$feedback = incassoos_download_text_file( $file );
+		}
+	}
+
+	// Collect errors
+	if ( ! empty( $errors ) ) {
+		$feedback['errors'] = $errors;
+	}
+
+	// Log any feedback
+	if ( ! empty( $feedback ) ) {
+		set_transient( 'incassoos_post_action_feedback-' . $post->ID, $feedback );
+	}
 }

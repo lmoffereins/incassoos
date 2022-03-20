@@ -46,6 +46,9 @@ class Incassoos_VGSR {
 		// Consumer type
 		$this->cash_consumer_type         = apply_filters( 'incassoos_vgsr_cash_consumer_type',         'cash'         );
 		$this->on_the_house_consumer_type = apply_filters( 'incassoos_vgsr_on_the_house_consumer_type', 'on_the_house' );
+
+		// Export type
+		$this->sfc_export_type            = apply_filters( 'incassoos_vgsr_sfc_export_type', 'vgsr_sfc' );
 	}
 
 	/**
