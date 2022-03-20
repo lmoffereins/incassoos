@@ -2798,3 +2798,30 @@ function incassoos_decrypt_encryptable_options( $decryption_key ) {
 		}
 	}
 }
+
+/**
+ * Return whether the option is encryptable and redacted
+ *
+ * @since 1.0.0
+ *
+ * @param  string $option_name Option name
+ * @param  string $value       Option value to check
+ * @return bool Option is both encryptable and redacted
+ */
+function incassoos_is_option_redacted( $option_name, $value ) {
+
+	// Bail when encryption is not enabled
+	if ( ! incassoos_is_encryption_enabled() ) {
+		return false;
+	}
+
+	// Get encryptable option
+	$args = incassoos_get_encryptable_option( $option_name );
+
+	// Bail when option is not registered as encryptable
+	if ( ! $args ) {
+		return false;
+	}
+
+	return call_user_func_array( $args['is_redacted_callback'], array( $value, $args['redact_callback_args'] ) );
+}
