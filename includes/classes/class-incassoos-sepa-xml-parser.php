@@ -294,7 +294,10 @@ class Incassoos_SEPA_XML_Parser {
 			'creditor_id',
 			'currency',
 		) as $detail ) {
-			if ( empty( $this->party->{$detail} ) ) {
+			$value = $this->party->{$detail};
+			if ( empty( $value )
+				|| ( 'iban' === $detail && ! incassoos_validate_iban( $value ) )
+			) {
 				$failed_details[] = "<code>{$detail}</code>";
 			}
 		}
@@ -317,7 +320,10 @@ class Incassoos_SEPA_XML_Parser {
 				'iban',
 				'bic',
 			) as $detail ) {
-				if ( empty( $t->{$detail} ) && empty( $t->party->{$detail} ) ) {
+				$value = isset( $t->party->{$detail} ) ? $t->party->{$detail} : ( isset( $t->{$detail} ) ? $t->{$detail} : false );
+				if ( empty( $value )
+					|| ( 'iban' === $detail && ! incassoos_validate_iban( $value ) )
+				) {
 					$failed_details[] = "<code>{$detail}</code>";
 				}
 			}
