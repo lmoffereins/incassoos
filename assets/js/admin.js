@@ -599,9 +599,7 @@ jQuery(document).ready( function($) {
 		return parseFloat( value ).toFixed( formatCurrency && formatCurrency.decimals || 2 );
 	}
 
-	/**
-	 * Taxonomy List Table
-	 */
+	/** Taxonomy List Table *********************************************/
 
 	// Setup term quick edit
 	if ( 'undefined' !== typeof inlineEditTax ) {
@@ -625,9 +623,7 @@ jQuery(document).ready( function($) {
 		};
 	}
 
-	/**
-	 * Consumers Page
-	 */
+	/** Consumers Page **************************************************/
 
 	var $consumersPage = $( 'body.incassoos_page_incassoos-consumers' ),
 	    $bulkEdit = $consumersPage.find( '#bulkedit' ),
@@ -749,4 +745,56 @@ jQuery(document).ready( function($) {
 	function consumersRemoveInlineEdit() {
 		$consumersPage.find( '.consumer' ).removeClass( 'toggled' ).find( '.inline-edit' ).remove();
 	}
+
+	/** Settings Page ***************************************************/
+
+	var $settingsPage = $( 'body.incassoos_page_incassoos-settings' );
+
+	$settingsPage
+		// Open popup for decryption key when decrypting option value
+		.on( 'click', '.show-option-value', function() {
+			var $this = $( this ).hide(),
+			    optionName = $this.prev( 'input' ).attr( 'name' );
+
+			// Insert decryption key input field
+			$( `<div class="decrypt-option-value-wrapper">
+				<label class="screen-reader-text" for="decryption-key">${settings.decryptOptionKeyLabel}</label>
+				<input type="password" name="decryption-key" placeholder="${settings.decryptOptionPlaceholder}" />
+				<button type="button" data-option-name="${optionName}" class="button button-secondary decrypt-option-value">${settings.decryptOptionButtonLabel}</button>
+			</div>` ).insertAfter( $this ).find( 'input' ).focus();
+		})
+
+		// Decrypt option value
+		.on( 'click', '.decrypt-option-value', function() {
+			var $this = $( this ),
+			    decryptionKey = $this.prev( 'input' ).val(),
+			    optionName = this.getAttribute( 'data-option-name' );
+
+			// Post AJAX action
+			jQuery.ajax({
+				type: 'POST',
+				url: settings.adminAjaxUrl,
+				data: {
+					action: 'incassoos_decrypt_option_value',
+					_wpnonce: settings.decryptOptionNonce,
+					decryption_key: decryptionKey,
+					option_name: optionName
+				},
+				dataType: 'json'
+			}).always( function( resp ) {
+				resp = ( resp && resp.hasOwnProperty( 'success' ) && resp.hasOwnProperty( 'data' ) ) ? resp : { success: false, data: [{ message: settings.unknownError }] };
+
+				if ( ! resp.success ) {
+					alert( resp.data[0].message );
+				} else {
+
+					// Replace input value of the option
+					$settingsPage.find( '[name="' + optionName + '"]' ).attr( 'value', resp.data.decryptedOptionValue ).focus();
+
+					// Remove decryption key inputs
+					$this.parents( '.decrypt-option-value-wrapper' ).remove();
+				}
+			});
+
+		});
 });

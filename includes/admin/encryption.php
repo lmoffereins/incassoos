@@ -459,3 +459,41 @@ function incassoos_admin_ajax_disable_encryption() {
 		wp_send_json_success( $disabled );
 	}
 }
+
+/**
+ * Ajax action for returning a decrypted option
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_ajax_decrypt_option_value() {
+
+	// Check the ajax nonce
+	check_ajax_referer( 'incassoos_decrypt_option_nonce' );
+
+	// Require decryption key
+	$decryption_key = isset( $_REQUEST['decryption_key'] ) ? $_REQUEST['decryption_key'] : false;
+	if ( ! $decryption_key ) {
+		wp_send_json_error( new WP_Error(
+			'incassoos_no_decryption_key',
+			esc_html__( 'The provided decryption key is empty.', 'incassoos' )
+		) );
+	}
+
+	// Set decryption key for this request
+	$validated = incassoos_set_decryption_key( $decryption_key );
+	if ( is_wp_error( $validated ) ) {
+		wp_send_json_error( $validated );
+	}
+
+	// Require option name
+	$option = isset( $_REQUEST['option_name'] ) ? get_option( $_REQUEST['option_name'] ) : false;
+	if ( ! $option ) {
+		wp_send_json_error( new WP_Error(
+			'incassoos_option_not_found',
+			esc_html__( 'Could not find the encrypted option.', 'incassoos' )
+		) );
+	}
+
+	// Decryption was successfull
+	wp_send_json_success( array( 'decryptedOptionValue' => $option ) );
+}

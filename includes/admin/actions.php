@@ -74,5 +74,6 @@ add_action( 'incassoos_admin_notices',             'incassoos_admin_settings_not
 
 /** Ajax **********************************************************************/
 
-add_action( 'wp_ajax_incassoos_enable_encryption',  'incassoos_admin_ajax_enable_encryption',  10 );
-add_action( 'wp_ajax_incassoos_disable_encryption', 'incassoos_admin_ajax_disable_encryption', 10 );
+add_action( 'wp_ajax_incassoos_enable_encryption',    'incassoos_admin_ajax_enable_encryption',    10 );
+add_action( 'wp_ajax_incassoos_disable_encryption',   'incassoos_admin_ajax_disable_encryption',   10 );
+add_action( 'wp_ajax_incassoos_decrypt_option_value', 'incassoos_admin_ajax_decrypt_option_value', 10 );

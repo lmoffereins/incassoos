@@ -513,11 +513,20 @@ function incassoos_admin_setting_callback_account_holder() { ?>
  *
  * @since 1.0.0
  */
-function incassoos_admin_setting_callback_account_iban() { ?>
+function incassoos_admin_setting_callback_account_iban() {
 
-	<input name="_incassoos_account_iban" id="_incassoos_account_iban" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_account_iban', '' ); ?>" />
+	// Get option value
+	$option = get_option( '_incassoos_account_iban', '' );
 
-	<?php
+	?>
+
+	<input name="_incassoos_account_iban" id="_incassoos_account_iban" type="text" class="regular-text" value="<?php echo $option; ?>" />
+
+	<?php if ( current_user_can( 'decrypt_incassoos_data' ) && incassoos_is_option_redacted( '_incassoos_account_iban', $option ) ) : ?>
+
+	<button type="button" id="incassoos-decrypt-account-iban" class="button button-secondary show-option-value"><?php esc_html_e( 'Show value', 'incassoos' ); ?></button>
+
+	<?php endif;
 }
 
 /**
@@ -525,11 +534,20 @@ function incassoos_admin_setting_callback_account_iban() { ?>
  *
  * @since 1.0.0
  */
-function incassoos_admin_setting_callback_sepa_creditor_id() { ?>
+function incassoos_admin_setting_callback_sepa_creditor_id() {
 
-	<input name="_incassoos_sepa_creditor_id" id="_incassoos_sepa_creditor_id" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_sepa_creditor_id', '' ); ?>" />
+	// Get option value
+	$option = get_option( '_incassoos_sepa_creditor_id', '' );
 
-	<?php
+	?>
+
+	<input name="_incassoos_sepa_creditor_id" id="_incassoos_sepa_creditor_id" type="text" class="regular-text" value="<?php echo $option; ?>" />
+
+	<?php if ( current_user_can( 'decrypt_incassoos_data' ) && incassoos_is_option_redacted( '_incassoos_sepa_creditor_id', $option ) ) : ?>
+
+	<button type="button" id="incassoos-decrypt-sepa-creditor-id" class="button button-secondary show-option-value"><?php esc_html_e( 'Show value', 'incassoos' ); ?></button>
+
+	<?php endif;
 }
 
 /**

@@ -249,12 +249,18 @@ class Incassoos_Admin {
 		wp_enqueue_script( 'incassoos-admin', incassoos()->assets_url . 'js/admin.js', array( 'jquery', 'jquery-ui-datepicker', 'suggest' ) );
 		wp_localize_script( 'incassoos-admin', 'incAdminL10n', array(
 			'settings' => array(
-				'formatCurrency'  => incassoos_get_currency_format_args(),
-				'consumersFields' => incassoos_admin_get_consumers_fields(),
-				'ids'             => array(
+				'adminAjaxUrl'             => admin_url( 'admin-ajax.php' ),
+				'unknownError'             => esc_html__( 'An unknown error occurred.', 'incassoos' ),
+				'decryptOptionKeyLabel'    => esc_html__( 'Decryption key', 'incassoos' ),
+				'decryptOptionPlaceholder' => esc_html__( 'Decryption key&hellip;', 'incassoos' ),
+				'decryptOptionButtonLabel' => esc_html__( 'Decrypt', 'incassoos' ),
+				'decryptOptionNonce'       => wp_create_nonce( 'incassoos_decrypt_option_nonce' ),
+				'formatCurrency'           => incassoos_get_currency_format_args(),
+				'consumersFields'          => incassoos_admin_get_consumers_fields(),
+				'ids'                      => array(
 					'occasionType' => incassoos_get_occasion_type_tax_id()
 				),
-				'occasionTypeDefault' => incassoos_get_default_occasion_type()
+				'occasionTypeDefault'      => incassoos_get_default_occasion_type()
 			),
 			'l10n' => array(
 				'showSelectedAll'      => __( 'Showing selected',                   'incassoos' ),
