@@ -136,7 +136,9 @@ jQuery(document).ready( function($) {
 
 	// Trigger the first auto-download when present
 	$( 'body.incassoos [data-autostart-download]' ).first().each( function() {
-		if ( this.href ) {
+
+		// Only trigger for in-site links
+		if ( this.href && settings.siteUrl === this.href.substr(0, settings.siteUrl.length) ) {
 			window.location = this.href;
 		}
 	});

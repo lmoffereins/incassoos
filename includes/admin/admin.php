@@ -249,6 +249,7 @@ class Incassoos_Admin {
 		wp_enqueue_script( 'incassoos-admin', incassoos()->assets_url . 'js/admin.js', array( 'jquery', 'jquery-ui-datepicker', 'suggest' ) );
 		wp_localize_script( 'incassoos-admin', 'incAdminL10n', array(
 			'settings' => array(
+				'siteUrl'                  => site_url(),
 				'adminAjaxUrl'             => admin_url( 'admin-ajax.php' ),
 				'unknownError'             => esc_html__( 'An unknown error occurred.', 'incassoos' ),
 				'decryptOptionKeyLabel'    => esc_html__( 'Decryption key', 'incassoos' ),
