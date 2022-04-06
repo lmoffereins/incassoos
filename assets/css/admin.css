@@ -577,7 +577,9 @@ body.incassoos-post-view .incassoos-item-list .item-details li,
 }
 
 .incassoos-item-list .item-list-header .list-search {
+	flex: 1;
 	height: 28px;
+	margin-right: 8px;
 	padding: 4px 5px;
 	line-height: 28px;
 	vertical-align: middle;
