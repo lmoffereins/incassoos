@@ -11,8 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 // Include dependencies
-if ( ! class_exists( 'Incassoos_File_Exporter', false ) ) {
-	require_once( incassoos()->includes_dir . 'classes/abstract-incassoos-file-exporter.php' );
+if ( ! class_exists( 'Incassoos_XML_Exporter', false ) ) {
+	require_once( incassoos()->includes_dir . 'classes/abstract-incassoos-xml-exporter.php' );
 }
 
 if ( ! class_exists( 'Incassoos_SEPA_XML_Exporter' ) ) :
@@ -21,15 +21,7 @@ if ( ! class_exists( 'Incassoos_SEPA_XML_Exporter' ) ) :
  *
  * @since 1.0.0
  */
-class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
-
-	/**
-	 * Holds the XML document object
-	 *
-	 * @since 1.0.0
-	 * @var DOMDocument object
-	 */
-	private $xml;
+class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 
 	/**
 	 * Whether this is a debit payment.
@@ -96,14 +88,10 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
 	 * @param array $debit Optional. Whether to generate a debit file. Defaults to true.
 	 */
 	public function __construct( $args = array(), $debit = true ) {
+		parent::__construct();
 
 		// Set file type and extension
 		$this->file_type = incassoos_get_sepa_export_type_id();
-		$this->file_extension = 'xml';
-
-		// Init XML object
-		$this->xml = new DOMDocument( '1.0', 'UTF-8' );
-		$this->xml->formatOutput = true;
 
 		// Set debit status
 		$this->is_debit = (bool) $debit;
@@ -285,7 +273,7 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array Validation errors
+	 * @return bool Is validation successfull?
 	 */
 	public function validate_file() {
 
@@ -358,56 +346,42 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
 		return ! $this->has_errors();
 	}
 
-	/** Export **********************************************************/
+	/** Structure *******************************************************/
 
 	/**
-	 * Return the export file contents
+	 * Return the root tag's xmlns property value
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return string File contents or False when invalid.
+	 * @return string Root tag xmlns
 	 */
-	public function get_file() {
-		return $this->xml->saveXML();
+	public function get_xmlns() {
+		return 'urn:iso:std:iso:20022:tech:xsd:pain.' . $this->get_pain();
 	}
-
-	/** Structure *******************************************************/
 
 	/**
 	 * Create the SEPA XML file structure
 	 *
 	 * @since 1.0.0
 	 */
-	public function build_file() {
-
-		// Start file
-		$this->setup_root_tag();
-
-		// File contents
+	public function setup_file_tags() {
+		$this->setup_collection_tag();
 		$this->setup_group_header();
 		$this->setup_payment_information();
 	}
 
 	/**
-	 * Setup the file's root tag
+	 * Setup the file's collection tag
 	 *
 	 * @since 1.0.0
 	 */
-	public function setup_root_tag() {
-
-		// Create root tag
-		$root = $this->xml->createElement( 'Document' );
-		$root->setAttribute( 'xmlns',     'urn:iso:std:iso:20022:tech:xsd:pain.' . $this->get_pain() );
-		$root->setAttribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance' );
+	public function setup_collection_tag() {
 
 		// Create collection tag
 		$collection = $this->xml->createElement( $this->is_debit() ? 'CstmrDrctDbtInitn' : 'CstmrCdtTrfInitn' );
 
 		// Add collection to root
-		$root->appendChild( $collection );
-
-		// Add root to xmlument
-		$this->xml->appendChild( $root );
+		$this->append_tag( $collection, false );
 	}
 
 	/**
@@ -627,77 +601,24 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
 	}
 
 	/**
-	 * Append new tags to an existing DOMElement
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $args List of tags to append as $tag_name => $content
-	 * @param DOMElement $root Element root for the new tags
-	 */
-	public function append_tags( $args = array(), $root = null ) {
-
-		// Bail when the root tag is not an DOMElement
-		if ( ! is_a( $root, 'DOMElement' ) )
-			return;
-
-		// Walk the tag list
-		foreach ( array_filter( (array) $args ) as $tag => $content ) {
-
-			// Create tag
-			$tag = $this->xml->createElement( $tag );
-
-			// Parse sub-tags
-			if ( is_array( $content ) ) {
-				$keys = array_keys( $content );
-
-				// Add attributes and content
-				if ( is_numeric( $keys[0] ) ) {
-
-					// Set tag content
-					$tag->nodeValue = trim( $content[ $keys[0] ] );
-					unset( $content[ $keys[0] ] );
-
-					// Add attributes
-					foreach ( $content as $attr => $value ) {
-						if ( strlen( trim( $value ) ) ) {
-							$tag->setAttribute( $attr, trim( $value ) );
-						}
-					}
-
-				// Append child tags
-				} else {
-					$tag = $this->append_tags( $content, $tag );
-				}
-
-			// Parse tag content
-			} elseif ( strlen( trim( $content ) ) ) {
-				$tag->nodeValue = trim( $content );
-			}
-
-			// Add tag to root
-			$root->appendChild( $tag );
-		}
-
-		return $root;
-	}
-
-	/**
 	 * Append the tag to the XML document at the given path
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param DOMElement $tag Element to append
-	 * @param string $path Optional. Path to query beyond root/collection.
+	 * @param string|bool $path Optional. Path to query beyond root/collection. Provide False to
+	 *                          append the tag to the actual root tag instead of the collection.
 	 */
 	public function append_tag( $tag, $path = '' ) {
 
 		// Define path at root/collection/{path}
-		$path = empty( $path ) ? '' : '/' . trim( $path, '/' );
-		$path = '//Document/' . ( $this->is_debit() ? 'CstmrDrctDbtInitn' : 'CstmrCdtTrfInitn' ) . $path;
+		if ( false !== $path ) {
+			$path = empty( $path ) ? '' : '/' . trim( $path, '/' );
+			$path = ( $this->is_debit() ? 'CstmrDrctDbtInitn' : 'CstmrCdtTrfInitn' ) . $path;
+		}
 
-		// Query path, add tag
-		$xpath = new DOMXPath( $this->xml );
-		$xpath->query( $path )->item( 0 )->appendChild( $tag );
+		// Append tag from parent
+		parent::append_tag( $tag, $path );
 	}
 
 	/** Transactions ****************************************************/
