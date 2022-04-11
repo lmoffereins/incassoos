@@ -1692,6 +1692,7 @@ function incassoos_register_export_type( $export_type_id, $args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'labels'                 => array(),
 		'class_name'             => '',
+		'class_file'             => '',
 		'require_decryption_key' => false
 	) );
 

@@ -503,10 +503,6 @@ final class Incassoos {
 
 		/** SEPA ********************************************************/
 
-		// Require classes
-		require_once( $this->includes_dir . 'classes/class-incassoos-sepa-xml-parser.php' );
-		require_once( $this->includes_dir . 'classes/class-incassoos-sepa-xml-file.php' );
-
 		incassoos_register_export_type(
 			incassoos_get_sepa_export_type_id(),
 			array(
@@ -514,7 +510,8 @@ final class Incassoos {
 					'name'        => esc_html__( 'SEPA file',        'incassoos' ),
 					'export_file' => esc_html__( 'Export SEPA file', 'incassoos' )
 				),
-				'class_name'             => 'Incassoos_SEPA_XML_File',
+				'class_name'             => 'Incassoos_Collection_SEPA_XML_Exporter',
+				'class_file'             => $this->includes_dir . 'classes/class-incassoos-collection-sepa-xml-exporter.php',
 				'require_decryption_key' => true
 			)
 		);

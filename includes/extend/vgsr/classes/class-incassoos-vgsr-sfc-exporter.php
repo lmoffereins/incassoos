@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Incassoos VGSR SFC File class
+ * Incassoos VGSR SFC Exporter class
  *
  * @package Incassoos
  * @subpackage Export
@@ -10,17 +10,22 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Incassoos_VGSR_SFC_File' ) ) :
+// Include dependencies
+if ( ! class_exists( 'Incassoos_File_Exporter', false ) ) {
+	require_once( incassoos()->includes_dir . 'classes/abstract-incassoos-file-exporter.php' );
+}
+
+if ( ! class_exists( 'Incassoos_VGSR_SFC_Exporter' ) ) :
 /**
- * The Incassoos VGSR SFC File class
+ * The Incassoos VGSR SFC Exporter class
  *
  * The .sfc file structure was originally developed for the FiscaatAutomaat
- * accounting software system. The file contains the accouting rules to import
- * into the system and is designed with a simple line based text format.
+ * accounting software system. The file contains the accounting rules for import
+ * into FiscaatAutomaat and its setup follows a simple line based text format.
  *
  * @since 1.0.0
  */
-class Incassoos_VGSR_SFC_File {
+class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 
 	/**
 	 * The collectable Collection post
@@ -31,6 +36,14 @@ class Incassoos_VGSR_SFC_File {
 	private $post;
 
 	/**
+	 * The collection date
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	private $collection_date;
+
+	/**
 	 * Setup this class
 	 *
 	 * @since 1.0.0
@@ -39,9 +52,60 @@ class Incassoos_VGSR_SFC_File {
 	 */
 	public function __construct( $post = 0 ) {
 
+		// Set file type and extension
+		$this->file_type = incassoos_vgsr_get_sfc_export_type_id();
+		$this->file_extension = 'sfc';
+
 		// Require the Collection to be collected
 		$this->post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
+
+		// Bail when invalid
+		if ( ! $this->validate_file() ) {
+			return;
+		}
+
+		// Set collection date
+		$this->collection_date = incassoos_get_collection_date( $this->post, 'Y-m-d' );
+
+		// Set file name
+		$this->set_filename(
+			sprintf( '%s-SFC-%s-%s.sfc',
+				incassoos_get_organization_name(),
+				incassoos_get_collection_title( $this->post ),
+				incassoos_get_collection_date( $this->post, 'Ymd' )
+			)
+		);
 	}
+
+	/** Validation ******************************************************/
+
+	/**
+	 * Validate file components and register any errors
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Validation errors
+	 */
+	public function validate_file() {
+
+		// Reset errors list
+		$this->errors = array();
+
+		if ( ! $this->post ) {
+			$this->errors[] = esc_html__( 'The file is invalid because the Collection is not collected.', 'incassoos' );
+		}
+
+		return ! $this->has_errors();
+	}
+
+	/** Export **********************************************************/
+
+	/**
+	 * Set headers for the file export
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_headers() { /* No relevant headers */ }
 
 	/**
 	 * Create and return the Collection's VGSR SFC file
@@ -52,8 +116,8 @@ class Incassoos_VGSR_SFC_File {
 	 */
 	public function get_file() {
 
-		// Bail when the Collection is invalid
-		if ( ! $this->post )
+		// Bail when the file is invalid
+		if ( $this->has_errors() )
 			return false;
 
 		$file = '';
@@ -71,22 +135,7 @@ class Incassoos_VGSR_SFC_File {
 		return $file;
 	}
 
-	/**
-	 * Return the Collection's SFC filename
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string Filename
-	 */
-	public function get_filename() {
-		if ( $this->post ) {
-			return sprintf( '%s-SFC-%s-%s.sfc',
-				incassoos_get_organization_name(),
-				incassoos_get_collection_title( $this->post ),
-				incassoos_get_collection_date( $this->post, 'Ymd' )
-			);
-		}
-	}
+	/** Structure *******************************************************/
 
 	/**
 	 * Get the Collection's Activity line data
@@ -200,7 +249,6 @@ class Incassoos_VGSR_SFC_File {
 	 * @return string Parsed lines
 	 */
 	public function parse_lines( $lines ) {
-		$date   = incassoos_get_collection_date( $this->post, 'Y-m-d' );
 		$retval = '';
 
 		foreach ( $lines as $line ) {
@@ -211,7 +259,7 @@ class Incassoos_VGSR_SFC_File {
 
 			// Build line
 			$retval .= sprintf('#%s#,%d,"%s",%s,%s' . "\r",
-				$date,
+				$this->collection_date,
 				$line['ledger_id'],
 				$line['title'],
 				$line['credit'],

@@ -2087,6 +2087,12 @@ function incassoos_export_collection_file( $post_id, $args = array() ) {
 		$errors[] = esc_html__( 'Invalid export type selected.', 'incassoos' );
 	}
 
+	// Get export class
+	$class = $export_type->class_name;
+	if ( ! class_exists( $class ) && ! empty( $export_type->class_file ) ) {
+		require_once( $export_type->class_file );
+	}
+
 	// Bail when the export class is not present
 	if ( empty( $errors ) && ! class_exists( $export_type->class_name ) ) {
 		$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
@@ -2113,14 +2119,15 @@ function incassoos_export_collection_file( $post_id, $args = array() ) {
 	// Continue when no errors were found
 	if ( empty( $errors ) ) {
 
-		// Get export class
-		$class = $export_type->class_name;
-
 		// Construct file
 		$file = new $class( $post );
 
+		// Bail when not setup properly
+		if ( ! is_a( $file, 'Incassoos_File_Exporter' ) ) {
+			$errors[] = sprintf( esc_html__( 'File exporter is not of type `%s`.', 'incassoos' ), 'Incassoos_File_Exporter' );
+
 		// Bail when construction failed
-		if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
+		} else if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
 			$errors = array_merge( $errors, $file->get_errors() );
 
 		// When dry-running without errors, delay download

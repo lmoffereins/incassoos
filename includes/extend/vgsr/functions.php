@@ -83,9 +83,6 @@ function incassoos_vgsr_get_sfc_export_type_id() {
  */
 function incassoos_vgsr_register_export_types() {
 
-	// Require class
-	require_once( incassoos()->extend->vgsr->plugin_dir . 'classes/class-incassoos-vgsr-sfc-file.php' );
-
 	// SFC
 	incassoos_register_export_type(
 		incassoos_vgsr_get_sfc_export_type_id(),
@@ -94,7 +91,8 @@ function incassoos_vgsr_register_export_types() {
 				'name'        => esc_html__( 'SFC file',        'incassoos' ),
 				'export_file' => esc_html__( 'Export SFC file', 'incassoos' )
 			),
-			'class_name' => 'Incassoos_VGSR_SFC_File'
+			'class_name' => 'Incassoos_VGSR_SFC_Exporter',
+			'class_file' => incassoos()->extend->vgsr->plugin_dir . 'classes/class-incassoos-vgsr-sfc-exporter.php'
 		)
 	);
 }

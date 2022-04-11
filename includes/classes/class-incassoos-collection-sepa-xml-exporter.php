@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Incassoos SEPA XML File class
+ * Incassoos Collection SEPA XML Exporter class
  *
  * @package Incassoos
  * @subpackage Export
@@ -10,13 +10,18 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Incassoos_SEPA_XML_File' ) ) :
+// Include dependencies
+if ( ! class_exists( 'Incassoos_SEPA_XML_Exporter', false ) ) {
+	require_once( incassoos()->includes_dir . 'classes/class-incassoos-sepa-xml-exporter.php' );
+}
+
+if ( ! class_exists( 'Incassoos_Collection_SEPA_XML_Exporter' ) ) :
 /**
- * The Incassoos SEPA XML File class
+ * The Incassoos Collection SEPA XML Exporter class
  *
  * @since 1.0.0
  */
-class Incassoos_SEPA_XML_File extends Incassoos_SEPA_XML_Parser {
+class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter {
 
 	/**
 	 * The collectable Collection post
@@ -64,11 +69,11 @@ class Incassoos_SEPA_XML_File extends Incassoos_SEPA_XML_Parser {
 	}
 
 	/**
-	 * Return the Collection's XML filename
+	 * Return the Collection's export filename
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return string Filename
+	 * @return string Export filename
 	 */
 	public function get_filename() {
 		if ( $this->post ) {

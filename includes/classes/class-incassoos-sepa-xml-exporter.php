@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Incassoos SEPA XML Parser class
+ * Incassoos SEPA XML Exporter class
  *
  * @package Incassoos
  * @subpackage Export
@@ -10,13 +10,18 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Incassoos_SEPA_XML_Parser' ) ) :
+// Include dependencies
+if ( ! class_exists( 'Incassoos_File_Exporter', false ) ) {
+	require_once( incassoos()->includes_dir . 'classes/abstract-incassoos-file-exporter.php' );
+}
+
+if ( ! class_exists( 'Incassoos_SEPA_XML_Exporter' ) ) :
 /**
- * The Incassoos SEPA XML Parser class
+ * The Incassoos SEPA XML Exporter class
  *
  * @since 1.0.0
  */
-class Incassoos_SEPA_XML_Parser {
+class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
 
 	/**
 	 * Holds the XML document object
@@ -83,14 +88,6 @@ class Incassoos_SEPA_XML_Parser {
 	public $current_transaction = -1;
 
 	/**
-	 * Holds the list of file errors
-	 *
-	 * @since 1.0.0
-	 * @var array
-	 */
-	private $errors = array();
-
-	/**
 	 * Setup this class
 	 *
 	 * @since 1.0.0
@@ -100,6 +97,10 @@ class Incassoos_SEPA_XML_Parser {
 	 */
 	public function __construct( $args = array(), $debit = true ) {
 
+		// Set file type and extension
+		$this->file_type = incassoos_get_sepa_export_type_id();
+		$this->file_extension = 'xml';
+
 		// Init XML object
 		$this->xml = new DOMDocument( '1.0', 'UTF-8' );
 		$this->xml->formatOutput = true;
@@ -108,53 +109,60 @@ class Incassoos_SEPA_XML_Parser {
 		$this->is_debit = (bool) $debit;
 
 		// Parse arguments
-		if ( $args ) {
-			$args = wp_parse_args( $args, array(
-				'party'            => array(),
-				'transactions'     => array(),
-				'collection_date'  => '',
-				'due_date'         => '',
-				'header_tags'      => array(),
-				'payment_tags'     => array(),
-				'transaction_tags' => array(),
-			) );
+		$args = wp_parse_args( $args, array(
+			'party'            => array(),
+			'transactions'     => array(),
+			'collection_date'  => '',
+			'due_date'         => '',
+			'header_tags'      => array(),
+			'payment_tags'     => array(),
+			'transaction_tags' => array(),
+		) );
 
-			// Parse party details
-			$this->party = (object) wp_parse_args( $args['party'], array(
-				'organization' => false,
-				'name'         => false,
-				'iban'         => false,
-				'bic'          => false,
-				'creditor_id'  => false,
-				'currency'     => '',
-			) );
+		// Parse party details
+		$this->party = (object) wp_parse_args( $args['party'], array(
+			'organization' => false,
+			'name'         => false,
+			'iban'         => false,
+			'bic'          => false,
+			'creditor_id'  => false,
+			'currency'     => '',
+		) );
 
-			// Parse transactions
-			$this->set_transactions( $args['transactions'] );
+		// Parse transactions
+		$this->set_transactions( $args['transactions'] );
 
-			// Set collection's dates
-			$this->set_collection_date( $args['collection_date'] );
-			$this->set_due_date(        $args['due_date']        );
+		// Set collection dates
+		$this->set_collection_date( $args['collection_date'] );
+		$this->set_due_date(        $args['due_date']        );
 
-			// Additional header tags
-			if ( $args['header_tags'] ) {
-				$this->header_tags = $args['header_tags'];
-			}
+		// Additional header tags
+		if ( $args['header_tags'] ) {
+			$this->header_tags = $args['header_tags'];
+		}
 
-			// Additional payment tags
-			if ( $args['payment_tags'] ) {
-				$this->payment_tags = $args['payment_tags'];
-			}
+		// Additional payment tags
+		if ( $args['payment_tags'] ) {
+			$this->payment_tags = $args['payment_tags'];
+		}
 
-			// Additional transaction tags
-			if ( $args['transaction_tags'] ) {
-				$this->transaction_tags = $args['transaction_tags'];
-			}
+		// Additional transaction tags
+		if ( $args['transaction_tags'] ) {
+			$this->transaction_tags = $args['transaction_tags'];
+		}
 
-			// Validate and build the file
-			if ( $this->validate_file() ) {
-				$this->build_file();
-			}
+		// Set file name
+		$this->set_filename(
+			sprintf( '%s-SEPA-%s-%s.xml',
+				$this->party->organization,
+				date( 'Ymd', $this->_collection_date ),
+				date( 'Ymd' )
+			)
+		);
+
+		// Validate and build the file
+		if ( $this->validate_file() ) {
+			$this->build_file();
 		}
 	}
 
@@ -350,26 +358,24 @@ class Incassoos_SEPA_XML_Parser {
 		return ! $this->has_errors();
 	}
 
-	/**
-	 * Return whether the file has any errors
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool Whether there are any errors
-	 */
-	public function has_errors() {
-		return ! empty( $this->errors );
-	}
+	/** Export **********************************************************/
 
 	/**
-	 * Return the file's errors
+	 * Set headers for the file export
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_headers() { /* No relevant headers */ }
+
+	/**
+	 * Return the export file contents
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array List of error messages
+	 * @return string File contents or False when invalid.
 	 */
-	public function get_errors() {
-		return $this->errors;
+	public function get_file() {
+		return $this->xml->saveXML();
 	}
 
 	/** Structure *******************************************************/
@@ -387,28 +393,6 @@ class Incassoos_SEPA_XML_Parser {
 		// File contents
 		$this->setup_group_header();
 		$this->setup_payment_information();
-	}
-
-	/**
-	 * Return the SEPA XML file
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string SEPA XML file or False when invalid.
-	 */
-	public function get_file() {
-		return $this->xml->saveXML();
-	}
-
-	/**
-	 * Return the SEPA XML filename
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string SEPA XML filename
-	 */
-	public function get_filename() {
-		return sprintf( '%s-SEPA-%s-%s.xml', $this->party->organization, date( 'Ymd', $this->_collection_date ), date( 'Ymd' ) );
 	}
 
 	/**
