@@ -101,13 +101,6 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	/** Export **********************************************************/
 
 	/**
-	 * Set headers for the file export
-	 *
-	 * @since 1.0.0
-	 */
-	public function set_headers() { /* No relevant headers */ }
-
-	/**
 	 * Create and return the Collection's VGSR SFC file
 	 *
 	 * @since 1.0.0

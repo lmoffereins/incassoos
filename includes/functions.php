@@ -1999,8 +1999,9 @@ function incassoos_download_text_file( $file, $filename = '' ) {
 		return false;
 	}
 
-	// File creator
-	if ( is_object( $file ) && method_exists( $file, 'get_file' ) ) {
+	// File exporter
+	if ( is_a( $file, 'Incassoos_File_Exporter' ) && method_exists( $file, 'get_file' ) ) {
+		$exporter = true;
 		$content = $file->get_file();
 
 		// Use creator filename
@@ -2010,6 +2011,7 @@ function incassoos_download_text_file( $file, $filename = '' ) {
 
 	// File content
 	} elseif ( is_string( $file ) && $filename ) {
+		$exporter = false;
 		$content = $file;
 
 	// Bail when the parameters are invalid
@@ -2017,11 +2019,18 @@ function incassoos_download_text_file( $file, $filename = '' ) {
 		return false;
 	}
 
-	// Start file headers
+	// Do the download
 	if ( ! headers_sent() ) {
-		nocache_headers();
-		header( 'Robots: none' );
-		header( 'Content-Type: ' . incassoos_get_file_type( $filename ) );
+
+		// Send headers from file exporter
+		if ( $exporter ) {
+			$file->send_headers();
+		} else {
+			nocache_headers();
+			header( 'Robots: none' );
+		}
+
+		header( 'Content-Type: ' . incassoos_get_file_type( $filename ) . '; charset=utf-8' );
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Disposition: inline; filename="' . $filename . '"' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );

@@ -86,11 +86,11 @@ abstract class Incassoos_File_Exporter {
 	/** Export **********************************************************/
 
 	/**
-	 * Set headers for the file export
+	 * Send headers for the file export
 	 *
 	 * @since 1.0.0
 	 */
-	public function set_headers() {
+	public function send_headers() {
 
 		// Disable GZIP
 		@ini_set( 'zlib.output_compression', 'Off' );
@@ -102,6 +102,7 @@ abstract class Incassoos_File_Exporter {
 
 		// Disable cache
 		nocache_headers();
+		header( 'Robots: none' );
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );
 	}

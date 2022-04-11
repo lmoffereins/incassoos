@@ -361,13 +361,6 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_File_Exporter {
 	/** Export **********************************************************/
 
 	/**
-	 * Set headers for the file export
-	 *
-	 * @since 1.0.0
-	 */
-	public function set_headers() { /* No relevant headers */ }
-
-	/**
 	 * Return the export file contents
 	 *
 	 * @since 1.0.0
