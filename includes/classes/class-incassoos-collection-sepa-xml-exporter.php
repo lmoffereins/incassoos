@@ -69,22 +69,23 @@ class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter
 	}
 
 	/**
-	 * Return the Collection's export filename
+	 * Set the Collection's export filename
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string Filename
 	 * @return string Export filename
 	 */
-	public function get_filename() {
+	public function set_filename( $filename ) {
 		if ( $this->post ) {
-			return sprintf( '%s-SEPA-%s-%s.xml',
+			$filename = sprintf( '%s-SEPA-%s-%s.xml',
 				$this->party->organization,
 				incassoos_get_collection_title( $this->post ),
 				incassoos_get_collection_date( $this->post, 'Ymd' )
 			);
-		} else {
-			return parent::get_filename();
 		}
+
+		parent::set_filename( $filename );
 	}
 
 	/**
