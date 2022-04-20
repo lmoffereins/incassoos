@@ -84,7 +84,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array Validation errors
+	 * @return bool Is validation successfull?
 	 */
 	public function validate_file() {
 

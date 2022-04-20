@@ -90,7 +90,7 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 	public function __construct( $args = array(), $debit = true ) {
 		parent::__construct();
 
-		// Set file type and extension
+		// Set file type
 		$this->file_type = incassoos_get_sepa_export_type_id();
 
 		// Set debit status
