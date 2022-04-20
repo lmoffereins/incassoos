@@ -243,10 +243,10 @@ function incassoos_get_product_title( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return.
+ * @param  string      $date_format Optional. Timestamp's date format to return.
  */
-function incassoos_the_product_created( $post = 0, $format = '' ) {
-	echo incassoos_get_product_created( $post, $format );
+function incassoos_the_product_created( $post = 0, $date_format = '' ) {
+	echo incassoos_get_product_created( $post, $date_format );
 }
 
 /**
@@ -257,18 +257,18 @@ function incassoos_the_product_created( $post = 0, $format = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_product_created'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return.
+ * @param  string      $date_format Optional. Timestamp's date format to return.
  * @return string Product created date.
  */
-function incassoos_get_product_created( $post = 0, $format = '' ) {
+function incassoos_get_product_created( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_order( $post );
 	$date = $post ? $post->post_date : '';
 
-	if ( $format ) {
-		$date = mysql2date( $format, $date );
+	if ( $date_format ) {
+		$date = mysql2date( $date_format, $date );
 	}
 
-	return apply_filters( 'incassoos_get_product_created', $date, $post, $format );
+	return apply_filters( 'incassoos_get_product_created', $date, $post, $date_format );
 }
 
 /**
@@ -305,11 +305,11 @@ function incassoos_get_product_menu_order( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_product_price( $post = 0, $format = false ) {
-	echo incassoos_get_product_price( $post, $format );
+function incassoos_the_product_price( $post = 0, $num_format = false ) {
+	echo incassoos_get_product_price( $post, $num_format );
 }
 
 /**
@@ -320,11 +320,11 @@ function incassoos_the_product_price( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_product_price'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Product price.
  */
-function incassoos_get_product_price( $post = 0, $format = false ) {
+function incassoos_get_product_price( $post = 0, $num_format = false ) {
 	$post  = incassoos_get_product( $post );
 	$price = get_post_meta( $post ? $post->ID : 0, 'price', true );
 
@@ -335,8 +335,8 @@ function incassoos_get_product_price( $post = 0, $format = false ) {
 	$price = (float) apply_filters( 'incassoos_get_product_price', (float) $price, $post );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$price = incassoos_parse_currency( $price, $format );
+	if ( null !== $num_format ) {
+		$price = incassoos_parse_currency( $price, $num_format );
 	}
 
 	return $price;
