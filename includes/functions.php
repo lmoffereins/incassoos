@@ -221,7 +221,7 @@ function incassoos_get_object_type( $post_type = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_object_post_type'
  *
  * @param  string $object_type Object type name
- * @return string              Post type name
+ * @return string Post type name
  */
 function incassoos_get_object_post_type( $object_type ) {
 	$post_type = '';
@@ -238,6 +238,8 @@ function incassoos_get_object_post_type( $object_type ) {
  * Return a label for the post type
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_type_label'
  *
  * @param  string $post_type  Optional. Post type name.
  * @param  string $label_type Optional. Label type. Defaults to 'singular_name'.
@@ -257,7 +259,7 @@ function incassoos_get_post_type_label( $post_type = '', $label_type = 'singular
 		$label = $pto->labels->{$label_type};
 	}
 
-	return $label;
+	return apply_filters( 'incassoos_get_post_type_label', $label, $post_type, $label_type );
 }
 
 /**
@@ -322,6 +324,77 @@ function incassoos_validate_post( $postarr, $post_type = '' ) {
 	}
 
 	return apply_filters( 'incassoos_validate_post', $validated, $postarr, $post_type );
+}
+
+/**
+ * Return the title of the post
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_title'
+ *
+ * @param  WP_Post|int $post Post object or ID. Defaults to the current post.
+ * @return string Post title
+ */
+function incassoos_get_post_title( $post = 0 ) {
+	$post        = get_post( $post );
+	$object_type = $post ? incassoos_get_object_type( $post->post_type ) : '';
+	$getter      = "incassoos_get_{$object_type}_title";
+	$title       = '';
+
+	// Get object post title
+	if ( function_exists( $getter ) ) {
+		$title = call_user_func_array( $getter, array( $post ) );
+	}
+
+	// Default to post title
+	if ( ! $title ) {
+		$title = $post->post_title;
+	}
+
+	return apply_filters( 'incassoos_get_post_title', $title, $post );
+}
+
+/**
+ * Return the date of the post
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_date'
+ *
+ * @param  WP_Post|int $post Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return string Post date
+ */
+function incassoos_get_post_date( $post = 0, $date_format = '' ) {
+	$post        = get_post( $post );
+	$object_type = $post ? incassoos_get_object_type( $post->post_type ) : '';
+	$getter      = "incassoos_get_{$object_type}_date";
+	$getter_alt  = "incassoos_get_{$object_type}_created";
+	$date        = '';
+
+	// Get object post date
+	if ( function_exists( $getter ) ) {
+		$date = call_user_func_array( $getter, array( $post, $date_format ) );
+	}
+
+	// Fallback to object created date
+	if ( ! $date && function_exists( $getter_alt ) ) {
+		$date = call_user_func_array( $getter_alt, array( $post, $date_format ) );
+	}
+
+	// Default to post date
+	if ( ! $date ) {
+
+		// Default to the registered date format
+		if ( empty( $date_format ) ) {
+			$date_format = get_option( 'date_format' );
+		}
+
+		$date = mysql2date( $date_format, $post->post_date );
+	}
+
+	return apply_filters( 'incassoos_get_post_date', $date, $post, $date_format );
 }
 
 /**
