@@ -361,11 +361,11 @@ function incassoos_get_activity_author( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_activity_price( $post = 0, $format = false ) {
-	echo incassoos_get_activity_price( $post, $format );
+function incassoos_the_activity_price( $post = 0, $num_format = false ) {
+	echo incassoos_get_activity_price( $post, $num_format );
 }
 
 /**
@@ -376,11 +376,11 @@ function incassoos_the_activity_price( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_activity_price'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Activity price.
  */
-function incassoos_get_activity_price( $post = 0, $format = false ) {
+function incassoos_get_activity_price( $post = 0, $num_format = false ) {
 	$post  = incassoos_get_activity( $post );
 	$price = get_post_meta( $post ? $post->ID : 0, 'price', true );
 
@@ -391,8 +391,8 @@ function incassoos_get_activity_price( $post = 0, $format = false ) {
 	$price = (float) apply_filters( 'incassoos_get_activity_price', (float) $price, $post );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$price = incassoos_parse_currency( $price, $format );
+	if ( null !== $num_format ) {
+		$price = incassoos_parse_currency( $price, $num_format );
 	}
 
 	return $price;
@@ -404,10 +404,10 @@ function incassoos_get_activity_price( $post = 0, $format = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_activity_created( $post = 0, $format = '' ) {
-	echo incassoos_get_activity_created( $post, $format );
+function incassoos_the_activity_created( $post = 0, $date_format = '' ) {
+	echo incassoos_get_activity_created( $post, $date_format );
 }
 
 /**
@@ -418,23 +418,23 @@ function incassoos_the_activity_created( $post = 0, $format = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_activity_created'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Activity created date.
  */
-function incassoos_get_activity_created( $post = 0, $format = '' ) {
+function incassoos_get_activity_created( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_activity( $post );
 	$date = $post ? $post->post_date : '';
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	}
 
-	return apply_filters( 'incassoos_get_activity_created', $date, $post, $format );
+	return apply_filters( 'incassoos_get_activity_created', $date, $post, $date_format );
 }
 
 /**
@@ -443,10 +443,10 @@ function incassoos_get_activity_created( $post = 0, $format = '' ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_activity_date( $post = 0, $format = '' ) {
-	echo incassoos_get_activity_date( $post, $format );
+function incassoos_the_activity_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_activity_date( $post, $date_format );
 }
 
 /**
@@ -457,25 +457,25 @@ function incassoos_the_activity_date( $post = 0, $format = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_activity_date'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Activity date.
  */
-function incassoos_get_activity_date( $post = 0, $format = '' ) {
+function incassoos_get_activity_date( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_activity( $post );
 	$date = get_post_meta( $post ? $post->ID : 0, 'activity_date', true );
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	} else {
 		$date = '';
 	}
 
-	return apply_filters( 'incassoos_get_activity_date', $date, $post, $format );
+	return apply_filters( 'incassoos_get_activity_date', $date, $post, $date_format );
 }
 
 /**
@@ -628,11 +628,11 @@ function incassoos_get_activity_prices_raw( $post = 0 ) {
  *
  * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_activity_participant_price( $participant, $post = 0, $format = false ) {
-	echo incassoos_get_activity_participant_price( $participant, $post, $format );
+function incassoos_the_activity_participant_price( $participant, $post = 0, $num_format = false ) {
+	echo incassoos_get_activity_participant_price( $participant, $post, $num_format );
 }
 
 /**
@@ -644,11 +644,11 @@ function incassoos_the_activity_participant_price( $participant, $post = 0, $for
  *
  * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Activity participant price.
  */
-function incassoos_get_activity_participant_price( $participant, $post = 0, $format = false ) {
+function incassoos_get_activity_participant_price( $participant, $post = 0, $num_format = false ) {
 	$post  = incassoos_get_activity( $post );
 	$total = 0;
 
@@ -661,8 +661,8 @@ function incassoos_get_activity_participant_price( $participant, $post = 0, $for
 	$total = (float) apply_filters( 'incassoos_get_activity_participant_price', (float) $total, $post, $participant );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $num_format ) {
+		$total = incassoos_parse_currency( $total, $num_format );
 	}
 
 	return $total;
@@ -698,11 +698,11 @@ function incassoos_activity_participant_has_custom_price( $participant, $post = 
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_activity_total( $post = 0, $format = false ) {
-	echo incassoos_get_activity_total( $post, $format );
+function incassoos_the_activity_total( $post = 0, $num_format = false ) {
+	echo incassoos_get_activity_total( $post, $num_format );
 }
 
 /**
@@ -713,11 +713,11 @@ function incassoos_the_activity_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_activity_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Activity total price.
  */
-function incassoos_get_activity_total( $post = 0, $format = false ) {
+function incassoos_get_activity_total( $post = 0, $num_format = false ) {
 	$post  = incassoos_get_activity( $post );
 	$total = get_post_meta( $post ? $post->ID : 0, 'total', true );
 
@@ -730,8 +730,8 @@ function incassoos_get_activity_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_activity_total', (float) $total, $post );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $num_format ) {
+		$total = incassoos_parse_currency( $total, $num_format );
 	}
 
 	return $total;
@@ -874,16 +874,16 @@ function incassoos_filter_activity_class( $classes, $class, $post_id ) {
  *
  * @since 1.0.0
  *
- * @param  string      $date   Activity date
- * @param  int}WP_Post $post   Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Date format
- * @return string              Activity date
+ * @param  string      $date        Activity date
+ * @param  int}WP_Post $post        Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Date format
+ * @return string Activity date
  */
-function incassoos_filter_activity_date( $date, $post = 0, $format = false ) {
+function incassoos_filter_activity_date( $date, $post = 0, $date_format = '' ) {
 
 	// Default the activity date to the created date
 	if ( ! $date ) {
-		$date = incassoos_get_activity_created( $post, $format ) . '*';
+		$date = incassoos_get_activity_created( $post, $date_format ) . '*';
 	}
 
 	return $date;
@@ -966,10 +966,10 @@ function incassoos_get_activity_collection_title( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_activity_collection_date( $post = 0, $format = '' ) {
-	echo incassoos_get_activity_collection_date( $post, $format );
+function incassoos_the_activity_collection_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_activity_collection_date( $post, $date_format );
 }
 
 /**
@@ -978,12 +978,12 @@ function incassoos_the_activity_collection_date( $post = 0, $format = '' ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Activity's Collection collected date
  */
-function incassoos_get_activity_collection_date( $post = 0, $format = '' ) {
+function incassoos_get_activity_collection_date( $post = 0, $date_format = '' ) {
 	$collection = incassoos_get_activity_collection( $post );
-	$date       = $collection ? incassoos_get_collection_date( $collection, $format ) : '';
+	$date       = $collection ? incassoos_get_collection_date( $collection, $date_format ) : '';
 
 	return $date;
 }
