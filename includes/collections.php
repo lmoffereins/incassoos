@@ -281,9 +281,9 @@ function incassoos_get_collection_author( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_collection_created( $post = 0, $format = false ) {
+function incassoos_the_collection_created( $post = 0, $date_format = '' ) {
 	echo incassoos_get_collection_created( $post );
 }
 
@@ -295,23 +295,23 @@ function incassoos_the_collection_created( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_created'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Collection's created date
  */
-function incassoos_get_collection_created( $post = 0, $format = false ) {
+function incassoos_get_collection_created( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_collection( $post );
 	$date = $post ? $post->post_date : '';
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	}
 
-	return apply_filters( 'incassoos_get_collection_created', $date, $post, $format );
+	return apply_filters( 'incassoos_get_collection_created', $date, $post, $date_format );
 }
 
 /**
@@ -320,9 +320,9 @@ function incassoos_get_collection_created( $post = 0, $format = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_collection_staged( $post = 0, $format = false ) {
+function incassoos_the_collection_staged( $post = 0, $date_format = '' ) {
 	echo incassoos_get_collection_staged( $post );
 }
 
@@ -334,25 +334,25 @@ function incassoos_the_collection_staged( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_staged'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Collection's staged date.
  */
-function incassoos_get_collection_staged( $post = 0, $format = false ) {
+function incassoos_get_collection_staged( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_collection( $post );
 	$date = get_post_meta( $post ? $post->ID : 0, 'staged', true );
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	} else {
 		$date = '';
 	}
 
-	return apply_filters( 'incassoos_get_collection_staged', $date, $post, $format );
+	return apply_filters( 'incassoos_get_collection_staged', $date, $post, $date_format );
 }
 
 /**
@@ -361,9 +361,9 @@ function incassoos_get_collection_staged( $post = 0, $format = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_collection_date( $post = 0, $format = false ) {
+function incassoos_the_collection_date( $post = 0, $date_format = '' ) {
 	echo incassoos_get_collection_date( $post );
 }
 
@@ -375,25 +375,25 @@ function incassoos_the_collection_date( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_date'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Collection's collected date.
  */
-function incassoos_get_collection_date( $post = 0, $format = false ) {
+function incassoos_get_collection_date( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_collection( $post );
 	$date = get_post_meta( $post ? $post->ID : 0, 'collected', true );
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	} else {
 		$date = '';
 	}
 
-	return apply_filters( 'incassoos_get_collection_date', $date, $post, $format );
+	return apply_filters( 'incassoos_get_collection_date', $date, $post, $date_format );
 }
 
 /**
@@ -402,9 +402,9 @@ function incassoos_get_collection_date( $post = 0, $format = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_collection_withdrawal_date( $post = 0, $format = false ) {
+function incassoos_the_collection_withdrawal_date( $post = 0, $date_format = '' ) {
 	echo incassoos_get_collection_withdrawal_date( $post );
 }
 
@@ -416,28 +416,28 @@ function incassoos_the_collection_withdrawal_date( $post = 0, $format = false ) 
  * @uses apply_filters() Calls 'incassoos_get_collection_withdrawal_date'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Collection's withdrawal date.
  */
-function incassoos_get_collection_withdrawal_date( $post = 0, $format = false ) {
+function incassoos_get_collection_withdrawal_date( $post = 0, $date_format = '' ) {
 	$post  = incassoos_get_collection( $post );
 	$delay = incassoos_get_default_collection_withdrawal_delay();
-	$date  = incassoos_get_collection_date( $post, $delay ? 'Y-m-d' : $format );
+	$date  = incassoos_get_collection_date( $post, $delay ? 'Y-m-d' : $date_format );
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
 		if ( $delay ) {
-			$date = date( $format, strtotime( $date . " + {$delay} day" ) );
+			$date = date( $date_format, strtotime( $date . " + {$delay} day" ) );
 		}
 	} else {
 		$date = '';
 	}
 
-	return apply_filters( 'incassoos_get_collection_withdrawal_date', $date, $post, $format );
+	return apply_filters( 'incassoos_get_collection_withdrawal_date', $date, $post, $date_format );
 }
 
 /**
@@ -446,11 +446,11 @@ function incassoos_get_collection_withdrawal_date( $post = 0, $format = false ) 
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_collection_total( $post = 0, $format = false ) {
-	echo incassoos_get_collection_total( $post, $format );
+function incassoos_the_collection_total( $post = 0, $num_format = false ) {
+	echo incassoos_get_collection_total( $post, $num_format );
 }
 
 /**
@@ -461,11 +461,11 @@ function incassoos_the_collection_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Collection total value.
  */
-function incassoos_get_collection_total( $post = 0, $format = false ) {
+function incassoos_get_collection_total( $post = 0, $num_format = false ) {
 	$post  = incassoos_get_collection( $post );
 	$total = get_post_meta( $post ? $post->ID : 0, 'total', true );
 
@@ -478,8 +478,8 @@ function incassoos_get_collection_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_collection_total', (float) $total, $post );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $num_format ) {
+		$total = incassoos_parse_currency( $total, $num_format );
 	}
 
 	return $total;
@@ -1069,11 +1069,11 @@ function incassoos_get_collection_consumer_types( $post = 0 ) {
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_collection_consumer_total( $consumer, $post = 0, $format = false ) {
-	echo incassoos_get_collection_consumer_total( $consumer, $post, $format );
+function incassoos_the_collection_consumer_total( $consumer, $post = 0, $num_format = false ) {
+	echo incassoos_get_collection_consumer_total( $consumer, $post, $num_format );
 }
 
 /**
@@ -1085,11 +1085,11 @@ function incassoos_the_collection_consumer_total( $consumer, $post = 0, $format 
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Collection consumer total value.
  */
-function incassoos_get_collection_consumer_total( $consumer, $post = 0, $format = false ) {
+function incassoos_get_collection_consumer_total( $consumer, $post = 0, $num_format = false ) {
 	$post  = incassoos_get_collection( $post );
 	$total = 0;
 
@@ -1109,8 +1109,8 @@ function incassoos_get_collection_consumer_total( $consumer, $post = 0, $format 
 	$total = (float) apply_filters( 'incassoos_get_collection_consumer_total', (float) $total, $post, $consumer );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $num_format ) {
+		$total = incassoos_parse_currency( $total, $num_format );
 	}
 
 	return $total;
@@ -1363,22 +1363,23 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $ar
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return array Collection consumer total values by asset. Value is a string when formatting is applied.
  */
-function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0, $format = false ) {
-	$post  = incassoos_get_collection( $post );
-	$posts = array();
+function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0, $num_format = false ) {
+	$post   = incassoos_get_collection( $post );
+	$totals = array();
 
 	if ( $post ) {
 
-		$assets = incassoos_get_collection_consumer_raw_assets( $consumer, $post, array( 'fields' => 'id=>parent' ) );
+		$raw_assets = incassoos_get_collection_consumer_assets( $consumer, $post, array( 'fields' => 'id=>parent' ) );
 		if ( $assets ) {
+			// TODO
 		}
 	}
 
-	return $posts;
+	return apply_filters( 'incassoos_get_collection_consumer_total_by_asset', $totals, $post, $consumer, $num_format );
 }
 
 /** Filters *******************************************************************/
@@ -1485,10 +1486,10 @@ function incassoos_get_asset_title( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_asset_date( $post = 0, $format = false ) {
-	echo incassoos_get_asset_date( $post, $format );
+function incassoos_the_asset_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_asset_date( $post, $date_format );
 }
 
 /**
@@ -1499,33 +1500,33 @@ function incassoos_the_asset_date( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_asset_date'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Asset date.
  */
-function incassoos_get_asset_date( $post = 0, $format = false ) {
+function incassoos_get_asset_date( $post = 0, $date_format = '' ) {
 	$date = '';
 
 	// Collection
 	if ( $_post = incassoos_get_collection( $post ) ) {
-		$date = incassoos_get_collection_date( $_post, $format );
+		$date = incassoos_get_collection_date( $_post, $date_format );
 
 	// Activity
 	} elseif ( $_post = incassoos_get_activity( $post ) ) {
-		$date = incassoos_get_activity_date( $_post, $format );
+		$date = incassoos_get_activity_date( $_post, $date_format );
 
 	// Occasion
 	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
-		$date = incassoos_get_occasion_date( $_post, $format );
+		$date = incassoos_get_occasion_date( $_post, $date_format );
 
 	// Custom asset
 	} else {
 
 		// Default to the registered date format
-		if ( empty( $format ) ) {
-			$format = get_option( 'date_format' );
+		if ( empty( $date_format ) ) {
+			$date_format = get_option( 'date_format' );
 		}
 
-		$date = apply_filters( 'incassoos_get_asset_date', $date, $post, $format );
+		$date = apply_filters( 'incassoos_get_asset_date', $date, $post, $date_format );
 	}
 
 	return $date;
@@ -1626,11 +1627,11 @@ function incassoos_get_asset_link( $post = 0 ) {
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_asset_consumer_total( $consumer, $post = 0, $format = false ) {
-	echo incassoos_get_asset_consumer_total( $consumer, $post, $format );
+function incassoos_the_asset_consumer_total( $consumer, $post = 0, $num_format = false ) {
+	echo incassoos_get_asset_consumer_total( $consumer, $post, $num_format );
 }
 
 /**
@@ -1642,32 +1643,32 @@ function incassoos_the_asset_consumer_total( $consumer, $post = 0, $format = fal
  *
  * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Asset consumer total value.
  */
-function incassoos_get_asset_consumer_total( $consumer, $post = 0, $format = false ) {
+function incassoos_get_asset_consumer_total( $consumer, $post = 0, $num_format = false ) {
 	$total = 0;
 
 	// Collection
 	if ( $_post = incassoos_get_collection( $post ) ) {
-		$total = incassoos_get_collection_consumer_total( $consumer, $_post, $format );
+		$total = incassoos_get_collection_consumer_total( $consumer, $_post, $num_format );
 
 	// Activity
 	} elseif ( $_post = incassoos_get_activity( $post ) ) {
-		$total = incassoos_get_activity_participant_price( $consumer, $_post, $format );
+		$total = incassoos_get_activity_participant_price( $consumer, $_post, $num_format );
 
 	// Occasion
 	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
-		$total = incassoos_get_occasion_consumer_total( $consumer, $_post, $format );
+		$total = incassoos_get_occasion_consumer_total( $consumer, $_post, $num_format );
 
 	// Custom asset
 	} else {
-		$total = apply_filters( 'incassoos_get_asset_consumer_total', $total, $post, $consumer, $format );
+		$total = apply_filters( 'incassoos_get_asset_consumer_total', $total, $post, $consumer, $num_format );
 
 		// Apply currency format
-		if ( ! is_string( $total ) && null !== $format ) {
-			$total = incassoos_get_format_currency( $total, $format );
+		if ( ! is_string( $total ) && null !== $num_format ) {
+			$total = incassoos_get_format_currency( $total, $num_format );
 		}
 	}
 
