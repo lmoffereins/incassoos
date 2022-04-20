@@ -350,10 +350,10 @@ function incassoos_get_occasion_author( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_occasion_created( $post = 0, $format = '' ) {
-	echo incassoos_get_occasion_created( $post, $format );
+function incassoos_the_occasion_created( $post = 0, $date_format = '' ) {
+	echo incassoos_get_occasion_created( $post, $date_format );
 }
 
 /**
@@ -364,23 +364,23 @@ function incassoos_the_occasion_created( $post = 0, $format = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_created'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Occasion created date.
  */
-function incassoos_get_occasion_created( $post = 0, $format = '' ) {
+function incassoos_get_occasion_created( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_occasion( $post );
 	$date = $post ? $post->post_date : '';
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	}
 
-	return apply_filters( 'incassoos_get_occasion_created', $date, $post, $format );
+	return apply_filters( 'incassoos_get_occasion_created', $date, $post, $date_format );
 }
 
 /**
@@ -389,10 +389,10 @@ function incassoos_get_occasion_created( $post = 0, $format = '' ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_occasion_date( $post = 0, $format = '' ) {
-	echo incassoos_get_occasion_date( $post, $format );
+function incassoos_the_occasion_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_occasion_date( $post, $date_format );
 }
 
 /**
@@ -403,25 +403,25 @@ function incassoos_the_occasion_date( $post = 0, $format = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_date'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Occasion date.
  */
-function incassoos_get_occasion_date( $post = 0, $format = '' ) {
+function incassoos_get_occasion_date( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_occasion( $post );
 	$date = get_post_meta( $post ? $post->ID : 0, 'occasion_date', true );
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	} else {
 		$date = '';
 	}
 
-	return apply_filters( 'incassoos_get_occasion_date', $date, $post, $format );
+	return apply_filters( 'incassoos_get_occasion_date', $date, $post, $date_format );
 }
 
 /**
@@ -502,11 +502,11 @@ function incassoos_get_occasion_type( $post = 0, $object = false ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_occasion_total( $post = 0, $format = false ) {
-	echo incassoos_get_occasion_total( $post, $format );
+function incassoos_the_occasion_total( $post = 0, $num_format = false ) {
+	echo incassoos_get_occasion_total( $post, $num_format );
 }
 
 /**
@@ -517,11 +517,11 @@ function incassoos_the_occasion_total( $post = 0, $format = false ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_total'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Occasion total value.
  */
-function incassoos_get_occasion_total( $post = 0, $format = false ) {
+function incassoos_get_occasion_total( $post = 0, $num_format = false ) {
 	$post  = incassoos_get_occasion( $post );
 	$total = get_post_meta( $post ? $post->ID : 0, 'total', true );
 
@@ -534,8 +534,8 @@ function incassoos_get_occasion_total( $post = 0, $format = false ) {
 	$total = (float) apply_filters( 'incassoos_get_occasion_total', (float) $total, $post );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $num_format ) {
+		$total = incassoos_parse_currency( $total, $num_format );
 	}
 
 	return $total;
@@ -579,10 +579,10 @@ function incassoos_get_occasion_total_raw( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_occasion_closed_date( $post = 0, $format = '' ) {
-	echo incassoos_get_occasion_closed_date( $post, $format );
+function incassoos_the_occasion_closed_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_occasion_closed_date( $post, $date_format );
 }
 
 /**
@@ -593,25 +593,25 @@ function incassoos_the_occasion_closed_date( $post = 0, $format = '' ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_closed_date'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string|bool Occasion closed date or False when not found.
  */
-function incassoos_get_occasion_closed_date( $post = 0, $format = '' ) {
+function incassoos_get_occasion_closed_date( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_occasion( $post );
 	$date = get_post_meta( $post ? $post->ID : 0, 'closed', true );
 
 	// Default to the registered date format
-	if ( empty( $format ) ) {
-		$format = get_option( 'date_format' );
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $format, $date );
+		$date = mysql2date( $date_format, $date );
 	} else {
 		$date = '';
 	}
 
-	return apply_filters( 'incassoos_get_occasion_closed_date', $date, $post, $format );
+	return apply_filters( 'incassoos_get_occasion_closed_date', $date, $post, $date_format );
 }
 
 /**
@@ -928,11 +928,11 @@ function incassoos_get_occasion_consumer_types( $post = 0 ) {
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  */
-function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $format = false ) {
-	echo incassoos_get_occasion_consumer_total( $consumer, $post, $format );
+function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $num_format = false ) {
+	echo incassoos_get_occasion_consumer_total( $consumer, $post, $num_format );
 }
 
 /**
@@ -946,11 +946,11 @@ function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $format = 
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                  null to skip format parsing. Defaults to false.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
  * @return string|float Occasion consumer total value.
  */
-function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $format = false ) {
+function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_format = false ) {
 	global $wpdb;
 
 	$post       = incassoos_get_occasion( $post );
@@ -973,8 +973,8 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $format = 
 	$total = (float) apply_filters( 'incassoos_get_occasion_consumer_total', (float) $total, $post, $consumer );
 
 	// Apply currency format
-	if ( null !== $format ) {
-		$total = incassoos_parse_currency( $total, $format );
+	if ( null !== $num_format ) {
+		$total = incassoos_parse_currency( $total, $num_format );
 	}
 
 	return $total;
@@ -1283,10 +1283,10 @@ function incassoos_get_occasion_collection_title( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
-function incassoos_the_occasion_collection_date( $post = 0, $format = '' ) {
-	echo incassoos_get_occasion_collection_date( $post, $format );
+function incassoos_the_occasion_collection_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_occasion_collection_date( $post, $date_format );
 }
 
 /**
@@ -1295,12 +1295,12 @@ function incassoos_the_occasion_collection_date( $post = 0, $format = '' ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  string      $format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return string Occasion's Collection collected date
  */
-function incassoos_get_occasion_collection_date( $post = 0, $format = '' ) {
+function incassoos_get_occasion_collection_date( $post = 0, $date_format = '' ) {
 	$collection = incassoos_get_occasion_collection( $post );
-	$date       = $collection ? incassoos_get_collection_date( $collection, $format ) : '';
+	$date       = $collection ? incassoos_get_collection_date( $collection, $date_format ) : '';
 
 	return $date;
 }
