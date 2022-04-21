@@ -474,8 +474,8 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$test_email_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_test_email' ), $base_url ), 'test-email-collection_' . $post->ID );
 
 	// Action options
-	$action_types = incassoos_admin_get_collection_action_types( $post );
-	$can_doaction = ! empty( $action_types );
+	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
+	$can_doaction     = ! empty( $actions_dropdown );
 
 	?>
 
@@ -576,8 +576,8 @@ function incassoos_admin_collection_details_metabox( $post ) {
 		<?php elseif ( $can_doaction ) : ?>
 
 		<div class="publishing-notice">
-			<label class="screen-reader-text" for="collection-action-type"><?php esc_html_e( 'Select collection action type', 'incassoos' ); ?></label>
-			<?php incassoos_admin_dropdown_collection_action_types( $post ); ?>
+			<label class="screen-reader-text" for="post-action-type"><?php esc_html_e( 'Select post action type', 'incassoos' ); ?></label>
+			<?php echo $actions_dropdown; ?>
 
 			<div class="action-confirmation">
 				<label>
@@ -606,8 +606,8 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php elseif ( $can_doaction ) : ?>
 				<?php wp_nonce_field( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' ); ?>
 				<input type="hidden" name="action" value="inc_doaction" />
-				<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Execute', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Execute', 'incassoos' ); ?>" />
+				<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
+				<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
 			<?php endif; ?>
 		</div>
 		<div class="clear"></div>

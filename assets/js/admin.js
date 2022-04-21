@@ -157,7 +157,7 @@ jQuery(document).ready( function($) {
 		})
 
 		// Action selection
-		.on( 'change', '#collection-action-type', function() {
+		.on( 'change', '#post-action-type', function() {
 			var dataset = $( this ).find( '[value="' + this.value + '"]' )[0].dataset;
 
 			// Show confirmation input when it is required

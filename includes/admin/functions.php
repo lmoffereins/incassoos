@@ -1646,7 +1646,7 @@ function incassoos_admin_collection_doaction( $post_id ) {
 	check_admin_referer( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' );
 
 	// Get and dissect action type
-	$action       = isset( $_POST['collection-action-type'] ) ? $_POST['collection-action-type'] : '';
+	$action       = isset( $_POST['post-action-type'] ) ? $_POST['post-action-type'] : '';
 	$action_parts = explode( '-', $action );
 	$action_group = $action_parts[0];
 
@@ -1918,67 +1918,96 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 	<?php endif;
 }
 
-/** Collection **********************************************************/
+/** Actions *************************************************************/
 
 /**
- * Return the admin action types for the Collection
+ * Return the admin action types for the post
  *
  * @since 1.0.0
  *
- * @uses apply_filters() 'incassoos_admin_get_collection_action_types'
+ * @uses apply_filters() 'incassoos_admin_get_{object_type}_action_types'
  *
  * @param  WP_Post|int $post Post object or ID
  * @return array Post action types
  */
-function incassoos_admin_get_collection_action_types( $post ) {
-	$post         = incassoos_get_collection( $post );
-	$action_types = array();
+function incassoos_admin_get_post_action_types( $post ) {
+	$post         = get_post( $post );
+	$object_type  = incassoos_get_object_type( $post->post_type ) ?: 'post';
+
+	// Define default action types
+	$action_types = array(
+		'distribution' => array(
+			'name'    => esc_html__( 'Distribution', 'incassoos' ),
+			'actions' => array()
+		),
+		'exporting' => array(
+			'name'    => esc_html__( 'Exporting', 'incassoos' ),
+			'actions' => array()
+		)
+	);
 
 	if ( $post ) {
+		switch ( $post->post_type ) {
 
-		// Distribution
-		$action_types['distribution_types'] = array(
-			'name'    => esc_html__( 'Distributing', 'incassoos' ),
-			'actions' => array(
-				'send-test_email'      => array( 'label' => esc_html__( 'Send test-email',      'incassoos' ) ),
-				'send-consumer_emails' => array( 'label' => esc_html__( 'Send consumer emails', 'incassoos' ), 'require_confirmation' => true )
-			)
-		);
+			// Collection
+			case incassoos_get_collection_post_type() :
 
-		// Export types
-		$action_types['export_types'] = array( 'name' => esc_html__( 'Exporting', 'incassoos' ), 'actions' => array() );
-		foreach ( incassoos_get_export_types() as $export_type_id ) {
+				// Distribution
+				$action_types['distribution']['actions'] = array(
+					'send-test_email'      => array( 'label' => esc_html__( 'Send test-email',      'incassoos' ) ),
+					'send-consumer_emails' => array( 'label' => esc_html__( 'Send consumer emails', 'incassoos' ), 'require_confirmation' => true )
+				);
+
+				break;
+		}
+
+		// Exporting
+		foreach ( incassoos_get_export_types( $post ) as $export_type_id => $export_type ) {
 
 			// Skip when user cannot export
-			if ( ! current_user_can( 'export_incassoos_collection', $post->ID, $export_type_id ) ) {
+			if ( ! current_user_can( "export_incassoos_{$object_type}", $post->ID, $export_type_id ) ) {
 				continue;
 			}
 
 			// Add export action
-			$action_types['export_types']['actions'][ "export-{$export_type_id}" ] = array(
+			$action_types['exporting']['actions'][ "export-{$export_type_id}" ] = array(
 				'label'                  => incassoos_get_export_type_label( $export_type_id, 'export_file' ),
 				'require_decryption_key' => incassoos_get_export_type_require_decryption_key( $export_type_id )
 			);
 		}
 	}
 
-	return apply_filters( 'incassoos_admin_get_collection_action_types', $action_types, $post );
+	$action_types = apply_filters( "incassoos_admin_get_{$object_type}_action_types", $action_types, $post );
+
+	// Find non-empty grouped and ungrouped action types
+	$grouped_actions   = array_filter( $action_types, function( $el ) { return isset( $el['name'] ) && ! empty( $el['actions'] ); } );
+	$ungrouped_actions = array_filter( $action_types, function( $el ) { return ! ( isset( $el['name'] ) && isset( $el['actions'] ) ); } );
+
+	// Append collected ungrouped action types
+	if ( ! empty( $ungrouped_actions ) ) {
+		$grouped_actions[] = array(
+			'name'    => esc_html__( 'Other', 'incassoos' ),
+			'actions' => $ungrouped_actions
+		);
+	}
+
+	return $grouped_actions;
 }
 
 /**
- * Display or return collection actions dropdown element
+ * Display or return actions dropdown element
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_admin_dropdown_collection_action_types'
+ * @uses apply_filters() Calls 'incassoos_admin_dropdown_post_action_types'
  *
  * @param  WP_Post|int $post Post object or ID
  * @param  array       $args Dropdown arguments
- * @return string HTML dropdown list of Collection actions
+ * @return string HTML dropdown list of post actions
  */
-function incassoos_admin_dropdown_collection_action_types( $post, $args = array() ) {
-	$post         = incassoos_get_collection( $post );
-	$action_types = incassoos_admin_get_collection_action_types( $post );
+function incassoos_admin_dropdown_post_action_types( $post, $args = array() ) {
+	$post         = get_post( $post );
+	$action_types = incassoos_admin_get_post_action_types( $post );
 	$output       = '';
 
 	// Bail when post and actions are not found
@@ -1988,23 +2017,11 @@ function incassoos_admin_dropdown_collection_action_types( $post, $args = array(
 
 	$parsed_args = wp_parse_args( $args, array(
 		'echo'              => 1,
-		'id'                => 'collection-action-type',
+		'id'                => 'post-action-type',
 		'class'             => '',
 		'tab_index'         => 0,
 		'option_none_value' => __( '&mdash; Actions &mdash;', 'incassoos' )
 	) );
-
-	// Find grouped and ungrouped action types
-	$grouped_actions   = array_filter( $action_types, function( $el ) { return isset( $el['name'] ) && isset( $el['actions'] ); } );
-	$ungrouped_actions = array_filter( $action_types, function( $el ) { return ! ( isset( $el['name'] ) && isset( $el['actions'] ) ); } );
-
-	// Append ungrouped action types
-	if ( ! empty( $ungrouped_actions ) ) {
-		$grouped_actions[] = array(
-			'name'    => esc_html__( 'Other', 'incassoos' ),
-			'actions' => $ungrouped_actions
-		);
-	}
 
 	$class = esc_attr( $parsed_args['class'] );
 	$id    = esc_attr( $parsed_args['id'] );
@@ -2020,7 +2037,7 @@ function incassoos_admin_dropdown_collection_action_types( $post, $args = array(
 	$output .= '<option value="-1">' . esc_html( $parsed_args['option_none_value'] ) . '</option>';
 
 	// Grouped actions
-	foreach ( $grouped_actions as $group ) {
+	foreach ( $action_types as $group ) {
 		if ( ! empty( $group['actions'] ) ) {
 			$output .= '<optgroup label="'. esc_attr( $group['name'] ) . '">';
 			foreach ( $group['actions'] as $action_id => $args ) {
@@ -2033,7 +2050,7 @@ function incassoos_admin_dropdown_collection_action_types( $post, $args = array(
 	}
 
 	$output .= '</select>';
-	$output = apply_filters( 'incassoos_admin_dropdown_collection_action_types', $output, $parsed_args );
+	$output = apply_filters( 'incassoos_admin_dropdown_post_action_types', $output, $post, $parsed_args );
 
 	if ( $parsed_args['echo'] ) {
 		echo $output;
@@ -2060,8 +2077,8 @@ function incassoos_admin_add_nav_menu_meta_box() {
  *
  * @since 1.0.0
  *
- * @param int    $post_id        Post ID
- * @param string $export_type_id Export type identifier
+ * @param int   $post_id Post ID
+ * @param array $args    Additional export arguments
  */
 function incassoos_export_collection_file( $post_id, $args = array() ) {
 	$post = incassoos_get_collection( $post_id, array( 'is_collected' => true ) );

@@ -309,32 +309,32 @@ body.incassoos-post-view #postdivrich .inside {
 	cursor: inherit;
 }
 
-#incassoos_collection_details .publishing-notice {
+#major-publishing-actions .publishing-notice {
 	max-width: 50%;
 }
 
-#incassoos_collection_details .publishing-notice.require-confirmation,
-#incassoos_collection_details .publishing-notice.require-decryption-key {
+#major-publishing-actions .publishing-notice.require-confirmation,
+#major-publishing-actions .publishing-notice.require-decryption-key {
 	max-width: none;
 	margin-bottom: 10px;
 }
 
-#incassoos_collection_details .publishing-notice .action-confirmation,
-#incassoos_collection_details .publishing-notice .action-decryption-key {
+#major-publishing-actions .publishing-notice .action-confirmation,
+#major-publishing-actions .publishing-notice .action-decryption-key {
 	display: none;
 }
 
-#incassoos_collection_details .publishing-notice.require-confirmation .action-confirmation,
-#incassoos_collection_details .publishing-notice.require-decryption-key .action-decryption-key {
+#major-publishing-actions .publishing-notice.require-confirmation .action-confirmation,
+#major-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key {
 	display: inline-block;
 }
 
-#incassoos_collection_details .publishing-notice.require-confirmation .action-confirmation label,
-#incassoos_collection_details .publishing-notice.require-decryption-key .action-decryption-key label {
+#major-publishing-actions .publishing-notice.require-confirmation .action-confirmation label,
+#major-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key label {
 	font-weight: inherit;
 }
 
-#incassoos_collection_details .publishing-notice.require-decryption-key .action-decryption-key input {
+#major-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key input {
 	text-align: left;
 	width: 100%;
 }
@@ -342,16 +342,16 @@ body.incassoos-post-view #postdivrich .inside {
 /* single column */
 @media screen and (max-width: 850px) {
 
-	#incassoos_collection_details .publishing-notice {
+	#major-publishing-actions .publishing-notice {
 		max-width: none;
 	}
 
-	#incassoos_collection_details .publishing-notice.require-confirmation,
-	#incassoos_collection_details .publishing-notice.require-decryption-key {
+	#major-publishing-actions .publishing-notice.require-confirmation,
+	#major-publishing-actions .publishing-notice.require-decryption-key {
 		margin-bottom: 0px;
 	}
 
-	#incassoos_collection_details .publishing-notice .action-decryption-key {
+	#major-publishing-actions .publishing-notice .action-decryption-key {
 		width: auto;
 	}
 }
