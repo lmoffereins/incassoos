@@ -501,8 +501,7 @@ final class Incassoos {
 	 */
 	public function register_export_types() {
 
-		/** SEPA ********************************************************/
-
+		// SEPA
 		incassoos_register_export_type(
 			incassoos_get_sepa_export_type_id(),
 			array(
@@ -512,6 +511,7 @@ final class Incassoos {
 				),
 				'class_name'             => 'Incassoos_Collection_SEPA_XML_Exporter',
 				'class_file'             => $this->includes_dir . 'classes/class-incassoos-collection-sepa-xml-exporter.php',
+				'show_in_list_callback'  => 'incassoos_is_collection_collected',
 				'require_decryption_key' => true
 			)
 		);

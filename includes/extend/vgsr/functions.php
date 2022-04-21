@@ -87,12 +87,13 @@ function incassoos_vgsr_register_export_types() {
 	incassoos_register_export_type(
 		incassoos_vgsr_get_sfc_export_type_id(),
 		array(
-			'labels'     => array(
+			'labels'                => array(
 				'name'        => esc_html__( 'SFC file',        'incassoos' ),
 				'export_file' => esc_html__( 'Export SFC file', 'incassoos' )
 			),
-			'class_name' => 'Incassoos_VGSR_SFC_Exporter',
-			'class_file' => incassoos()->extend->vgsr->plugin_dir . 'classes/class-incassoos-vgsr-sfc-exporter.php'
+			'class_name'            => 'Incassoos_VGSR_SFC_Exporter',
+			'class_file'            => incassoos()->extend->vgsr->plugin_dir . 'classes/class-incassoos-vgsr-sfc-exporter.php',
+			'show_in_list_callback' => 'incassoos_is_collection_collected'
 		)
 	);
 }

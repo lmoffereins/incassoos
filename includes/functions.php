@@ -1766,6 +1766,7 @@ function incassoos_register_export_type( $export_type_id, $args = array() ) {
 		'labels'                 => array(),
 		'class_name'             => '',
 		'class_file'             => '',
+		'show_in_list_callback'  => '__return_true',
 		'require_decryption_key' => false
 	) );
 
@@ -1853,8 +1854,31 @@ function incassoos_export_type_exists( $export_type_id ) {
  *
  * @return array Export type ids
  */
-function incassoos_get_export_types() {
+function incassoos_get_export_type_ids() {
 	return array_keys( incassoos()->export_types );
+}
+
+/**
+ * Return the objects of the defined export types based on context
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $context Optional. Export context for use in `show_in_list_callback`.
+ * @return array Export type objects
+ */
+function incassoos_get_export_types( $context = null ) {
+	$export_types = array();
+
+	foreach ( incassoos_get_export_type_ids() as $export_type_id ) {
+		$export_type = incassoos_get_export_type( $export_type_id );
+		$callback = $export_type->show_in_list_callback;
+
+		if ( null === $context || ( function_exists( $callback ) && call_user_func_array( $callback, array( $context ) ) ) ) {
+			$export_types[ $export_type_id ] = $export_type;
+		}
+	}
+
+	return $export_types;
 }
 
 /**
