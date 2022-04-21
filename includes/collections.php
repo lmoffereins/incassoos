@@ -1067,7 +1067,7 @@ function incassoos_get_collection_consumer_types( $post = 0 ) {
  * 
  * @since 1.0.0
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
@@ -1083,15 +1083,16 @@ function incassoos_the_collection_consumer_total( $consumer, $post = 0, $num_for
  *
  * @uses apply_filters() Calls 'incassoos_get_collection_consumer_total'
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
  * @return string|float Collection consumer total value.
  */
 function incassoos_get_collection_consumer_total( $consumer, $post = 0, $num_format = false ) {
-	$post  = incassoos_get_collection( $post );
-	$total = 0;
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post     = incassoos_get_collection( $post );
+	$total    = 0;
 
 	if ( $post ) {
 
@@ -1125,16 +1126,17 @@ function incassoos_get_collection_consumer_total( $consumer, $post = 0, $num_for
  *
  * @uses apply_filters() Calls 'incassoos_get_collection_consumer_total_raw'
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return string Collection consumer raw total value.
  */
 function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 	global $wpdb;
 
-	$post   = incassoos_get_collection( $post );
-	$assets = incassoos_get_collection_consumer_raw_assets( $consumer, $post );
-	$total  = 0;
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post     = incassoos_get_collection( $post );
+	$assets   = incassoos_get_collection_consumer_raw_assets( $consumer, $post );
+	$total    = 0;
 
 	if ( $post && $assets ) {
 
@@ -1232,14 +1234,15 @@ function incassoos_get_collection_assets( $post = 0, $args = array() ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_collection_consumer_assets'
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection consumer assets
  */
 function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $args = array() ) {
-	$post  = incassoos_get_collection( $post );
-	$posts = array();
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post     = incassoos_get_collection( $post );
+	$posts    = array();
 
 	if ( $post ) {
 
@@ -1317,14 +1320,15 @@ function incassoos_get_collection_raw_assets( $post = 0, $args = array() ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_collection_consumer_raw_assets'
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection consumer raw assets
  */
 function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $args = array() ) {
-	$post  = incassoos_get_collection( $post );
-	$posts = array();
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post     = incassoos_get_collection( $post );
+	$posts    = array();
 
 	if ( $post ) {
 
@@ -1361,15 +1365,16 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $ar
  *
  * @uses apply_filters() Calls 'incassoos_get_collection_consumer_total_by_asset'
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
  * @return array Collection consumer total values by asset. Value is a string when formatting is applied.
  */
 function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0, $num_format = false ) {
-	$post   = incassoos_get_collection( $post );
-	$totals = array();
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post     = incassoos_get_collection( $post );
+	$totals   = array();
 
 	if ( $post ) {
 
@@ -1625,7 +1630,7 @@ function incassoos_get_asset_link( $post = 0 ) {
  * 
  * @since 1.0.0
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
@@ -1641,14 +1646,15 @@ function incassoos_the_asset_consumer_total( $consumer, $post = 0, $num_format =
  *
  * @uses apply_filters() Calls 'incassoos_get_asset_consumer_total'
  *
- * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
  * @return string|float Asset consumer total value.
  */
 function incassoos_get_asset_consumer_total( $consumer, $post = 0, $num_format = false ) {
-	$total = 0;
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$total    = 0;
 
 	// Collection
 	if ( $_post = incassoos_get_collection( $post ) ) {
