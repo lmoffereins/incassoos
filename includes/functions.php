@@ -1971,6 +1971,7 @@ function incassoos_register_export_type( $export_type_id, $args = array() ) {
 	$args['id'] = $export_type_id;
 	$args = wp_parse_args( $args, array(
 		'labels'                 => array(),
+		'labels_callback'        => '',
 		'class_name'             => '',
 		'class_file'             => '',
 		'show_in_list_callback'  => '__return_true',
@@ -1978,6 +1979,10 @@ function incassoos_register_export_type( $export_type_id, $args = array() ) {
 	) );
 
 	// Parse labels
+	if ( is_callable( $args['labels_callback'] ) ) {
+		$args['labels'] = (array) call_user_func( $args['labels_callback'] );
+	}
+
 	$args['labels'] = wp_parse_args( $args['labels'], array(
 		'name'        => ucfirst( $export_type_id ),
 		'export_file' => sprintf( esc_html__( 'Export %s', 'incassoos' ), $export_type_id )
@@ -2018,10 +2023,11 @@ function incassoos_unregister_export_type( $export_type_id ) {
  *
  * @uses apply_filters Calls 'incassoos_get_export_type'
  *
- * @param  string $export_type_id Export type id or label.
+ * @param string $export_type_id Export type id or label.
+ * @param mixed $context Optional. Context for custom setup of export type.
  * @return object|bool Export type object or False when not found.
  */
-function incassoos_get_export_type( $export_type_id = '' ) {
+function incassoos_get_export_type( $export_type_id, $context = null ) {
 	$plugin      = incassoos();
 	$type_id     = sanitize_title( $export_type_id );
 	$type_object = false;
@@ -2039,7 +2045,16 @@ function incassoos_get_export_type( $export_type_id = '' ) {
 		$type_object = $plugin->export_types[ $type_id ];
 	}
 
-	return apply_filters( 'incassoos_get_export_type', $type_object, $export_type_id );
+	// Consider the context
+	if ( $type_object && null !== $context ) {
+
+		// Apply contextual labels
+		if ( is_callable( $type_object->labels_callback ) ) {
+			$type_object->labels = call_user_func_array( $type_object->labels_callback, array( $context ) );
+		}
+	}
+
+	return apply_filters( 'incassoos_get_export_type', $type_object, $export_type_id, $context );
 }
 
 /**
@@ -2070,17 +2085,17 @@ function incassoos_get_export_type_ids() {
  *
  * @since 1.0.0
  *
- * @param mixed $context Optional. Export context for use in `show_in_list_callback`.
+ * @param mixed $context Optional. Context for custom setup of export type.
  * @return array Export type objects
  */
 function incassoos_get_export_types( $context = null ) {
 	$export_types = array();
 
 	foreach ( incassoos_get_export_type_ids() as $export_type_id ) {
-		$export_type = incassoos_get_export_type( $export_type_id );
+		$export_type = incassoos_get_export_type( $export_type_id, $context );
 		$callback = $export_type->show_in_list_callback;
 
-		if ( null === $context || ( function_exists( $callback ) && call_user_func_array( $callback, array( $context ) ) ) ) {
+		if ( null === $context || ( is_callable( $callback ) && call_user_func_array( $callback, array( $context ) ) ) ) {
 			$export_types[ $export_type_id ] = $export_type;
 		}
 	}
