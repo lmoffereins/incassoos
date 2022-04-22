@@ -2339,7 +2339,7 @@ function incassoos_download_text_file( $file, $filename = '' ) {
 		header( 'Content-Disposition: inline; filename="' . $filename . '"' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
-		header( 'Content-Length: ' . mb_strlen( $content ) );
+		header( 'Content-Length: ' . strlen( $content ) );
 
 		// Output file content
 		echo $content;
