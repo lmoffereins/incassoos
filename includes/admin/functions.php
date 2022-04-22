@@ -1618,10 +1618,33 @@ function incassoos_admin_post_doaction( $post_id ) {
 	// Dynamic nonce check
 	check_admin_referer( "doaction_{$object_type}-{$post->ID}", "{$object_type}_doaction_nonce" );
 
-	// Run dedicated object type hook
-	if ( function_exists( "incassoos_admin_{$object_type}_doaction" ) ) {
-		call_user_func( "incassoos_admin_{$object_type}_doaction", $post_id );
+	// Get and dissect action type
+	$action       = isset( $_POST['post-action-type'] ) ? $_POST['post-action-type'] : '';
+	$action_parts = explode( '-', $action );
+
+	// Handle exports all the same
+	if ( 'export' === $action_parts[0] ) {
+
+		// Start file export dryrun
+		incassoos_export_post_file( $post->ID, array(
+
+			// Simulate whether the export could be run. Download will initiate on next page load.
+			'dryrun'         => true,
+
+			// Get export type from action
+			'export_type_id' => substr( $action, 7 ),
+
+			// Add decryption key when provided
+			'decryption_key' => isset( $_POST['action-decryption-key'] ) ? $_POST['action-decryption-key'] : false
+		) );
 	}
+
+	// Run dedicated object type hook
+	do_action( "incassoos_admin_{$object_type}_doaction", $post, $action );
+
+	// Still here? Redirect to the post's page
+	wp_redirect( incassoos_get_post_url( $post ) );
+	exit();
 }
 
 /**
@@ -1629,57 +1652,19 @@ function incassoos_admin_post_doaction( $post_id ) {
  *
  * @since 1.0.0
  *
- * @uses do_action() Calls 'incassoos_admin_collection_doaction-{$action_group}'
- * @uses do_action() Calls 'incassoos_admin_collection_doaction-{$action}'
- *
- * @param int $post_id Post ID
+ * @param WP_Post $post   Post object
+ * @param string  $action Action type id
  */
-function incassoos_admin_collection_doaction( $post_id ) {
-	$post = incassoos_get_collection( $post_id );
-
-	// Bail when the post is not a Collection
-	if ( ! $post ) {
-		return;
-	}
-
-	// Nonce check
-	check_admin_referer( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' );
-
-	// Get and dissect action type
-	$action       = isset( $_POST['post-action-type'] ) ? $_POST['post-action-type'] : '';
+function incassoos_admin_collection_doaction( $post, $action ) {
 	$action_parts = explode( '-', $action );
 	$action_group = $action_parts[0];
 
 	// Handle action by action group
 	switch ( $action_group ) {
-		case 'export' :
-
-			// Start file export dryrun
-			incassoos_export_collection_file( $post->ID, array(
-
-				// Simulate whether the export could be run. Download will initiate on next page load.
-				'dryrun'         => true,
-
-				// Get export type from action
-				'export_type_id' => substr( $action, 7 ),
-
-				// Add decryption key when provided
-				'decryption_key' => isset( $_POST['action-decryption-key'] ) ? $_POST['action-decryption-key'] : false
-			) );
-
-			break;
-
-		default :
-			do_action( "incassoos_admin_collection_doaction-{$action_group}", $post, $action );
+		case 'send' :
+			// TODO process distribution actions...
 			break;
 	}
-
-	// Still here? Handle action by action
-	do_action( "incassoos_admin_collection_doaction-{$action}", $post, $action );
-
-	// Still here? Redirect to the Collection's page
-	wp_redirect( incassoos_get_collection_url( $post ) );
-	exit();
 }
 
 /**
@@ -1713,7 +1698,7 @@ function incassoos_admin_post_action_download( $post_id ) {
 		$export_details['dryrun'] = false;
 
 		// Start serving the download file
-		incassoos_export_collection_file( $post->ID, $export_details );
+		incassoos_export_post_file( $post->ID, $export_details );
 	}
 
 	// Still here? Notify user
@@ -2073,17 +2058,18 @@ function incassoos_admin_add_nav_menu_meta_box() {
 /** Exporting ***********************************************************/
 
 /**
- * Process the export file request for a collection
+ * Process the export file request for a post
  *
  * @since 1.0.0
  *
  * @param int   $post_id Post ID
  * @param array $args    Additional export arguments
  */
-function incassoos_export_collection_file( $post_id, $args = array() ) {
-	$post = incassoos_get_collection( $post_id, array( 'is_collected' => true ) );
+function incassoos_export_post_file( $post_id, $args = array() ) {
+	$post        = get_post( $post_id );
+	$object_type = incassoos_get_object_type( $post->post_type );
 
-	// Bail when the post is not a collected Collection
+	// Bail when the post is not found
 	if ( ! $post ) {
 		return false;
 	}
@@ -2116,7 +2102,7 @@ function incassoos_export_collection_file( $post_id, $args = array() ) {
 	}
 
 	// Bail when the user cannot export
-	if ( empty( $errors ) && ! current_user_can( 'export_incassoos_collection', $post->ID, $parsed_args['export_type_id'] ) ) {
+	if ( empty( $errors ) && ! current_user_can( "export_incassoos_{$object_type}", $post->ID, $parsed_args['export_type_id'] ) ) {
 		$errors[] = esc_html__( 'You are not allowed to export this Collection.', 'incassoos' );
 	}
 

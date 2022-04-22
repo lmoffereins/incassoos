@@ -22,9 +22,35 @@ jQuery(document).ready( function($) {
 
 	/** Generic *********************************************************/
 
-	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_occasion_consumers, #incassoos_activity_participants, body.incassoos_page_incassoos-consumers' ),
+	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_activity_participants, #incassoos_occasion_consumers, body.incassoos_page_incassoos-consumers' ),
+	    $detailsBox = $( '#incassoos_collection_details, #incassoos_activity_details, #incassoos_occasion_details, #incassoos_order_details, #incassoos_product_details' ),
 	    $consumerList = $consumerBox.find( '.incassoos-item-list' ),
 	    consumerHiddenMatches = '.showing-default-items .hide-by-default, .search-hide, .hide-in-list';
+
+	$detailsBox
+		// Publishing action
+		.on( 'click', '#publishing-action .button', function() {
+			$detailsBox.find( '#major-publishing-actions .spinner' ).addClass( 'is-active' );
+		})
+
+		// Action selection
+		.on( 'change', '#post-action-type', function() {
+			var dataset = $( this ).find( '[value="' + this.value + '"]' )[0].dataset;
+
+			// Show confirmation input when it is required
+			if ( !! parseInt( dataset.requireConfirmation ) ) {
+				$detailsBox.find( '.publishing-notice' ).addClass( 'require-confirmation' );
+			} else {
+				$detailsBox.find( '.publishing-notice' ).removeClass( 'require-confirmation' );
+			}
+
+			// Show decryption key input when it is required
+			if ( !! parseInt( dataset.requireDecryptionKey ) ) {
+				$detailsBox.find( '.publishing-notice' ).addClass( 'require-decryption-key' );
+			} else {
+				$detailsBox.find( '.publishing-notice' ).removeClass( 'require-decryption-key' );
+			}
+		});
 
 	$consumerList
 		// Toggling item details
@@ -149,31 +175,6 @@ jQuery(document).ready( function($) {
 	    $colActBox = $( '#incassoos_collection_activities' ),
 	    $colOccBox = $( '#incassoos_collection_occasions' ),
 	    $colTotalField = $colDtlsBox.find( '#collection-total' ).prepend( '<span class="new-value value"></span>' );
-
-	$colDtlsBox
-		// Publishing action
-		.on( 'click', '#publishing-action .button', function() {
-			$colDtlsBox.find( '#major-publishing-actions .spinner' ).addClass( 'is-active' );
-		})
-
-		// Action selection
-		.on( 'change', '#post-action-type', function() {
-			var dataset = $( this ).find( '[value="' + this.value + '"]' )[0].dataset;
-
-			// Show confirmation input when it is required
-			if ( !! parseInt( dataset.requireConfirmation ) ) {
-				$colDtlsBox.find( '.publishing-notice' ).addClass( 'require-confirmation' );
-			} else {
-				$colDtlsBox.find( '.publishing-notice' ).removeClass( 'require-confirmation' );
-			}
-
-			// Show decryption key input when it is required
-			if ( !! parseInt( dataset.requireDecryptionKey ) ) {
-				$colDtlsBox.find( '.publishing-notice' ).addClass( 'require-decryption-key' );
-			} else {
-				$colDtlsBox.find( '.publishing-notice' ).removeClass( 'require-decryption-key' );
-			}
-		});
 
 	// Keep selected count
 	$colActBox.on( 'click', '.select-activity', function() {
@@ -797,6 +798,5 @@ jQuery(document).ready( function($) {
 					$this.parents( '.decrypt-option-value-wrapper' ).remove();
 				}
 			});
-
 		});
 });
