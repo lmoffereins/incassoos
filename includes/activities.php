@@ -496,21 +496,57 @@ function incassoos_is_activity_same_date_created( $post = 0 ) {
 }
 
 /**
- * Return the Activity's list of participant ids
+ * Return the Activity's participants
  *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_activity_participants'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return array Activity's list of participant identifiers.
+ * @return array Activity participant ids
  */
 function incassoos_get_activity_participants( $post = 0 ) {
-	$post  = incassoos_get_activity( $post );
-	$users = get_post_meta( $post ? $post->ID : 0, 'participant', false );
-	$users = $users ? array_unique( array_filter( $users ) ) : array();
+	$post         = incassoos_get_activity( $post );
+	$participants = array();
 
-	return (array) apply_filters( 'incassoos_get_activity_participants', $users, $post );
+	if ( $post ) {
+
+		// Get participants from post meta
+		if ( $values = get_post_meta( $post->ID, 'participant' ) ) {
+			$participants = array_map( 'intval', array_unique( array_filter( $values ) ) );
+		}
+	}
+
+	return (array) apply_filters( 'incassoos_get_activity_participants', $participants, $post );
+}
+
+/**
+ * Return the Activity's participant users
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_activity_participant_users'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_User_Query}.
+ * @return array Activity participant user objects
+ */
+function incassoos_get_activity_participant_users( $post = 0, $query_args = array() ) {
+	$post         = incassoos_get_activity( $post );
+	$participants = incassoos_get_activity_participants( $post );
+	$users        = array();
+
+	if ( $participants ) {
+
+		// Query selected users
+		$user_ids = ! empty( $query_args['include'] ) ? array_intersect( (array) $query_args['include'], $participants ) : $participants;
+		$query_args['include'] = array_map( 'intval', array_unique( array_filter( $user_ids ) ) );
+
+		// Query users
+		$users = incassoos_get_users( $query_args );
+	}
+
+	return apply_filters( 'incassoos_get_activity_participant_users', $users, $post, $query_args );
 }
 
 /**
