@@ -153,7 +153,7 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 			foreach ( $columns as $column_id => $column_label ) {
 
 				if ( isset( $row_data[ $column_id ] ) ) {
-					$row[] = $this->format_value( $row_data[ $column_id ] );
+					$row[] = $this->format_value( $row_data[ $column_id ], $column_id );
 				} else {
 					$row[] = '';
 				}
@@ -173,9 +173,10 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 	 * @uses apply_filters() Calls 'incassoos_export-{file_type}-format_value'
 	 *
 	 * @param string $input CSV value to format
+	 * @param string $column_id Optional. Column identifier used for contextual formatting.
 	 * @return string Formatted CSV value
 	 */
-	public function format_value( $input ) {
+	public function format_value( $input, $column_id = '' ) {
 		if ( is_array( $input ) ) {
 			$formatted = implode( ',', $input );
 		} elseif ( ! is_scalar( $input ) ) {
@@ -193,7 +194,7 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 			$formatted = 'UTF-8' === $encoding ? $formatted : utf8_encode( $formatted );
 		}
 
-		$formatted = apply_filters( "incassoos_export-{$this->file_type}-format_value", $formatted, $input, $this );
+		$formatted = apply_filters( "incassoos_export-{$this->file_type}-format_value", $formatted, $input, $column_id, $this );
 
 		return $this->escape_value( $formatted );
 	}

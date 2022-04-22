@@ -134,25 +134,25 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$post_title = incassoos_get_occasion_title( $this->post );
 				$post_date  = incassoos_get_occasion_date( $this->post, 'Y-m-d' );
 
-				foreach ( incassoos_get_occasion_orders( $this->post ) as $order_id ) {
+				foreach ( incassoos_get_occasion_orders( $this->post, array( 'order' => 'ASC' ) ) as $order_id ) {
 					$order_date = incassoos_get_order_created( $order_id, 'Y-m-d H:i:s' );
-					$user_id    = incassoos_get_order_consumer_id( $order_id );
+					$user_id    = incassoos_get_order_consumer( $order_id );
 					$user_name  = incassoos_get_order_consumer_title( $order_id );
 
 					foreach ( incassoos_get_order_products( $order_id ) as $product ) {
 						$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
-							'id'            => $post_id,
-							'occasion'      => $post_title,
-							'occasion_date' => $post_date,
-							'order_id'      => $order_id,
-							'order_date'    => $order_date,
-							'user_id'       => $user_id,
-							'user_name'     => $user_name,
-							'product_id'    => $product['id'],
-							'product_name'  => $product['name'],
-							'amount'        => $product['amount'],
-							'price'         => incassoos_parse_currency( $product['price'], true ),
-							'total'         => incassoos_parse_currency( $product['amount'] * $product['price'], true )
+							'id'             => $post_id,
+							'occasion'       => $post_title,
+							'occasion_date'  => $post_date,
+							'order_id'       => $order_id,
+							'order_datetime' => $order_date,
+							'user_id'        => $user_id,
+							'user_name'      => $user_name,
+							'product_id'     => $product['id'],
+							'product_name'   => $product['name'],
+							'amount'         => $product['amount'],
+							'price'          => incassoos_parse_currency( $product['price'], true ),
+							'total'          => incassoos_parse_currency( $product['amount'] * $product['price'], true )
 						), $product, $order_id, $this );
 					}
 				}
