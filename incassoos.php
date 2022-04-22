@@ -118,7 +118,10 @@ final class Incassoos {
 		$this->guest_consumer_type  = apply_filters( 'incassoos_guest_consumer_type', 'guest' );
 
 		// Export type
-		$this->sepa_export_type     = apply_filters( 'incassoos_sepa_export_type', 'inc_sepa' );
+		$this->sepa_export_type              = apply_filters( 'incassoos_sepa_export_type',              'inc_sepa'              );
+		$this->post_consumers_export_type    = apply_filters( 'incassoos_post_consumers_export_type',    'inc_post_consumers'    );
+		$this->post_consumptions_export_type = apply_filters( 'incassoos_post_consumptions_export_type', 'inc_post_consumptions' );
+		$this->post_products_export_type     = apply_filters( 'incassoos_post_products_export_type',     'inc_post_products'     );
 
 		/** Misc ********************************************************/
 
@@ -513,6 +516,45 @@ final class Incassoos {
 				'class_file'             => $this->includes_dir . 'classes/class-incassoos-collection-sepa-xml-exporter.php',
 				'show_in_list_callback'  => 'incassoos_is_collection_collected',
 				'require_decryption_key' => true
+			)
+		);
+
+		// Post consumers CSV
+		incassoos_register_export_type(
+			incassoos_get_post_consumers_export_type_id(),
+			array(
+				'labels_callback'       => 'incassoos_get_post_consumers_export_type_labels',
+				'class_name'            => 'Incassoos_Post_Consumers_CSV_Exporter',
+				'class_file'            => $this->includes_dir . 'classes/class-incassoos-post-consumers-csv-exporter.php',
+				'show_in_list_callback' => 'incassoos_show_post_consumers_export_type'
+			)
+		);
+
+		// Post consumptions CSV
+		incassoos_register_export_type(
+			incassoos_get_post_consumptions_export_type_id(),
+			array(
+				'labels'                => array(
+					'name'        => esc_html__( 'Post consumptions (csv)',   'incassoos' ),
+					'export_file' => esc_html__( 'Export consumptions (csv)', 'incassoos' )
+				),
+				'class_name'            => 'Incassoos_Post_Consumptions_CSV_Exporter',
+				'class_file'            => $this->includes_dir . 'classes/class-incassoos-post-consumptions-csv-exporter.php',
+				'show_in_list_callback' => 'incassoos_show_post_consumptions_export_type'
+			)
+		);
+
+		// Post products CSV
+		incassoos_register_export_type(
+			incassoos_get_post_products_export_type_id(),
+			array(
+				'labels'                => array(
+					'name'        => esc_html__( 'Post products (csv)',   'incassoos' ),
+					'export_file' => esc_html__( 'Export products (csv)', 'incassoos' )
+				),
+				'class_name'            => 'Incassoos_Post_Products_CSV_Exporter',
+				'class_file'            => $this->includes_dir . 'classes/class-incassoos-post-products-csv-exporter.php',
+				'show_in_list_callback' => 'incassoos_show_post_products_export_type'
 			)
 		);
 	}

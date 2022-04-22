@@ -1945,6 +1945,140 @@ function incassoos_get_sepa_export_type_id() {
 }
 
 /**
+ * Return the post consumers export type id
+ *
+ * @since 1.0.0
+ *
+ * @return string Post consumers export type id
+ */
+function incassoos_get_post_consumers_export_type_id() {
+	return incassoos()->post_consumers_export_type;
+}
+
+/**
+ * Return the contextual labels for the post consumers export type
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $context Context. Expects a post object.
+ * @return array Export type labels
+ */
+function incassoos_get_post_consumers_export_type_labels( $context = null ) {
+	$post_type = get_post_type( $context );
+
+	switch ( $post_type ) {
+
+		// Activity
+		case incassoos_get_activity_post_type() :
+			$labels = array(
+				'name'        => esc_html__( 'Post participants (csv)',   'incassoos' ),
+				'export_file' => esc_html__( 'Export participants (csv)', 'incassoos' )
+			);
+			break;
+
+		// Other
+		default :
+			$labels = array(
+				'name'        => esc_html__( 'Post consumers (csv)',   'incassoos' ),
+				'export_file' => esc_html__( 'Export consumers (csv)', 'incassoos' )
+			);
+	}
+
+	return (array) apply_filters( 'incassoos_get_post_consumers_export_type_labels', $labels, $context );
+}
+
+/**
+ * Return to show the post consumers export type for the context
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $context Context. Expects a post object.
+ * @return bool Show the export type?
+ */
+function incassoos_show_post_consumers_export_type( $context ) {
+
+	// Match post types
+	$show = in_array( get_post_type( $context ), array(
+		incassoos_get_collection_post_type(),
+		incassoos_get_activity_post_type(),
+		incassoos_get_occasion_post_type()
+	), true );
+
+	// Require post to be collected
+	if ( ! incassoos_is_post_collected( $context ) ) {
+		$show = false;
+	}
+
+	return (bool) apply_filters( 'incassoos_show_post_consumers_export_type', $show, $context );
+}
+
+/**
+ * Return the post consumptions export type id
+ *
+ * @since 1.0.0
+ *
+ * @return string Post consumptions export type id
+ */
+function incassoos_get_post_consumptions_export_type_id() {
+	return incassoos()->post_consumptions_export_type;
+}
+
+/**
+ * Return to show the post consumptions export type for the context
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $context Context. Expects a post object.
+ * @return bool Show the export type?
+ */
+function incassoos_show_post_consumptions_export_type( $context ) {
+	$post_type = get_post_type( $context );
+	$show      = false;
+
+	// Require occasion to be locked
+	if ( incassoos_get_occasion_post_type() === $post_type && incassoos_is_occasion_locked( $context ) ) {
+		$show = true;
+	}
+
+	return (bool) apply_filters( 'incassoos_show_post_consumptions_export_type', $show, $context );
+}
+
+/**
+ * Return the post products export type id
+ *
+ * @since 1.0.0
+ *
+ * @return string Post products export type id
+ */
+function incassoos_get_post_products_export_type_id() {
+	return incassoos()->post_products_export_type;
+}
+
+/**
+ * Return to show the post products export type for the context
+ *
+ * @since 1.0.0
+ *
+ * @param mixed $context Context. Expects a post object.
+ * @return bool Show the export type?
+ */
+function incassoos_show_post_products_export_type( $context ) {
+	$post_type = get_post_type( $context );
+	$show      = false;
+
+	// Require occasion to be locked
+	if ( incassoos_get_occasion_post_type() === $post_type && incassoos_is_occasion_locked( $context ) ) {
+		$show = true;
+
+	// Require order to be locked
+	} elseif ( incassoos_get_order_post_type() === $post_type && incassoos_is_order_locked( $context ) ) {
+		$show = true;
+	}
+
+	return (bool) apply_filters( 'incassoos_show_post_products_export_type', $show, $context );
+}
+
+/**
  * Register a Collection export type
  *
  * @since 1.0.0
