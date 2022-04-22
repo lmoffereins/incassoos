@@ -2378,6 +2378,19 @@ function incassoos_get_file_type( $filename ) {
 	return $type;
 }
 
+/**
+ * Wrapper for set_time_limit
+ *
+ * @since 1.0.0
+ *
+ * @param int $limit Time limit in seconds
+ */
+function incassoos_set_time_limit( $limit = 0 ) {
+	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit( $limit );
+	}
+}
+
 /** Security ******************************************************************/
 
 /**

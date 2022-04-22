@@ -100,6 +100,10 @@ abstract class Incassoos_File_Exporter {
 			@apache_setenv( 'no-gzip', 1 );
 		}
 
+		// Remove export limits
+		ignore_user_abort( true );
+		incassoos_set_time_limit( 0 );
+
 		// Disable cache
 		nocache_headers();
 		header( 'Robots: none' );
