@@ -1493,7 +1493,7 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 			<?php if ( $consumer_types ) : ?>
 
 			<li class="group">
-				<h4 class="sublist-header"><?php esc_html_e( 'Consumer Types', 'incassoos' ); ?></h4>
+				<h4 class="sublist-header item-content"><?php esc_html_e( 'Consumer Types', 'incassoos' ); ?></h4>
 				<ul class="users">
 					<?php foreach ( $consumer_types as $consumer_type ) : ?>
 
