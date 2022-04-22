@@ -651,6 +651,8 @@ function incassoos_get_collection_hint( $post = 0 ) {
  * 
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_is_post_collectable'
+ *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Is the post collectable?
  */
@@ -685,6 +687,10 @@ function incassoos_is_post_collectable( $post = 0 ) {
 			case incassoos_get_order_post_type() :
 				$retval = incassoos_is_order_collectable( $post );
 				break;
+
+            // Other
+            default :
+                $retval = (bool) apply_filters( 'incassoos_is_post_collectable', $retval, $post );
 		}
 	}
 
@@ -695,6 +701,8 @@ function incassoos_is_post_collectable( $post = 0 ) {
  * Return whether the post is collected
  * 
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_post_collected'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Is the post collected?
@@ -726,6 +734,10 @@ function incassoos_is_post_collected( $post = 0 ) {
 			case incassoos_get_order_post_type() :
 				$retval = incassoos_is_order_collected( $post );
 				break;
+
+            // Other
+            default :
+                $retval = (bool) apply_filters( 'incassoos_is_post_collected', $retval, $post );
 		}
 	}
 
