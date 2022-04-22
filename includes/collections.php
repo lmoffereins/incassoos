@@ -740,10 +740,10 @@ function incassoos_is_post_collected( $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_activities'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection activities
  */
-function incassoos_get_collection_activities( $post = 0, $args = array() ) {
+function incassoos_get_collection_activities( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
 	$posts = array();
 
@@ -751,13 +751,13 @@ function incassoos_get_collection_activities( $post = 0, $args = array() ) {
 	if ( $post ) {
 
 		// Query by post parent
-		$args['post_parent'] = $post->ID;
+		$query_args['post_parent'] = $post->ID;
 
 		// Query posts
-		$posts = incassoos_get_activities( $args );
+		$posts = incassoos_get_activities( $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_activities', $posts, $post, $args );
+	return (array) apply_filters( 'incassoos_get_collection_activities', $posts, $post, $query_args );
 }
 
 /**
@@ -766,10 +766,10 @@ function incassoos_get_collection_activities( $post = 0, $args = array() ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  */
-function incassoos_the_collection_activity_count( $post = 0, $args = array() ) {
-	echo incassoos_get_collection_activity_count( $post, $args );
+function incassoos_the_collection_activity_count( $post = 0, $query_args = array() ) {
+	echo incassoos_get_collection_activity_count( $post, $query_args );
 }
 
 /**
@@ -780,15 +780,15 @@ function incassoos_the_collection_activity_count( $post = 0, $args = array() ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_activity_count'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return int Collection activity count
  */
-function incassoos_get_collection_activity_count( $post = 0, $args = array() ) {
+function incassoos_get_collection_activity_count( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
-	$posts = incassoos_get_collection_activities( $post, $args );
+	$posts = incassoos_get_collection_activities( $post, $query_args );
 	$count = count( $posts );
 
-	return (int) apply_filters( 'incassoos_get_collection_activity_count', $count, $post, $args );
+	return (int) apply_filters( 'incassoos_get_collection_activity_count', $count, $post, $query_args );
 }
 
 /**
@@ -797,10 +797,10 @@ function incassoos_get_collection_activity_count( $post = 0, $args = array() ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Term_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Term_Query}.
  * @return array Collection order occasions
  */
-function incassoos_get_collection_occasions( $post = 0, $args = array() ) {
+function incassoos_get_collection_occasions( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
 	$posts = array();
 
@@ -808,13 +808,13 @@ function incassoos_get_collection_occasions( $post = 0, $args = array() ) {
 	if ( $post ) {
 
 		// Query by post parent
-		$args['post_parent'] = $post->ID;
+		$query_args['post_parent'] = $post->ID;
 
 		// Query posts
-		$posts = incassoos_get_occasions( $args );
+		$posts = incassoos_get_occasions( $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_occasions', $posts, $post, $args );
+	return (array) apply_filters( 'incassoos_get_collection_occasions', $posts, $post, $query_args );
 }
 
 /**
@@ -823,10 +823,10 @@ function incassoos_get_collection_occasions( $post = 0, $args = array() ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  */
-function incassoos_the_collection_occasion_count( $post = 0, $args = array() ) {
-	echo incassoos_get_collection_occasion_count( $post, $args );
+function incassoos_the_collection_occasion_count( $post = 0, $query_args = array() ) {
+	echo incassoos_get_collection_occasion_count( $post, $query_args );
 }
 
 /**
@@ -837,15 +837,15 @@ function incassoos_the_collection_occasion_count( $post = 0, $args = array() ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_occasion_count'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return int Collection order occasion count
  */
-function incassoos_get_collection_occasion_count( $post = 0, $args = array() ) {
+function incassoos_get_collection_occasion_count( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
-	$posts = incassoos_get_collection_occasions( $post, $args );
+	$posts = incassoos_get_collection_occasions( $post, $query_args );
 	$count = count( $posts );
 
-	return (int) apply_filters( 'incassoos_get_collection_occasion_count', $count, $post, $args );
+	return (int) apply_filters( 'incassoos_get_collection_occasion_count', $count, $post, $query_args );
 }
 
 /**
@@ -856,10 +856,10 @@ function incassoos_get_collection_occasion_count( $post = 0, $args = array() ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_orders'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection orders
  */
-function incassoos_get_collection_orders( $post = 0, $args = array() ) {
+function incassoos_get_collection_orders( $post = 0, $query_args = array() ) {
 	$post      = incassoos_get_collection( $post );
 	$occasions = incassoos_get_collection_occasions( $post );
 	$posts     = array();
@@ -868,13 +868,13 @@ function incassoos_get_collection_orders( $post = 0, $args = array() ) {
 	if ( $post && $occasions ) {
 
 		// Query by post parent
-		$args['post_parent__in'] = $occasions;
+		$query_args['post_parent__in'] = $occasions;
 
 		// Query posts
-		$posts = incassoos_get_orders( $args );
+		$posts = incassoos_get_orders( $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_orders', $posts, $post, $args );
+	return (array) apply_filters( 'incassoos_get_collection_orders', $posts, $post, $query_args );
 }
 
 /**
@@ -883,10 +883,10 @@ function incassoos_get_collection_orders( $post = 0, $args = array() ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  */
-function incassoos_the_collection_order_count( $post = 0, $args = array() ) {
-	echo incassoos_get_collection_order_count( $post, $args );
+function incassoos_the_collection_order_count( $post = 0, $query_args = array() ) {
+	echo incassoos_get_collection_order_count( $post, $query_args );
 }
 
 /**
@@ -897,15 +897,15 @@ function incassoos_the_collection_order_count( $post = 0, $args = array() ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_order_count'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return int Collection order count
  */
-function incassoos_get_collection_order_count( $post = 0, $args = array() ) {
+function incassoos_get_collection_order_count( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
-	$posts = incassoos_get_collection_orders( $post, $args );
+	$posts = incassoos_get_collection_orders( $post, $query_args );
 	$count = count( $posts );
 
-	return (int) apply_filters( 'incassoos_get_collection_order_count', $count, $post, $args );
+	return (int) apply_filters( 'incassoos_get_collection_order_count', $count, $post, $query_args );
 }
 
 /**
@@ -978,10 +978,10 @@ function incassoos_get_collection_consumers( $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_consumer_users'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array $args Optional. Additional query arguments for {@see WP_User_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_User_Query}.
  * @return array Collection consumer user objects
  */
-function incassoos_get_collection_consumer_users( $post = 0, $args = array() ) {
+function incassoos_get_collection_consumer_users( $post = 0, $query_args = array() ) {
 	$post      = incassoos_get_collection( $post );
 	$consumers = incassoos_get_collection_consumers( $post );
 	$users     = array();
@@ -989,14 +989,14 @@ function incassoos_get_collection_consumer_users( $post = 0, $args = array() ) {
 	if ( $consumers ) {
 
 		// Query selected users
-		$user_ids = ! empty( $args['include'] ) ? array_intersect( (array) $args['include'], $consumers ) : $consumers;
-		$args['include'] = array_map( 'intval', array_unique( array_filter( $user_ids ) ) );
+		$user_ids = ! empty( $query_args['include'] ) ? array_intersect( (array) $query_args['include'], $consumers ) : $consumers;
+		$query_args['include'] = array_map( 'intval', array_unique( array_filter( $user_ids ) ) );
 
 		// Query users
-		$users = incassoos_get_users( $args );
+		$users = incassoos_get_users( $query_args );
 	}
 
-	return apply_filters( 'incassoos_get_collection_consumer_users', $users, $post, $consumers );
+	return apply_filters( 'incassoos_get_collection_consumer_users', $users, $post, $query_args );
 }
 
 /**
@@ -1192,10 +1192,10 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_collection_assets'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection assets
  */
-function incassoos_get_collection_assets( $post = 0, $args = array() ) {
+function incassoos_get_collection_assets( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
 	$posts = array();
 
@@ -1213,9 +1213,9 @@ function incassoos_get_collection_assets( $post = 0, $args = array() ) {
 			$defaults['post_status'] = incassoos_get_collected_status_id();
 		}
 
-		$args = apply_filters( 'incassoos_get_collection_assets_args', wp_parse_args( $args, $defaults ) );
+		$query_args = apply_filters( 'incassoos_get_collection_assets_args', wp_parse_args( $query_args, $defaults ), $post, $query_args );
 
-		$query = new WP_Query( $args );
+		$query = new WP_Query( $query_args );
 		$posts = $query->posts;
 
 		// Default to empty array
@@ -1224,7 +1224,7 @@ function incassoos_get_collection_assets( $post = 0, $args = array() ) {
 		}
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_assets', $posts, $post, $args );
+	return (array) apply_filters( 'incassoos_get_collection_assets', $posts, $post, $query_args );
 }
 
 /**
@@ -1236,10 +1236,10 @@ function incassoos_get_collection_assets( $post = 0, $args = array() ) {
  *
  * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection consumer assets
  */
-function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $args = array() ) {
+function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $query_args = array() ) {
 	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
 	$post     = incassoos_get_collection( $post );
 	$posts    = array();
@@ -1252,14 +1252,14 @@ function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $args =
 		$others    = wp_list_pluck( wp_list_filter( $raw_posts, array( 'post_parent' => $post->ID ) ), 'ID' );
 
 		// Query by post ID
-		$args['post_parent__in'] = false;
-		$args['post__in'] = array_values( array_merge( $occasions, $others ) );
+		$query_args['post_parent__in'] = false;
+		$query_args['post__in'] = array_values( array_merge( $occasions, $others ) );
 
 		// Query assets
-		$posts = incassoos_get_collection_assets( $post, $args );
+		$posts = incassoos_get_collection_assets( $post, $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_consumer_assets', $posts, $post, $consumer );
+	return (array) apply_filters( 'incassoos_get_collection_consumer_assets', $posts, $consumer, $post, $query_args );
 }
 
 /**
@@ -1273,10 +1273,10 @@ function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $args =
  * @uses apply_filters() Calls 'incassoos_get_collection_raw_assets'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection raw assets
  */
-function incassoos_get_collection_raw_assets( $post = 0, $args = array() ) {
+function incassoos_get_collection_raw_assets( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_collection( $post );
 	$posts = array();
 
@@ -1296,9 +1296,9 @@ function incassoos_get_collection_raw_assets( $post = 0, $args = array() ) {
 			$defaults['post_status'] = incassoos_get_collected_status_id();
 		}
 
-		$args = apply_filters( 'incassoos_get_collection_raw_assets_args', wp_parse_args( $args, $defaults ) );
+		$query_args = apply_filters( 'incassoos_get_collection_raw_assets_args', wp_parse_args( $query_args, $defaults ) );
 
-		$query = new WP_Query( $args );
+		$query = new WP_Query( $query_args );
 		$posts = $query->posts;
 
 		// Default to empty array
@@ -1307,7 +1307,7 @@ function incassoos_get_collection_raw_assets( $post = 0, $args = array() ) {
 		}
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_raw_assets', $posts, $post, $args );
+	return (array) apply_filters( 'incassoos_get_collection_raw_assets', $posts, $post, $query_args );
 }
 
 /**
@@ -1322,10 +1322,10 @@ function incassoos_get_collection_raw_assets( $post = 0, $args = array() ) {
  *
  * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Collection consumer raw assets
  */
-function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $args = array() ) {
+function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $query_args = array() ) {
 	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
 	$post     = incassoos_get_collection( $post );
 	$posts    = array();
@@ -1333,7 +1333,7 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $ar
 	if ( $post ) {
 
 		// Define post meta query
-		$meta_query = isset( $args['meta_query'] ) ? $args['meta_query'] : array();
+		$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
 		$meta_query[] = array(
 			'relation' => 'OR',
 			array(
@@ -1349,13 +1349,13 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $ar
 				'value' => $consumer
 			)
 		);
-		$args['meta_query'] = $meta_query;
+		$query_args['meta_query'] = $meta_query;
 
 		// Query posts
-		$posts = incassoos_get_collection_raw_assets( $post, $args );
+		$posts = incassoos_get_collection_raw_assets( $post, $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_collection_consumer_raw_assets', $posts, $post, $consumer, $args );
+	return (array) apply_filters( 'incassoos_get_collection_consumer_raw_assets', $posts, $consumer, $post, $query_args );
 }
 
 /**

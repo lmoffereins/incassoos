@@ -712,19 +712,19 @@ function incassoos_is_order_collectable( $post = 0 ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_orders'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Orders.
  */
-function incassoos_get_orders( $args = array() ) {
+function incassoos_get_orders( $query_args = array() ) {
 
 	// Parse query arguments
-	$args = wp_parse_args( $args, array(
+	$query_args = wp_parse_args( $query_args, array(
 		'fields'         => 'ids',
 		'post_type'      => incassoos_get_order_post_type(),
 		'posts_per_page' => -1
 	) );
 
-	$query = new WP_Query( $args );
+	$query = new WP_Query( $query_args );
 	$posts = $query->posts;
 
 	// Default to empty array
@@ -732,7 +732,7 @@ function incassoos_get_orders( $args = array() ) {
 		$posts = array();
 	}
 
-	return apply_filters( 'incassoos_get_orders', $posts, $args );
+	return apply_filters( 'incassoos_get_orders', $posts, $query_args );
 }
 
 /**
@@ -742,18 +742,18 @@ function incassoos_get_orders( $args = array() ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_uncollected_orders'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Uncollected Orders
  */
-function incassoos_get_uncollected_orders( $args = array() ) {
+function incassoos_get_uncollected_orders( $query_args = array() ) {
 
 	// Define query arguments
-	$args['incassoos_collected'] = false;
+	$query_args['incassoos_collected'] = false;
 
 	// Query posts
-	$posts = incassoos_get_orders( $args );
+	$posts = incassoos_get_orders( $query_args );
 
-	return apply_filters( 'incassoos_get_uncollected_orders', $posts, $args );
+	return apply_filters( 'incassoos_get_uncollected_orders', $posts, $query_args );
 }
 
 /** Filters *******************************************************************/

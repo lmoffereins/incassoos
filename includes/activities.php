@@ -604,7 +604,7 @@ function incassoos_activity_has_participant( $participant = 0, $post = 0 ) {
 
 	$retval = in_array( $participant, $users );
 
-	return (bool) apply_filters( 'incassoos_activity_has_participant', $retval, $post, $participant );
+	return (bool) apply_filters( 'incassoos_activity_has_participant', $retval, $participant, $post );
 }
 
 /**
@@ -694,7 +694,7 @@ function incassoos_get_activity_participant_price( $participant, $post = 0, $num
 		$total  = $prices[ $participant ];
 	}
 
-	$total = (float) apply_filters( 'incassoos_get_activity_participant_price', (float) $total, $post, $participant );
+	$total = (float) apply_filters( 'incassoos_get_activity_participant_price', (float) $total, $participant, $post );
 
 	// Apply currency format
 	if ( null !== $num_format ) {
@@ -725,7 +725,7 @@ function incassoos_activity_participant_has_custom_price( $participant, $post = 
 		$retval = isset( $prices[ $participant ] ) && $prices[ $participant ] !== incassoos_get_activity_price( $post );
 	}
 
-	return (bool) apply_filters( 'incassoos_activity_participant_has_custom_price', $retval, $post, $participant );
+	return (bool) apply_filters( 'incassoos_activity_participant_has_custom_price', $retval, $participant, $post );
 }
 
 /**
@@ -832,19 +832,19 @@ function incassoos_is_activity_collectable( $post = 0 ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_activities'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Activities
  */
-function incassoos_get_activities( $args = array() ) {
+function incassoos_get_activities( $query_args = array() ) {
 
 	// Parse query arguments
-	$args = wp_parse_args( $args, array(
+	$query_args = wp_parse_args( $query_args, array(
 		'fields'         => 'ids',
 		'post_type'      => incassoos_get_activity_post_type(),
 		'posts_per_page' => -1
 	) );
 
-	$query = new WP_Query( $args );
+	$query = new WP_Query( $query_args );
 	$posts = $query->posts;
 
 	// Default to empty array
@@ -852,7 +852,7 @@ function incassoos_get_activities( $args = array() ) {
 		$posts = array();
 	}
 
-	return apply_filters( 'incassoos_get_activities', $posts, $args );
+	return apply_filters( 'incassoos_get_activities', $posts, $query_args );
 }
 
 /**
@@ -862,18 +862,18 @@ function incassoos_get_activities( $args = array() ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_uncollected_activities'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Uncollected Activities
  */
-function incassoos_get_uncollected_activities( $args = array() ) {
+function incassoos_get_uncollected_activities( $query_args = array() ) {
 
 	// Define query arguments
-	$args['incassoos_collected'] = false;
+	$query_args['incassoos_collected'] = false;
 
 	// Query posts
-	$posts = incassoos_get_activities( $args );
+	$posts = incassoos_get_activities( $query_args );
 
-	return apply_filters( 'incassoos_get_uncollected_activities', $posts, $args );
+	return apply_filters( 'incassoos_get_uncollected_activities', $posts, $query_args );
 }
 
 /** Filters *******************************************************************/

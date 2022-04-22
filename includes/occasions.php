@@ -135,18 +135,18 @@ function incassoos_registered_occasion_type_taxonomy() {
  *
  * @since 1.0.0
  *
- * @param  array $args Optional. Query args for {@see WP_Term_Query}.
+ * @param  array $query_args Optional. Query args for {@see WP_Term_Query}.
  * @return array Occasion type data.
  */
-function incassoos_get_occasion_types( $args = array() ) {
+function incassoos_get_occasion_types( $query_args = array() ) {
 
 	// Parse defaults
-	$args = wp_parse_args( $args, array(
+	$query_args = wp_parse_args( $query_args, array(
 		'taxonomy'   => incassoos_get_occasion_type_tax_id(),
 		'hide_empty' => false
 	) );
 
-	return get_terms( $args );
+	return get_terms( $query_args );
 }
 
 /**
@@ -692,19 +692,19 @@ function incassoos_is_occasion_collectable( $post = 0 ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_occasions'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Occasions
  */
-function incassoos_get_occasions( $args = array() ) {
+function incassoos_get_occasions( $query_args = array() ) {
 
 	// Parse query arguments
-	$args = wp_parse_args( $args, array(
+	$query_args = wp_parse_args( $query_args, array(
 		'fields'         => 'ids',
 		'post_type'      => incassoos_get_occasion_post_type(),
 		'posts_per_page' => -1
 	) );
 
-	$query = new WP_Query( $args );
+	$query = new WP_Query( $query_args );
 	$posts = $query->posts;
 
 	// Default to empty array
@@ -712,7 +712,7 @@ function incassoos_get_occasions( $args = array() ) {
 		$posts = array();
 	}
 
-	return apply_filters( 'incassoos_get_occasions', $posts, $args );
+	return apply_filters( 'incassoos_get_occasions', $posts, $query_args );
 }
 
 /**
@@ -722,18 +722,18 @@ function incassoos_get_occasions( $args = array() ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_uncollected_occasions'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Uncollected Occasions
  */
-function incassoos_get_uncollected_occasions( $args = array() ) {
+function incassoos_get_uncollected_occasions( $query_args = array() ) {
 
 	// Define query arguments
-	$args['incassoos_collected'] = false;
+	$query_args['incassoos_collected'] = false;
 
 	// Query posts
-	$posts = incassoos_get_occasions( $args );
+	$posts = incassoos_get_occasions( $query_args );
 
-	return apply_filters( 'incassoos_get_uncollected_occasions', $posts, $args );
+	return apply_filters( 'incassoos_get_uncollected_occasions', $posts, $query_args );
 }
 
 /**
@@ -744,10 +744,10 @@ function incassoos_get_uncollected_occasions( $args = array() ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_orders'
  *
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Occasion orders
  */
-function incassoos_get_occasion_orders( $post = 0, $args = array() ) {
+function incassoos_get_occasion_orders( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_occasion( $post );
 	$posts = array();
 
@@ -755,13 +755,13 @@ function incassoos_get_occasion_orders( $post = 0, $args = array() ) {
 	if ( $post ) {
 
 		// Query by post parent
-		$args['post_parent'] = $post->ID;
+		$query_args['post_parent'] = $post->ID;
 
 		// Query posts
-		$posts = incassoos_get_orders( $args );
+		$posts = incassoos_get_orders( $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_occasion_orders', $posts, $post, $args );
+	return (array) apply_filters( 'incassoos_get_occasion_orders', $posts, $post, $query_args );
 }
 
 /**
@@ -770,10 +770,10 @@ function incassoos_get_occasion_orders( $post = 0, $args = array() ) {
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  */
-function incassoos_the_occasion_order_count( $post = 0, $args = array() ) {
-	echo incassoos_get_occasion_order_count( $post, $args );
+function incassoos_the_occasion_order_count( $post = 0, $query_args = array() ) {
+	echo incassoos_get_occasion_order_count( $post, $query_args );
 }
 
 /**
@@ -784,15 +784,15 @@ function incassoos_the_occasion_order_count( $post = 0, $args = array() ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_order_count'
  *
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return int Occasion order count
  */
-function incassoos_get_occasion_order_count( $post = 0, $args = array() ) {
+function incassoos_get_occasion_order_count( $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_occasion( $post );
-	$posts = incassoos_get_occasion_orders( $post, $args );
+	$posts = incassoos_get_occasion_orders( $post, $query_args );
 	$count = count( $posts );
 
-	return (int) apply_filters( 'incassoos_get_occasion_order_count', $count, $post, $args );
+	return (int) apply_filters( 'incassoos_get_occasion_order_count', $count, $post, $query_args );
 }
 
 /**
@@ -837,10 +837,10 @@ function incassoos_get_occasion_consumers( $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_occasion_consumer_users'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  array $args Optional. Additional query arguments for {@see WP_User_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_User_Query}.
  * @return array Occasion consumer user objects
  */
-function incassoos_get_occasion_consumer_users( $post = 0, $args = array() ) {
+function incassoos_get_occasion_consumer_users( $post = 0, $query_args = array() ) {
 	$post      = incassoos_get_occasion( $post );
 	$consumers = incassoos_get_occasion_consumers( $post );
 	$users     = array();
@@ -848,14 +848,14 @@ function incassoos_get_occasion_consumer_users( $post = 0, $args = array() ) {
 	if ( $consumers ) {
 
 		// Query selected users
-		$user_ids = ! empty( $args['include'] ) ? array_intersect( (array) $args['include'], $consumers ) : $consumers;
-		$args['include'] = array_map( 'intval', array_unique( array_filter( $user_ids ) ) );
+		$user_ids = ! empty( $query_args['include'] ) ? array_intersect( (array) $query_args['include'], $consumers ) : $consumers;
+		$query_args['include'] = array_map( 'intval', array_unique( array_filter( $user_ids ) ) );
 
 		// Query users
-		$users = incassoos_get_users( $args );
+		$users = incassoos_get_users( $query_args );
 	}
 
-	return apply_filters( 'incassoos_get_occasion_consumer_users', $users, $post, $consumers );
+	return apply_filters( 'incassoos_get_occasion_consumer_users', $users, $post, $query_args, $consumers );
 }
 
 /**
@@ -970,7 +970,7 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_forma
 		}
 	}
 
-	$total = (float) apply_filters( 'incassoos_get_occasion_consumer_total', (float) $total, $post, $consumer );
+	$total = (float) apply_filters( 'incassoos_get_occasion_consumer_total', (float) $total, $consumer, $post, $num_format );
 
 	// Apply currency format
 	if ( null !== $num_format ) {
@@ -989,17 +989,17 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_forma
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Occasion consumer orders
  */
-function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $args = array() ) {
+function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_occasion( $post );
 	$posts = array();
 
 	if ( $post ) {
 
 		// Define post meta query
-		$meta_query = isset( $args['meta_query'] ) ? $args['meta_query'] : array();
+		$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
 		$meta_query[] = array(
 			'relation' => 'OR',
 			array(
@@ -1011,13 +1011,13 @@ function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $args = a
 				'value' => $consumer
 			)
 		);
-		$args['meta_query'] = $meta_query;
+		$query_args['meta_query'] = $meta_query;
 
 		// Query posts
-		$posts = incassoos_get_occasion_orders( $post, $args );
+		$posts = incassoos_get_occasion_orders( $post, $query_args );
 	}
 
-	return (array) apply_filters( 'incassoos_get_occasion_consumer_orders', $posts, $post, $consumer, $args );
+	return (array) apply_filters( 'incassoos_get_occasion_consumer_orders', $posts, $consumer, $post, $query_args );
 }
 
 /**
@@ -1027,10 +1027,10 @@ function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $args = a
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  */
-function incassoos_the_occasion_consumer_order_count( $consumer, $post = 0, $args = array() ) {
-	echo incassoos_get_occasion_consumer_order_count( $consumer, $post, $args );
+function incassoos_the_occasion_consumer_order_count( $consumer, $post = 0, $query_args = array() ) {
+	echo incassoos_get_occasion_consumer_order_count( $consumer, $post, $query_args );
 }
 
 /**
@@ -1042,15 +1042,15 @@ function incassoos_the_occasion_consumer_order_count( $consumer, $post = 0, $arg
  *
  * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
- * @param  array       $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return int Occasion consumer order count
  */
-function incassoos_get_occasion_consumer_order_count( $consumer, $post = 0, $args = array() ) {
+function incassoos_get_occasion_consumer_order_count( $consumer, $post = 0, $query_args = array() ) {
 	$post  = incassoos_get_occasion( $post );
-	$posts = incassoos_get_occasion_consumer_orders( $consumer, $post, $args );
+	$posts = incassoos_get_occasion_consumer_orders( $consumer, $post, $query_args );
 	$count = count( $posts );
 
-	return (int) apply_filters( 'incassoos_get_occasion_consumer_order_count', $count, $post, $consumer, $args );
+	return (int) apply_filters( 'incassoos_get_occasion_consumer_order_count', $count, $consumer, $post, $query_args );
 }
 
 /**

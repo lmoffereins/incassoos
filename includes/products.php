@@ -405,19 +405,19 @@ function incassoos_get_product_price( $post = 0, $num_format = false ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_products'
  *
- * @param  array $args Optional. Additional query arguments for {@see WP_Query}.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Products.
  */
-function incassoos_get_products( $args = array() ) {
+function incassoos_get_products( $query_args = array() ) {
 
 	// Parse query arguments
-	$args = wp_parse_args( $args, array(
+	$query_args = wp_parse_args( $query_args, array(
 		'fields'         => 'ids',
 		'post_type'      => incassoos_get_product_post_type(),
 		'posts_per_page' => -1
 	) );
 
-	$query = new WP_Query( $args );
+	$query = new WP_Query( $query_args );
 	$posts = $query->posts;
 
 	// Default to empty array
@@ -425,7 +425,7 @@ function incassoos_get_products( $args = array() ) {
 		$posts = array();
 	}
 
-	return apply_filters( 'incassoos_get_products', $posts, $args );
+	return apply_filters( 'incassoos_get_products', $posts, $query_args );
 }
 
 /** Update ********************************************************************/
