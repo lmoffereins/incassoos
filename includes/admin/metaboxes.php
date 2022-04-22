@@ -824,8 +824,8 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 							<?php foreach ( incassoos_get_collection_consumer_assets( $user->ID, $post ) as $item_id ) : ?>
 
 							<li>
-								<span class="title"><?php incassoos_the_asset_link( $item_id ); ?></span>
-								<span class="total"><?php incassoos_the_asset_consumer_total( $user->ID, $item_id, true ); ?></span>
+								<span class="title"><?php incassoos_the_post_link( $item_id ); ?></span>
+								<span class="total"><?php incassoos_the_post_consumer_total( $user->ID, $item_id, true ); ?></span>
 							</li>
 
 							<?php endforeach; ?>
@@ -855,8 +855,8 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 							<?php foreach ( incassoos_get_collection_consumer_assets( $consumer_type, $post ) as $item_id ) : ?>
 
 							<li>
-								<span class="title"><?php incassoos_the_asset_link( $item_id ); ?></span>
-								<span class="total"><?php incassoos_the_asset_consumer_total( $consumer_type, $item_id, true ); ?></span>
+								<span class="title"><?php incassoos_the_post_link( $item_id ); ?></span>
+								<span class="total"><?php incassoos_the_post_consumer_total( $consumer_type, $item_id, true ); ?></span>
 							</li>
 
 							<?php endforeach; ?>

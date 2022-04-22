@@ -238,6 +238,62 @@ function incassoos_get_product_title( $post = 0 ) {
 }
 
 /**
+ * Output the Product's url
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_product_url( $post = 0 ) {
+	echo incassoos_get_product_url( $post );
+}
+
+/**
+ * Return the Product's url
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_product_url'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Product url
+ */
+function incassoos_get_product_url( $post = 0 ) {
+	$post = incassoos_get_product( $post );
+	$url  = $post ? add_query_arg( array( 'post' => $post->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) : '';
+
+	return apply_filters( 'incassoos_get_product_url', $url, $post );
+}
+
+/**
+ * Output the Product's link
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_product_link( $post = 0 ) {
+	echo incassoos_get_product_link( $post );
+}
+
+/**
+ * Return the Product's link
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_product_link'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Product link
+ */
+function incassoos_get_product_link( $post = 0 ) {
+	$post = incassoos_get_product( $post );
+	$link = $post ? sprintf( '<a href="%s">%s</a>', esc_url( incassoos_get_product_url( $post ) ), incassoos_get_product_title( $post ) ) : '';
+
+	return apply_filters( 'incassoos_get_product_link', $link, $post );
+}
+
+/**
  * Output the Product's created date
  *
  * @since 1.0.0

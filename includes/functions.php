@@ -327,74 +327,281 @@ function incassoos_validate_post( $postarr, $post_type = '' ) {
 }
 
 /**
- * Return the title of the post
+ * The following are post type-agnostic approaches of plugin post details. This logic
+ * is usually applied to fetch post details when there is a benefit of not knowing the
+ * post's post type per se.
+ */
+
+/**
+ * Output the post's title
+ * 
+ * @since 1.0.0
  *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_post_title( $post = 0 ) {
+	echo incassoos_get_post_title( $post );
+}
+
+/**
+ * Return the post's title
+ * 
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_title'
  *
- * @param  WP_Post|int $post Post object or ID. Defaults to the current post.
- * @return string Post title
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Asset title.
  */
 function incassoos_get_post_title( $post = 0 ) {
-	$post        = get_post( $post );
-	$object_type = $post ? incassoos_get_object_type( $post->post_type ) : '';
-	$getter      = "incassoos_get_{$object_type}_title";
-	$title       = '';
+	$title = '';
 
-	// Get object post title
-	if ( function_exists( $getter ) ) {
-		$title = call_user_func_array( $getter, array( $post ) );
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$title = incassoos_get_collection_title( $_post );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$title = incassoos_get_activity_title( $_post );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$title = incassoos_get_occasion_title( $_post );
+
+	// Order
+	} elseif ( $_post = incassoos_get_order( $post ) ) {
+		$title = incassoos_get_order_title( $_post );
+
+	// Product
+	} elseif ( $_post = incassoos_get_product( $post ) ) {
+		$title = incassoos_get_product_title( $_post );
+
+	// Custom post
+	} else {
+		$title = apply_filters( 'incassoos_get_post_title', $title, $post );
 	}
 
-	// Default to post title
-	if ( ! $title ) {
-		$title = $post->post_title;
-	}
-
-	return apply_filters( 'incassoos_get_post_title', $title, $post );
+	return $title;
 }
 
 /**
- * Return the date of the post
+ * Output the post's date
+ * 
+ * @since 1.0.0
  *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ */
+function incassoos_the_post_date( $post = 0, $date_format = '' ) {
+	echo incassoos_get_post_date( $post, $date_format );
+}
+
+/**
+ * Return the post's date
+ * 
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_date'
  *
- * @param  WP_Post|int $post Post object or ID. Defaults to the current post.
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
- * @return string Post date
+ * @return string Asset date.
  */
 function incassoos_get_post_date( $post = 0, $date_format = '' ) {
-	$post        = get_post( $post );
-	$object_type = $post ? incassoos_get_object_type( $post->post_type ) : '';
-	$getter      = "incassoos_get_{$object_type}_date";
-	$getter_alt  = "incassoos_get_{$object_type}_created";
-	$date        = '';
+	$date = '';
 
-	// Get object post date
-	if ( function_exists( $getter ) ) {
-		$date = call_user_func_array( $getter, array( $post, $date_format ) );
-	}
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$date = incassoos_get_collection_date( $_post, $date_format );
 
-	// Fallback to object created date
-	if ( ! $date && function_exists( $getter_alt ) ) {
-		$date = call_user_func_array( $getter_alt, array( $post, $date_format ) );
-	}
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$date = incassoos_get_activity_date( $_post, $date_format );
 
-	// Default to post date
-	if ( ! $date ) {
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$date = incassoos_get_occasion_date( $_post, $date_format );
+
+	// Order
+	} elseif ( $_post = incassoos_get_order( $post ) ) {
+		$date = incassoos_get_order_created( $_post );
+
+	// Product
+	} elseif ( $_post = incassoos_get_product( $post ) ) {
+		$date = incassoos_get_product_created( $_post );
+
+	// Custom post
+	} else {
 
 		// Default to the registered date format
 		if ( empty( $date_format ) ) {
 			$date_format = get_option( 'date_format' );
 		}
 
-		$date = mysql2date( $date_format, $post->post_date );
+		$date = apply_filters( 'incassoos_get_post_date', $date, $post, $date_format );
 	}
 
-	return apply_filters( 'incassoos_get_post_date', $date, $post, $date_format );
+	return $date;
+}
+
+/**
+ * Output the post's url
+ * 
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_post_url( $post = 0 ) {
+	echo incassoos_get_post_url( $post );
+}
+
+/**
+ * Return the post's url
+ * 
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_url'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Asset url.
+ */
+function incassoos_get_post_url( $post = 0 ) {
+	$url = '';
+
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$url = incassoos_get_collection_url( $_post );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$url = incassoos_get_activity_url( $_post );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$url = incassoos_get_occasion_url( $_post );
+
+	// Order
+	} elseif ( $_post = incassoos_get_order( $post ) ) {
+		$url = incassoos_get_order_url( $_post );
+
+	// Product
+	} elseif ( $_post = incassoos_get_product( $post ) ) {
+		$url = incassoos_get_product_url( $_post );
+
+	// Custom post
+	} else {
+		$url = apply_filters( 'incassoos_get_post_url', $url, $post );
+	}
+
+	return $url;
+}
+
+/**
+ * Output the post's link
+ * 
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_post_link( $post = 0 ) {
+	echo incassoos_get_post_link( $post );
+}
+
+/**
+ * Return the post's link
+ * 
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_link'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return string Asset link.
+ */
+function incassoos_get_post_link( $post = 0 ) {
+	$link = '';
+
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$link = incassoos_get_collection_link( $_post );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$link = incassoos_get_activity_link( $_post );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$link = incassoos_get_occasion_link( $_post );
+
+	// Order
+	} elseif ( $_post = incassoos_get_order( $post ) ) {
+		$link = incassoos_get_order_link( $_post );
+
+	// Product
+	} elseif ( $_post = incassoos_get_product( $post ) ) {
+		$link = incassoos_get_product_link( $_post );
+
+	// Custom post
+	} else {
+		$link = apply_filters( 'incassoos_get_post_link', $link, $post );
+	}
+
+	return $link;
+}
+
+/**
+ * Output the post's consumer total value
+ * 
+ * @since 1.0.0
+ *
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
+ */
+function incassoos_the_post_consumer_total( $consumer, $post = 0, $num_format = false ) {
+	echo incassoos_get_post_consumer_total( $consumer, $post, $num_format );
+}
+
+/**
+ * Return the post's consumer total value
+ * 
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_consumer_total'
+ *
+ * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
+ * @return string|float Asset consumer total value.
+ */
+function incassoos_get_post_consumer_total( $consumer, $post = 0, $num_format = false ) {
+	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$total    = 0;
+
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$total = incassoos_get_collection_consumer_total( $consumer, $_post, $num_format );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$total = incassoos_get_activity_participant_price( $consumer, $_post, $num_format );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$total = incassoos_get_occasion_consumer_total( $consumer, $_post, $num_format );
+
+	// Custom post
+	} else {
+		$total = apply_filters( 'incassoos_get_post_consumer_total', $total, $post, $consumer, $num_format );
+
+		// Apply currency format
+		if ( ! is_string( $total ) && null !== $num_format ) {
+			$total = incassoos_get_format_currency( $total, $num_format );
+		}
+	}
+
+	return $total;
 }
 
 /**
