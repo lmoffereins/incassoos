@@ -47,10 +47,10 @@ function incassoos_admin_get_consumers_fields() {
 	foreach ( $fields as $field_id => $args ) {
 		$fields[ $field_id ] = wp_parse_args( $args, array(
 			'label'            => '',
-			'get_callback'     => 'incassoos_admin_consumers_meta_get_callback',
-			'update_callback'  => 'incassoos_admin_consumers_meta_update_callback',
-			'input_callback'   => 'incassoos_admin_consumers_input_callback',
-			'display_callback' => 'incassoos_admin_consumers_meta_display_callback',
+			'get_callback'     => 'incassoos_admin_consumers_field_get_callback',
+			'update_callback'  => 'incassoos_admin_consumers_field_update_callback',
+			'input_callback'   => 'incassoos_admin_consumers_field_input_callback',
+			'display_callback' => 'incassoos_admin_consumers_field_display_callback',
 			'type'             => 'text',
 			'options'          => array()
 		) );
@@ -65,7 +65,7 @@ function incassoos_admin_get_consumers_fields() {
  * @since 1.0.0
  *
  * @param string $field_id Meta field key
- * @return array Single field
+ * @return array|bool Single field or False when not found
  */
 function incassoos_admin_get_consumers_field( $field_id ) {
 	$fields = incassoos_admin_get_consumers_fields();
@@ -75,7 +75,7 @@ function incassoos_admin_get_consumers_field( $field_id ) {
 		return $fields[ $field_id ];
 	}
 
-	return array();
+	return false;
 }
 
 /**
@@ -87,7 +87,7 @@ function incassoos_admin_get_consumers_field( $field_id ) {
  * @param string $field_id Meta field key
  * @return mixed Field value
  */
-function incassoos_admin_consumers_meta_get_callback( $user, $field_id ) {
+function incassoos_admin_consumers_field_get_callback( $user, $field_id ) {
 	return implode( ',', (array) $user->get( $field_id ) );
 }
 
@@ -101,7 +101,7 @@ function incassoos_admin_consumers_meta_get_callback( $user, $field_id ) {
  * @param string  $field_id Meta field key
  * @return mixed Update success.
  */
-function incassoos_admin_consumers_meta_update_callback( $user, $value, $field_id ) {
+function incassoos_admin_consumers_field_update_callback( $user, $value, $field_id ) {
 	if ( empty( $value ) ) {
 		return delete_user_meta( $user->ID, $field_id );
 	} else {
@@ -114,11 +114,11 @@ function incassoos_admin_consumers_meta_update_callback( $user, $value, $field_i
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_admin_consumers_input_callback'
+ * @uses apply_filters() Calls 'incassoos_admin_consumers_field_input_callback'
  *
  * @param string $field_id Meta field key
  */
-function incassoos_admin_consumers_input_callback( $field_id ) {
+function incassoos_admin_consumers_field_input_callback( $field_id ) {
 	$field = incassoos_admin_get_consumers_field( $field_id );
 	$element = '';
 
@@ -175,7 +175,7 @@ function incassoos_admin_consumers_input_callback( $field_id ) {
 			$element = '<input type="' . $type . '" name="' . esc_attr( $field_id ) . '" value="" />';
 	}
 
-	echo apply_filters( 'incassoos_admin_consumers_input_callback', $element, $field_id );
+	echo apply_filters( 'incassoos_admin_consumers_field_input_callback', $element, $field_id );
 }
 
 /**
@@ -183,14 +183,15 @@ function incassoos_admin_consumers_input_callback( $field_id ) {
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_admin_consumers_display_callback'
+ * @uses apply_filters() Calls 'incassoos_admin_consumers_field_display_callback'
  *
+ * @param WP_User $user User object
  * @param string $field_id Meta field key
  * @return string Field display value
  */
-function incassoos_admin_consumers_display_callback( $field_id ) {
+function incassoos_admin_consumers_field_display_callback( $user, $field_id ) {
 	$field = incassoos_admin_get_consumers_field( $field_id );
-	$value = $field ? call_user_func( $field['get_callback'], $field_id ) : '';
+	$value = $field ? call_user_func( $field['get_callback'], $user, $field_id ) : '';
 
 	switch ( $field['type'] ) {
 
@@ -200,7 +201,7 @@ function incassoos_admin_consumers_display_callback( $field_id ) {
 			break;
 	}
 
-	return apply_filters( 'incassoos_admin_consumers_display_callback', $value, $field_id );
+	return apply_filters( 'incassoos_admin_consumers_field_display_callback', $value, $field_id );
 }
 
 /** Page ****************************************************************/
