@@ -17,10 +17,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @uses apply_filters() Calls 'incassoos_admin_get_consumers_fields'
  *
- * @param string $field Optional. Single field to return.
- * @return array Consumers fields or single field when requested.
+ * @return array Consumers fields
  */
-function incassoos_admin_get_consumers_fields( $field = '' ) {
+function incassoos_admin_get_consumers_fields() {
 
 	// Define fields
 	$fields = apply_filters( 'incassoos_admin_get_consumers_fields', array(
@@ -44,24 +43,39 @@ function incassoos_admin_get_consumers_fields( $field = '' ) {
 		),
 	) );
 
-	// Parse arguments
-	foreach ( $fields as $_field => $args ) {
-		$fields[ $_field ] = wp_parse_args( $args, array(
-			'label'           => '',
-			'get_callback'    => 'incassoos_admin_consumers_meta_get_callback',
-			'update_callback' => 'incassoos_admin_consumers_meta_update_callback',
-			'input_callback'  => 'incassoos_admin_consumers_input_callback',
-			'type'            => 'text',
-			'options'         => array()
+	// Parse defaults
+	foreach ( $fields as $field_id => $args ) {
+		$fields[ $field_id ] = wp_parse_args( $args, array(
+			'label'            => '',
+			'get_callback'     => 'incassoos_admin_consumers_meta_get_callback',
+			'update_callback'  => 'incassoos_admin_consumers_meta_update_callback',
+			'input_callback'   => 'incassoos_admin_consumers_input_callback',
+			'display_callback' => 'incassoos_admin_consumers_meta_display_callback',
+			'type'             => 'text',
+			'options'          => array()
 		) );
 	}
 
+	return $fields;
+}
+
+/**
+ * Return a single admin consumers field
+ *
+ * @since 1.0.0
+ *
+ * @param string $field_id Meta field key
+ * @return array Single field
+ */
+function incassoos_admin_get_consumers_field( $field_id ) {
+	$fields = incassoos_admin_get_consumers_fields();
+
 	// Return single field
-	if ( $field && isset( $fields[ $field ] ) ) {
-		return $fields[ $field ];
+	if ( $field_id && isset( $fields[ $field_id ] ) ) {
+		return $fields[ $field_id ];
 	}
 
-	return $fields;
+	return array();
 }
 
 /**
@@ -69,12 +83,12 @@ function incassoos_admin_get_consumers_fields( $field = '' ) {
  *
  * @since 1.0.0
  *
- * @param  WP_User $user User object
- * @param  string $field Meta field key
+ * @param WP_User $user User object
+ * @param string $field_id Meta field key
  * @return mixed Field value
  */
-function incassoos_admin_consumers_meta_get_callback( $user, $field ) {
-	return implode( ',', (array) $user->get( $field ) );
+function incassoos_admin_consumers_meta_get_callback( $user, $field_id ) {
+	return implode( ',', (array) $user->get( $field_id ) );
 }
 
 /**
@@ -82,67 +96,67 @@ function incassoos_admin_consumers_meta_get_callback( $user, $field ) {
  *
  * @since 1.0.0
  *
- * @param  WP_User $user User object
- * @param  mixed   $value New user field value
- * @param  string  $field Meta field key
+ * @param WP_User $user User object
+ * @param mixed   $value New user field value
+ * @param string  $field_id Meta field key
  * @return mixed Update success.
  */
-function incassoos_admin_consumers_meta_update_callback( $user, $value, $field ) {
+function incassoos_admin_consumers_meta_update_callback( $user, $value, $field_id ) {
 	if ( empty( $value ) ) {
-		return delete_user_meta( $user->ID, $field );
+		return delete_user_meta( $user->ID, $field_id );
 	} else {
-		return update_user_meta( $user->ID, $field, $value );
+		return update_user_meta( $user->ID, $field_id, $value );
 	}
 }
 
 /**
- * Output the admin consumers field's input field
+ * Output the admin consumers field's input element
  *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_admin_consumers_input_callback'
  *
- * @param  string $field Meta field key
+ * @param string $field_id Meta field key
  */
-function incassoos_admin_consumers_input_callback( $field ) {
-	$_field = incassoos_admin_get_consumers_fields( $field );
-	$input  = '';
+function incassoos_admin_consumers_input_callback( $field_id ) {
+	$field = incassoos_admin_get_consumers_field( $field_id );
+	$element = '';
 
-	switch ( $_field['type'] ) {
+	switch ( $field['type'] ) {
 
 		// Checkbox
 		case 'checkbox' :
-			if ( ! $_field['options'] ) {
-				$input = '<input type="checkbox" name="' . esc_attr( $field ) . '" value="1" />';
+			if ( ! $field['options'] ) {
+				$element = '<input type="checkbox" name="' . esc_attr( $field_id ) . '" value="1" />';
 				break;
 			}
 
 		// Radio
 		case 'radio' :
-			foreach ( $_field['options'] as $option => $opt_label ) {
-				$id = esc_attr( $field ) . '-' . esc_attr( $option );
-				$input .= sprintf( '<input type="%s" name="%s" id="%s" value="%s" />',
-					$_field['type'],
-					esc_attr( $field ) . ( 'checkbox' === $_field['type'] ? '[]' : '' ),
+			foreach ( $field['options'] as $option => $opt_label ) {
+				$id = esc_attr( $field_id ) . '-' . esc_attr( $option );
+				$element .= sprintf( '<input type="%s" name="%s" id="%s" value="%s" />',
+					$field['type'],
+					esc_attr( $field_id ) . ( 'checkbox' === $field['type'] ? '[]' : '' ),
 					$id,
 					esc_attr( $option )
 				);
-				$input .= '<label for="' . $id . '">' . $opt_label . '</label>';
+				$element .= '<label for="' . $id . '">' . $opt_label . '</label>';
 			}
 			break;
 
 		// Select
 		case 'select' :
-			$input = '<select name="' . esc_attr( $field ) . '">';
-			foreach ( $_field['options'] as $option => $opt_label ) {
-				$input .= sprintf( '<option value="%s">%s</option>', esc_attr( $option ), esc_html( $opt_label ) );
+			$element = '<select name="' . esc_attr( $field_id ) . '">';
+			foreach ( $field['options'] as $option => $opt_label ) {
+				$element .= sprintf( '<option value="%s">%s</option>', esc_attr( $option ), esc_html( $opt_label ) );
 			}
-			$input .= '</select>';
+			$element .= '</select>';
 			break;
 
 		// Textarea
 		case 'textarea' :
-			$input = '<textarea name="' . esc_attr( $field ) . '"></textarea>';
+			$element = '<textarea name="' . esc_attr( $field_id ) . '"></textarea>';
 			break;
 
 		// Price
@@ -152,16 +166,41 @@ function incassoos_admin_consumers_input_callback( $field ) {
 			$format_args     = incassoos_get_currency_format_args();
 			$min_price_value = 1 / pow( 10, $format_args['decimals'] );
 
-			$input = '<input type="number" class="small-text" min="0" step="' . $min_price_value . '" name="' . esc_attr( $field ) . '" value="" />';
+			$element = '<input type="number" class="small-text" min="0" step="' . $min_price_value . '" name="' . esc_attr( $field_id ) . '" value="" />';
 			break;
 
 		// Other
 		default :
-			$type = $_field['type'] ? esc_attr( $_field['type'] ) : 'text';
-			$input = '<input type="' . $type . '" name="' . esc_attr( $field ) . '" value="" />';
+			$type = $field['type'] ? esc_attr( $field['type'] ) : 'text';
+			$element = '<input type="' . $type . '" name="' . esc_attr( $field_id ) . '" value="" />';
 	}
 
-	echo apply_filters( 'incassoos_admin_consumers_input_callback', $input, $field );
+	echo apply_filters( 'incassoos_admin_consumers_input_callback', $element, $field_id );
+}
+
+/**
+ * Return the admin consumers field's display value
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_consumers_display_callback'
+ *
+ * @param string $field_id Meta field key
+ * @return string Field display value
+ */
+function incassoos_admin_consumers_display_callback( $field_id ) {
+	$field = incassoos_admin_get_consumers_field( $field_id );
+	$value = $field ? call_user_func( $field['get_callback'], $field_id ) : '';
+
+	switch ( $field['type'] ) {
+
+		// Price
+		case 'price' :
+			$value = incassoos_parse_currency( $value, true );
+			break;
+	}
+
+	return apply_filters( 'incassoos_admin_consumers_display_callback', $value, $field_id );
 }
 
 /** Page ****************************************************************/
@@ -212,9 +251,9 @@ function incassoos_admin_load_consumers_page() {
 			if ( ! current_user_can( 'edit_incassoos_consumer', $user->ID ) )
 				return;
 
-			foreach ( incassoos_admin_get_consumers_fields() as $column => $args ) {
-				$value = isset( $_REQUEST[ $column ] ) ? $_REQUEST[ $column ] : null;
-				$_success = call_user_func( $args['update_callback'], $user, $value, $column );
+			foreach ( incassoos_admin_get_consumers_fields() as $field_id => $args ) {
+				$value = isset( $_REQUEST[ $field_id ] ) ? $_REQUEST[ $field_id ] : null;
+				$_success = call_user_func( $args['update_callback'], $user, $value, $field_id );
 
 				if ( is_wp_error( $_success ) || ! $_success ) {
 					$success = false;
@@ -346,9 +385,9 @@ function incassoos_admin_consumers_page() {
 							<div class="details" style="display:none;">
 								<span class="user-id"><?php echo $user->ID; ?></span>
 
-								<?php foreach ( incassoos_admin_get_consumers_fields() as $column => $args ) : ?>
+								<?php foreach ( incassoos_admin_get_consumers_fields() as $field_id => $args ) : ?>
 
-									<span class="user-<?php echo esc_attr( $column ); ?>"><?php echo call_user_func( $args['get_callback'], $user, $column ); ?></span>
+									<span class="user-<?php echo esc_attr( $field_id ); ?>"><?php echo call_user_func( $args['get_callback'], $user, $field_id ); ?></span>
 
 								<?php endforeach; ?>
 							</div>
@@ -383,11 +422,11 @@ function incassoos_admin_consumers_page() {
 				<legend class="inline-edit-legend screen-reader-text"><?php esc_html_e( 'Quick Edit' ); ?></legend>
 				<div class="inline-edit-fields">
 
-				<?php foreach ( incassoos_admin_get_consumers_fields() as $column => $args ) : ?>
+				<?php foreach ( incassoos_admin_get_consumers_fields() as $field_id => $args ) : ?>
 
 					<label>
 						<span class="title"><?php echo $args['label']; ?></span>
-						<span class="input-text-wrap"><?php call_user_func( $args['input_callback'], $column ); ?></span>
+						<span class="input-text-wrap"><?php call_user_func( $args['input_callback'], $field_id ); ?></span>
 					</label>
 
 				<?php endforeach; ?>
