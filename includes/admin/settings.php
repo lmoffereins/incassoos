@@ -479,7 +479,7 @@ function incassoos_admin_setting_callback_transaction_description() { ?>
 
 	<input name="_incassoos_transaction_description" id="_incassoos_transaction_description" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_transaction_description', '' ); ?>" />
 
-	<p class="description"><?php printf( esc_html__( 'Use the %s tag to insert the title of the collection at hand.', 'incassoos' ), '<code>%TITLE%</code>' ); ?></p>
+	<p class="description"><?php printf( esc_html__( 'Use the %s tag to insert the title of the related collection.', 'incassoos' ), '<code>{{TITLE}}</code>' ); ?></p>
 
 	<?php
 }
