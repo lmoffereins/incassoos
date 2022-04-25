@@ -1122,6 +1122,26 @@ body.incassoos_page_incassoos-consumers .import-export-consumers {
 	float: right;
 }
 
+body.incassoos_page_incassoos-consumers .export-consumers-wrapper {
+	display: inline-block;
+}
+
+body.incassoos_page_incassoos-consumers .export-consumers-wrapper:not(.opened) input:first-of-type {
+	display: none;
+}
+
+body.incassoos_page_incassoos-consumers .export-consumers-wrapper input:first-of-type {
+	margin-right: -4px;
+	border-right: 0px;
+	border-start-end-radius: 0px;
+	border-end-end-radius: 0px;
+}
+
+body.incassoos_page_incassoos-consumers .export-consumers-wrapper.opened .button {
+	border-start-start-radius: 0px;
+	border-end-start-radius: 0px;
+}
+
 body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) #bulk-action-selector,
 body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) #doaction,
 body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) #consumer-quick-select,

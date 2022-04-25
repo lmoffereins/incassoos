@@ -725,6 +725,16 @@ jQuery(document).ready( function($) {
 				.text( $consumerList.hasClass( 'showing-default-items' ) ? l10n.showDefaultItemsAll : l10n.showDefaultItemsOnly );
 
 			toggleGroups();
+		})
+
+		// Export consumers: open popup for decryption key
+		.on( 'click', '.export-consumers-wrapper.require-decryption-key:not(.opened) #export-consumers', function( e ) {
+
+			// Do not start export yet
+			e.preventDefault();
+
+			// Toggle visibility of other inputs
+			$( this ).parents( '.export-consumers-wrapper' ).addClass( 'opened' ).find( 'input:first-of-type' ).focus();
 		});
 
 	/**

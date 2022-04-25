@@ -1596,7 +1596,7 @@ function incassoos_admin_post_notices() {
  *
  * @since 1.0.0
  *
- * @uses do_action() Calls 'incassoos_admin_{$object_type}_doaction'
+ * @uses do_action() Calls 'incassoos_admin_{object_type}_doaction'
  *
  * @param int $post_id Post ID
  */
@@ -1626,21 +1626,17 @@ function incassoos_admin_post_doaction( $post_id ) {
 	if ( 'export' === $action_parts[0] ) {
 
 		// Start file export dryrun
-		incassoos_export_post_file( $post->ID, array(
-
-			// Simulate whether the export could be run. Download will initiate on next page load.
-			'dryrun'         => true,
-
-			// Get export type from action
+		incassoos_admin_export_file( array(
+			'post_id'        => $post->ID,
 			'export_type_id' => substr( $action, 7 ),
-
-			// Add decryption key when provided
+			'dryrun'         => true,
 			'decryption_key' => isset( $_POST['action-decryption-key'] ) ? $_POST['action-decryption-key'] : false
 		) );
-	}
+	} else {
 
-	// Run dedicated object type hook
-	do_action( "incassoos_admin_{$object_type}_doaction", $post, $action );
+		// Run dedicated object type hook
+		do_action( "incassoos_admin_{$object_type}_doaction", $post, $action );
+	}
 
 	// Still here? Redirect to the post's page
 	wp_redirect( incassoos_get_post_url( $post ) );
@@ -1670,6 +1666,7 @@ function incassoos_admin_collection_doaction( $post, $action ) {
 /**
  * Process a file download request
  *
+ * The action fires irrespective of whether a `post_id` is provided.
  * Requires the 'file-id' parameter in the $_GET global.
  *
  * @since 1.0.0
@@ -1678,11 +1675,10 @@ function incassoos_admin_collection_doaction( $post, $action ) {
  * @return bool False when the download didn't start
  */
 function incassoos_admin_post_action_download( $post_id ) {
-	$post    = get_post( $post_id );
 	$file_id = isset( $_REQUEST['file-id'] ) ? $_REQUEST['file-id'] : false;
 
 	// Bail when post or file is not provided
-	if ( ! $post || ! $file_id ) {
+	if ( ! $file_id ) {
 		return;
 	}
 
@@ -1694,28 +1690,34 @@ function incassoos_admin_post_action_download( $post_id ) {
 		// Offer download only once
 		incassoos_delete_export_details( $file_id );
 
-		// Make sure the 'dryrun' parameter is not activated
-		$export_details['dryrun'] = false;
-
 		// Start serving the download file
-		incassoos_export_post_file( $post->ID, $export_details );
+		incassoos_admin_export_file( $export_details );
+	}
+
+	// Setup redirect url
+	if ( isset( $_GET['_page'] ) ) {
+		$redirect_url = add_query_arg( array( 'page' => esc_attr( $_GET['_page'] ) ), 'admin.php' );
+	} else {
+		$redirect_url = add_query_arg( array( 'post' => $post_id, 'action' => 'edit' ), admin_url( 'post.php' ) );
 	}
 
 	// Still here? Notify user
-	wp_die( sprintf( __( 'Sorry, the file you requested could not be downloaded. <a href="%s">Return to the post.</a>', 'incassoos' ), add_query_arg( array( 'post' => $post->ID, 'action' => 'edit' ), admin_url( 'post.php' ) ) ) );
+	wp_die( sprintf( __( 'Sorry, the file you requested could not be downloaded. <a href="%s">Return to the previous page.</a>', 'incassoos' ), $redirect_url ) );
 }
 
 /**
  * Display the logged errors for the post action
  *
  * @since 1.0.0
- *
- * @param WP_Post $post Post object
  */
-function incassoos_admin_post_action_error_notice( $post ) {
+function incassoos_admin_post_action_error_notice() {
+
+	// Find (post) context
+	$post    = get_post();
+	$post_id = $post ? $post->ID : 0;
 
 	// Find whether any feedback was defined
-	$feedback = get_transient( 'incassoos_post_action_feedback-' . $post->ID ) ;
+	$feedback = get_transient( "incassoos_admin_export_file_feedback-{$post_id}" );
 
 	// Bail when no feedback is logged
 	if ( ! $feedback ) {
@@ -1766,7 +1768,7 @@ function incassoos_admin_post_action_error_notice( $post ) {
 	<?php endif;
 
 	// Remove logged feedback afterwards
-	delete_transient( 'incassoos_post_action_feedback-' . $post->ID );
+	delete_transient( "incassoos_admin_export_file_feedback-{$post_id}" );
 }
 
 /** Multiple Posts ******************************************************/
@@ -2062,108 +2064,120 @@ function incassoos_admin_add_nav_menu_meta_box() {
  *
  * @since 1.0.0
  *
- * @param int   $post_id Post ID
- * @param array $args    Additional export arguments
+ * @param array $args Additional export arguments
+ * @return bool|WP_Error Export success or error object
  */
-function incassoos_export_post_file( $post_id, $args = array() ) {
-	$post        = get_post( $post_id );
-	$object_type = incassoos_get_object_type( $post->post_type );
-
-	// Bail when the post is not found
-	if ( ! $post ) {
-		return false;
-	}
-
+function incassoos_admin_export_file( $args = array() ) {
 	$parsed_args = wp_parse_args( $args, array(
-		'dryrun'         => false,
+		'post_id'        => 0,
 		'export_type_id' => '',
+		'dryrun'         => false,
 		'decryption_key' => false
 	) );
+
+	// Post context
+	$post        = $parsed_args['post_id'] ? get_post( $parsed_args['post_id'] ) : false;
+	$object_type = $post ? incassoos_get_object_type( $post->post_type ) : '';
 
 	// Export type
 	$export_type = incassoos_get_export_type( $parsed_args['export_type_id'] );
 	$feedback    = array();
-	$errors      = array();
+	$retval      = true;
 
-	// Bail when the export type does not exist
-	if ( ! $export_type ) {
-		$errors[] = esc_html__( 'Invalid export type selected.', 'incassoos' );
-	}
+	// Run checks, break out on error
+	do {
 
-	// Get export class
-	$class = $export_type->class_name;
-	if ( ! class_exists( $class ) && ! empty( $export_type->class_file ) ) {
-		require_once( $export_type->class_file );
-	}
-
-	// Bail when the export class is not present
-	if ( empty( $errors ) && ! class_exists( $export_type->class_name ) ) {
-		$errors[] = esc_html__( 'Export type class does not exist.', 'incassoos' );
-	}
-
-	// Bail when the user cannot export
-	if ( empty( $errors ) && ! current_user_can( "export_incassoos_{$object_type}", $post->ID, $parsed_args['export_type_id'] ) ) {
-		$errors[] = esc_html__( 'You are not allowed to export this Collection.', 'incassoos' );
-	}
-
-	// Bail when the decryption key was required but not provided
-	if ( empty( $errors ) && incassoos_get_export_type_require_decryption_key( $parsed_args['export_type_id'] ) ) {
-
-		// Try to set the decryption key
-		$result = incassoos_set_decryption_key( $parsed_args['decryption_key'] );
-
-		if ( is_wp_error( $result ) ) {
-			$errors[] = $result->get_error_message();
-		} else if ( ! $result ) {
-			$errors[] = esc_html__( 'Invalid decryption key provided.', 'incassoos' );
+		// Bail when the export type does not exist
+		if ( ! $export_type ) {
+			$retval = new WP_Error( 'incassoos_invalid_export_type', esc_html__( 'Invalid export type selected.', 'incassoos' ) );
+			break;
 		}
-	}
 
-	// Continue when no errors were found
-	if ( empty( $errors ) ) {
+		// Get export class
+		$class = $export_type->class_name;
+		if ( ! class_exists( $class ) && ! empty( $export_type->class_file ) ) {
+			require_once( $export_type->class_file );
+		}
+
+		// Bail when the export class is not present
+		if ( ! class_exists( $class ) ) {
+			$retval = new WP_Error( 'incassoos_export_type_class_not_found', esc_html__( 'Export type class does not exist.', 'incassoos' ) );
+			break;
+		}
+
+		// Bail when the user cannot export the post
+		if ( $post && ! current_user_can( "export_incassoos_{$object_type}", $post->ID, $export_type ) ) {
+			$retval = new WP_Error( 'incassoos_no_access', esc_html__( 'You are not allowed to export data from this post.', 'incassoos' ) );
+			break;
+		}
+
+		// Bail when the decryption key was required but not provided
+		if ( incassoos_get_export_type_require_decryption_key( $parsed_args['export_type_id'] ) ) {
+
+			// Try to set the decryption key
+			$result = incassoos_set_decryption_key( $parsed_args['decryption_key'] );
+
+			if ( is_wp_error( $result ) || ! $result ) {
+				$retval = $result ?: new WP_Error( 'incassoos_invalid_decryption_key', esc_html__( 'Invalid decryption key provided.', 'incassoos' ) );
+				break;
+			}
+		}
 
 		// Construct file
 		$file = new $class( $post );
 
 		// Bail when not setup properly
 		if ( ! is_a( $file, 'Incassoos_File_Exporter' ) ) {
-			$errors[] = sprintf( esc_html__( 'File exporter is not of type `%s`.', 'incassoos' ), 'Incassoos_File_Exporter' );
+			$retval = new WP_Error( 'incassoos_invalid_file_exporter', sprintf( esc_html__( 'File exporter is not of type `%s`.', 'incassoos' ), 'Incassoos_File_Exporter' ) );
 
 		// Bail when construction failed
 		} else if ( method_exists( $file, 'has_errors' ) && $file->has_errors() ) {
-			$errors = array_merge( $errors, $file->get_errors() );
+			$retval = new WP_Error();
+			foreach ( $file->get_errors() as $message ) {
+				$retval->add( 'incassoos_export_file_error', $message );
+			}
 
 		// When dry-running without errors, delay download
 		} else if ( $parsed_args['dryrun'] ) {
 
 			// Save export details for download on next page load
+			unset( $parsed_args['dryrun'] );
 			$file_id = incassoos_save_export_details( $parsed_args );
 
 			// Report feedback
 			if ( $file_id ) {
 
 				// Setup download url
-				$download_url = add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_download', 'file-id' => $file_id ), admin_url( 'post.php' ) );
+				$download_url = add_query_arg( array( 'action' => 'inc_download', 'file-id' => $file_id ), admin_url( 'post.php' ) );
+				if ( $post ) {
+					$download_url = add_query_arg( 'post', $post->ID, $download_url );
+				} elseif ( isset( $_GET['page'] ) ) {
+					$download_url = add_query_arg( '_page', esc_attr( $_GET['page'] ), $download_url );
+				}
 
 				// Provide download hint
 				$feedback['success'] = array( sprintf( __( 'Your download will start shortly&hellip; <a data-autostart-download="1" href="%s">Click here if it doesn\'t.</a>', 'incassoos' ), $download_url ) );
 			} else {
-				$errors[] = esc_html__( 'Something went wrong preparing your download. Please try again.', 'incassoos' );
+				$retval = new WP_Error( 'incassoos_unknown_export_error', esc_html__( 'Something went wrong preparing your download. Please try again.', 'incassoos' ) );
 			}
 
 		// Offer file download
 		} else {
 			$feedback = incassoos_download_text_file( $file );
 		}
-	}
+
+	} while ( 0 );
 
 	// Collect errors
-	if ( ! empty( $errors ) ) {
-		$feedback['errors'] = $errors;
+	if ( is_wp_error( $retval ) ) {
+		$feedback['errors'] = $retval->get_error_messages();
 	}
 
 	// Log any feedback
 	if ( ! empty( $feedback ) ) {
-		set_transient( 'incassoos_post_action_feedback-' . $post->ID, $feedback );
+		$feedback_id = $parsed_args['post_id'];
+		set_transient( "incassoos_admin_export_file_feedback-{$feedback_id}", $feedback );
 	}
+
+	return $retval;
 }

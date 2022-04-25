@@ -236,8 +236,6 @@ function incassoos_admin_load_consumers_page() {
 		} else {
 			$users = wp_list_pluck( array_filter( $users ), 'ID' );
 		}
-	} else {
-		return;
 	}
 
 	$sendback = add_query_arg( 'page', 'incassoos-consumers', admin_url( 'admin.php' ) );
@@ -310,6 +308,27 @@ function incassoos_admin_load_consumers_page() {
 			exit();
 
 			break;
+
+		// Download consumers
+		case 'incassoos-export-consumers' :
+			check_admin_referer( 'incassoos-export-consumers' );
+
+			// Bail when the users cannot be exported
+			if ( ! current_user_can( 'export_incassoos_consumers' ) )
+				return;
+
+			// Start file export dryrun
+			incassoos_admin_export_file( array(
+				'export_type_id' => incassoos_get_consumers_export_type_id(),
+				'dryrun'         => true,
+				'decryption_key' => isset( $_POST['export-decryption-key'] ) ? $_POST['export-decryption-key'] : false
+			) );
+
+			// Redirect to consumers page
+			wp_redirect( $sendback );
+			exit();
+
+			break;
 	}
 }
 
@@ -342,6 +361,25 @@ function incassoos_admin_consumers_page() {
 
 		<div id="select-meta" class="tablenav hide-if-no-js">
 			<button type="button" id="toggle-bulk-edit" class="button alignleft"><?php esc_html_e( 'Open bulk edit mode', 'incassoos' ); ?></button>
+
+			<?php if ( current_user_can( 'export_incassoos_consumers' ) ) : ?>
+
+			<div class="import-export-consumers">
+				<div class="export-consumers-wrapper <?php if ( $is_encryption_enabled ) { echo 'require-decryption-key'; } ?>">
+					<?php if ( $is_encryption_enabled ) : ?>
+
+					<label class="screen-reader-text" for="export-decryption-key"><?php esc_html_e( 'Decryption key', 'incassoos' ); ?></label>
+					<input type="password" name="export-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
+
+					<?php endif; ?>
+
+					<?php wp_nonce_field( 'incassoos-export-consumers' ); ?>
+					<input type="hidden" name="action" value="incassoos-export-consumers" />
+					<?php submit_button( esc_html__( 'Export', 'incassoos' ), 'button-secondary', 'export-consumers', false ); ?>
+				</div>
+			</div>
+
+			<?php endif; ?>
 		</div>
 
 		<?php endif; ?>

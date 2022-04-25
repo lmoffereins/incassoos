@@ -2079,6 +2079,17 @@ function incassoos_show_post_products_export_type( $context ) {
 }
 
 /**
+ * Return the consumers export type id
+ *
+ * @since 1.0.0
+ *
+ * @return string Consumers export type id
+ */
+function incassoos_get_consumers_export_type_id() {
+	return incassoos()->consumers_export_type;
+}
+
+/**
  * Register a Collection export type
  *
  * @since 1.0.0
@@ -2351,7 +2362,7 @@ function incassoos_get_export_details( $file_id ) {
 
 	$transient = get_transient( $file_id );
 
-	// Bail when the tranient was not found
+	// Bail when the transient was not found
 	if ( ! $transient ) {
 		return false;
 	}

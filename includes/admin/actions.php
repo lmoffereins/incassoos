@@ -60,7 +60,8 @@ add_action( 'load-nav-menus.php',          'incassoos_admin_add_nav_menu_meta_bo
 add_action( 'post_action_inc_doaction',            'incassoos_admin_post_doaction',            10    );
 add_action( 'incassoos_admin_collection_doaction', 'incassoos_admin_collection_doaction',      10, 2 );
 add_action( 'post_action_inc_download',            'incassoos_admin_post_action_download',     10    );
-add_action( 'edit_form_top',                       'incassoos_admin_post_action_error_notice', 10    );
+add_action( 'admin_notices',                       'incassoos_admin_post_action_error_notice', 10    );
+// add_action( 'edit_form_top',                       'incassoos_admin_post_action_error_notice', 10    );
 
 /** Pages *********************************************************************/
 

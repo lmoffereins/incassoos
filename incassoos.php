@@ -122,6 +122,7 @@ final class Incassoos {
 		$this->post_consumers_export_type    = apply_filters( 'incassoos_post_consumers_export_type',    'inc_post_consumers'    );
 		$this->post_consumptions_export_type = apply_filters( 'incassoos_post_consumptions_export_type', 'inc_post_consumptions' );
 		$this->post_products_export_type     = apply_filters( 'incassoos_post_products_export_type',     'inc_post_products'     );
+		$this->consumers_export_type         = apply_filters( 'incassoos_consumers_export_type',         'inc_consumers'         );
 
 		/** Misc ********************************************************/
 
@@ -555,6 +556,21 @@ final class Incassoos {
 				'class_name'            => 'Incassoos_Post_Products_CSV_Exporter',
 				'class_file'            => $this->includes_dir . 'classes/class-incassoos-post-products-csv-exporter.php',
 				'show_in_list_callback' => 'incassoos_show_post_products_export_type'
+			)
+		);
+
+		// Consumers CSV
+		incassoos_register_export_type(
+			incassoos_get_consumers_export_type_id(),
+			array(
+				'labels'                 => array(
+					'name'        => esc_html__( 'Consumers (csv)',        'incassoos' ),
+					'export_file' => esc_html__( 'Export consumers (csv)', 'incassoos' )
+				),
+				'class_name'             => 'Incassoos_Consumers_CSV_Exporter',
+				'class_file'             => $this->includes_dir . 'classes/class-incassoos-consumers-csv-exporter.php',
+				'show_in_list_callback'  => '__return_false',
+				'require_decryption_key' => true
 			)
 		);
 	}
