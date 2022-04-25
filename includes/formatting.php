@@ -70,13 +70,13 @@ function incassoos_sanitize_transaction_description( $content = '' ) {
 	$sub = '/-TITLE-/';
 
 	// Substitute parsable title tag
-	$value = str_replace( '%TITLE%', $sub, $content );
+	$value = str_replace( '{{TITLE}}', $sub, $content );
 
 	// Parse ISO 20022
 	$value = incassoos_sanitize_iso20022( $value );
 
 	// Re-substitute title tag
-	$value = str_replace( $sub, '%TITLE%', $value );
+	$value = str_replace( $sub, '{{TITLE}}', $value );
 
 	// Filter the result and return
 	return apply_filters( 'incassoos_sanitize_transaction_description', $value, $content );

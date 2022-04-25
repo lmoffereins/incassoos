@@ -1723,7 +1723,7 @@ function incassoos_get_collection_transaction_description( $post = 0 ) {
 
 	if ( $post ) {
 		$title       = incassoos_get_collection_title( $post );
-		$description = str_replace( '%TITLE%', $title, incassoos_get_transaction_description() );
+		$description = str_replace( '{{TITLE}}', $title, incassoos_get_transaction_description() );
 
 		// Fallback to just the title
 		if ( ! $description ) {
