@@ -46,9 +46,9 @@ abstract class Incassoos_File_Exporter {
 	 * Holds the list of file errors
 	 *
 	 * @since 1.0.0
-	 * @var array
+	 * @var WP_Error
 	 */
-	protected $errors = array();
+	protected $errors;
 
 	/** Validation ******************************************************/
 
@@ -62,6 +62,21 @@ abstract class Incassoos_File_Exporter {
 	abstract public function validate_file();
 
 	/**
+	 * Register a file error
+	 *
+	 * @since 1.0.0
+	 */
+	public function add_error( $code, $message, $data = '' ) {
+
+		// Set property when not defined yet
+		if ( null === $this->errors ) {
+			$this->errors = new WP_Error();
+		}
+
+		$this->errors->add( $code, $message, $data );
+	}
+
+	/**
 	 * Return whether the file has any errors
 	 *
 	 * @since 1.0.0
@@ -69,7 +84,7 @@ abstract class Incassoos_File_Exporter {
 	 * @return bool Whether there are any errors
 	 */
 	public function has_errors() {
-		return ! empty( $this->errors );
+		return is_a( $this->errors, 'WP_Error' ) ? $this->errors->has_errors() : false;
 	}
 
 	/**
@@ -80,7 +95,7 @@ abstract class Incassoos_File_Exporter {
 	 * @return array List of error messages
 	 */
 	public function get_errors() {
-		return $this->errors;
+		return is_a( $this->errors, 'WP_Error' ) ? $this->errors->get_error_messages() : array();
 	}
 
 	/** Export **********************************************************/

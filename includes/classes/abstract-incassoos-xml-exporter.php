@@ -96,6 +96,11 @@ abstract class Incassoos_XML_Exporter extends Incassoos_File_Exporter {
 	 * @return string File contents or False when invalid.
 	 */
 	public function get_file() {
+
+		// Bail when the file is invalid
+		if ( $this->has_errors() )
+			return false;
+
 		return $this->xml->saveXML();
 	}
 

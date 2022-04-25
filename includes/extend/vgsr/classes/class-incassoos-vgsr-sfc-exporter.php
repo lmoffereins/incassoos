@@ -89,10 +89,10 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	public function validate_file() {
 
 		// Reset errors list
-		$this->errors = array();
+		$this->errors = new WP_Error();
 
 		if ( ! $this->post ) {
-			$this->errors[] = esc_html__( 'The file is invalid because the Collection is not collected.', 'incassoos' );
+			$this->add_error( 'incassoos_invalid_post', esc_html__( 'The file is invalid because the Collection is not collected.', 'incassoos' ) );
 		}
 
 		return ! $this->has_errors();

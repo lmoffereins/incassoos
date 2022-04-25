@@ -278,7 +278,7 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 	public function validate_file() {
 
 		// Reset errors list
-		$this->errors = array();
+		$this->errors = new WP_Error();
 		$failed_details = array();
 
 		// Party details
@@ -301,7 +301,7 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 		// Construct error message
 		if ( $failed_details ) {
 			$detail_list = count( $failed_details ) > 1 ? wp_sprintf_l( '%l', $failed_details ) : $failed_details[0];
-			$this->errors[] = sprintf( esc_html__( 'The file has an invalid value for the following detail(s) of the creditor/organization: %s', 'incassoos' ), $detail_list );
+			$this->add_error( 'incassoos_invalid_file_parameter', sprintf( esc_html__( 'The file has an invalid value for the following detail(s) of the creditor/organization: %s', 'incassoos' ), $detail_list ) );
 		}
 
 		// Transaction errors
@@ -340,7 +340,7 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 			}
 
 			// Construct error message
-			$this->errors[] = sprintf( $message, count( $failed_details ) > 1 ? wp_sprintf_l( '%l', $failed_details ) : $failed_details[0] );
+			$this->add_error( 'incassoos_invalid_file_parameter', sprintf( $message, count( $failed_details ) > 1 ? wp_sprintf_l( '%l', $failed_details ) : $failed_details[0] ) );
 		}
 
 		return ! $this->has_errors();

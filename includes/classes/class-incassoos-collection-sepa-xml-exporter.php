@@ -42,7 +42,7 @@ class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter
 
 		// Require the decryption key
 		if ( incassoos_is_encryption_enabled() && ! incassoos_get_decryption_key() ) {
-			$this->errors[] = esc_html__( 'The required decryption key was not provided.', 'incassoos' );
+			$this->add_error( 'incassoos_missing_decryption_key', esc_html__( 'The required decryption key was not provided.', 'incassoos' ) );
 			return;
 		}
 

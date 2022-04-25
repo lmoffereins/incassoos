@@ -106,6 +106,11 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 	 * @return string File contents or False when invalid.
 	 */
 	public function get_file() {
+
+		// Bail when the file is invalid
+		if ( $this->has_errors() )
+			return false;
+
 		$file  = chr( 239 ) . chr( 187 ) . chr( 191 );
 		$file .= $this->export_column_headers();
 		$file .= $this->export_file_data();
