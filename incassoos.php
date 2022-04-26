@@ -166,9 +166,7 @@ final class Incassoos {
 		/** Admin *******************************************************/
 
 		if ( is_admin() ) {
-			require( $this->includes_dir . 'admin/actions.php'     );
-			require( $this->includes_dir . 'admin/admin.php'       );
-			require( $this->includes_dir . 'admin/sub-actions.php' );
+			require( $this->includes_dir . 'admin/admin.php' );
 		}
 
 		/** Extend ******************************************************/
