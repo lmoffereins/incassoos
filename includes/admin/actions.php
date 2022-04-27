@@ -42,6 +42,7 @@ add_action( 'post_action_inc_unstage',     'incassoos_admin_post_action_unstage'
 add_action( 'post_action_inc_collect',     'incassoos_admin_post_action_collect',    10    );
 add_action( 'post_action_inc_duplicate',   'incassoos_admin_post_action_duplicate',  10    );
 add_action( 'post_action_inc_doaction',    'incassoos_admin_post_action_doaction',   10    );
+add_action( 'admin_post_inc_download',     'incassoos_admin_post_action_download',   10    ); // Using admin-post.php
 add_filter( 'redirect_post_location',      'incassoos_admin_redirect_post_location', 10, 2 );
 add_action( 'add_meta_boxes',              'incassoos_admin_add_meta_boxes',         10, 2 );
 add_filter( 'post_updated_messages',       'incassoos_admin_post_updated_messages',  10    );
@@ -49,8 +50,8 @@ add_action( 'incassoos_admin_notices',     'incassoos_admin_post_notices',      
 add_action( 'incassoos_admin_notices',     'incassoos_admin_post_action_notices',    10    );
 
 // Actions
-add_action( 'incassoos_admin_collection_send_test_email', 'incassoos_admin_collection_send_test_email',  10, 2 );
-add_action( 'admin_post_inc_download',                    'incassoos_admin_post_action_download',        10    );
+add_action( 'incassoos_admin_collection_send_test_email',      'incassoos_admin_collection_send_test_email',      10, 2 );
+add_action( 'incassoos_admin_collection_send_consumer_emails', 'incassoos_admin_collection_send_consumer_emails', 10, 2 );
 
 /** Taxonomy ******************************************************************/
 

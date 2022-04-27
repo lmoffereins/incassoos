@@ -1705,6 +1705,44 @@ function incassoos_send_collection_test_email( $post = 0 ) {
 }
 
 /**
+ * Send a Collection's email to its consumers
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Were the emails sent?
+ */
+function incassoos_send_collection_consumer_emails( $post = 0 ) {
+	$post = incassoos_get_collection( $post );
+	$args = array();
+	$sent = false;
+
+	if ( $post ) {
+		$sent = array();
+
+		foreach ( incassoos_get_collection_consumers( $post ) as $user_id ) {
+			$user = incassoos_get_user( $user_id );
+			if ( $user ) {
+
+				// Define email details
+				$args['to']      = $user->user_email;
+				$args['post']    = $post; // Provide post object to later filters
+				$args['user_id'] = $user->ID;
+				$args['subject'] = incassoos_get_collection_transaction_description( $post );
+				$args['message'] = incassoos_get_collection_email_content( $user->ID, $post );
+
+				// Send the email
+				$sent[ $user->ID ] = incassoos_send_email( $args );
+			}
+		}
+
+		$sent = ! in_array( false, $sent );
+	}
+
+	return $sent;
+}
+
+/**
  * Return the Collection's transaction description
  *
  * When the setting for transaction description is empty, the Collection's title
