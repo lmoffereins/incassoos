@@ -55,7 +55,7 @@ class Incassoos_REST_JWT_Auth_Controller {
 	 */
 	public function setup_actions() {
 		add_filter( 'rest_api_init',              array( $this, 'filter_cors_headers' ), 15    );
-		add_filter( 'rest_authentication_errors', array( $this, 'authenticate'   ),  5, 3 );
+		add_filter( 'rest_authentication_errors', array( $this, 'authenticate'        ),  5, 3 );
 	}
 
 	/**

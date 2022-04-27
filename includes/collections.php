@@ -688,9 +688,9 @@ function incassoos_is_post_collectable( $post = 0 ) {
 				$retval = incassoos_is_order_collectable( $post );
 				break;
 
-            // Other
-            default :
-                $retval = (bool) apply_filters( 'incassoos_is_post_collectable', $retval, $post );
+			// Other
+			default :
+				$retval = (bool) apply_filters( 'incassoos_is_post_collectable', $retval, $post );
 		}
 	}
 
@@ -735,9 +735,9 @@ function incassoos_is_post_collected( $post = 0 ) {
 				$retval = incassoos_is_order_collected( $post );
 				break;
 
-            // Other
-            default :
-                $retval = (bool) apply_filters( 'incassoos_is_post_collected', $retval, $post );
+			// Other
+			default :
+				$retval = (bool) apply_filters( 'incassoos_is_post_collected', $retval, $post );
 		}
 	}
 

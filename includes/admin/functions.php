@@ -1393,13 +1393,14 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 8 => __( 'Collection submitted.', 'incassoos' ),
 
 		// Custom
-		11 => __( 'Collection staged.',          'incassoos' ),
-		12 => __( 'Collection unstaged.',        'incassoos' ),
-		13 => __( 'Collection collected.',       'incassoos' ),
-		14 => __( 'Collection test email sent.', 'incassoos' ),
+		11 => __( 'Collection staged.',               'incassoos' ),
+		12 => __( 'Collection unstaged.',             'incassoos' ),
+		13 => __( 'Collection collected.',            'incassoos' ),
+		14 => __( 'Collection test email sent.',      'incassoos' ),
+		15 => __( 'Collection consumer emails sent.', 'incassoos' ),
 
 		// Error codes
-		'incassoos_empty_title'   => __( 'Empty title.', 'incassoos' ),
+		'incassoos_empty_title'   => __( 'Empty title.',              'incassoos' ),
 		'incassoos_empty_content' => __( 'Empty collection message.', 'incassoos' ),
 	);
 
@@ -1412,10 +1413,10 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 8 => __( 'Activity submitted.', 'incassoos' ),
 
 		// Error codes
-		'incassoos_empty_title'   => __( 'Empty title.', 'incassoos' ),
+		'incassoos_empty_title'   => __( 'Empty title.',           'incassoos' ),
 		'incassoos_invalid_date'  => __( 'Invalid activity date.', 'incassoos' ),
-		'incassoos_empty_price'   => __( 'Empty price.', 'incassoos' ),
-		'incassoos_invalid_price' => __( 'Invalid price.', 'incassoos' ),
+		'incassoos_empty_price'   => __( 'Empty price.',           'incassoos' ),
+		'incassoos_invalid_price' => __( 'Invalid price.',         'incassoos' ),
 	);
 
 	// Occasion
@@ -1431,8 +1432,8 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		12 => __( 'Occasion reopened.',  'incassoos' ),
 
 		// Error codes
-		'incassoos_empty_title'  => __( 'Empty title.', 'incassoos' ),
-		'incassoos_empty_date'   => __( 'Empty occasion date.', 'incassoos' ),
+		'incassoos_empty_title'  => __( 'Empty title.',           'incassoos' ),
+		'incassoos_empty_date'   => __( 'Empty occasion date.',   'incassoos' ),
 		'incassoos_invalid_date' => __( 'Invalid occasion date.', 'incassoos' ),
 	);
 
@@ -1450,12 +1451,12 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		'incassoos_order_time_locked'       => $time_lock
 			? sprintf( __( 'Sorry, the order cannot be edited beyond %d minutes after initial creation.', 'incassoos' ), $time_lock )
 			: __( 'Sorry, the order cannot be edited after initial creation.', 'incassoos' ),
-		'incassoos_order_invalid_parent'    => __( 'Invalid occasion.', 'incassoos' ),
+		'incassoos_order_invalid_parent'    => __( 'Invalid occasion.',                      'incassoos' ),
 		'incassoos_order_locked_occasion'   => __( 'The occasion is closed for new orders.', 'incassoos' ),
-		'incassoos_user_invalid_id_or_type' => __( 'Invalid consumer ID or type.', 'incassoos' ),
-		'incassoos_user_invalid_id'         => __( 'Invalid consumer ID.', 'incassoos' ),
-		'incassoos_consumer_invalid_type'   => __( 'Invalid consumer type.', 'incassoos' ),
-		'incassoos_order_invalid_products'  => __( 'Invalid order products.', 'incassoos' ),
+		'incassoos_user_invalid_id_or_type' => __( 'Invalid consumer ID or type.',           'incassoos' ),
+		'incassoos_user_invalid_id'         => __( 'Invalid consumer ID.',                   'incassoos' ),
+		'incassoos_consumer_invalid_type'   => __( 'Invalid consumer type.',                 'incassoos' ),
+		'incassoos_order_invalid_products'  => __( 'Invalid order products.',                'incassoos' ),
 	);
 
 	// Product
@@ -1467,8 +1468,8 @@ function incassoos_admin_post_updated_messages( $messages ) {
 		 8 => __( 'Product submitted.', 'incassoos' ),
 
 		// Error codes
-		'incassoos_empty_title'   => __( 'Empty title.', 'incassoos' ),
-		'incassoos_empty_price'   => __( 'Empty price.', 'incassoos' ),
+		'incassoos_empty_title'   => __( 'Empty title.',   'incassoos' ),
+		'incassoos_empty_price'   => __( 'Empty price.',   'incassoos' ),
 		'incassoos_invalid_price' => __( 'Invalid price.', 'incassoos' ),
 	);
 
@@ -1528,10 +1529,10 @@ function incassoos_admin_post_notices() {
 
 	$types = array(
 		incassoos_get_collection_post_type() => esc_html__( 'Collection could not be saved: %s', 'incassoos' ),
-		incassoos_get_activity_post_type()   => esc_html__( 'Activity could not be saved: %s', 'incassoos' ),
-		incassoos_get_occasion_post_type()   => esc_html__( 'Occasion could not be saved: %s', 'incassoos' ),
-		incassoos_get_order_post_type()      => esc_html__( 'Order could not be saved: %s', 'incassoos' ),
-		incassoos_get_product_post_type()    => esc_html__( 'Product could not be saved: %s', 'incassoos' ),
+		incassoos_get_activity_post_type()   => esc_html__( 'Activity could not be saved: %s',   'incassoos' ),
+		incassoos_get_occasion_post_type()   => esc_html__( 'Occasion could not be saved: %s',   'incassoos' ),
+		incassoos_get_order_post_type()      => esc_html__( 'Order could not be saved: %s',      'incassoos' ),
+		incassoos_get_product_post_type()    => esc_html__( 'Product could not be saved: %s',    'incassoos' ),
 	);
 
 	// Get error prefix
