@@ -1959,7 +1959,11 @@ function incassoos_admin_get_post_action_types( $post ) {
 
 				// Distribution: send consumer emails
 				if ( incassoos_is_collection_collected( $post ) ) {
-					$action_types['distribution']['actions']['send-consumer_emails'] = array( 'label' => esc_html__( 'Send consumer emails', 'incassoos' ), 'require_confirmation' => true );
+					$is_sent = incassoos_is_collection_consumer_emails_sent( $post );
+					$action_types['distribution']['actions']['send-consumer_emails'] = array(
+						'label'                => $is_sent ? esc_html__( 'Resend consumer emails', 'incassoos' ) : esc_html__( 'Send consumer emails', 'incassoos' ),
+						'require_confirmation' => $is_sent
+					);
 				}
 
 				break;

@@ -219,7 +219,7 @@ body.incassoos-post-view #postdivrich .inside {
 
 .incassoos-object-details label {
 	display: inline-block;
-	width: 30%;
+	width: 32%;
 	margin-right: -4px;
 	padding-right: 8px;
 	font-weight: 600;
@@ -232,14 +232,14 @@ body.incassoos-post-view #postdivrich .inside {
 .incassoos-object-details label + * {
 	display: inline-block;
 	width: 100%;
-	max-width: 70%;
+	max-width: 68%;
 	margin-right: 0px;
 	margin-left: 0px;
 	vertical-align: top;
 }
 
 .incassoos-object-details label + select {
-	width: 70%;
+	width: 68%;
 }
 
 .incassoos-object-details label + .detail-wrapper select {

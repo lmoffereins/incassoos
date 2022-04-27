@@ -575,6 +575,28 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<?php endif; ?>
 
+		<?php if ( incassoos_is_collection_collected( $post ) ) : ?>
+
+		<p>
+			<label><?php esc_html_e( 'Distributed:', 'incassoos' ); ?></label>
+
+			<?php if ( incassoos_is_collection_consumer_emails_sent( $post ) ) : ?>
+
+			<span id="collection-consumer-emails-sent" class="value">
+				<?php foreach ( incassoos_get_collection_consumer_emails_sent( $post ) as $sent ) : ?>
+				<span class="value"><?php echo $sent; ?></span>
+				<?php endforeach; ?>
+			</span>
+
+			<?php else : ?>
+
+			<span id="collection-consumer-emails-sent" class="value"><?php esc_html_e( 'Not yet distributed', 'incassoos' ); ?></span>
+
+			<?php endif; ?>
+		</p>
+
+		<?php endif; ?>
+
 		<?php do_action( 'incassoos_collection_details_metabox', $post ); ?>
 
 		<?php if ( ! incassoos_is_collection_locked( $post ) && incassoos_collection_has_assets( $post ) ) : ?>

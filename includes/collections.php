@@ -644,6 +644,49 @@ function incassoos_get_collection_hint( $post = 0 ) {
 	return apply_filters( 'incassoos_get_collection_hint', $hint, $post );
 }
 
+/**
+ * Return whether the Collection's consumer emails are sent
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Collection's consumer emails are sent
+ */
+function incassoos_is_collection_consumer_emails_sent( $post = 0 ) {
+	$post    = incassoos_get_collection( $post );
+	$dates   = incassoos_get_collection_consumer_emails_sent( $post );
+	$is_sent = ! empty( $dates );
+
+	return apply_filters( 'incassoos_is_collection_consumer_emails_sent', $is_sent, $post );
+}
+
+/**
+ * Return the Collection's send dates for consumer emails
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_collection_consumer_emails_sent'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return array Collection consumer emails sent dates
+ */
+function incassoos_get_collection_consumer_emails_sent( $post = 0, $date_format = '' ) {
+	$post  = incassoos_get_collection( $post );
+	$dates = $post ? get_post_meta( $post->ID, 'consumer_emails_sent', false ) : array();
+
+	// Default to the registered date format
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
+	}
+
+	foreach ( $dates as $index => $date ) {
+		$dates[ $index ] = mysql2date( $date_format, $date );
+	}
+
+	return apply_filters( 'incassoos_get_collection_consumer_emails_sent', $dates, $post, $date_format );
+}
+
 /** Assets ********************************************************************/
 
 /**
@@ -1732,11 +1775,21 @@ function incassoos_send_collection_consumer_emails( $post = 0 ) {
 				$args['message'] = incassoos_get_collection_email_content( $user->ID, $post );
 
 				// Send the email
-				$sent[ $user->ID ] = incassoos_send_email( $args );
+				$sent[ $user->ID ] = $is_sent = incassoos_send_email( $args );
+
+				// Break out when sending failed
+				if ( ! $is_sent ) {
+					break;
+				}
 			}
 		}
 
 		$sent = ! in_array( false, $sent );
+
+		// Register emails sent date
+		if ( $sent ) {
+			add_post_meta( $post->ID, 'consumer_emails_sent', wp_date( 'Y-m-d H:i:s' ) );
+		}
 	}
 
 	return $sent;
