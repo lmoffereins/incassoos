@@ -2311,6 +2311,8 @@ function incassoos_get_export_type_require_decryption_key( $export_type_id ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_save_export_details_expiration'
+ *
  * @param  array $export_details Export details to be saved
  * @return string|bool File identifier when saved, false when saving failed
  */
@@ -2332,8 +2334,9 @@ function incassoos_save_export_details( $export_details = array() ) {
 	// Encrypt export details for it may contain private info
 	$export_details = base64_encode( openssl_encrypt( maybe_serialize( $export_details ), 'AES-256-CBC', $nonce, 0, $iv ) );
 
-	// Store transient for 30 minutes
-	$success = set_transient( $file_id, $export_details, 30 * MINUTE_IN_SECONDS );
+	// Make export details expire. Default to 15 minutes.
+	$expiration = apply_filters( 'incassoos_save_export_details_expiration', 15 * MINUTE_IN_SECONDS );
+	$success    = set_transient( $file_id, $export_details, $expiration );
 
 	// Bail when storing the transient failed
 	if ( ! $success ) {
