@@ -1670,11 +1670,8 @@ function incassoos_admin_collection_doaction( $post, $action ) {
  * Requires the 'file-id' parameter in the $_GET global.
  *
  * @since 1.0.0
- *
- * @param  int $post_id Post ID
- * @return bool False when the download didn't start
  */
-function incassoos_admin_post_action_download( $post_id ) {
+function incassoos_admin_post_action_download() {
 	$file_id = isset( $_REQUEST['file-id'] ) ? $_REQUEST['file-id'] : false;
 
 	// Bail when post or file is not provided
@@ -1687,9 +1684,6 @@ function incassoos_admin_post_action_download( $post_id ) {
 
 	if ( $export_details ) {
 
-		// Offer download only once
-		incassoos_delete_export_details( $file_id );
-
 		// Start serving the download file
 		incassoos_admin_export_file( $export_details );
 	}
@@ -1697,27 +1691,29 @@ function incassoos_admin_post_action_download( $post_id ) {
 	// Setup redirect url
 	if ( isset( $_GET['_page'] ) ) {
 		$redirect_url = add_query_arg( array( 'page' => esc_attr( $_GET['_page'] ) ), 'admin.php' );
+	} elseif ( isset( $_GET['post'] ) ) {
+		$redirect_url = add_query_arg( array( 'post' => esc_attr( $_GET['post'] ), 'action' => 'edit' ), admin_url( 'post.php' ) );
 	} else {
-		$redirect_url = add_query_arg( array( 'post' => $post_id, 'action' => 'edit' ), admin_url( 'post.php' ) );
+		$redirect_url = add_query_arg( array( 'page' => 'incassoos' ), admin_url( 'admin.php' ) );
 	}
 
 	// Still here? Notify user
-	wp_die( sprintf( __( 'Sorry, the file you requested could not be downloaded. <a href="%s">Return to the previous page.</a>', 'incassoos' ), $redirect_url ) );
+	wp_die( sprintf( __( 'Sorry, the file download you requested is expired. <a href="%s">Return to the previous page.</a>', 'incassoos' ), $redirect_url ) );
 }
 
 /**
- * Display the logged errors for the post action
+ * Display the logged messages for the post action
  *
  * @since 1.0.0
  */
-function incassoos_admin_post_action_error_notice() {
+function incassoos_admin_post_action_notices() {
 
 	// Find (post) context
 	$post    = get_post();
 	$post_id = $post ? $post->ID : 0;
 
 	// Find whether any feedback was defined
-	$feedback = get_transient( "incassoos_admin_export_file_feedback-{$post_id}" );
+	$feedback = get_transient( "incassoos_admin_post_action_notice-{$post_id}" );
 
 	// Bail when no feedback is logged
 	if ( ! $feedback ) {
@@ -1768,7 +1764,7 @@ function incassoos_admin_post_action_error_notice() {
 	<?php endif;
 
 	// Remove logged feedback afterwards
-	delete_transient( "incassoos_admin_export_file_feedback-{$post_id}" );
+	delete_transient( "incassoos_admin_post_action_notice-{$post_id}" );
 }
 
 /** Multiple Posts ******************************************************/
@@ -2148,7 +2144,7 @@ function incassoos_admin_export_file( $args = array() ) {
 			if ( $file_id ) {
 
 				// Setup download url
-				$download_url = add_query_arg( array( 'action' => 'inc_download', 'file-id' => $file_id ), admin_url( 'post.php' ) );
+				$download_url = add_query_arg( array( 'action' => 'inc_download', 'file-id' => $file_id ), admin_url( 'admin-post.php' ) );
 				if ( $post ) {
 					$download_url = add_query_arg( 'post', $post->ID, $download_url );
 				} elseif ( isset( $_GET['page'] ) ) {
@@ -2176,7 +2172,7 @@ function incassoos_admin_export_file( $args = array() ) {
 	// Log any feedback
 	if ( ! empty( $feedback ) ) {
 		$feedback_id = $parsed_args['post_id'];
-		set_transient( "incassoos_admin_export_file_feedback-{$feedback_id}", $feedback );
+		set_transient( "incassoos_admin_post_action_notice-{$feedback_id}", $feedback );
 	}
 
 	return $retval;

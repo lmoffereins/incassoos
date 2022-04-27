@@ -52,10 +52,10 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 		$this->file_type = incassoos_get_post_consumers_export_type_id();
 
 		// Set the post context
-		$this->post = $post = get_post( $post );
-		$this->object_type  = incassoos_get_object_type( $post->post_type ) ?: 'default';
+		$this->post        = get_post( $post );
+		$this->object_type = $this->post ? incassoos_get_object_type( $this->post->post_type ) : 'default';
 
-		if ( $post ) {
+		if ( $this->post ) {
 			$columns   = $this->get_post_columns();
 			$file_data = $this->get_post_data();
 
@@ -159,7 +159,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$post_date  = incassoos_get_collection_date( $this->post, 'Y-m-d' );
 
 				// Consumer users
-				foreach ( incassoos_get_collection_consumer_users() as $user ) {
+				foreach ( incassoos_get_collection_consumer_users( $this->post ) as $user ) {
 					foreach ( incassoos_get_collection_consumer_assets( $user->ID, $this->post ) as $item_id ) {
 						$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
 							'id'              => $post_id,
@@ -176,7 +176,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				}
 
 				// Consumer types
-				foreach ( incassoos_get_collection_consumer_types() as $type_id ) {
+				foreach ( incassoos_get_collection_consumer_types( $this->post ) as $type_id ) {
 					$type_name = incassoos_get_consumer_type_title( $type_id );
 
 					foreach ( incassoos_get_collection_consumer_assets( $user, $this->post ) as $item_id ) {
@@ -201,7 +201,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$post_title = incassoos_get_activity_title( $this->post );
 				$post_date  = incassoos_get_activity_date( $this->post , 'Y-m-d');
 
-				foreach ( incassoos_get_activity_participant_users() as $user ) {
+				foreach ( incassoos_get_activity_participant_users( $this->post ) as $user ) {
 					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
 						'id'            => $post_id,
 						'activity'      => $post_title,
@@ -220,7 +220,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$post_date  = incassoos_get_occasion_date( $this->post, 'Y-m-d' );
 
 				// Consumer users
-				foreach ( incassoos_get_occasion_consumer_users() as $user ) {
+				foreach ( incassoos_get_occasion_consumer_users( $this->post ) as $user ) {
 					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
 						'id'            => $post_id,
 						'occasion'      => $post_title,
@@ -233,7 +233,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				}
 
 				// Consumer types
-				foreach ( incassoos_get_occasion_consumer_types() as $type_id ) {
+				foreach ( incassoos_get_occasion_consumer_types( $this->post ) as $type_id ) {
 					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
 						'id'            => $post_id,
 						'occasion'      => $post_title,
