@@ -337,6 +337,11 @@ function incassoos_admin_post_submit_metabox( $post ) {
 
 	<div class="submitbox" id="submitpost">
 		<div id="major-publishing-actions">
+			<?php // Hidden submit button early on so that the browser chooses the right button when form is submitted with Return key. ?>
+			<div style="display:none;">
+				<?php submit_button( __( 'Save' ), '', 'save' ); ?>
+			</div>
+
 			<div id="delete-action">
 				<?php
 				if ( current_user_can( $post_type_object->cap->delete_post, $post->ID ) ) {
@@ -359,8 +364,8 @@ function incassoos_admin_post_submit_metabox( $post ) {
 						<?php submit_button( __( 'Save' ), 'primary large', 'publish', false ); ?>
 					<?php endif;
 				} elseif ( ! $is_post_view ) { ?>
-						<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update') ?>" />
-						<input name="save" type="submit" class="button button-primary button-large" id="publish" value="<?php esc_attr_e( 'Update' ) ?>" />
+					<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e( 'Update' ); ?>" />
+					<?php submit_button( __( 'Update' ), 'primary large', 'save', false, array( 'id' => 'publish' ) ); ?>
 				<?php
 				} ?>
 			</div>
@@ -596,7 +601,24 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_stage || $can_unstage || $can_doaction ) : ?>
+	<?php if ( $can_doaction ) : ?>
+
+	<div id="misc-publishing-actions">
+		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+
+		<div class="publishing-action">
+			<span class="spinner"></span>
+			<?php wp_nonce_field( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_doaction" />
+			<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<?php endif; ?>
+
+	<?php if ( $can_stage || $can_unstage || $can_collect ) : ?>
 
 	<div id="major-publishing-actions">
 		<?php if ( $can_stage ) : ?>
@@ -608,11 +630,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			</span>
 		</div>
 
-		<?php elseif ( $can_doaction ) :
-
-		incassoos_admin_post_doaction_publishing_notice( $actions_dropdown );
-
-		endif; ?>
+		<?php endif; ?>
 
 		<div id="publishing-action">
 			<span class="spinner"></span>
@@ -623,11 +641,6 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php endif; ?>
 			<?php if ( $can_collect ) : ?>
 				<a class="button button-primary button-large" id="collect-collection" href="<?php echo esc_url( $collect_url ); ?>"><?php esc_html_e( 'Submit', 'incassoos' ); ?></a>
-			<?php elseif ( $can_doaction ) : ?>
-				<?php wp_nonce_field( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' ); ?>
-				<input type="hidden" name="action" value="inc_doaction" />
-				<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
 			<?php endif; ?>
 		</div>
 		<div class="clear"></div>
@@ -1026,21 +1039,15 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 	<?php if ( $can_doaction ) : ?>
 
-	<div id="major-publishing-actions">
-		<?php if ( $can_doaction ) :
+	<div id="misc-publishing-actions">
+		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
 
-			incassoos_admin_post_doaction_publishing_notice( $actions_dropdown );
-
-		endif; ?>
-
-		<div id="publishing-action">
+		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php if ( $can_doaction ) : ?>
-				<?php wp_nonce_field( 'doaction_activity-' . $post->ID, 'activity_doaction_nonce' ); ?>
-				<input type="hidden" name="action" value="inc_doaction" />
-				<label class="screen-reader-text" for="doaction-activity"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="doaction-activity" name="doaction-activity" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
-			<?php endif; ?>
+			<?php wp_nonce_field( 'doaction_activity-' . $post->ID, 'activity_doaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_doaction" />
+			<label class="screen-reader-text" for="doaction-activity"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-activity" name="doaction-activity" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1350,7 +1357,24 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_close || $can_reopen || $can_doaction ) : ?>
+	<?php if ( $can_doaction ) : ?>
+
+	<div id="misc-publishing-actions">
+		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+
+		<div class="publishing-action">
+			<span class="spinner"></span>
+			<?php wp_nonce_field( 'doaction_occasion-' . $post->ID, 'occasion_doaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_doaction" />
+			<label class="screen-reader-text" for="doaction-occasion"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-occasion" name="doaction-occasion" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<?php endif; ?>
+
+	<?php if ( $can_close || $can_reopen ) : ?>
 
 	<div id="major-publishing-actions">
 		<?php if ( $can_reopen ) : ?>
@@ -1359,11 +1383,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			<label title="<?php printf( esc_attr__( 'The occasion was closed on %1$s at %2$s.', 'incassoos' ), incassoos_get_occasion_closed_date( $post ), incassoos_get_occasion_closed_date( $post, get_option( 'time_format' ) ) ); ?>"><?php esc_html_e( 'Closed for new orders.', 'incassoos' ); ?></label>
 		</div>
 
-		<?php elseif ( $can_doaction ) :
-
-			incassoos_admin_post_doaction_publishing_notice( $actions_dropdown );
-
-		endif; ?>
+		<?php endif; ?>
 
 		<div id="publishing-action">
 			<span class="spinner"></span>
@@ -1371,11 +1391,6 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 				<a class="button button-primary button-large" id="close-occasion" href="<?php echo esc_url( $close_url ); ?>"><?php esc_html_e( 'Close', 'incassoos' ); ?></a>
 			<?php elseif ( $can_reopen ) : ?>
 				<a class="button button-secondary button-large" id="reopen-occasion" href="<?php echo esc_url( $reopen_url ); ?>"><?php esc_html_e( 'Reopen', 'incassoos' ); ?></a>
-			<?php elseif ( $can_doaction ) : ?>
-				<?php wp_nonce_field( 'doaction_occasion-' . $post->ID, 'occasion_doaction_nonce' ); ?>
-				<input type="hidden" name="action" value="inc_doaction" />
-				<label class="screen-reader-text" for="doaction-occasion"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="doaction-occasion" name="doaction-occasion" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
 			<?php endif; ?>
 		</div>
 		<div class="clear"></div>
@@ -1634,21 +1649,15 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 	<?php if ( $can_doaction ) : ?>
 
-	<div id="major-publishing-actions">
-		<?php if ( $can_doaction ) :
+	<div id="misc-publishing-actions">
+		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
 
-			incassoos_admin_post_doaction_publishing_notice( $actions_dropdown );
-
-		endif; ?>
-
-		<div id="publishing-action">
+		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php if ( $can_doaction ) : ?>
-				<?php wp_nonce_field( 'doaction_order-' . $post->ID, 'order_doaction_nonce' ); ?>
-				<input type="hidden" name="action" value="inc_doaction" />
-				<label class="screen-reader-text" for="doaction-order"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="doaction-order" name="doaction-order" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
-			<?php endif; ?>
+			<?php wp_nonce_field( 'doaction_order-' . $post->ID, 'order_doaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_doaction" />
+			<label class="screen-reader-text" for="doaction-order"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-order" name="doaction-order" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1806,23 +1815,17 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_close || $can_reopen || $can_doaction ) : ?>
+	<?php if ( $can_doaction ) : ?>
 
-	<div id="major-publishing-actions">
-		<?php if ( $can_doaction ) :
+	<div id="misc-publishing-actions">
+		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
 
-			incassoos_admin_post_doaction_publishing_notice( $actions_dropdown );
-
-		endif; ?>
-
-		<div id="publishing-action">
+		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php if ( $can_doaction ) : ?>
-				<?php wp_nonce_field( 'doaction_product-' . $post->ID, 'product_doaction_nonce' ); ?>
-				<input type="hidden" name="action" value="inc_doaction" />
-				<label class="screen-reader-text" for="doaction-product"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-				<input type="submit" class="button button-secondary button-large" id="doaction-product" name="doaction-product" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
-			<?php endif; ?>
+			<?php wp_nonce_field( 'doaction_product-' . $post->ID, 'product_doaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_doaction" />
+			<label class="screen-reader-text" for="doaction-product"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-product" name="doaction-product" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>

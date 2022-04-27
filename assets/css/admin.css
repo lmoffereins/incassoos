@@ -150,6 +150,7 @@ body.incassoos-post-view #postdivrich .inside {
 	border: none;
 }
 
+#misc-publishing-actions .publishing-notice,
 #major-publishing-actions .publishing-notice {
 	display: inline-block;
 	line-height: 28px;
@@ -164,7 +165,8 @@ body.incassoos-post-view #postdivrich .inside {
 	vertical-align: middle;
 }
 
-#major-publishing-actions #publishing-action {
+#misc-publishing-actions .publishing-action,
+#major-publishing-actions .publishing-action {
 	text-align: right;
 	float: right;
 	line-height: 23px;
@@ -174,17 +176,20 @@ body.incassoos-post-view #postdivrich .inside {
 	pointer-events: none;
 }
 
-#major-publishing-actions #publishing-action .spinner {
+#misc-publishing-actions .publishing-action .spinner,
+#major-publishing-actions .publishing-action .spinner {
 	float: left;
 }
 
 @media screen and (max-width: 782px) {
 
-	#major-publishing-actions #publishing-action {
+	#misc-publishing-actions .publishing-action,
+	#major-publishing-actions .publishing-action {
 		line-height: 47px;
 	}
 
-	#major-publishing-actions #publishing-action .spinner {
+	#misc-publishing-actions .publishing-action .spinner,
+	#major-publishing-actions .publishing-action .spinner {
 		float: none;
 		margin-top: -2px; /* Half of the Collect button's bottom margin. */
 	}
@@ -309,32 +314,39 @@ body.incassoos-post-view #postdivrich .inside {
 	cursor: inherit;
 }
 
-#major-publishing-actions .publishing-notice {
+#misc-publishing-actions {
+	padding: 10px;
+	clear: both;
+	border-top: 1px solid #ddd;
+	background: #fafafa;
+}
+
+#misc-publishing-actions .publishing-notice {
 	max-width: 50%;
 }
 
-#major-publishing-actions .publishing-notice.require-confirmation,
-#major-publishing-actions .publishing-notice.require-decryption-key {
+#misc-publishing-actions .publishing-notice.require-confirmation,
+#misc-publishing-actions .publishing-notice.require-decryption-key {
 	max-width: none;
 	margin-bottom: 10px;
 }
 
-#major-publishing-actions .publishing-notice .action-confirmation,
-#major-publishing-actions .publishing-notice .action-decryption-key {
+#misc-publishing-actions .publishing-notice .action-confirmation,
+#misc-publishing-actions .publishing-notice .action-decryption-key {
 	display: none;
 }
 
-#major-publishing-actions .publishing-notice.require-confirmation .action-confirmation,
-#major-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key {
+#misc-publishing-actions .publishing-notice.require-confirmation .action-confirmation,
+#misc-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key {
 	display: inline-block;
 }
 
-#major-publishing-actions .publishing-notice.require-confirmation .action-confirmation label,
-#major-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key label {
+#misc-publishing-actions .publishing-notice.require-confirmation .action-confirmation label,
+#misc-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key label {
 	font-weight: inherit;
 }
 
-#major-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key input {
+#misc-publishing-actions .publishing-notice.require-decryption-key .action-decryption-key input {
 	text-align: left;
 	width: 100%;
 }
@@ -342,16 +354,16 @@ body.incassoos-post-view #postdivrich .inside {
 /* single column */
 @media screen and (max-width: 850px) {
 
-	#major-publishing-actions .publishing-notice {
+	#misc-publishing-actions .publishing-notice {
 		max-width: none;
 	}
 
-	#major-publishing-actions .publishing-notice.require-confirmation,
-	#major-publishing-actions .publishing-notice.require-decryption-key {
+	#misc-publishing-actions .publishing-notice.require-confirmation,
+	#misc-publishing-actions .publishing-notice.require-decryption-key {
 		margin-bottom: 0px;
 	}
 
-	#major-publishing-actions .publishing-notice .action-decryption-key {
+	#misc-publishing-actions .publishing-notice .action-decryption-key {
 		width: auto;
 	}
 }

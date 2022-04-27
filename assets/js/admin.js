@@ -29,8 +29,8 @@ jQuery(document).ready( function($) {
 
 	$detailsBox
 		// Publishing action
-		.on( 'click', '#publishing-action .button', function() {
-			$detailsBox.find( '#major-publishing-actions .spinner' ).addClass( 'is-active' );
+		.on( 'click', '.publishing-action .button', function() {
+			$detailsBox.find( '#misc-publishing-actions .spinner' ).addClass( 'is-active' );
 		})
 
 		// Action selection
