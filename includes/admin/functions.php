@@ -1334,46 +1334,6 @@ function incassoos_admin_post_action_collect( $post_id ) {
 }
 
 /**
- * Parse the admin test email action for a Collection
- *
- * @since 1.0.0
- *
- * @param  mixed $post_id Post ID
- */
-function incassoos_admin_post_action_test_email( $post_id ) {
-	$post = incassoos_get_collection( $post_id );
-
-	// Bail when the post is not a Collection
-	if ( ! $post )
-		return;
-
-	// Nonce check
-	check_admin_referer( 'test-email-collection_' . $post->ID );
-
-	// Bail when the user cannot collect
-	if ( ! current_user_can( 'collect_incassoos_collection', $post->ID ) ) {
-		wp_die( __( 'Sorry, you are not allowed to collect this item.', 'incassoos' ) );
-	}
-
-	// Bail when the Collection is trashed
-	if ( 'trash' == $post->post_status ) {
-		wp_die( __( 'You can&#8217;t collect this item because it is in the Trash. Please restore it and try again.', 'incassoos' ) );
-	}
-
-	// Send-it
-	$success = incassoos_send_collection_test_email( $post );
-
-	// Something went wrong
-	if ( ! $success ) {
-		wp_die( __( 'Sorry, something went wrong. The requested action could not be executed.', 'incassoos' ) );
-	}
-
-	// Redirect to Collection page
-	wp_redirect( add_query_arg( array( 'message' => 14 ), incassoos_get_collection_url( $post ) ) );
-	exit();
-}
-
-/**
  * Parse the admin duplicate action for an Activity
  *
  * @since 1.0.0
@@ -1596,11 +1556,11 @@ function incassoos_admin_post_notices() {
  *
  * @since 1.0.0
  *
- * @uses do_action() Calls 'incassoos_admin_{object_type}_doaction'
+ * @uses do_action() Calls 'incassoos_admin_{object_type}_{action_type}_{action_id}'
  *
  * @param int $post_id Post ID
  */
-function incassoos_admin_post_doaction( $post_id ) {
+function incassoos_admin_post_action_doaction( $post_id ) {
 	$post = get_post( $post_id );
 
 	// Bail when the post is not found
@@ -1621,21 +1581,23 @@ function incassoos_admin_post_doaction( $post_id ) {
 	// Get and dissect action type
 	$action       = isset( $_POST['post-action-type'] ) ? $_POST['post-action-type'] : '';
 	$action_parts = explode( '-', $action );
+	$action_type  = $action_parts[0];
+	$action_id    = substr( $action, strlen( $action_type ) + 1 );
 
 	// Handle exports all the same
-	if ( 'export' === $action_parts[0] ) {
+	if ( 'export' === $action_type ) {
 
 		// Start file export dryrun
 		incassoos_admin_export_file( array(
 			'post_id'        => $post->ID,
-			'export_type_id' => substr( $action, 7 ),
+			'export_type_id' => $action_id,
 			'dryrun'         => true,
 			'decryption_key' => isset( $_POST['action-decryption-key'] ) ? $_POST['action-decryption-key'] : false
 		) );
 	} else {
 
 		// Run dedicated object type hook
-		do_action( "incassoos_admin_{$object_type}_doaction", $post, $action );
+		do_action( "incassoos_admin_{$object_type}_{$action_type}_{$action_id}", $post, $action );
 	}
 
 	// Still here? Redirect to the post's page
@@ -1644,23 +1606,40 @@ function incassoos_admin_post_doaction( $post_id ) {
 }
 
 /**
- * Process the post action for a Collection
+ * Parse the admin test email action for a Collection
  *
  * @since 1.0.0
  *
- * @param WP_Post $post   Post object
- * @param string  $action Action type id
+ * @param  mixed $post_id Post ID
  */
-function incassoos_admin_collection_doaction( $post, $action ) {
-	$action_parts = explode( '-', $action );
-	$action_group = $action_parts[0];
+function incassoos_admin_collection_send_test_email( $post_id ) {
+	$post = incassoos_get_collection( $post_id );
 
-	// Handle action by action group
-	switch ( $action_group ) {
-		case 'send' :
-			// TODO process distribution actions...
-			break;
+	// Bail when this is not a Collection
+	if ( ! $post )
+		return;
+
+	// Bail when the user cannot collect
+	if ( ! current_user_can( 'collect_incassoos_collection', $post->ID ) ) {
+		wp_die( __( 'Sorry, you are not allowed to collect this item.', 'incassoos' ) );
 	}
+
+	// Bail when the Collection is trashed
+	if ( 'trash' == $post->post_status ) {
+		wp_die( __( 'You can&#8217;t collect this item because it is in the Trash. Please restore it and try again.', 'incassoos' ) );
+	}
+
+	// Send-it
+	$success = incassoos_send_collection_test_email( $post );
+
+	// Something went wrong
+	if ( ! $success ) {
+		wp_die( __( 'Sorry, something went wrong. The requested action could not be executed.', 'incassoos' ) );
+	}
+
+	// Redirect to Collection page
+	wp_redirect( add_query_arg( array( 'message' => 14 ), incassoos_get_collection_url( $post ) ) );
+	exit();
 }
 
 /**
@@ -1935,11 +1914,15 @@ function incassoos_admin_get_post_action_types( $post ) {
 			// Collection
 			case incassoos_get_collection_post_type() :
 
-				// Distribution
-				$action_types['distribution']['actions'] = array(
-					'send-test_email'      => array( 'label' => esc_html__( 'Send test-email',      'incassoos' ) ),
-					'send-consumer_emails' => array( 'label' => esc_html__( 'Send consumer emails', 'incassoos' ), 'require_confirmation' => true )
-				);
+				// Distribution: send test email
+				if ( incassoos_is_collection_staged( $post ) ) {
+					$action_types['distribution']['actions']['send-test_email'] = array( 'label' => esc_html__( 'Send test-email', 'incassoos' ) );
+				}
+
+				// Distribution: send consumer emails
+				if ( incassoos_is_collection_collected( $post ) ) {
+					$action_types['distribution']['actions']['send-consumer_emails'] = array( 'label' => esc_html__( 'Send consumer emails', 'incassoos' ), 'require_confirmation' => true );
+				}
 
 				break;
 		}
