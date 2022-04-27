@@ -338,7 +338,8 @@ function incassoos_admin_load_consumers_page() {
  * @since 1.0.0
  */
 function incassoos_admin_consumers_page() {
-	$can_bulk_edit = current_user_can( 'edit_incassoos_consumers' );
+	$can_bulk_edit         = current_user_can( 'edit_incassoos_consumers' );
+	$is_encryption_enabled = incassoos_is_encryption_enabled();
 
 	if ( isset( $_GET['updated']) ) :
 		$updated = explode( ',', $_GET['updated'] );
