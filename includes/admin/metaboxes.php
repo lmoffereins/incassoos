@@ -501,6 +501,10 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$is_published     = incassoos_is_post_published( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
+	// Parameters
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
+	$date_format      = get_option( 'date_format' );
+
 	// Permissions
 	$can_stage   = current_user_can( 'stage_incassoos_collection',   $post->ID );
 	$can_unstage = current_user_can( 'unstage_incassoos_collection', $post->ID );
@@ -524,7 +528,9 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
-			<span id="collection-created" class="value"><?php incassoos_the_collection_created( $post ); ?></span>
+			<span id="collection-created" class="value">
+				<abbr title="<?php incassoos_the_collection_created( $post, $abbr_date_format ); ?>"><?php incassoos_the_collection_created( $post ); ?></abbr>
+			</span>
 		</p>
 
 		<?php endif; ?>
@@ -538,12 +544,14 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			} else {
 				esc_html_e( 'Collected:', 'incassoos' );
 			} ?></label>
-			<span id="collection-date" class="value"><?php
-			if ( incassoos_is_collection_staged( $post ) ) {
-				incassoos_the_collection_staged( $post );
-			} else {
-				incassoos_the_collection_date( $post );
-			} ?></span>
+
+			<span id="collection-date" class="value">
+				<?php if ( incassoos_is_collection_staged( $post ) ) : ?>
+				<abbr title="<?php incassoos_the_collection_staged( $post, $abbr_date_format ); ?>"><?php incassoos_the_collection_staged( $post ); ?></abbr>
+				<?php else : ?>
+				<abbr title="<?php incassoos_the_collection_date( $post, $abbr_date_format ); ?>"><?php incassoos_the_collection_date( $post ); ?></abbr>
+				<?php endif; ?>
+			</span>
 		</p>
 
 		<?php endif; ?>
@@ -583,8 +591,14 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php if ( incassoos_is_collection_consumer_emails_sent( $post ) ) : ?>
 
 			<span id="collection-consumer-emails-sent" class="value">
-				<?php foreach ( incassoos_get_collection_consumer_emails_sent( $post ) as $sent ) : ?>
-				<span class="value"><?php echo $sent; ?></span>
+				<?php
+				// Using '_U' as date format will return the correctly timezone'd numeric timestamp with '_' as a random prefix.
+				// The prefix is only there for circumventing the timezone correction in `mysql2date()` which would otherwise
+				// return the GMT date.
+				foreach ( incassoos_get_collection_consumer_emails_sent( $post, '_U' ) as $prefixed_date ) : ?>
+				<span class="value">
+					<abbr title="<?php echo wp_date( $abbr_date_format, substr( $prefixed_date, 1 ) ); ?>"><?php echo wp_date( $date_format, substr( $prefixed_date, 1 ) ); ?></abbr>
+				</span>
 				<?php endforeach; ?>
 			</span>
 
@@ -937,6 +951,9 @@ function incassoos_admin_activity_details_metabox( $post ) {
 	$is_published     = incassoos_is_post_published( $post );
 	$activity_cat_tax = incassoos_get_activity_cat_tax_id();
 
+	// Parameters
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
+
 	// Formatting
 	$format_args      = incassoos_get_currency_format_args();
 	$min_price_value  = 1 / pow( 10, $format_args['decimals'] );
@@ -953,7 +970,9 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
-			<span id="activity-created" class="value"><?php incassoos_the_activity_created( $post ); ?></span>
+			<span id="activity-created" class="value">
+				<abbr title="<?php incassoos_the_activity_created( $post, $abbr_date_format ); ?>"><?php incassoos_the_activity_created( $post ); ?></abbr>
+			</span>
 		</p>
 
 		<?php endif; ?>
@@ -1248,6 +1267,9 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 	$is_published      = incassoos_is_post_published( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
 
+	// Parameters
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
+
 	// Permissions
 	$can_close  = current_user_can( 'close_incassoos_occasion',  $post->ID );
 	$can_reopen = current_user_can( 'reopen_incassoos_occasion', $post->ID );
@@ -1269,7 +1291,9 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
-			<span id="occasion-created" class="value"><?php incassoos_the_occasion_created( $post ); ?></span>
+			<span id="occasion-created" class="value">
+				<abbr title="<?php incassoos_the_occasion_created( $post, $abbr_date_format ); ?>"><?php incassoos_the_occasion_created( $post ); ?></abbr>
+			</span>
 		</p>
 
 		<?php endif; ?>
@@ -1280,7 +1304,13 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			<?php if ( ! $is_post_view ) : ?>
 				<input type="text" id="occasion-date" name="occasion_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post->ID, 'occasion_date', true ) ) ); ?>" class="datepicker" />
 			<?php else : ?>
-				<span id="occasion-date" class="value"><?php incassoos_the_occasion_date( $post ); ?></span>
+				<span id="occasion-date" class="value">
+					<?php if ( incassoos_is_occasion_same_date_created( $post ) ) : ?>
+						<abbr title="<?php incassoos_the_occasion_created( $post, $abbr_date_format ); ?>"><?php incassoos_the_occasion_date( $post ); ?></abbr>
+					<?php else :
+						incassoos_the_occasion_date( $post );
+					endif; ?>
+				</span>
 			<?php endif; ?>
 		</p>
 
@@ -1351,7 +1381,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Closed:', 'incassoos' ); ?></label>
-			<span id="occasion-closed" class="value"><?php incassoos_the_occasion_closed_date( $post, 'Y-m-d H:i:s' ); ?></span>
+			<span id="occasion-closed" class="value"><?php incassoos_the_occasion_closed_date( $post, $abbr_date_format ); ?></span>
 		</p>
 
 		<p>
@@ -1571,6 +1601,9 @@ function incassoos_admin_order_details_metabox( $post ) {
 	$is_published  = incassoos_is_post_published( $post );
 	$consumer_type = incassoos_get_order_consumer_type( $post );
 
+	// Parameters
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
+
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
 	$can_doaction     = ! empty( $actions_dropdown );
@@ -1583,7 +1616,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
-			<span id="order-created" class="value"><?php incassoos_the_order_created( $post ); ?></span>
+			<span id="order-created" class="value"><?php incassoos_the_order_created( $post, $abbr_date_format ); ?></span>
 		</p>
 
 		<?php endif; ?>
@@ -1782,6 +1815,9 @@ function incassoos_admin_product_details_metabox( $post ) {
 	$is_published    = incassoos_is_post_published( $post );
 	$price           = incassoos_get_product_price( $post );
 
+	// Parameters
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
+
 	// Formatting
 	$format_args     = incassoos_get_currency_format_args();
 	$min_price_value = 1 / pow( 10, $format_args['decimals'] );
@@ -1798,7 +1834,9 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
-			<span id="product-created" class="value"><?php incassoos_the_product_created( $post ); ?></span>
+			<span id="product-created" class="value">
+				<abbr title="<?php incassoos_the_product_created( $post, $abbr_date_format ); ?>"><?php incassoos_the_product_created( $post ); ?></abbr>
+			</span>
 		</p>
 
 		<?php endif; ?>

@@ -459,6 +459,22 @@ function incassoos_admin_get_current_page() {
 	return $current_page;
 }
 
+/** Misc ****************************************************************/
+
+/**
+ * Return the date format for date abbreviation titles
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_get_abbr_date_format'
+ *
+ * @param mixed $context Optional. Abbreviation context. Can be a WP_Post object.
+ * @return string Date format
+ */
+function incassoos_admin_get_abbr_date_format( $context = '' ) {
+	return apply_filters( 'incassoos_admin_get_abbr_date_format', 'Y/m/d H:i:s', $context );
+}
+
 /** Posts ***************************************************************/
 
 /**
