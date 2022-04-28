@@ -616,6 +616,11 @@ function incassoos_get_order_created( $post = 0, $date_format = '' ) {
 	$post = incassoos_get_order( $post );
 	$date = $post ? $post->post_date : '';
 
+	// Default to the registered date format
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
+	}
+
 	if ( $date_format ) {
 		$date = mysql2date( $date_format, $date );
 	}
