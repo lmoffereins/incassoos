@@ -284,7 +284,7 @@ function incassoos_get_collection_author( $post = 0 ) {
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
 function incassoos_the_collection_created( $post = 0, $date_format = '' ) {
-	echo incassoos_get_collection_created( $post );
+	echo incassoos_get_collection_created( $post, $date_format );
 }
 
 /**
@@ -323,7 +323,7 @@ function incassoos_get_collection_created( $post = 0, $date_format = '' ) {
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
 function incassoos_the_collection_staged( $post = 0, $date_format = '' ) {
-	echo incassoos_get_collection_staged( $post );
+	echo incassoos_get_collection_staged( $post, $date_format );
 }
 
 /**
@@ -364,7 +364,7 @@ function incassoos_get_collection_staged( $post = 0, $date_format = '' ) {
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
 function incassoos_the_collection_date( $post = 0, $date_format = '' ) {
-	echo incassoos_get_collection_date( $post );
+	echo incassoos_get_collection_date( $post, $date_format );
 }
 
 /**
@@ -405,7 +405,7 @@ function incassoos_get_collection_date( $post = 0, $date_format = '' ) {
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  */
 function incassoos_the_collection_withdrawal_date( $post = 0, $date_format = '' ) {
-	echo incassoos_get_collection_withdrawal_date( $post );
+	echo incassoos_get_collection_withdrawal_date( $post, $date_format );
 }
 
 /**
