@@ -615,8 +615,14 @@ function incassoos_get_post_consumer_total( $consumer, $post = 0, $num_format = 
  * @return bool Is the post published?
  */
 function incassoos_is_post_published( $post = 0 ) {
-	$post = get_post( $post );
-	return (bool) apply_filters( 'incassoos_is_post_published', ! in_array( $post->post_status, array( 'auto-draft', 'draft' ), true ), $post );
+	$post         = get_post( $post );
+	$is_published = false;
+
+	if ( $post ) {
+		$is_published = ! in_array( $post->post_status, array( 'auto-draft', 'draft' ), true );
+	}
+
+	return (bool) apply_filters( 'incassoos_is_post_published', $is_published, $post );
 }
 
 /**
