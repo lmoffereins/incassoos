@@ -501,7 +501,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$is_published     = incassoos_is_post_published( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
-	// Parameters
+	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 	$date_format      = get_option( 'date_format' );
 
@@ -951,10 +951,8 @@ function incassoos_admin_activity_details_metabox( $post ) {
 	$is_published     = incassoos_is_post_published( $post );
 	$activity_cat_tax = incassoos_get_activity_cat_tax_id();
 
-	// Parameters
-	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
-
 	// Formatting
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 	$format_args      = incassoos_get_currency_format_args();
 	$min_price_value  = 1 / pow( 10, $format_args['decimals'] );
 
@@ -1267,7 +1265,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 	$is_published      = incassoos_is_post_published( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
 
-	// Parameters
+	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 
 	// Permissions
@@ -1601,7 +1599,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 	$is_published  = incassoos_is_post_published( $post );
 	$consumer_type = incassoos_get_order_consumer_type( $post );
 
-	// Parameters
+	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 
 	// Action options
@@ -1815,12 +1813,10 @@ function incassoos_admin_product_details_metabox( $post ) {
 	$is_published    = incassoos_is_post_published( $post );
 	$price           = incassoos_get_product_price( $post );
 
-	// Parameters
-	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
-
 	// Formatting
-	$format_args     = incassoos_get_currency_format_args();
-	$min_price_value = 1 / pow( 10, $format_args['decimals'] );
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
+	$format_args      = incassoos_get_currency_format_args();
+	$min_price_value  = 1 / pow( 10, $format_args['decimals'] );
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
