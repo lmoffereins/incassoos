@@ -549,6 +549,58 @@ function incassoos_get_post_link( $post = 0 ) {
 }
 
 /**
+ * Output the post's total value
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
+ */
+function incassoos_the_post_total( $post = 0, $num_format = false ) {
+	echo incassoos_get_post_total( $post, $num_format );
+}
+
+/**
+ * Return the post's total value
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_total'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
+ * @return string Post total value.
+ */
+function incassoos_get_post_total( $post = 0, $num_format = false ) {
+	$total = '';
+
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$total = incassoos_get_collection_total( $_post, $num_format );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$total = incassoos_get_activity_total( $_post, $num_format );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$total = incassoos_get_occasion_total( $_post, $num_format );
+
+	// Order
+	} elseif ( $_post = incassoos_get_order( $post ) ) {
+		$total = incassoos_get_order_total( $_post, $num_format );
+
+	// Custom post
+	} else {
+		$total = apply_filters( 'incassoos_get_post_total', $total, $post, $num_format );
+	}
+
+	return $total;
+}
+
+/**
  * Output the post's consumer total value
  * 
  * @since 1.0.0
@@ -623,6 +675,21 @@ function incassoos_is_post_published( $post = 0 ) {
 	}
 
 	return (bool) apply_filters( 'incassoos_is_post_published', $is_published, $post );
+}
+
+/**
+ * Return whether the post has a total value
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Post ID or object
+ * @return bool Dows the post have a total?
+ */
+function incassoos_is_post_with_total( $post = 0 ) {
+	$post       = get_post( $post );
+	$with_total = (bool) incassoos_get_post_total( $post, null );
+
+	return (bool) apply_filters( 'incassoos_is_post_with_total', $with_total, $post );
 }
 
 /**
@@ -3320,4 +3387,44 @@ function incassoos_is_option_redacted( $option_name, $value ) {
 	}
 
 	return call_user_func_array( $args['is_redacted_callback'], array( $value, $args['redact_callback_args'] ) );
+}
+
+/** Tools ***************************************************************/
+
+/**
+ * Recalculate a post's total value
+ *
+ * @since 1.0.0
+ *
+ * @param int|WP_Post $post Optional. Post ID or post object. Defaults to the current post.
+ */
+function incassoos_tool_recalculate_post_total( $post = 0 ) {
+	$post = get_post( $post );
+
+	// Bail when the post is invalid
+	if ( ! $post ) {
+		return;
+	}
+
+	switch ( $post->post_type ) {
+		case incassoos_get_collection_post_type() :
+		case incassoos_get_activity_post_type() :
+		case incassoos_get_occasion_post_type() :
+		case incassoos_get_order_post_type() :
+
+			// Get object type
+			$object_type = incassoos_get_object_type( $post->post_type );
+			if ( $object_type ) {
+
+				// Query the raw total
+				$callback = "incassoos_get_{$object_type}_total_raw";
+				if ( function_exists( $callback ) ) {
+					$total = call_user_func( $callback, $post );
+
+					// Save the raw total as new total
+					update_post_meta( $post->ID, 'total', $total );
+				}
+			}
+			break;
+	}
 }

@@ -1615,6 +1615,9 @@ function incassoos_admin_post_action_doaction( $post_id ) {
 
 		// Run dedicated object type hook
 		do_action( "incassoos_admin_{$object_type}_{$action_type}_{$action_id}", $post, $action );
+
+		// Run post type-agnostic hook
+		do_action( "incassoos_admin_post_{$action_type}_{$action_id}", $post, $action );
 	}
 
 	// Still here? Redirect to the post's page
@@ -1959,6 +1962,10 @@ function incassoos_admin_get_post_action_types( $post ) {
 		'exporting' => array(
 			'name'    => esc_html__( 'Exporting', 'incassoos' ),
 			'actions' => array()
+		),
+		'tools' => array(
+			'name'    => esc_html__( 'Tools', 'incassoos' ),
+			'actions' => array()
 		)
 	);
 
@@ -1994,10 +2001,15 @@ function incassoos_admin_get_post_action_types( $post ) {
 			}
 
 			// Add export action
-			$action_types['exporting']['actions'][ "export-{$export_type_id}" ] = array(
+			$action_types['exporting']['actions']["export-{$export_type_id}"] = array(
 				'label'                  => incassoos_get_export_type_label( $export_type_id, 'export_file' ),
 				'require_decryption_key' => incassoos_get_export_type_require_decryption_key( $export_type_id )
 			);
+		}
+
+		// Tools: recalculate total value
+		if ( incassoos_is_post_with_total( $post ) ) {
+			$action_types['tools']['actions']['tool-recalculate_total'] = array( 'label' => esc_html__( 'Recalculate total value', 'incassoos' ) );
 		}
 	}
 
