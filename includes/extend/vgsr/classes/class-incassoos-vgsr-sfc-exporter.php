@@ -105,6 +105,8 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @uses apply_filters() Calls 'incassoos_export-{file_type}-get_file'
+	 *
 	 * @return string|false VGSR SFC file or False when invalid.
 	 */
 	public function get_file() {
@@ -125,7 +127,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 			$file .= $this->parse_lines( $olines );
 		}
 
-		return $file;
+		return apply_filters( "incassoos_export-{$this->file_type}-get_file", $file, $this );
 	}
 
 	/** Structure *******************************************************/
