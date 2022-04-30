@@ -145,7 +145,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		$retval     = array();
 
 		// Provide default activity date
-		add_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date', 10, 3 );
+		add_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
 
 		// Walk Activities
 		foreach ( $activities as $item_id ) {
@@ -167,7 +167,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		}
 
 		// Remove filter
-		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date', 10, 3 );
+		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
 
 		// Append counter line
 		$retval[] = array(
