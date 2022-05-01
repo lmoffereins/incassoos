@@ -989,16 +989,6 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 		<?php endif; ?>
 
-		<p>
-			<label for="price"><?php esc_html_e( 'Price:', 'incassoos' ); ?></label>
-
-			<?php if ( ! $is_post_view ) : ?>
-				<input type="number" name="price" id="price" step="<?php echo $min_price_value; ?>" min="<?php echo $min_price_value; ?>" value="<?php echo esc_attr( number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) ) ); ?>" />
-			<?php else : ?>
-				<span id="price" class="value"><?php incassoos_the_activity_price( $post, true ); ?></span>
-			<?php endif; ?>
-		</p>
-
 		<?php if ( ! $is_post_view || incassoos_activity_has_category( $post ) ) : ?>
 
 		<p>
@@ -1023,6 +1013,16 @@ function incassoos_admin_activity_details_metabox( $post ) {
 		</p>
 
 		<?php endif; ?>
+
+		<p>
+			<label for="price"><?php esc_html_e( 'Price:', 'incassoos' ); ?></label>
+
+			<?php if ( ! $is_post_view ) : ?>
+				<input type="number" name="price" id="price" step="<?php echo $min_price_value; ?>" min="<?php echo $min_price_value; ?>" value="<?php echo esc_attr( number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) ) ); ?>" />
+			<?php else : ?>
+				<span id="price" class="value"><?php incassoos_the_activity_price( $post, true ); ?></span>
+			<?php endif; ?>
+		</p>
 
 		<p>
 			<label><?php esc_html_e( 'Count:', 'incassoos' ); ?></label>
