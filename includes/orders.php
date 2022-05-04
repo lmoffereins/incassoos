@@ -1370,11 +1370,73 @@ function incassoos_validate_order( $args = array() ) {
 /** Consumer Types ************************************************************/
 
 /**
+ * Return the base Unknown user consumer type id
+ *
+ * @since 1.0.0
+ *
+ * @return string Consumer type id
+ */
+function incassoos_get_unknown_user_consumer_type_id_base() {
+	return incassoos()->unknown_user_consumer_type;
+}
+
+/**
+ * Return the Unknown user consumer type id
+ *
+ * @since 1.0.0
+ *
+ * @param int $user_id User ID of the unknown user.
+ * @return string Consumer type id
+ */
+function incassoos_get_unknown_user_consumer_type_id( $user_id ) {
+	$consumer_type = incassoos_get_unknown_user_consumer_type_id_base();
+	$user_id       = is_numeric( $user_id ) ? $user_id : 0;
+
+	// Add user id suffix to type
+	$type_id = "{$consumer_type}:{$user_id}";
+
+	return $type_id;
+}
+
+/**
+ * Return whether the input value is a Unknown user consumer type
+ *
+ * @since 1.0.0
+ *
+ * @param string $type_id Consumer type id
+ * @return int Unknown user ID
+ */
+function incassoos_get_user_id_from_unknown_user_consumer_type( $type_id ) {
+	$consumer_type = incassoos_get_unknown_user_consumer_type_id_base();
+	$parts         = is_string( $type_id ) ? explode( ':', $type_id ) : array();
+	$user_id       = 0;
+
+	// Check syntax '{consumer_type}:{user_id}'
+	if ( $parts && $parts[0] === $consumer_type ) {
+		$user_id = isset( $parts[1] ) && is_numeric( $parts[1] ) ? (int) $parts[1] : 0;
+	}
+
+	return $user_id;
+}
+
+/**
+ * Return whether the input value is a Unknown user consumer type
+ *
+ * @since 1.0.0
+ *
+ * @param string $type_id Consumer type id
+ * @return bool Consumer type is a unknown user
+ */
+function incassoos_is_unknown_user_consumer_type_id( $type_id ) {
+	return (bool) incassoos_get_user_id_from_unknown_user_consumer_type( $type_id );
+}
+
+/**
  * Return the Guest consumer type id
  *
  * @since 1.0.0
  *
- * @return string Guest consumer type id
+ * @return string Consumer type id
  */
 function incassoos_get_guest_consumer_type_id() {
 	return incassoos()->guest_consumer_type;
@@ -1441,32 +1503,48 @@ function incassoos_unregister_consumer_type( $type_id ) {
 /**
  * Return the consumer type object
  *
+ * The return value is cloned from the registered consumer type.
+ *
  * @since 1.0.0
  *
  * @uses apply_filters Calls 'incassoos_get_consumer_type'
  *
- * @param  string $type Consumer type id or label.
+ * @param  string $type_id Consumer type id or label.
  * @return object|bool Consumer type object or False when not found.
  */
-function incassoos_get_consumer_type( $type = '' ) {
+function incassoos_get_consumer_type( $type_id ) {
 	$plugin      = incassoos();
-	$type_id     = sanitize_title( $type );
 	$type_object = false;
 
 	if ( ! isset( $plugin->consumer_types ) ) {
 		$plugin->consumer_types = array();
 	}
 
-	// Get type by id
-	if ( isset( $plugin->consumer_types[ $type_id ] ) ) {
-		$type_object = $plugin->consumer_types[ $type_id ];
-
-	// Get type by label
-	} elseif ( $type_id = array_search( $type, wp_list_pluck( $plugin->consumer_types, 'label' ) ) ) {
-		$type_object = $plugin->consumer_types[ $type_id ];
+	// Special case: Unknown user type
+	if ( incassoos_is_unknown_user_consumer_type_id( $type_id ) ) {
+		$unknown_user_id = incassoos_get_user_id_from_unknown_user_consumer_type( $type_id );
+		$type_id         = incassoos_get_unknown_user_consumer_type_id_base();
+	} else {
+		$unknown_user_id = false;
 	}
 
-	return apply_filters( 'incassoos_get_consumer_type', $type_object, $type );
+	// Get type by id
+	if ( isset( $plugin->consumer_types[ $type_id ] ) ) {
+		$type_object = clone $plugin->consumer_types[ $type_id ];
+
+	// Get type by label
+	} elseif ( $type_id = array_search( $type_id, wp_list_pluck( $plugin->consumer_types, 'label' ) ) ) {
+		$type_object = clone $plugin->consumer_types[ $type_id ];
+	}
+
+	// When handling Unknown user type
+	if ( $unknown_user_id ) {
+		$type_object->id              = incassoos_get_unknown_user_consumer_type_id( $unknown_user_id );
+		$type_object->label           = sprintf( $type_object->label_user, $unknown_user_id );
+		$type_object->unknown_user_id = $unknown_user_id;
+	}
+
+	return apply_filters( 'incassoos_get_consumer_type', $type_object, $type_id );
 }
 
 /**

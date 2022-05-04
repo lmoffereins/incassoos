@@ -179,7 +179,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				foreach ( incassoos_get_collection_consumer_types( $this->post ) as $type_id ) {
 					$type_name = incassoos_get_consumer_type_title( $type_id );
 
-					foreach ( incassoos_get_collection_consumer_assets( $user, $this->post ) as $item_id ) {
+					foreach ( incassoos_get_collection_consumer_assets( $type_id, $this->post ) as $item_id ) {
 						$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
 							'id'              => $post_id,
 							'collection'      => $post_title,
@@ -201,6 +201,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$post_title = incassoos_get_activity_title( $this->post );
 				$post_date  = incassoos_get_activity_date( $this->post , 'Y-m-d');
 
+				// Participant users
 				foreach ( incassoos_get_activity_participant_users( $this->post ) as $user ) {
 					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
 						'id'            => $post_id,
@@ -210,6 +211,18 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 						'user_name'     => $user->display_name,
 						'price'         => incassoos_get_activity_participant_price( $user->ID, $this->post, true )
 					), $user, $this );
+				}
+
+				// Participant types
+				foreach ( incassoos_get_activity_participant_types( $this->post ) as $type_id ) {
+					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
+						'id'            => $post_id,
+						'activity'      => $post_title,
+						'activity_date' => $post_date,
+						'user_id'       => $type_id,
+						'user_name'     => incassoos_get_consumer_type_title( $type_id ),
+						'price'         => incassoos_get_activity_participant_price( $type_id, $this->post, true )
+					), $type_id, $this );
 				}
 				break;
 
@@ -242,7 +255,7 @@ class Incassoos_Post_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 						'user_name'     => incassoos_get_consumer_type_title( $type_id ),
 						'order_count'   => incassoos_get_occasion_consumer_order_count( $type_id, $this->post ),
 						'total'         => incassoos_get_occasion_consumer_total( $type_id, $this->post, true )
-					), $user, $this );
+					), $type_id, $this );
 				}
 				break;
 		}

@@ -902,20 +902,20 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 			<li class="group">
 				<h4 class="sublist-header item-content"><?php esc_html_e( 'Consumer Types', 'incassoos' ); ?></h4>
 				<ul class="users">
-					<?php foreach ( $consumer_types as $consumer_type ) : ?>
+					<?php foreach ( $consumer_types as $type_id ) : ?>
 
-					<li id="type-<?php echo esc_attr( $consumer_type ); ?>" class="consumer collection-consumer-type selector">
+					<li id="type-<?php echo esc_attr( $type_id ); ?>" class="consumer collection-consumer-type selector">
 						<button type="button" class="button-link open-details">
-							<span class="consumer-name title"><?php incassoos_the_consumer_type_title( $consumer_type ); ?></span>
-							<span class="total"><?php incassoos_the_collection_consumer_total( $consumer_type, $post, true ); ?></span>
+							<span class="consumer-name title"><?php incassoos_the_consumer_type_title( $type_id ); ?></span>
+							<span class="total"><?php incassoos_the_collection_consumer_total( $type_id, $post, true ); ?></span>
 						</button>
 
 						<ul class="item-details">
-							<?php foreach ( incassoos_get_collection_consumer_assets( $consumer_type, $post ) as $item_id ) : ?>
+							<?php foreach ( incassoos_get_collection_consumer_assets( $type_id, $post ) as $item_id ) : ?>
 
 							<li>
 								<span class="title"><?php incassoos_the_post_link( $item_id ); ?></span>
-								<span class="total"><?php incassoos_the_post_consumer_total( $consumer_type, $item_id, true ); ?></span>
+								<span class="total"><?php incassoos_the_post_consumer_total( $type_id, $item_id, true ); ?></span>
 							</li>
 
 							<?php endforeach; ?>
@@ -1098,11 +1098,12 @@ function incassoos_admin_activity_details_metabox( $post ) {
 function incassoos_admin_activity_participants_metabox( $post ) {
 
 	// Get details
-	$is_post_view = incassoos_admin_is_post_view( $post );
-	$participants = incassoos_get_activity_participants( $post );
-	$users        = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
-	$hidden_users = array();
-	$prices       = get_post_meta( $post->ID, 'prices', true ) ?: array();
+	$is_post_view      = incassoos_admin_is_post_view( $post );
+	$participants      = incassoos_get_activity_participants( $post );
+	$participant_types = incassoos_get_activity_participant_types( $post );
+	$users             = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
+	$hidden_users      = array();
+	$prices            = get_post_meta( $post->ID, 'prices', true ) ?: array();
 
 	// Collect hidden users
 	if ( ! $is_post_view ) {
@@ -1183,7 +1184,6 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 					<?php endif; ?>
 				</h4>
 				<ul class="users">
-
 					<?php foreach ( $group->users as $user ) :
 						$_item_class = $item_class;
 						$has_custom_price = false;
@@ -1231,6 +1231,26 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 			</li>
 
 			<?php endforeach; ?>
+
+			<?php if ( $is_post_view && $participant_types ) : ?>
+
+			<li class="group consumer-types">
+				<h4 class="sublist-header item-content"><?php esc_html_e( 'Participant Types', 'incassoos' ); ?></h4>
+				<ul class="users">
+					<?php foreach ( $participant_types as $type_id ) : ?>
+
+					<li id="type-<?php echo $type_id; ?>" class="<?php echo implode( ' ', $item_class ); ?>">
+						<div class="item-content">
+							<span class="consumer-name title"><?php incassoos_the_consumer_type_title( $type_id ); ?></span>
+							<span class="price"><?php incassoos_the_activity_participant_price( $type_id, $post, true ); ?></span>
+						</div>
+					</li>
+
+					<?php endforeach; ?>
+				</ul>
+			</li>
+
+			<?php endif; ?>
 		</ul>
 
 		<div style="display:none;" id="addparticipant">

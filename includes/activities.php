@@ -550,6 +550,90 @@ function incassoos_get_activity_participant_users( $post = 0, $query_args = arra
 }
 
 /**
+ * Return the Activity's unknown participants
+ *
+ * @since 1.0.0
+ *
+ * @global WPDB $wpdb
+ *
+ * @uses apply_filters() Calls 'incassoos_get_activity_unknown_participants'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return array Activity unknown participants
+ */
+function incassoos_get_activity_unknown_participants( $post = 0 ) {
+	global $wpdb;
+
+	$post         = incassoos_get_activity( $post );
+	$participants = incassoos_get_activity_participants( $post );
+	$unknown_ids  = array();
+
+	if ( $post && $participants ) {
+
+		// Define post meta query
+		$user_ids = implode( ',', $participants );
+		$sql      = "SELECT ID FROM {$wpdb->users} WHERE ID IN ($user_ids)";
+
+		// Query all types
+		if ( $values = $wpdb->get_col( $sql ) ) {
+			$unknown_ids = array_diff( $participants, array_filter( $values ) );
+		}
+	}
+
+	return apply_filters( 'incassoos_get_activity_unknown_participants', $unknown_ids, $post );
+}
+
+/**
+ * Return whether the Activity has unknown participants
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_activity_has_unknown_participant'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Activity has unknown participants
+ */
+function incassoos_activity_has_unknown_participants( $post = 0 ) {
+	$post    = incassoos_get_activity( $post );
+	$unknown = (bool) incassoos_get_activity_unknown_participants( $post );
+
+	return (bool) apply_filters( 'incassoos_activity_has_unknown_participants', $unknown, $post );
+}
+
+/**
+ * Return the Activity's participant types
+ *
+ * Participant types are the same as consumer types.
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_activity_participant_types'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  array $query_args Optional. Additional query arguments for {@see WP_User_Query}.
+ * @return array Activity participant types
+ */
+function incassoos_get_activity_participant_types( $post = 0, $query_args = array() ) {
+	$post  = incassoos_get_activity( $post );
+	$types = array();
+
+	if ( $post ) {
+
+		// Get types from post meta
+		if ( $values = get_post_meta( $post->ID, 'participant_type' ) ) {
+			$types = array_unique( array_filter( $values ) );
+		}
+
+		// Consider unknown users
+		foreach ( incassoos_get_activity_unknown_participants( $post ) as $user_id ) {
+			$types[] = incassoos_get_unknown_user_consumer_type_id( $user_id );
+		}
+	}
+
+	return apply_filters( 'incassoos_get_activity_participant_types', $types, $post, $query_args );
+}
+
+/**
  * Output the Activity's participant count
  *
  * @since 1.0.0
@@ -585,24 +669,31 @@ function incassoos_get_activity_participant_count( $post = 0 ) {
  *
  * @uses apply_filters() Calls 'incassoos_activity_has_participant'
  *
- * @param  int|WP_Post|string $participant Optional. Participant user object or ID. Defaults to the current user.
+ * @param  int|WP_User|string $participant Participant user object or ID or participant type.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Is the participant registered for the Activity?
  */
-function incassoos_activity_has_participant( $participant = 0, $post = 0 ) {
-	$post  = incassoos_get_activity( $post );
-	$users = incassoos_get_activity_participants( $post );
+function incassoos_activity_has_participant( $participant, $post = 0 ) {
+	$_participant = is_a( $participant, 'WP_User' ) ? $participant->ID : $participant;
+	$post         = incassoos_get_activity( $post );
+	$retval       = false;
 
-	// Get the user id
-	if ( is_a( $participant, 'WP_User' ) ) {
-		$participant = $participant->ID;
+	if ( $post ) {
 
-	// Default to the current user
-	} elseif ( ! $participant ) {
-		$participant = get_current_user_id();
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $participant ) ) {
+			$_participant = incassoos_get_user_id_from_unknown_user_consumer_type( $participant );
+
+		// Consider all unknown users
+		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $participant ) {
+			$retval = incassoos_activity_has_unknown_participants( $post );
+		}
+
+		if ( ! $retval ) {
+			$users  = incassoos_get_activity_participants( $post );
+			$retval = in_array( $_participant, $users );
+		}
 	}
-
-	$retval = in_array( $participant, $users );
 
 	return (bool) apply_filters( 'incassoos_activity_has_participant', $retval, $participant, $post );
 }
@@ -627,7 +718,7 @@ function incassoos_get_activity_participant_prices( $post = 0 ) {
 		$raw_prices = incassoos_get_activity_prices_raw( $post );
 
 		// Join specified raw prices with the default price for all other participants
-		$prices = $raw_prices + array_fill_keys( array_diff( $users, array_keys( $raw_prices ) ), $price );
+		$prices = $raw_prices + array_fill_keys( array_diff( $users, array_keys( $raw_prices ) ), (float) $price );
 	}
 
 	return (array) apply_filters( 'incassoos_get_activity_participant_prices', $prices, $post );
@@ -662,7 +753,7 @@ function incassoos_get_activity_prices_raw( $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
+ * @param  int|WP_User|string $participant Participant user object or ID or participant type.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
@@ -678,30 +769,47 @@ function incassoos_the_activity_participant_price( $participant, $post = 0, $num
  *
  * @uses apply_filters() Calls 'incassoos_get_activity_participant_price'
  *
- * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
+ * @param  int|WP_User|string $participant Participant user object or ID or participant type.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
  * @return string|float Activity participant price.
  */
 function incassoos_get_activity_participant_price( $participant, $post = 0, $num_format = false ) {
-	$post  = incassoos_get_activity( $post );
-	$total = 0;
+	$_participant = is_a( $participant, 'WP_User' ) ? $participant->ID : $participant;
+	$post         = incassoos_get_activity( $post );
+	$price        = 0;
 
-	// Is Activity participant
-	if ( incassoos_activity_has_participant( $participant, $post ) ) {
+	if ( $post ) {
+
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $participant ) ) {
+			$_participant = incassoos_get_user_id_from_unknown_user_consumer_type( $participant );
+		}
+
 		$prices = incassoos_get_activity_participant_prices( $post );
-		$total  = $prices[ $participant ];
+		if ( isset( $prices[ $_participant ] ) ) {
+			$price = $prices[ $_participant ];
+		}
+
+		// Consider all unknown users
+		if ( incassoos_get_unknown_user_consumer_type_id_base() === $participant ) {
+			foreach ( incassoos_get_activity_unknown_participants( $post ) as $user_id ) {
+				if ( isset( $prices[ $user_id ] ) ) {
+					$price += $prices[ $user_id ];
+				}
+			}
+		}
 	}
 
-	$total = (float) apply_filters( 'incassoos_get_activity_participant_price', (float) $total, $participant, $post );
+	$price = (float) apply_filters( 'incassoos_get_activity_participant_price', (float) $price, $participant, $post, $num_format );
 
 	// Apply currency format
 	if ( null !== $num_format ) {
-		$total = incassoos_parse_currency( $total, $num_format );
+		$price = incassoos_parse_currency( $price, $num_format );
 	}
 
-	return $total;
+	return $price;
 }
 
 /**
@@ -711,18 +819,34 @@ function incassoos_get_activity_participant_price( $participant, $post = 0, $num
  *
  * @uses apply_filters() Calls 'incassoos_activity_participant_has_custom_price'
  *
- * @param  int}WP_user|string $participant Participant user object or ID or participant type id.
+ * @param  int|WP_User|string $participant Participant user object or ID or participant type.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Does the Activity participant have a custom price?
  */
 function incassoos_activity_participant_has_custom_price( $participant, $post = 0 ) {
-	$post   = incassoos_get_activity( $post );
-	$retval = false;
+	$_participant = is_a( $participant, 'WP_User' ) ? $participant->ID : $participant;
+	$post         = incassoos_get_activity( $post );
+	$retval       = false;
 
-	// Is Activity participant
-	if ( incassoos_activity_has_participant( $participant, $post ) ) {
+	if ( $post ) {
+
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $participant ) ) {
+			$_participant = incassoos_get_user_id_from_unknown_user_consumer_type( $participant );
+		}
+
 		$prices = incassoos_get_activity_prices_raw( $post );
-		$retval = isset( $prices[ $participant ] ) && $prices[ $participant ] !== incassoos_get_activity_price( $post );
+		$retval = isset( $prices[ $_participant ] ) && $prices[ $_participant ] !== incassoos_get_activity_price( $post );
+
+		// Consider all unknown users
+		if ( incassoos_get_unknown_user_consumer_type_id_base() === $participant ) {
+			foreach ( incassoos_get_activity_unknown_participants( $post ) as $user_id ) {
+				if ( isset( $prices[ $user_id ] ) && $prices[ $_participant ] !== incassoos_get_activity_price( $post ) ) {
+					$retval = true;
+					break;
+				}
+			}
+		}
 	}
 
 	return (bool) apply_filters( 'incassoos_activity_participant_has_custom_price', $retval, $participant, $post );

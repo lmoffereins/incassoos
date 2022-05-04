@@ -140,23 +140,54 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 * @return array Collection Activity line data
 	 */
 	public function get_activity_lines() {
-		$activities = incassoos_get_collection_activities( $this->post );
-		$totals     = 0;
-		$retval     = array();
+		$activities     = incassoos_get_collection_activities( $this->post );
+		$date           = incassoos_get_collection_date( $this->post, 'j-n-Y' );
+		$consumer_types = incassoos_get_consumer_types();
+		$retval         = array();
+
+		// Define totals by type
+		$titles         = array();
+		$totals         = array_flip( $activities ) + array_combine( $consumer_types, array_fill( 0, count( $consumer_types ), 0 ) );
 
 		// Provide default activity date
 		add_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
 
 		// Walk Activities
-		foreach ( $activities as $item_id ) {
-			$title   = incassoos_get_activity_title( $item_id );
-			$total   = incassoos_get_activity_total( $item_id, null );
-			$totals += $total;
+		foreach ( $activities as $post_id ) {
+			$titles[ $post_id ] = incassoos_get_activity_title( $post_id );
+			$totals[ $post_id ] = incassoos_get_activity_total( $post_id, null );
 
 			// Append activity date
-			if ( $date  = incassoos_get_activity_date( $item_id, 'j-n-Y' ) ) {
-				$title .= " ($date)";
+			if ( $_date = incassoos_get_activity_date( $post_id, 'j-n-Y' ) ) {
+				$titles[ $post_id ] .= " ($_date)";
 			}
+
+			// Distinguish totals per consumer type
+			foreach ( $consumer_types as $type_id ) {
+				$type_price = incassoos_get_activity_participant_price( $type_id, $post_id, null );
+
+				// Add type total, subtract from activity
+				if ( ! empty( $type_price ) ) {
+					$totals[ $type_id ] += $type_price;
+					$totals[ $post_id ] -= $type_price;
+				}
+			}
+		}
+
+		// Remove filter
+		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
+
+		// Walk defined totals
+		foreach ( $totals as $item_id => $total ) {
+
+			// Skip lines with 0
+			if ( ! $total ) {
+				continue;
+			}
+
+			$title = isset( $titles[ $item_id ] )
+				? $titles[ $item_id ]
+				: sprintf( __( 'Activity revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
 
 			// Setup line data
 			$retval[] = array(
@@ -166,14 +197,12 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 			);
 		}
 
-		// Remove filter
-		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
-
 		// Append counter line
+		$counter_total = array_sum( $totals );
 		$retval[] = array(
 			'title'  => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
-			'debit'  => $totals < 0 ? abs( $totals ) : 0,
-			'credit' => $totals < 0 ? 0 : $totals,
+			'debit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
+			'credit' => $counter_total < 0 ? 0 : $counter_total,
 		);
 
 		return $retval;
@@ -196,25 +225,32 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		$totals         = array( 'all' => 0 ) + array_combine( $consumer_types, array_fill( 0, count( $consumer_types ), 0 ) );
 
 		// Walk Occasions
-		foreach ( $occasions as $item_id ) {
-			$totals['all'] = incassoos_get_occasion_total( $item_id, null );
+		foreach ( $occasions as $post_id ) {
+			$totals['all'] = incassoos_get_occasion_total( $post_id, null );
 
 			// Distinguish totals per consumer type
-			foreach ( $consumer_types as $type ) {
+			foreach ( $consumer_types as $type_id ) {
+				$total = incassoos_get_occasion_consumer_total( $type_id, $post_id, null );
 
 				// Add type total, subtract from all
-				if ( $total = incassoos_get_occasion_consumer_total( $type, $item_id, null ) ) {
-					$totals[ $type ] += $total;
-					$totals['all']   -= $total;
+				if ( ! empty( $total ) ) {
+					$totals[ $type_id ] += $total;
+					$totals['all']      -= $total;
 				}
 			}
 		}
 
 		// Walk defined totals
-		foreach ( $totals as $type => $total ) {
-			$title = ( 'all' === $type )
+		foreach ( $totals as $item_id => $total ) {
+
+			// Skip lines with 0
+			if ( ! $total ) {
+				continue;
+			}
+
+			$title = ( 'all' === $item_id )
 				? sprintf( __( 'Order revenue collected per %s', 'incassoos' ), "($date)" )
-				: sprintf( __( 'Order revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $type ), "($date)" );
+				: sprintf( __( 'Order revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
 
 			// Setup line data
 			$retval[] = array(

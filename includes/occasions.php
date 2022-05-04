@@ -888,6 +888,57 @@ function incassoos_get_occasion_consumer_count( $post = 0 ) {
 }
 
 /**
+ * Return the Occasion's unknown consumers
+ *
+ * @since 1.0.0
+ *
+ * @global WPDB $wpdb
+ *
+ * @uses apply_filters() Calls 'incassoos_get_occasion_unknown_consumers'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return array Occasion unknown consumers
+ */
+function incassoos_get_occasion_unknown_consumers( $post = 0 ) {
+	global $wpdb;
+
+	$post        = incassoos_get_occasion( $post );
+	$consumers   = incassoos_get_occasion_consumers( $post );
+	$unknown_ids = array();
+
+	if ( $post && $consumers ) {
+
+		// Define post meta query
+		$user_ids = implode( ',', $consumers );
+		$sql      = "SELECT ID FROM {$wpdb->users} WHERE ID IN ($user_ids)";
+
+		// Query all types
+		if ( $values = $wpdb->get_col( $sql ) ) {
+			$unknown_ids = array_diff( $consumers, array_filter( $values ) );
+		}
+	}
+
+	return apply_filters( 'incassoos_get_occasion_unknown_consumers', $unknown_ids, $post );
+}
+
+/**
+ * Return whether the Occasion has unknown consumers
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_occasion_has_unknown_participant'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Occasion has unknown consumers
+ */
+function incassoos_occasion_has_unknown_consumers( $post = 0 ) {
+	$post    = incassoos_get_occasion( $post );
+	$unknown = (bool) incassoos_get_occasion_unknown_consumers( $post );
+
+	return (bool) apply_filters( 'incassoos_occasion_has_unknown_consumers', $unknown, $post );
+}
+
+/**
  * Return the Occasion's consumer types
  * 
  * @since 1.0.0
@@ -915,6 +966,11 @@ function incassoos_get_occasion_consumer_types( $post = 0 ) {
 		// Query all types
 		if ( $values = $wpdb->get_col( $sql ) ) {
 			$types = array_unique( array_filter( $values ) );
+		}
+
+		// Consider unknown users
+		foreach ( incassoos_get_occasion_unknown_consumers( $post ) as $user_id ) {
+			$types[] = incassoos_get_unknown_user_consumer_type_id( $user_id );
 		}
 	}
 
@@ -953,20 +1009,35 @@ function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $num_forma
 function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_format = false ) {
 	global $wpdb;
 
-	$post       = incassoos_get_occasion( $post );
-	$query_type = is_numeric( $consumer ) ? 'incassoos_consumer' : 'incassoos_consumer_type';
-	$orders     = incassoos_get_occasion_orders( $post, array( $query_type => $consumer ) );
-	$total      = 0;
+	$_consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post      = incassoos_get_occasion( $post );
+	$total     = 0;
 
-	if ( $post && $orders ) {
+	if ( $post ) {
 
-		// Define post meta query
-		$post_ids = implode( ',', $orders );
-		$sql      = $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id IN ($post_ids) AND meta_key = %s", 'total' );
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
 
-		// Query all totals
-		if ( $values = $wpdb->get_col( $sql ) ) {
-			$total = array_sum( array_map( 'floatval', $values ) );
+		// Consider all unknown users
+		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+			$_consumer = incassoos_get_occasion_unknown_consumers( $post );
+		}
+
+		// Query orders
+		$query_type = is_numeric( $_consumer ) || is_array( $_consumer ) ? 'incassoos_consumer' : 'incassoos_consumer_type';
+		$orders     = incassoos_get_occasion_orders( $post, array( $query_type => $_consumer ) );
+
+		if ( $orders ) {
+
+			// Define post meta query
+			$post_ids = implode( ',', $orders );
+			$sql      = $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id IN ($post_ids) AND meta_key = %s", 'total' );
+
+			// Query all totals
+			if ( $values = $wpdb->get_col( $sql ) ) {
+				$total = array_sum( array_map( 'floatval', $values ) );
+			}
 		}
 	}
 
@@ -993,22 +1064,28 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_forma
  * @return array Occasion consumer orders
  */
 function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $query_args = array() ) {
-	$post  = incassoos_get_occasion( $post );
-	$posts = array();
+	$_consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post      = incassoos_get_occasion( $post );
+	$posts     = array();
 
 	if ( $post ) {
+
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+
+		// Consider all unknown users
+		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+			$_consumer = incassoos_get_occasion_unknown_consumers( $post );
+		}
 
 		// Define post meta query
 		$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
 		$meta_query[] = array(
-			'relation' => 'OR',
 			array(
-				'key'   => 'consumer',
-				'value' => $consumer
-			),
-			array(
-				'key'   => 'consumer_type',
-				'value' => $consumer
+				'key'     => is_numeric( $_consumer ) || is_array( $_consumer ) ? 'consumer' : 'consumer_type',
+				'value'   => (array) $_consumer,
+				'compare' => 'IN'
 			)
 		);
 		$query_args['meta_query'] = $meta_query;

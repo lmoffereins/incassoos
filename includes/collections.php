@@ -1084,6 +1084,57 @@ function incassoos_get_collection_consumer_count( $post = 0 ) {
 }
 
 /**
+ * Return the Collection's unknown consumers
+ *
+ * @since 1.0.0
+ *
+ * @global WPDB $wpdb
+ *
+ * @uses apply_filters() Calls 'incassoos_get_collection_unknown_consumers'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return array Collection unknown consumers
+ */
+function incassoos_get_collection_unknown_consumers( $post = 0 ) {
+	global $wpdb;
+
+	$post        = incassoos_get_collection( $post );
+	$consumers   = incassoos_get_collection_consumers( $post );
+	$unknown_ids = array();
+
+	if ( $post && $consumers ) {
+
+		// Define post meta query
+		$user_ids = implode( ',', $consumers );
+		$sql      = "SELECT ID FROM {$wpdb->users} WHERE ID IN ($user_ids)";
+
+		// Query all types
+		if ( $values = $wpdb->get_col( $sql ) ) {
+			$unknown_ids = array_diff( $consumers, array_filter( $values ) );
+		}
+	}
+
+	return apply_filters( 'incassoos_get_collection_unknown_consumers', $unknown_ids, $post );
+}
+
+/**
+ * Return whether the Collection has unknown consumers
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_collection_has_unknown_participant'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Collection has unknown consumers
+ */
+function incassoos_collection_has_unknown_consumers( $post = 0 ) {
+	$post    = incassoos_get_collection( $post );
+	$unknown = (bool) incassoos_get_collection_unknown_consumers( $post );
+
+	return (bool) apply_filters( 'incassoos_collection_has_unknown_consumers', $unknown, $post );
+}
+
+/**
  * Return the Collection's consumer types
  * 
  * @since 1.0.0
@@ -1111,6 +1162,11 @@ function incassoos_get_collection_consumer_types( $post = 0 ) {
 		// Query all types
 		if ( $values = $wpdb->get_col( $sql ) ) {
 			$types = array_unique( array_filter( $values ) );
+		}
+
+		// Consider unknown users
+		foreach ( incassoos_get_collection_unknown_consumers( $post ) as $user_id ) {
+			$types[] = incassoos_get_unknown_user_consumer_type_id( $user_id );
 		}
 	}
 
@@ -1145,24 +1201,39 @@ function incassoos_the_collection_consumer_total( $consumer, $post = 0, $num_for
  * @return string|float Collection consumer total value.
  */
 function incassoos_get_collection_consumer_total( $consumer, $post = 0, $num_format = false ) {
-	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
-	$post     = incassoos_get_collection( $post );
-	$total    = 0;
+	$_consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post      = incassoos_get_collection( $post );
+	$total     = 0;
 
 	if ( $post ) {
 
 		// Get collected amount
 		if ( incassoos_is_collection_collected( $post ) ) {
+
+			// Consider unknown users
+			if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
+				$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+			}
+
 			$totals = get_post_meta( $post->ID, 'totals', true );
-			$total  = isset( $totals[ $consumer ] ) ? (float) $totals[ $consumer ] : 0;
+			$total  = isset( $totals[ $_consumer ] ) ? (float) $totals[ $_consumer ] : 0;
+
+			// Consider all unknown users
+			if ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+				foreach ( incassoos_get_collection_unknown_consumers( $post ) as $user_id ) {
+					if ( isset( $totals[ $user_id ] ) ) {
+						$total += $totals[ $user_id ];
+					}
+				}
+			}
 
 		// Get calculated amount
 		} else {
-			$total  = incassoos_get_collection_consumer_total_raw( $consumer, $post );
+			$total = incassoos_get_collection_consumer_total_raw( $consumer, $post );
 		}
 	}
 
-	$total = (float) apply_filters( 'incassoos_get_collection_consumer_total', (float) $total, $post, $consumer );
+	$total = (float) apply_filters( 'incassoos_get_collection_consumer_total', (float) $total, $consumer, $post, $num_format );
 
 	// Apply currency format
 	if ( null !== $num_format ) {
@@ -1188,12 +1259,23 @@ function incassoos_get_collection_consumer_total( $consumer, $post = 0, $num_for
 function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 	global $wpdb;
 
-	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
-	$post     = incassoos_get_collection( $post );
-	$assets   = incassoos_get_collection_consumer_raw_assets( $consumer, $post );
-	$total    = 0;
+	$_consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post      = incassoos_get_collection( $post );
+	$total     = 0;
+
+	// Query assets
+	$assets = incassoos_get_collection_consumer_raw_assets( $consumer, $post );
 
 	if ( $post && $assets ) {
+
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+
+		// Consider all unknown users
+		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+			$_consumer = incassoos_get_collection_unknown_consumers( $post );
+		}
 
 		// Define post meta query
 		$post_ids = implode( ',', $assets );
@@ -1203,7 +1285,7 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 		if ( $values = $wpdb->get_results( $sql ) ) {
 			foreach ( $values as $value ) {
 
-				// Price, Prices, Total
+				// Price, Prices, Total in that order specifically
 				if ( 'price' === $value->meta_key ) {
 
 					// Find whether a consumer price was defined
@@ -1216,16 +1298,20 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 					}
 
 					// Rely on post price
-					if ( ! isset( $prices[ $consumer ] ) ) {
-						$total += (float) $value->meta_value;
+					foreach ( (array) $_consumer as $__consumer ) {
+						if ( ! isset( $prices[ $__consumer ] ) ) {
+							$total += (float) $value->meta_value;
+						}
 					}
 
 				} elseif ( 'prices' === $value->meta_key ) {
 					$prices = maybe_unserialize( $value->meta_value );
 
 					// When a consumer price was defined
-					if ( isset( $prices[ $consumer ] ) ) {
-						$total += (float) $prices[ $consumer ];
+					foreach ( (array) $_consumer as $__consumer ) {
+						if ( isset( $prices[ $__consumer ] ) ) {
+							$total += (float) $prices[ $__consumer ];
+						}
 					}
 
 				// Totals for Orders only
@@ -1236,7 +1322,7 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 		}
 	}
 
-	return (float) apply_filters( 'incassoos_get_collection_consumer_total_raw', (float) $total, $post, $consumer );
+	return (float) apply_filters( 'incassoos_get_collection_consumer_total_raw', (float) $total, $consumer, $post );
 }
 
 /**
@@ -1295,20 +1381,19 @@ function incassoos_get_collection_assets( $post = 0, $query_args = array() ) {
  * @return array Collection consumer assets
  */
 function incassoos_get_collection_consumer_assets( $consumer, $post = 0, $query_args = array() ) {
-	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
-	$post     = incassoos_get_collection( $post );
-	$posts    = array();
+	$post  = incassoos_get_collection( $post );
+	$posts = array();
 
 	if ( $post ) {
 
 		// Raw assets with parent
 		$raw_posts = incassoos_get_collection_consumer_raw_assets( $consumer, $post, array( 'fields' => 'id=>parent' ) );
-		$occasions = array_unique( wp_list_pluck( wp_list_filter( $raw_posts, array( 'post_parent' => $post->ID ), 'NOT' ), 'post_parent' ) );
+		$via_posts = array_unique( wp_list_pluck( wp_list_filter( $raw_posts, array( 'post_parent' => $post->ID ), 'NOT' ), 'post_parent' ) );
 		$others    = wp_list_pluck( wp_list_filter( $raw_posts, array( 'post_parent' => $post->ID ) ), 'ID' );
 
 		// Query by post ID
 		$query_args['post_parent__in'] = false;
-		$query_args['post__in'] = array_values( array_merge( $occasions, $others ) );
+		$query_args['post__in'] = array_values( array_merge( $via_posts, $others ) );
 
 		// Query assets
 		$posts = incassoos_get_collection_assets( $post, $query_args );
@@ -1351,7 +1436,7 @@ function incassoos_get_collection_raw_assets( $post = 0, $query_args = array() )
 			$defaults['post_status'] = incassoos_get_collected_status_id();
 		}
 
-		$query_args = apply_filters( 'incassoos_get_collection_raw_assets_args', wp_parse_args( $query_args, $defaults ) );
+		$query_args = apply_filters( 'incassoos_get_collection_raw_assets_args', wp_parse_args( $query_args, $defaults ), $post, $query_args );
 
 		$query = new WP_Query( $query_args );
 		$posts = $query->posts;
@@ -1381,27 +1466,34 @@ function incassoos_get_collection_raw_assets( $post = 0, $query_args = array() )
  * @return array Collection consumer raw assets
  */
 function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $query_args = array() ) {
-	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
-	$post     = incassoos_get_collection( $post );
-	$posts    = array();
+	$_consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post      = incassoos_get_collection( $post );
+	$posts     = array();
 
 	if ( $post ) {
+
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+
+		// Consider all unknown users
+		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+			$_consumer = incassoos_get_collection_unknown_consumers( $post );
+		}
 
 		// Define post meta query
 		$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
 		$meta_query[] = array(
 			'relation' => 'OR',
 			array(
-				'key'   => 'participant',
-				'value' => $consumer
+				'key'     => is_numeric( $_consumer ) || is_array( $_consumer ) ? 'participant' : 'participant_type',
+				'value'   => (array) $_consumer,
+				'compare' => 'IN'
 			),
 			array(
-				'key'   => 'consumer',
-				'value' => $consumer
-			),
-			array(
-				'key'   => 'consumer_type',
-				'value' => $consumer
+				'key'     => is_numeric( $_consumer ) || is_array( $_consumer ) ? 'consumer' : 'consumer_type',
+				'value'   => (array) $_consumer,
+				'compare' => 'IN'
 			)
 		);
 		$query_args['meta_query'] = $meta_query;
@@ -1427,11 +1519,20 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $qu
  * @return array Collection consumer total values by asset. Value is a string when formatting is applied.
  */
 function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0, $num_format = false ) {
-	$consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
-	$post     = incassoos_get_collection( $post );
-	$totals   = array();
+	$_consumer = is_a( $consumer, 'WP_User' ) ? $consumer->ID : $consumer;
+	$post      = incassoos_get_collection( $post );
+	$totals    = array();
 
 	if ( $post ) {
+
+		// Consider unknown users
+		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+
+		// Consider all unknown users
+		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+			$_consumer = incassoos_get_collection_unknown_consumers( $post );
+		}
 
 		$raw_assets = incassoos_get_collection_consumer_assets( $consumer, $post, array( 'fields' => 'id=>parent' ) );
 		if ( $assets ) {
@@ -1439,7 +1540,7 @@ function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0,
 		}
 	}
 
-	return apply_filters( 'incassoos_get_collection_consumer_total_by_asset', $totals, $post, $consumer, $num_format );
+	return apply_filters( 'incassoos_get_collection_consumer_total_by_asset', $totals, $consumer, $post, $num_format );
 }
 
 /** Filters *******************************************************************/

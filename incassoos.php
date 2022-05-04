@@ -115,7 +115,8 @@ final class Incassoos {
 		$this->collected_status_id  = apply_filters( 'incassoos_collected_post_status', 'collected' );
 
 		// Consumer type
-		$this->guest_consumer_type  = apply_filters( 'incassoos_guest_consumer_type', 'guest' );
+		$this->unknown_user_consumer_type = apply_filters( 'incassoos_unknown_user_consumer_type', 'unknown_user' );
+		$this->guest_consumer_type        = apply_filters( 'incassoos_guest_consumer_type',        'guest'        );
 
 		// Export type
 		$this->sepa_export_type              = apply_filters( 'incassoos_sepa_export_type',              'inc_sepa'              );
@@ -486,12 +487,22 @@ final class Incassoos {
 	 */
 	public function register_consumer_types() {
 
+		// Unknown user
+		incassoos_register_consumer_type(
+			incassoos_get_unknown_user_consumer_type_id_base(),
+			array(
+				'label'       => _x( 'Unknown users', 'Consumer type', 'incassoos' ),
+				'label_user'  => _x( 'Unknown user [%s]', 'Consumer type', 'incassoos' ),
+				'label_count' => _nx_noop( 'Unknown user <span class="count">(%s)</span>', 'Unknown users <span class="count">(%s)</span>', 'Consumer type', 'incassoos' )
+			)
+		);
+
 		// Guest
 		incassoos_register_consumer_type(
 			incassoos_get_guest_consumer_type_id(),
 			array(
 				'label'       => _x( 'Guest', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'Guest <span class="count">(%s)</span>', 'Guest <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
+				'label_count' => _nx_noop( 'Guest <span class="count">(%s)</span>', 'Guest <span class="count">(%s)</span>', 'Consumer type', 'incassoos' )
 			)
 		);
 	}
