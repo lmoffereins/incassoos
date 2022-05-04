@@ -143,4 +143,3 @@ if ( is_admin() ) {
 // add_action( 'bp_core_loaded', 'incassoos_buddypress', 10 );
 add_action( 'incassoos_init', 'incassoos_members',    10 );
 add_action( 'vgsr_ready',     'incassoos_vgsr',       10 );
-// add_action( 'incassoos_init', 'incassoos_wpseo',      10 );
