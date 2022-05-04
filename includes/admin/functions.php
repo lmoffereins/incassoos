@@ -283,14 +283,15 @@ function incassoos_admin_is_plugin_page() {
  * @uses do_action() Calls 'incassoos_admin_page-{$page}'
  */
 function incassoos_admin_page() {
-	$pages        = incassoos_admin_get_pages();
-	$current_page = incassoos_admin_get_current_page();
+	$pages           = incassoos_admin_get_pages();
+	$current_page    = incassoos_admin_get_current_page();
+	$show_page_title = empty( $pages[ $current_page ]['hide_page_title'] );
 
 	?>
 
 	<div class="wrap">
 
-		<?php if ( ! isset( $pages[ $current_page ]['hide_page_title'] ) || ! $pages[ $current_page ]['hide_page_title'] ) : ?>
+		<?php if ( $show_page_title ) : ?>
 
 		<h1 class="page-title"><?php incassoos_admin_the_page_title(); ?></h1>
 
@@ -348,11 +349,11 @@ function incassoos_admin_page_nav() {
 	foreach ( $pages as $slug => $args ) {
 
 		// Skip empty pages
-		if ( empty( $args ) || ! isset( $args['page_title'] ) )
+		if ( empty( $args ) || empty( $args['page_title'] ) || ! empty( $args['hide_nav_menu_item'] ) )
 			continue;
 
 		// Print the tab item
-		printf( '<a class="nav-item nav-item-%s" href="%s">%s</a>',
+		printf( '<a class="nav-item nav-item-%s" href="%s"><span class="nav-item-title">%s</span></a>',
 			( $page === $slug ) ? "{$slug} nav-item-active" : $slug,
 			esc_url( add_query_arg( array( 'page' => $slug ), admin_url( 'admin.php' ) ) ),
 			$args['page_title']
@@ -403,13 +404,11 @@ function incassoos_admin_get_pages() {
 	// Setup return value
 	$pages = array(
 		'incassoos'            => __( 'Dashboard', 'incassoos' ),
-		'incassoos-consumers'  => array(
-			'page_title'             => __( 'Consumers', 'incassoos' ),
-		),
-		'incassoos-settings'   => __( 'Settings', 'incassoos' ),
+		'incassoos-consumers'  => __( 'Consumers', 'incassoos' ),
+		'incassoos-settings'   => __( 'Settings',  'incassoos' ),
 		'incassoos-encryption' => array(
-			'page_title'             => __( 'Encryption', 'incassoos' ),
-			'hide_page_title'        => true
+			'page_title'      => __( 'Encryption', 'incassoos' ),
+			'hide_page_title' => true
 		)
 	);
 
@@ -419,7 +418,13 @@ function incassoos_admin_get_pages() {
 	}
 
 	foreach ( $pages as $page => $args ) {
-		$pages[ $page ] = is_array( $args ) ? $args : array( 'page_title' => $args );
+		$pages[ $page ] = wp_parse_args(
+			is_array( $args ) ? $args : array( 'page_title' => $args ),
+			array(
+				'hide_page_title'    => false,
+				'hide_nav_menu_item' => false
+			)
+		);
 	}
 
 	$pages = (array) apply_filters( 'incassoos_admin_get_pages', $pages );
