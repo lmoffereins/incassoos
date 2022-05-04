@@ -707,6 +707,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 
 .incassoos-item-list .add-participant-container.adding-participant .add-participant .list-search {
 	border-radius: 2px 0px 0px 0px;
+	margin: 0px;
 }
 
 .incassoos-item-list .add-participant-container.adding-participant .add-participant .item-list {
