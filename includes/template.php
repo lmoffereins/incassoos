@@ -13,6 +13,26 @@ defined( 'ABSPATH' ) || exit;
 /** Request *******************************************************************/
 
 /**
+ * Register additional query vars for the global request
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_query_vars'
+ *
+ * @param array $query_vars Public query vars
+ * @return array Query vars
+ */
+function incassoos_query_vars( $query_vars ) {
+	$plugin_query_vars = apply_filters( 'incassoos_query_vars',
+
+		// Taxonomies. Expected use: <taxonomy>=<term_id>
+		incassoos_get_plugin_taxonomies()
+	);
+
+	return array_merge( $query_vars, $plugin_query_vars );
+}
+
+/**
  * Add checks for plugin conditions to parse_request action
  *
  * @since 1.0.0
@@ -106,6 +126,19 @@ function incassoos_parse_query_vars( $posts_query ) {
 	// Bail when filters are suppressed on this query
 	if ( true === $posts_query->get( 'suppress_filters' ) )
 		return;
+
+	// Parse taxonomy query vars
+	foreach ( incassoos_get_plugin_taxonomies() as $taxonomy ) {
+		if ( $terms = $posts_query->get( $taxonomy ) ) {
+			$tax_query = (array) $posts_query->get( 'tax_query', array() );
+			$tax_query[] = array(
+				'taxonomy' => $taxonomy,
+				'terms'    => wp_parse_id_list( $terms ),
+				'field'    => 'term_id'
+			);
+			$posts_query->set( 'tax_query', $tax_query );
+		}
+	}
 
 	// Get query details
 	$post_type = (array) $posts_query->get( 'post_type' );

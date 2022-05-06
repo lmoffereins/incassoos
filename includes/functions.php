@@ -1072,8 +1072,7 @@ function incassoos_filter_term_link( $url, $term, $taxonomy ) {
 		if ( isset( $types[ $taxonomy ] ) ) {
 			$url = add_query_arg( array(
 				'post_type' => $types[ $taxonomy ],
-				'taxonomy'  => $taxonomy,
-				'term'      => $term->slug
+				$taxonomy   => $term->term_id
 			), admin_url( 'edit.php' ) );
 		}
 	}

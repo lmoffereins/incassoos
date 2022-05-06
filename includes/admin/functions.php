@@ -1035,6 +1035,100 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 	return $actions;
 }
 
+/**
+ * Display filter dropdowns for the posts list table
+ *
+ * @since 1.0.0
+ *
+ * @param  string $post_type Post type
+ * @param  string $which Location of the table nav
+ */
+function incassoos_admin_restrict_manage_posts( $post_type, $which ) {
+
+	// Bail when we're not in the top
+	if ( 'top' !== $which ) {
+		return;
+	}
+
+	// Activity
+	if ( incassoos_get_activity_post_type() === $post_type ) {
+		$taxonomy = incassoos_get_activity_cat_tax_id();
+		$term     = get_query_var( $taxonomy ) ?: get_query_var( 'term' );
+		if ( is_string( $term ) && ! is_numeric( $term ) ) {
+			$term = get_term_by( 'slug', $term, $taxonomy );
+			if ( $term ) {
+				$term = $term->term_id;
+			}
+		}
+
+		$dropdown_options = array(
+			'taxonomy'        => $taxonomy,
+			'name'            => $taxonomy,
+			'show_option_all' => get_taxonomy( $taxonomy )->labels->all_items,
+			'hide_empty'      => 0,
+			'hierarchical'    => 1,
+			'show_count'      => 0,
+			'orderby'         => 'name',
+			'selected'        => $term
+		);
+
+		echo '<label class="screen-reader-text" for="term">' . _x( 'Filter by category', 'Activity category', 'incassoos' ) . '</label>';
+		wp_dropdown_categories( $dropdown_options );
+	}
+
+	// Occasion
+	if ( incassoos_get_occasion_post_type() === $post_type ) {
+		$taxonomy = incassoos_get_occasion_type_tax_id();
+		$term     = get_query_var( $taxonomy ) ?: get_query_var( 'term' );
+		if ( is_string( $term ) && ! is_numeric( $term ) ) {
+			$term = get_term_by( 'slug', $term, $taxonomy );
+			if ( $term ) {
+				$term = $term->term_id;
+			}
+		}
+
+		$dropdown_options = array(
+			'taxonomy'        => $taxonomy,
+			'name'            => $taxonomy,
+			'show_option_all' => get_taxonomy( $taxonomy )->labels->all_items,
+			'hide_empty'      => 0,
+			'hierarchical'    => 1,
+			'show_count'      => 0,
+			'orderby'         => 'name',
+			'selected'        => $term
+		);
+
+		echo '<label class="screen-reader-text" for="term">' . _x( 'Filter by type', 'Occasion type', 'incassoos' ) . '</label>';
+		wp_dropdown_categories( $dropdown_options );
+	}
+
+	// Product
+	if ( incassoos_get_product_post_type() === $post_type ) {
+		$taxonomy = incassoos_get_product_cat_tax_id();
+		$term     = get_query_var( $taxonomy ) ?: get_query_var( 'term' );
+		if ( is_string( $term ) && ! is_numeric( $term ) ) {
+			$term = get_term_by( 'slug', $term, $taxonomy );
+			if ( $term ) {
+				$term = $term->term_id;
+			}
+		}
+
+		$dropdown_options = array(
+			'taxonomy'        => $taxonomy,
+			'name'            => $taxonomy,
+			'show_option_all' => get_taxonomy( $taxonomy )->labels->all_items,
+			'hide_empty'      => 0,
+			'hierarchical'    => 1,
+			'show_count'      => 0,
+			'orderby'         => 'name',
+			'selected'        => $term
+		);
+
+		echo '<label class="screen-reader-text" for="term">' . _x( 'Filter by category', 'Product category', 'incassoos' ) . '</label>';
+		wp_dropdown_categories( $dropdown_options );
+	}
+}
+
 /** Single Post *********************************************************/
 
 /**

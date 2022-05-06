@@ -30,6 +30,7 @@ add_action( 'manage_posts_extra_tablenav', 'incassoos_admin_manage_posts_tablena
 add_filter( 'manage_posts_columns',        'incassoos_admin_posts_add_columns',     10, 2 );
 add_filter( 'manage_posts_custom_column',  'incassoos_admin_posts_custom_column',   10, 2 );
 add_filter( 'post_row_actions',            'incassoos_admin_post_row_actions',      10, 2 );
+add_action( 'restrict_manage_posts',       'incassoos_admin_restrict_manage_posts', 10, 2 );
 
 // Single
 add_action( 'load-post.php',               'incassoos_admin_load_post_view',         10    );
