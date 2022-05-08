@@ -1032,6 +1032,13 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 		unset( $actions['inline hide-if-no-js'] );
 	}
 
+	// Product
+	if ( incassoos_get_product( $post ) ) {
+
+		// Disable inline editing
+		unset( $actions['inline hide-if-no-js'] );
+	}
+
 	return $actions;
 }
 
