@@ -1036,6 +1036,14 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 	content: '\f16f'; /* dashicons-coffee */
 }
 
+#incassoos_dashboard_status .encryption a:before {
+	content: '\f335'; /* dashicons-no-alt */
+}
+
+body.incassoos-encryption-enabled #incassoos_dashboard_status .encryption a:before {
+	content: '\f147'; /* dashicons-yes */
+}
+
 #incassoos_dashboard_actions .main span {
 	display: inline-block;
 	margin: 0px 5px 10px 0px;

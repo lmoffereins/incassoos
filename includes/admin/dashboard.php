@@ -155,6 +155,12 @@ function incassoos_admin_dashboard_status_widget() {
 		);
 	}
 
+	// Encryption
+	$statuses['encryption'] = sprintf( '<a href="%s">%s</a>',
+		esc_url( add_query_arg( 'page', 'incassoos-encryption', admin_url( 'admin.php' ) ) ),
+		incassoos_is_encryption_enabled() ? __( 'Encryption is enabled', 'incassoos' ) : __( 'Encryption is not enabled', 'incassoos' )
+	);
+
 	// Filter statuses to display
 	$statuses = apply_filters( 'incassoos_admin_dashboard_statuses', $statuses );
 
