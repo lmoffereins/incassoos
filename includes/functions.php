@@ -2704,7 +2704,7 @@ function incassoos_enable_encryption() {
  * @uses do_action() Calls 'incassoos_disable_encryption'
  * @uses do_action() Calls 'incassoos_disabled_encryption'
  *
- * @param  string $decryption_key Decryption key
+ * @param  string $decryption_key The encoded decryption key
  * @return bool|WP_Error Disabling success error object
  */
 function incassoos_disable_encryption( $decryption_key ) {
@@ -2811,10 +2811,10 @@ function incassoos_generate_encryption_keys( $password = null ) {
  *
  * @since 1.0.0
  *
- * @return string Encryption key
+ * @return string Encoded encryption key
  */
 function incassoos_get_encryption_key() {
-	return base64_decode( get_option( '_incassoos_encryption_key' ) );
+	return get_option( '_incassoos_encryption_key' );
 }
 
 /**
@@ -2891,7 +2891,7 @@ function incassoos_validate_decryption_key( $decryption_key ) {
  *
  * @since 1.0.0
  *
- * @return string|bool Decryption key or False when not set
+ * @return string|bool The encoded decryption key or False when not set
  */
 function incassoos_get_decryption_key() {
 	
@@ -2913,7 +2913,7 @@ function incassoos_get_decryption_key() {
  *
  * @since 1.0.0
  *
- * @param string $decryption_key The decryption key
+ * @param string $decryption_key The encoded decryption key
  * @return bool|WP_Error Saving success or error object when failed
  */
 function incassoos_set_decryption_key( $decryption_key ) {
@@ -2945,9 +2945,9 @@ function incassoos_set_decryption_key( $decryption_key ) {
  *
  * @since 1.0.0
  *
- * @return bool Deletion success
+ * @return bool Remval success
  */
-function incassoos_delete_decryption_key() {
+function incassoos_remove_decryption_key() {
 
 	// Unset decryption key from cache
 	incassoos()->encryption->decryption_key = null;
@@ -2970,7 +2970,7 @@ function incassoos_encrypt_value( $input ) {
 		try {
 
 			// Encrypt input
-			$encrypted = sodium_crypto_box_seal( (string) $input, incassoos_get_encryption_key() );
+			$encrypted = sodium_crypto_box_seal( (string) $input, base64_decode( incassoos_get_encryption_key() ) );
 
 			// Set encrypted value
 			if ( $encrypted ) {
@@ -2995,7 +2995,7 @@ function incassoos_encrypt_value( $input ) {
  * @since 1.0.0
  *
  * @param  string $input          Value to decrypt
- * @param  string $decryption_key The decryption key
+ * @param  string $decryption_key The encoded decryption key
  * @return string Decrypted string
  */
 function incassoos_decrypt_value( $input, $decryption_key ) {
@@ -3016,7 +3016,7 @@ function incassoos_decrypt_value( $input, $decryption_key ) {
 			// Construct keypair
 			$keypair = sodium_crypto_box_keypair_from_secretkey_and_publickey(
 				base64_decode( $decryption_key ),
-				incassoos_get_encryption_key()
+				base64_decode( incassoos_get_encryption_key() )
 			);
 
 			// Decrypt input
@@ -3349,7 +3349,7 @@ function incassoos_encrypt_encryptable_options() {
  *
  * @since 1.0.0
  *
- * @param string $decryption_key The decryption key
+ * @param string $decryption_key The encoded decryption key
  */
 function incassoos_decrypt_encryptable_options( $decryption_key ) {
 
