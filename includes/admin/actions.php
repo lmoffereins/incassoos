@@ -35,6 +35,7 @@ add_action( 'restrict_manage_posts',       'incassoos_admin_restrict_manage_post
 // Single
 add_action( 'load-post.php',               'incassoos_admin_load_post_view',         10    );
 add_action( 'load-edit.php',               'incassoos_admin_load_posts_view',        10    );
+add_action( 'incassoos_admin_init',        'incassoos_admin_handle_post_action',     10    );
 add_action( 'post_action_view',            'incassoos_admin_post_action_view',       10    );
 add_action( 'post_action_inc_close',       'incassoos_admin_post_action_close',      10    );
 add_action( 'post_action_inc_reopen',      'incassoos_admin_post_action_reopen',     10    );

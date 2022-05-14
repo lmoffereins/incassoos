@@ -1193,6 +1193,23 @@ function incassoos_admin_load_post_view() {
 }
 
 /**
+ * Reset the post action parameter when unintentionally overwritten
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_handle_post_action() {
+
+	// Bail when not a post request
+	if ( 'POST' != strtoupper( $_SERVER['REQUEST_METHOD'] ) )
+		return;
+
+	// Reset action from 'inc_doaction' to the original 'postedit' for saves
+	if ( isset( $_POST['save'] ) && isset( $_POST['action'] ) && 'inc_doaction' === $_POST['action'] ) {
+		$_POST['action'] = $_POST['originalaction'];
+	}
+}
+
+/**
  * Display the admin page for the post's view action
  *
  * This is an alternative post admin page without any editing options.
