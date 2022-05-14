@@ -201,7 +201,7 @@ function incassoos_admin_dashboard_recent_widget() {
 	if ( current_user_can( 'view_incassoos_collections' ) ) {
 		$recently_collected = incassoos_admin_dashboard_recent_posts( array(
 			'id'          => 'recently-collected',
-			'title'       => esc_html__( 'Recently collected', 'incassoos' ),
+			'title'       => esc_html__( 'Recent collections', 'incassoos' ),
 			'detail_cb'   => 'incassoos_get_collection_total',
 			'detail_args' => array( 0, true ),
 			'max'         => 5,

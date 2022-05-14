@@ -88,7 +88,6 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
-
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/schema#',
 			'title'      => 'incassoos-settings',
@@ -157,7 +156,6 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_settings( $request ) {
-
 		$schema = $this->get_item_schema();
 
 		// Base fields for every item.

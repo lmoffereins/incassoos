@@ -262,9 +262,6 @@ function incassoos_is_value_redacted( $input, $args = array() ) {
 /**
  * Filter the value of the Account IBAN option before update
  *
- * When the value is valid, an encrypted version is saved separately and the option's
- * value is redacted before update.
- *
  * @since 1.0.0
  *
  * @param  mixed $value Input value
@@ -290,9 +287,6 @@ function incassoos_sanitize_account_iban( $value ) {
 
 /**
  * Filter the value of the SEPA Creditor Identifier option before update
- *
- * When the value is valid, an encrypted version is saved separately while the option's
- * value is redacted before update.
  *
  * @since 1.0.0
  *

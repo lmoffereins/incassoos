@@ -504,8 +504,8 @@ function incassoos_get_collection_total_raw( $post = 0 ) {
 	$total = 0;
 
 	// Get Collection assets
-	$activities   = incassoos_get_collection_activities( $post );
-	$orders = incassoos_get_collection_orders( $post );
+	$activities = incassoos_get_collection_activities( $post );
+	$orders     = incassoos_get_collection_orders( $post );
 
 	// Query all total values
 	if ( $activities || $orders ) {

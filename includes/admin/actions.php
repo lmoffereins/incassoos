@@ -66,7 +66,7 @@ add_action( 'load-nav-menus.php',          'incassoos_admin_add_nav_menu_meta_bo
 /** Pages *********************************************************************/
 
 add_filter( 'removable_query_args',                'incassoos_admin_removable_query_args',       10 );
-add_action( 'admin_notices',                       'incassoos_admin_header',                      2 );
+add_action( 'incassoos_admin_notices',             'incassoos_admin_header',                      2 );
 add_action( 'incassoos_admin_load_dashboard_page', 'incassoos_admin_add_dashboard_widgets',      10 );
 add_action( 'incassoos_admin_load_settings_page',  'incassoos_admin_jwt_auth_invalidate_tokens', 10 );
 add_filter( 'incassoos_admin_get_settings_fields', 'incassoos_admin_jwt_auth_settings_fields',   10 );

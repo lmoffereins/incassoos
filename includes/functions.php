@@ -351,7 +351,7 @@ function incassoos_the_post_title( $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_post_title'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return string Asset title.
+ * @return string Post title.
  */
 function incassoos_get_post_title( $post = 0 ) {
 	$title = '';
@@ -405,7 +405,7 @@ function incassoos_the_post_date( $post = 0, $date_format = '' ) {
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
- * @return string Asset date.
+ * @return string Post date.
  */
 function incassoos_get_post_date( $post = 0, $date_format = '' ) {
 	$date = '';
@@ -463,7 +463,7 @@ function incassoos_the_post_url( $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_post_url'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return string Asset url.
+ * @return string Post url.
  */
 function incassoos_get_post_url( $post = 0 ) {
 	$url = '';
@@ -515,7 +515,7 @@ function incassoos_the_post_link( $post = 0 ) {
  * @uses apply_filters() Calls 'incassoos_get_post_link'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return string Asset link.
+ * @return string Post link.
  */
 function incassoos_get_post_link( $post = 0 ) {
 	$link = '';

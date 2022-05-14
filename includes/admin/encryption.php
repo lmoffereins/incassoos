@@ -408,6 +408,8 @@ function incassoos_admin_get_encryptable_data() {
 /**
  * Ajax action for enabling encryption
  *
+ * @todo Consider doing a dry run to ensure no errors appear.
+ *
  * @since 1.0.0
  */
 function incassoos_admin_ajax_enable_encryption() {

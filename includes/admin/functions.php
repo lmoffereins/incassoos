@@ -113,14 +113,8 @@ function incassoos_admin_menu_highlight() {
 	 * top menu and submenu item.
 	 */
 
-	// Main post types
-	if ( in_array( $screen->post_type, array(
-		incassoos_get_collection_post_type(),
-		incassoos_get_activity_post_type(),
-		incassoos_get_occasion_post_type(),
-		incassoos_get_order_post_type(),
-		incassoos_get_product_post_type(),
-	) ) ) {
+	// Plugin post types
+	if ( incassoos_is_plugin_post_type( $screen->post_type ) ) {
 		$parent_file  = 'incassoos';
 		$submenu_file = "edit.php?post_type={$screen->post_type}";
 
@@ -145,7 +139,7 @@ function incassoos_admin_menu_highlight() {
 		$parent_file  = 'incassoos';
 		$submenu_file = "edit.php?post_type=" . incassoos_get_product_post_type();
 
-	// Default to settings
+	// Default plugin home
 	} elseif ( 'incassoos' === $parent_file && null === $submenu_file ) {
 		$parent_file  = 'incassoos';
 		$submenu_file = 'incassoos';

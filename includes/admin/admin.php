@@ -287,13 +287,12 @@ class Incassoos_Admin {
 		$css = array();
 
 		// List columns
-		$css[] = ".fixed .column-taxonomy-" . incassoos_get_activity_cat_tax_id() .
-		       ", .fixed .column-taxonomy-" . incassoos_get_occasion_type_tax_id() .
-		       ", .fixed .column-taxonomy-" . incassoos_get_product_cat_tax_id() . " { width: 10%; }";
+		$css[] = '.fixed .column-taxonomy-' . incassoos_get_activity_cat_tax_id() .
+		       ', .fixed .column-taxonomy-' . incassoos_get_occasion_type_tax_id() .
+		       ', .fixed .column-taxonomy-' . incassoos_get_product_cat_tax_id() . ' { width: 10%; }';
 
 		// Post
-		$css[] = ".post-type-" . incassoos_get_order_post_type() . ":not(.incassoos-post-view) #post-body-content { margin: 0px; }";
-		$css[] = ".post-type-" . incassoos_get_order_post_type() . " #major-publishing-actions { border: none; }";
+		$css[] = '.post-type-' . incassoos_get_order_post_type() . ':not(.incassoos-post-view) #post-body-content { margin: 0px; }';
 
 		if ( ! empty( $css ) ) {
 			wp_add_inline_style( 'incassoos-admin', implode( "\n", $css ) );

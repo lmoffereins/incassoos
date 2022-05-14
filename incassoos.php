@@ -146,23 +146,18 @@ final class Incassoos {
 		require( $this->includes_dir . 'activities.php'   );
 		require( $this->includes_dir . 'capabilities.php' );
 		require( $this->includes_dir . 'collections.php'  );
-		require( $this->includes_dir . 'orders.php'       );
 		require( $this->includes_dir . 'currency.php'     );
 		require( $this->includes_dir . 'formatting.php'   );
 		require( $this->includes_dir . 'functions.php'    );
 		require( $this->includes_dir . 'locale.php'       );
 		require( $this->includes_dir . 'occasions.php'    );
+		require( $this->includes_dir . 'orders.php'       );
 		require( $this->includes_dir . 'products.php'     );
 		require( $this->includes_dir . 'sub-actions.php'  );
 		require( $this->includes_dir . 'template.php'     );
 		require( $this->includes_dir . 'theme-compat.php' );
 		require( $this->includes_dir . 'users.php'        );
 		require( $this->includes_dir . 'update.php'       );
-
-		/** Widgets *****************************************************/
-
-		// require( $this->includes_dir . 'classes/class-incassoos-enrollments-widget.php'  );
-		// require( $this->includes_dir . 'classes/class-incassoos-partners-widget.php'     );
 
 		/** Admin *******************************************************/
 

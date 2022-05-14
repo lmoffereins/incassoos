@@ -1921,6 +1921,7 @@ function incassoos_admin_notes_metabox( $post ) {
 	if ( ! $is_post_view ) {
 
 		// Use the WordPress editor
+		// Running the TinyMCE editor in a metabox is discouraged, see https://core.trac.wordpress.org/ticket/19173.
 		// wp_editor( $post->post_excerpt, 'excerpt', array(
 		// 	'textarea_rows' => 5,
 		// 	'editor_height' => 150,
