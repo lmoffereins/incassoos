@@ -2831,6 +2831,31 @@ function incassoos_is_encryption_enabled() {
 }
 
 /**
+ * Return the encryption key that is associated with the decryption key
+ *
+ * @since 1.0.0
+ *
+ * @param  string $decryption_key The encoded decryption key
+ * @return string|WP_Error Encoded encryption key, error object when unsuccessfull.
+ */
+function incassoos_get_encryption_key_from_decription_key( $decryption_key ) {
+	try {
+
+		// Derive encryption key from decryption key
+		$encryption_key = base64_encode( sodium_crypto_box_publickey_from_secretkey( base64_decode( $decryption_key ) ) );
+
+	// Keypair is invalid
+	} catch ( Exception $exception ) {
+		$encryption_key = new WP_Error(
+			'incassoos_invalid_decryption_key',
+			esc_html__( 'The provided decryption key is not a valid key.', 'incassoos' )
+		);
+	}
+
+	return $encryption_key;
+}
+
+/**
  * Return whether this is the correct decryption key
  *
  * Validation of the decryption key is done by deriving an encryption key from the
@@ -2838,29 +2863,20 @@ function incassoos_is_encryption_enabled() {
  *
  * @since 1.0.0
  *
- * @param  string $decryption_key Decryption key
+ * @param  string $decryption_key The encoded decryption key
  * @return bool|WP_Error True when valid, error object when invalid.
  */
 function incassoos_validate_decryption_key( $decryption_key ) {
-
-	// Define retval
+	$encryption_key = incassoos_get_encryption_key_from_decription_key( $decryption_key );
 	$validated = true;
 
-	try {
-
-		// Derive encryption key from decryption key
-		$encryption_key = sodium_crypto_box_publickey_from_secretkey( base64_decode( $decryption_key ) );
-
-	// Keypair is invalid
-	} catch ( Exception $exception ) {
-		$validated = new WP_Error(
-			'incassoos_invalid_decryption_key',
-			esc_html__( 'The provided decryption key is not a valid key.', 'incassoos' )
-		);
+	// Get error data from encryption key
+	if ( is_wp_error( $encryption_key ) ) {
+		$validated = $encryption_key;
 	}
 
 	// Compare encryption keys
-	if ( ! is_wp_error( $validated ) && $encryption_key !== incassoos_get_encryption_key() ) {
+	if ( ! is_wp_error( $encryption_key ) && $encryption_key !== incassoos_get_encryption_key() ) {
 		$validated = new WP_Error(
 			'incassoos_incorrect_decryption_key',
 			esc_html__( 'The provided decryption key is not the correct key.', 'incassoos' )
