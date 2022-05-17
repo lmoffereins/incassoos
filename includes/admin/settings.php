@@ -270,29 +270,29 @@ function incassoos_admin_get_settings_fields() {
 				'args'              => array()
 			),
 
-			// JWT Authentication
-			'_incassoos_jwt_auth_enabled' => array(
-				'title'             => esc_html__( 'Authentication', 'incassoos' ),
-				'callback'          => 'incassoos_admin_setting_callback_jwt_auth_enabled',
-				'sanitize_callback' => 'incassoos_sanitize_jwt_auth_enabled',
-				'args'              => array()
-			),
+			// // JWT Authentication
+			// '_incassoos_jwt_auth_enabled' => array(
+			// 	'title'             => esc_html__( 'Authentication', 'incassoos' ),
+			// 	'callback'          => 'incassoos_admin_setting_callback_jwt_auth_enabled',
+			// 	'sanitize_callback' => 'incassoos_sanitize_jwt_auth_enabled',
+			// 	'args'              => array()
+			// ),
 
-			// JWT Secret
-			'_incassoos_jwt_auth_secret' => array(
-				'title'             => esc_html__( 'Secret Key', 'incassoos' ),
-				'callback'          => 'incassoos_admin_setting_callback_jwt_auth_secret',
-				'sanitize_callback' => 'remove_accents',
-				'args'              => array()
-			),
+			// // JWT Secret
+			// '_incassoos_jwt_auth_secret' => array(
+			// 	'title'             => esc_html__( 'Secret Key', 'incassoos' ),
+			// 	'callback'          => 'incassoos_admin_setting_callback_jwt_auth_secret',
+			// 	'sanitize_callback' => 'remove_accents',
+			// 	'args'              => array()
+			// ),
 
-			// JWT Invalidate Tokens
-			'_incassoos_jwt_auth_invalidate_tokens' => array(
-				'title'             => esc_html__( 'Invalidate Tokens', 'incassoos' ),
-				'callback'          => 'incassoos_admin_setting_callback_jwt_auth_invalidate_tokens',
-				'sanitize_callback' => false,
-				'args'              => array()
-			),
+			// // JWT Invalidate Tokens
+			// '_incassoos_jwt_auth_invalidate_tokens' => array(
+			// 	'title'             => esc_html__( 'Invalidate Tokens', 'incassoos' ),
+			// 	'callback'          => 'incassoos_admin_setting_callback_jwt_auth_invalidate_tokens',
+			// 	'sanitize_callback' => false,
+			// 	'args'              => array()
+			// ),
 		),
 	) );
 }
