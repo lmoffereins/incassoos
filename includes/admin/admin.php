@@ -178,6 +178,14 @@ class Incassoos_Admin {
 
 				break;
 
+			// Encryption
+			case 'incassoos_admin_page-incassoos-encryption' :
+
+				// Defer to decryption caps
+				$caps = array( 'decrypt_incassoos_data' );
+
+				break;
+
 			// Collection admin
 			case 'incassoos_collection_admin' :
 
