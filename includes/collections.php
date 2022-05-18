@@ -1985,7 +1985,7 @@ function incassoos_collection_email_salutation( $post, $user ) {
  * @param  WP_Post|bool $post Post object or False when not found.
  */
 function incassoos_collection_email_amounts_table( $post, $user ) {
-	$total = incassoos_get_collection_consumer_total( $user );
+	$total = incassoos_get_collection_consumer_total( $user, $post );
 
 	// Bail when the user has no stake
 	if ( ! $total || ! $post )
@@ -2047,7 +2047,7 @@ function incassoos_collection_email_amounts_table( $post, $user ) {
  * @param  WP_Post|bool $post Post object or False when not found.
  */
 function incassoos_collection_email_withdrawal_mention( $post, $user ) {
-	$total = incassoos_get_collection_consumer_total( $user );
+	$total = incassoos_get_collection_consumer_total( $user, $post );
 
 	// Bail when the user has no stake
 	if ( ! $total || ! $post )
@@ -2058,7 +2058,9 @@ function incassoos_collection_email_withdrawal_mention( $post, $user ) {
 	// Default to now + delay
 	if ( empty( $withdrawal_date ) ) {
 		$delay = incassoos_get_default_collection_withdrawal_delay();
-		$withdrawal_date = date( get_option( 'date_format' ), strtotime( "+ {$delay} day" ) );
+		if ( $delay ) {
+			$withdrawal_date = date( get_option( 'date_format' ), strtotime( "+ {$delay} day" ) );
+		}
 	}
 
 	echo wpautop( sprintf(
