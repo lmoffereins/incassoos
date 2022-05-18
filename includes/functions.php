@@ -1045,6 +1045,23 @@ function incassoos_is_plugin_taxonomy( $taxonomy = '' ) {
 }
 
 /**
+ * Return plugin taxonomies mapped to post types
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_plugin_taxonomy_post_types'
+ *
+ * @return array Map of taxonomies to post types
+ */
+function incassoos_get_plugin_taxonomy_post_types() {
+	return apply_filters( 'incassoos_get_plugin_taxonomy_post_types', array(
+		incassoos_get_activity_cat_tax_id()  => incassoos_get_activity_post_type(),
+		incassoos_get_occasion_type_tax_id() => incassoos_get_occasion_post_type(),
+		incassoos_get_product_cat_tax_id()   => incassoos_get_product_post_type()
+	) );
+}
+
+/**
  * Modify the term link
  *
  * @since 1.0.0
@@ -1062,16 +1079,12 @@ function incassoos_filter_term_link( $url, $term, $taxonomy ) {
 	if ( incassoos_is_plugin_taxonomy( $taxonomy ) ) {
 
 		// Map taxonomies to post types
-		$types = array(
-			incassoos_get_activity_cat_tax_id()  => incassoos_get_activity_post_type(),
-			incassoos_get_occasion_type_tax_id() => incassoos_get_occasion_post_type(),
-			incassoos_get_product_cat_tax_id()   => incassoos_get_product_post_type()
-		);
+		$tax_map = incassoos_get_plugin_taxonomy_post_types();
 
 		// Define base admin url
-		if ( isset( $types[ $taxonomy ] ) ) {
+		if ( isset( $tax_map[ $taxonomy ] ) ) {
 			$url = add_query_arg( array(
-				'post_type' => $types[ $taxonomy ],
+				'post_type' => $tax_map[ $taxonomy ],
 				$taxonomy   => $term->term_id
 			), admin_url( 'edit.php' ) );
 		}
