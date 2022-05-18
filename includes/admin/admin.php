@@ -146,45 +146,7 @@ class Incassoos_Admin {
 
 		switch ( $cap ) {
 
-			/** Admin Pages *************************************************/
-
-			// Dashboard
-			case 'incassoos_admin_page-incassoos' :
-
-				// Defer to dashboard caps
-				$caps = array( 'view_incassoos_dashboard' );
-
-				break;
-
-			// Users
-			case 'incassoos_admin_page-incassoos-consumers' :
-
-				// Defer to consumers caps
-				$caps = array( 'edit_incassoos_consumers' );
-
-				break;
-
-			// Settings
-			case 'incassoos_admin_page-incassoos-settings' :
-
-				// Block when without settings
-				if ( ! incassoos_admin_page_has_settings( 'incassoos' ) ) {
-					$caps = array( 'do_not_allow' );
-
-				// Defer to settings caps
-				} else {
-					$caps = array( 'edit_incassoos_settings' );
-				}
-
-				break;
-
-			// Encryption
-			case 'incassoos_admin_page-incassoos-encryption' :
-
-				// Defer to decryption caps
-				$caps = array( 'decrypt_incassoos_data' );
-
-				break;
+			/** Post Type Pages *********************************************/
 
 			// Collection admin
 			case 'incassoos_collection_admin' :
@@ -223,6 +185,72 @@ class Incassoos_Admin {
 
 				// Defer to viewing caps
 				$caps = array( 'view_incassoos_products' );
+
+				break;
+
+			/** Taxonomy Pages **********************************************/
+
+			// Activity Category admin
+			case 'incassoos_activity_cat_admin' :
+
+				// Defer to managing caps
+				$caps = array( 'manage_incassoos_activity_cats' );
+
+				break;
+
+			// Occsion Type admin
+			case 'incassoos_occasion_type_admin' :
+
+				// Defer to managing caps
+				$caps = array( 'manage_incassoos_occasion_types' );
+
+				break;
+
+			// Product Category admin
+			case 'incassoos_product_cat_admin' :
+
+				// Defer to managing caps
+				$caps = array( 'manage_incassoos_product_cats' );
+
+				break;
+
+			/** Admin Pages *************************************************/
+
+			// Dashboard
+			case 'incassoos_admin_page-incassoos' :
+
+				// Defer to dashboard caps
+				$caps = array( 'view_incassoos_dashboard' );
+
+				break;
+
+			// Users
+			case 'incassoos_admin_page-incassoos-consumers' :
+
+				// Defer to consumers caps
+				$caps = array( 'edit_incassoos_consumers' );
+
+				break;
+
+			// Settings
+			case 'incassoos_admin_page-incassoos-settings' :
+
+				// Block when without settings
+				if ( ! incassoos_admin_page_has_settings( 'incassoos' ) ) {
+					$caps = array( 'do_not_allow' );
+
+				// Defer to settings caps
+				} else {
+					$caps = array( 'edit_incassoos_settings' );
+				}
+
+				break;
+
+			// Encryption
+			case 'incassoos_admin_page-incassoos-encryption' :
+
+				// Defer to decryption caps
+				$caps = array( 'decrypt_incassoos_data' );
 
 				break;
 
