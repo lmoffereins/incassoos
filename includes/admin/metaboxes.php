@@ -279,6 +279,9 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 			);
 		}
 	}
+
+	// General
+	add_filter( 'incassoos_admin_view_post_content_metabox_title', 'incassoos_admin_filter_content_metabox_title', 10, 2 );
 }
 
 /**
@@ -404,7 +407,7 @@ function incassoos_admin_view_form_after_title( $post ) { ?>
  * @param  WP_Post $post Post object.
  */
 function incassoos_admin_view_form_after_editor( $post ) {
-	$widget_title   = _x( 'Content', 'Post metabox title', 'incassoos' );
+	$widget_title   = apply_filters( 'incassoos_admin_view_post_content_metabox_title', _x( 'Content', 'Post metabox title', 'incassoos' ), $post );
 	$widget_content = apply_filters( 'the_content', $post->post_content );
 	$box = array( 'id' => 'postdivrich', 'title' => $widget_title );
 	$widget_classes = 'postbox ' . postbox_classes( $box['id'], get_current_screen()->id );
@@ -416,7 +419,7 @@ function incassoos_admin_view_form_after_editor( $post ) {
 	?>
 
 	<div class="meta-box-sortables">
-		<div id="postdivrich" class="<?php echo $widget_classes; ?>">
+		<div id="<?php echo $box['id']; ?>" class="<?php echo $widget_classes; ?>">
 			<?php
 				echo '<div class="postbox-header">';
 				echo '<h2 class="hndle">';
@@ -481,6 +484,25 @@ function incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ) {
 		</div>
 
 	<?php
+}
+
+/**
+ * Modify the view post content metabox title
+ *
+ * @since 1.0.0
+ *
+ * @param string $widget_title Metabox title
+ * @param WP_Post $post Post object
+ * @return string Metabox title
+ */
+function incassoos_admin_filter_content_metabox_title( $widget_title, $post ) {
+
+	// Collection
+	if ( incassoos_get_collection( $post ) ) {
+		$widget_title = __( 'Email body', 'Post metabox title', 'incassoos' );
+	}
+
+	return $widget_title;
 }
 
 /** Collection **********************************************************/
