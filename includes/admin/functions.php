@@ -41,11 +41,9 @@ function incassoos_register_admin_menu() {
 	);
 
 	// Manage posts
-	$hooks[] = incassoos_admin_submenu_post_type( incassoos_get_collection_post_type() );
-	$hooks[] = incassoos_admin_submenu_post_type( incassoos_get_activity_post_type()   );
-	$hooks[] = incassoos_admin_submenu_post_type( incassoos_get_occasion_post_type()   );
-	$hooks[] = incassoos_admin_submenu_post_type( incassoos_get_order_post_type()      );
-	$hooks[] = incassoos_admin_submenu_post_type( incassoos_get_product_post_type()    );
+	foreach ( incassoos_get_plugin_post_types() as $post_type ) {
+		$hooks[] = incassoos_admin_add_submenu_post_type( $post_type );
+	}
 
 	// Consumers page
 	$hooks[] = $consumers_page = add_submenu_page(
@@ -152,10 +150,10 @@ function incassoos_admin_menu_highlight() {
  * @since 1.0.0
  *
  * @param string $post_type Post type name
- * @param string $function Optional. Menu file or function. Defaults to the post type's edit.php
+ * @param string $file_or_callback Optional. Menu file or function. Defaults to the post type's edit.php
  * @return false|string Result from {@see add_submenu_page()}
  */
-function incassoos_admin_submenu_post_type( $post_type = '', $function = '' ) {
+function incassoos_admin_add_submenu_post_type( $post_type = '', $file_or_callback = '' ) {
 	if ( ! $post_type_object = get_post_type_object( $post_type ) )
 		return false;
 
@@ -166,12 +164,21 @@ function incassoos_admin_submenu_post_type( $post_type = '', $function = '' ) {
 	remove_menu_page( $menu_file );
 	unset( $GLOBALS['submenu'][ $menu_file ] );
 
+	// Re-register post-new.php submenu, since it was removed
+	add_submenu_page(
+		'incassoos',
+		$post_type_object->labels->add_new_item,
+		$post_type_object->labels->add_new,
+		$post_type_object->show_ui ? 'exist' : 'do_not_allow',
+		"post-new.php?post_type={$post_type}"
+	);
+
 	return add_submenu_page(
 		'incassoos',
 		$post_type_object->label,
 		$post_type_object->labels->menu_name,
 		$post_type_object->show_ui ? 'exist' : 'do_not_allow',
-		! empty( $function ) ? $function : $menu_file
+		! empty( $file_or_callback ) ? $file_or_callback : $menu_file
 	);
 }
 
@@ -181,10 +188,10 @@ function incassoos_admin_submenu_post_type( $post_type = '', $function = '' ) {
  * @since 1.0.0
  *
  * @param string $taxonomy Taxonomy name
- * @param string $function Optional. Menu file or function. Defaults to the taxonomy's edit-tags.php
+ * @param string $file_or_callback Optional. Menu file or function. Defaults to the taxonomy's edit-tags.php
  * @return false|string Result from {@see add_submenu_page()}
  */
-function incassoos_admin_submenu_taxonomy( $taxonomy = '', $function = '' ) {
+function incassoos_admin_add_submenu_taxonomy( $taxonomy = '', $file_or_callback = '' ) {
 	if ( ! $taxonomy = get_taxonomy( $taxonomy ) )
 		return false;
 
@@ -195,17 +202,24 @@ function incassoos_admin_submenu_taxonomy( $taxonomy = '', $function = '' ) {
 		$taxonomy->labels->name,
 		$taxonomy->labels->menu_name,
 		$taxonomy->show_ui ? 'exist' : 'do_not_allow',
-		! empty( $function ) ? $function : $menu_file
+		! empty( $file_or_callback ) ? $file_or_callback : $menu_file
 	);
 }
 
-
 /**
- * Remove the individual page menu items
+ * Remove the individual admin menu items
+ *
+ * Admin pages remain registered, but they disappear from the admin menu.
  *
  * @since 1.0.0
  */
 function incassoos_remove_admin_menu() {
+
+	// Remove post-new.php items from admin menu
+	foreach ( incassoos_get_plugin_post_types() as $post_type ) {
+		remove_submenu_page( 'incassoos', "post-new.php?post_type={$post_type}" );
+	}
+
 	remove_submenu_page( 'incassoos', 'incassoos-consumers'  );
 	remove_submenu_page( 'incassoos', 'incassoos-settings'   );
 	remove_submenu_page( 'incassoos', 'incassoos-encryption' );
