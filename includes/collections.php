@@ -2053,16 +2053,20 @@ function incassoos_collection_email_withdrawal_mention( $post, $user ) {
 	if ( ! $total || ! $post )
 		return;
 
-	?>
+	$withdrawal_date = incassoos_get_collection_withdrawal_date( $post );
 
-	<p><?php printf(
+	// Default to now + delay
+	if ( empty( $withdrawal_date ) ) {
+		$delay = incassoos_get_default_collection_withdrawal_delay();
+		$withdrawal_date = date( get_option( 'date_format' ), strtotime( "+ {$delay} day" ) );
+	}
+
+	echo wpautop( sprintf(
 		esc_html__( 'The total amount of %1$s will be withdrawn from your account (%2$s) on or around %3$s.', 'incassoos' ),
 		incassoos_get_format_currency( $total ),
-		incassoos_get_user_iban( $user ),
-		incassoos_get_collection_withdrawal_date( $post )
-	); ?></p>
-
-	<?php
+		incassoos_get_user_iban( $user ) ?: '?',
+		$withdrawal_date
+	) );
 }
 
 /**
