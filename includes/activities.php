@@ -114,6 +114,7 @@ function incassoos_get_activity_cat_tax_labels() {
 		'no_terms'                   => __( 'No categories',                        'incassoos' ),
 		'items_list_navigation'      => __( 'Activity categories list navigation',  'incassoos' ),
 		'items_list'                 => __( 'Activity categories list',             'incassoos' ),
+		'back_to_items'              => __( '&larr; Go to Activity Categories',     'incassoos' ),
 	) );
 }
 

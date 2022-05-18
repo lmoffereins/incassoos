@@ -116,6 +116,7 @@ function incassoos_get_product_cat_tax_labels() {
 		'no_terms'                   => __( 'No categories',                        'incassoos' ),
 		'items_list_navigation'      => __( 'Product categories list navigation',   'incassoos' ),
 		'items_list'                 => __( 'Product categories list',              'incassoos' ),
+		'back_to_items'              => __( '&larr; Go to Product Categories',      'incassoos' ),
 	) );
 }
 

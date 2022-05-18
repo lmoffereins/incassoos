@@ -114,6 +114,7 @@ function incassoos_get_occasion_type_tax_labels() {
 		'no_terms'                   => __( 'No types',                        'incassoos' ),
 		'items_list_navigation'      => __( 'Occasion types list navigation',  'incassoos' ),
 		'items_list'                 => __( 'Occasion types list',             'incassoos' ),
+		'back_to_items'              => __( '&larr; Go to Occasion Types',     'incassoos' ),
 	) );
 }
 
