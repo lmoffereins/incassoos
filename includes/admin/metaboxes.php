@@ -712,10 +712,10 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 
 	// Get collection assets
 	$is_post_view = incassoos_admin_is_post_view( $post );
-	$cactivities  = incassoos_get_collection_activities( $post );
+	$selected_activities = incassoos_get_collection_activities( $post );
 
 	if ( $is_post_view ) {
-		$activities = $cactivities;
+		$activities = $selected_activities;
 	} else {
 		$activities = incassoos_get_uncollected_activities( array( 'incassoos_empty' => false ) );
 	}
@@ -731,7 +731,7 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 			<li id="post-<?php echo $item_id; ?>" class="asset collection-activity">
 				<?php if ( ! $is_post_view ) : ?>
 
-				<input id="collection-activity-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-activity[]" class="select-activity" <?php checked( in_array( $item_id, $cactivities ) ); ?> />
+				<input id="collection-activity-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-activity[]" class="select-activity" <?php checked( in_array( $item_id, $selected_activities ) ); ?> />
 				<label for="collection-activity-<?php echo $item_id; ?>">
 					<span class="title"><?php incassoos_the_activity_title( $item_id ); ?></span>
 
@@ -791,10 +791,10 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 
 	// Get collection assets
 	$is_post_view = incassoos_admin_is_post_view( $post );
-	$coccasions   = incassoos_get_collection_occasions( $post );
+	$selected_occasions = incassoos_get_collection_occasions( $post );
 
 	if ( $is_post_view ) {
-		$occasions = $coccasions;
+		$occasions = $selected_occasions;
 	} else {
 		$occasions = incassoos_get_uncollected_occasions( array( 'incassoos_empty' => false ) );
 	}
@@ -810,7 +810,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 			<li id="post-<?php echo $item_id; ?>" class="asset collection-occasion">
 				<?php if ( ! $is_post_view ) : ?>
 
-				<input id="collection-occasion-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-occasion[]" class="select-occasion" <?php checked( in_array( $item_id, $coccasions ) ); ?> />
+				<input id="collection-occasion-<?php echo $item_id; ?>" type="checkbox" value="<?php echo $item_id; ?>" name="collection-occasion[]" class="select-occasion" <?php checked( in_array( $item_id, $selected_occasions ) ); ?> />
 				<label for="collection-occasion-<?php echo $item_id; ?>">
 					<span class="title"><?php incassoos_the_occasion_title( $item_id ); ?></span>
 
