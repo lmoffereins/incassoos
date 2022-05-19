@@ -819,7 +819,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 					<?php endif; ?>
 
 					<div class="details">
-						<span class="occasion-order-count"><?php incassoos_the_occasion_order_count( $item_id ); ?></span>
+						<span class="occasion-consumer-count"><?php incassoos_the_occasion_consumer_count( $item_id ); ?></span>
 						<span class="occasion-total"><?php incassoos_the_occasion_total( $item_id, true ); ?></span>
 						<span class="view-action">
 							<a target="_blank" href="<?php echo esc_url( incassoos_get_occasion_url( $item_id ) ); ?>"><?php esc_html_e( 'View' ); ?></a>
