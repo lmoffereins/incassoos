@@ -740,7 +740,8 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 					<?php endif; ?>
 
 					<div class="details">
-						<span class="activity-participant-count"><?php incassoos_the_activity_participant_count( $item_id ); ?></span>
+						<?php /* translators: number of participants */ ?>
+						<span class="activity-participant-count"><?php printf( __( '%d participants', 'incassoos' ), incassoos_get_activity_participant_count( $item_id ) ); ?></span>
 						<span class="activity-total"><?php incassoos_the_activity_total( $item_id, true ); ?></span>
 						<span class="view-action">
 							<a target="_blank" href="<?php echo esc_url( incassoos_get_activity_url( $item_id ) ); ?>"><?php esc_html_e( 'View' ); ?>
@@ -757,7 +758,8 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 				<?php endif; ?>
 
 				<div class="details">
-					<span class="activity-participant-count"><?php incassoos_the_activity_participant_count( $item_id ); ?></span>
+					<?php /* translators: number of participants */ ?>
+					<span class="activity-participant-count"><?php printf( __( '%d participants', 'incassoos' ), incassoos_get_activity_participant_count( $item_id ) ); ?></span>
 					<span class="activity-total"><?php incassoos_the_activity_total( $item_id, true ); ?></span>
 				</div>
 
@@ -819,7 +821,8 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 					<?php endif; ?>
 
 					<div class="details">
-						<span class="occasion-order-count"><?php incassoos_the_occasion_order_count( $item_id ); ?></span>
+						<?php /* translators: number of consumers */ ?>
+						<span class="occasion-consumer-count"><?php printf( __( '%d consumers', 'incassoos' ), incassoos_get_occasion_consumer_count( $item_id ) ); ?></span>
 						<span class="occasion-total"><?php incassoos_the_occasion_total( $item_id, true ); ?></span>
 						<span class="view-action">
 							<a target="_blank" href="<?php echo esc_url( incassoos_get_occasion_url( $item_id ) ); ?>"><?php esc_html_e( 'View' ); ?></a>
@@ -836,7 +839,8 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 				<?php endif; ?>
 
 				<div class="details">
-					<span class="occasion-order-count"><?php incassoos_the_occasion_order_count( $item_id ); ?></span>
+					<?php /* translators: number of consumers */ ?>
+					<span class="occasion-consumer-count"><?php printf( __( '%d consumers', 'incassoos' ), incassoos_get_occasion_consumer_count( $item_id ) ); ?></span>
 					<span class="occasion-total"><?php incassoos_the_occasion_total( $item_id, true ); ?></span>
 				</div>
 
