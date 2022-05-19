@@ -73,6 +73,7 @@ add_action( 'incassoos_admin_load_settings_page',  'incassoos_admin_jwt_auth_inv
 add_filter( 'incassoos_admin_get_settings_fields', 'incassoos_admin_jwt_auth_settings_fields',   10 );
 add_filter( 'incassoos_admin_get_settings_fields', 'incassoos_admin_user_roles_settings_fields', 10 );
 add_action( 'incassoos_admin_notices',             'incassoos_admin_settings_notices',           10 );
+add_filter( 'option_page_capability_incassoos',    'incassoos_admin_get_option_page_cap',        10 );
 
 /** Ajax **********************************************************************/
 

@@ -345,6 +345,19 @@ function incassoos_admin_page_has_settings( $page = '' ) {
 	return false;
 }
 
+/**
+ * Return the capability for updating plugin settings
+ *
+ * The settings page capability is further mapped in `Incassoos_Admin::map_meta_caps()`.
+ *
+ * @since 1.0.0
+ *
+ * @return string Capability
+ */
+function incassoos_admin_get_option_page_cap() {
+	return 'incassoos_admin_page-incassoos-settings';
+}
+
 /** Main Section **********************************************************/
 
 /**
