@@ -727,14 +727,20 @@ jQuery(document).ready( function($) {
 			toggleGroups();
 		})
 
-		// Export consumers: open popup for decryption key
-		.on( 'click', '.export-consumers-wrapper.require-decryption-key:not(.opened) #export-consumers', function( e ) {
+		// Export consumers: open popup when decryption key is required
+		.on( 'click', '.export-consumers-wrapper.require-decryption-key #export-consumers', function( e ) {
+			var $parent = $( this ).parents( '.export-consumers-wrapper' );
+
+			// Ignore when decryption key is provided
+			if ( $parent.is( '.opened' ) && '' !== $parent.find( 'input[name="export-decryption-key"]').val() ) {
+				return;
+			}
 
 			// Do not start export yet
 			e.preventDefault();
 
 			// Toggle visibility of other inputs
-			$( this ).parents( '.export-consumers-wrapper' ).addClass( 'opened' ).find( 'input:first-of-type' ).focus();
+			$parent.toggleClass( 'opened' ).find( 'input:first-of-type' ).focus();
 		});
 
 	/**
