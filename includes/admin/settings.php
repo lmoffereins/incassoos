@@ -535,11 +535,10 @@ function incassoos_admin_setting_callback_account_iban() {
 
 	<input name="_incassoos_account_iban" id="_incassoos_account_iban" type="text" class="regular-text" value="<?php echo $option; ?>" />
 
-	<?php if ( current_user_can( 'decrypt_incassoos_data' ) && incassoos_is_option_redacted( '_incassoos_account_iban', $option ) ) : ?>
+	<?php
 
-	<button type="button" id="incassoos-decrypt-account-iban" class="button button-secondary show-option-value"><?php esc_html_e( 'Show value', 'incassoos' ); ?></button>
-
-	<?php endif;
+	// Provide way for decrypting option
+	incassoos_admin_setting_decrypt_button( array( 'option_name' => '_incassoos_account_iban', 'option_value' => $option ) );
 }
 
 /**
@@ -556,11 +555,10 @@ function incassoos_admin_setting_callback_sepa_creditor_id() {
 
 	<input name="_incassoos_sepa_creditor_id" id="_incassoos_sepa_creditor_id" type="text" class="regular-text" value="<?php echo $option; ?>" />
 
-	<?php if ( current_user_can( 'decrypt_incassoos_data' ) && incassoos_is_option_redacted( '_incassoos_sepa_creditor_id', $option ) ) : ?>
+	<?php
 
-	<button type="button" id="incassoos-decrypt-sepa-creditor-id" class="button button-secondary show-option-value"><?php esc_html_e( 'Show value', 'incassoos' ); ?></button>
-
-	<?php endif;
+	// Provide way for decrypting option
+	incassoos_admin_setting_decrypt_button( array( 'option_name' => '_incassoos_sepa_creditor_id', 'option_value' => $option ) );
 }
 
 /**
@@ -834,6 +832,50 @@ function incassoos_admin_jwt_auth_settings_fields( $fields ) {
 	}
 
 	return $fields;
+}
+
+/**
+ * Display a button for decrypting the singular option value
+ *
+ * @since 1.0.0
+ *
+ * @param array $args {
+ *     List of arguments
+ *
+ *     @type string $option_name  The option name
+ *     @type string $option_value The option's value to check for redaction
+ * }
+ */
+function incassoos_admin_setting_decrypt_button( $args = array() ) {
+
+	// Bail when the user cannot decrypt options
+	if ( ! incassoos_is_encryption_enabled() || ! current_user_can( 'decrypt_incassoos_data' ) ) {
+		return;
+	}
+
+	$args = wp_parse_args( $args, array(
+		'option_name'  => '',
+		'option_value' => ''
+	) );
+
+	// Bail when the option is not encrypted
+	if ( ! incassoos_is_option_redacted( $args['option_name'], $args['option_value'] ) ) {
+		return;
+	}
+
+	$key_id    = "incassoos-{$args['option_name']}-decryption-key";
+	$button_id = "incassoos-decrypt-{$args['option_name']}";
+
+	?>
+
+	<div class="decrypt-option-value-wrapper require-decryption-key-wrapper">
+		<label class="screen-reader-text" for="<?php echo $key_id; ?>"><?php esc_html_e( 'Decryption key', 'incassoos' ); ?></label>
+		<input type="password" name="<?php echo $key_id; ?>" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
+		<button type="button" id="<?php echo $button_id; ?>" class="button button-secondary decrypt-option-value" data-option-name="<?php echo $args['option_name']; ?>"><?php esc_html_e( 'Show value', 'incassoos' ); ?></button>
+		<span class="spinner"></span>
+	</div>
+
+	<?php
 }
 
 /** Page ****************************************************************/

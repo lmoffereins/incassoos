@@ -366,7 +366,8 @@ function incassoos_admin_consumers_page() {
 			<?php if ( current_user_can( 'export_incassoos_consumers' ) ) : ?>
 
 			<div class="import-export-consumers">
-				<div class="export-consumers-wrapper <?php if ( $is_encryption_enabled ) { echo 'require-decryption-key'; } ?>">
+				<span class="spinner"></span>
+				<div class="export-consumers-wrapper <?php if ( $is_encryption_enabled ) { echo 'require-decryption-key-wrapper'; } ?>">
 					<?php if ( $is_encryption_enabled ) : ?>
 
 					<label class="screen-reader-text" for="export-decryption-key"><?php esc_html_e( 'Decryption key', 'incassoos' ); ?></label>

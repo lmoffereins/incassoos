@@ -728,11 +728,12 @@ jQuery(document).ready( function($) {
 		})
 
 		// Export consumers: open popup when decryption key is required
-		.on( 'click', '.export-consumers-wrapper.require-decryption-key #export-consumers', function( e ) {
+		.on( 'click', '.export-consumers-wrapper.require-decryption-key-wrapper #export-consumers', function( e ) {
 			var $parent = $( this ).parents( '.export-consumers-wrapper' );
 
-			// Ignore when decryption key is provided
+			// Continue the submit decryption key is provided
 			if ( $parent.is( '.opened' ) && '' !== $parent.find( 'input[name="export-decryption-key"]').val() ) {
+				$parent.prev( '.spinner' ).addClass( 'is-active' );
 				return;
 			}
 
@@ -771,23 +772,28 @@ jQuery(document).ready( function($) {
 
 	$settingsPage
 		// Open popup for decryption key when decrypting option value
-		.on( 'click', '.show-option-value', function() {
-			var $this = $( this ).hide(),
-			    optionName = $this.prev( 'input' ).attr( 'name' );
+		.on( 'click', '.decrypt-option-value-wrapper:not(.opened) .decrypt-option-value', function() {
+			var $parent = $( this ).parents( '.decrypt-option-value-wrapper' ).addClass( 'opened' );
 
-			// Insert decryption key input field
-			$( `<div class="decrypt-option-value-wrapper">
-				<label class="screen-reader-text" for="decryption-key">${settings.decryptOptionKeyLabel}</label>
-				<input type="password" name="decryption-key" placeholder="${settings.decryptOptionPlaceholder}" />
-				<button type="button" data-option-name="${optionName}" class="button button-secondary decrypt-option-value">${settings.decryptOptionButtonLabel}</button>
-			</div>` ).insertAfter( $this ).find( 'input' ).focus();
+			$parent
+				.find( 'input' ).focus()
+				.next( '.decrypt-option-value' ).text( settings.decryptOptionButtonLabel );
 		})
 
 		// Decrypt option value
-		.on( 'click', '.decrypt-option-value', function() {
+		.on( 'click', '.decrypt-option-value-wrapper.opened .decrypt-option-value', function() {
 			var $this = $( this ),
 			    decryptionKey = $this.prev( 'input' ).val(),
 			    optionName = this.getAttribute( 'data-option-name' );
+
+			// Toggle UI when input was empty
+			if ( '' === decryptionKey ) {
+				$this.parents( '.decrypt-option-value-wrapper' ).toggleClass( 'opened' ).find( '.decrypt-option-value' ).focus().text( settings.decryptOptionButtonLabelAlt );
+				return;
+			}
+
+			// Start spinning
+			$this.next( '.spinner' ).addClass( 'is-active' );
 
 			// Post AJAX action
 			jQuery.ajax({
