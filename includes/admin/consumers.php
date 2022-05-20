@@ -221,7 +221,8 @@ function incassoos_admin_load_consumers_page() {
 		return;
 
 	$dobulk   = isset( $_REQUEST['bulkaction'] ) && ! empty( $_REQUEST['bulkaction'] );
-	$doaction = isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ? $_REQUEST['action'] : false;
+	$doexport = ! $dobulk && isset( $_REQUEST['exportaction'] ) ? $_REQUEST['exportaction'] : false;
+	$doaction = isset( $_REQUEST['action'] ) && -1 != $_REQUEST['action'] ? $_REQUEST['action'] : $doexport;
 
 	// Get the user query var
 	if ( isset( $_REQUEST['user'] ) ) {
@@ -376,7 +377,7 @@ function incassoos_admin_consumers_page() {
 					<?php endif; ?>
 
 					<?php wp_nonce_field( 'incassoos-export-consumers' ); ?>
-					<input type="hidden" name="action" value="incassoos-export-consumers" />
+					<input type="hidden" name="exportaction" value="incassoos-export-consumers" />
 					<?php submit_button( esc_html__( 'Export', 'incassoos' ), 'button-secondary', 'export-consumers', false ); ?>
 				</div>
 			</div>

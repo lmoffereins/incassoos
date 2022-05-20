@@ -1143,6 +1143,10 @@ body.incassoos_page_incassoos-consumers .import-export-consumers {
 	float: right;
 }
 
+body.incassoos_page_incassoos-consumers .bulk-editing .import-export-consumers {
+	display: none; /* hide import/export when bulk editing */
+}
+
 body.incassoos_page_incassoos-consumers .import-export-consumers .spinner {
 	float: left;
 }
