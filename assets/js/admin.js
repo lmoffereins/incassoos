@@ -810,6 +810,7 @@ jQuery(document).ready( function($) {
 				resp = ( resp && resp.hasOwnProperty( 'success' ) && resp.hasOwnProperty( 'data' ) ) ? resp : { success: false, data: [{ message: settings.unknownError }] };
 
 				if ( ! resp.success ) {
+					$this.next( '.spinner' ).removeClass( 'is-active' );
 					alert( resp.data[0].message );
 				} else {
 

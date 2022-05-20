@@ -1149,7 +1149,7 @@ body.incassoos_page_incassoos-consumers .import-export-consumers .spinner {
 
 body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper,
 body.incassoos_page_incassoos-settings .require-decryption-key-wrapper {
-	display: inline-block;
+	display: inline-flex;
 	vertical-align: top;
 }
 
@@ -1161,18 +1161,13 @@ body.incassoos_page_incassoos-settings .require-decryption-key-wrapper:not(.open
 	vertical-align: top;
 	width: 32px;
 	height: 30px;
-	margin-right: -5px;
-	padding: 5px;
+	margin-right: -1px;
+	padding: 5px 6px;
 	color: #0071a1;
 	border: 1px solid #0071a1;
 	background: #f3f5f6;
 	border-radius: 3px 0px 0px 3px;
 	box-sizing: border-box;
-}
-
-body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper:not(.opened) input[type="submit"],
-body.incassoos_page_incassoos-settings .require-decryption-key-wrapper:not(.opened) .button {
-	border-radius: 0px 3px 3px 0px;
 }
 
 body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper:not(.opened) input:first-of-type,
@@ -1182,14 +1177,17 @@ body.incassoos_page_incassoos-settings .require-decryption-key-wrapper:not(.open
 
 body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper input:first-of-type,
 body.incassoos_page_incassoos-settings .require-decryption-key-wrapper input {
-	margin-right: -4px;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 0px;
 	border-right: 0px;
 	border-start-end-radius: 0px;
 	border-end-end-radius: 0px;
 }
 
-body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper.opened .button,
-body.incassoos_page_incassoos-settings .require-decryption-key-wrapper.opened .button {
+body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper .button,
+body.incassoos_page_incassoos-settings .require-decryption-key-wrapper .button {
+	margin-bottom: 0px;
 	border-start-start-radius: 0px;
 	border-end-start-radius: 0px;
 }
@@ -1320,6 +1318,18 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 	body.incassoos_page_incassoos-consumers .tablenav {
 		height: 40px;
 		margin: 20px 0px 5px 0px;
+	}
+
+	body.incassoos_page_incassoos-consumers .require-decryption-key-wrapper:not(.opened):before,
+	body.incassoos_page_incassoos-settings .require-decryption-key-wrapper:not(.opened):before {
+		width: 42px;
+		height: 40px;
+		padding: 10px;
+	}
+
+	body.incassoos_page_incassoos-consumers .import-export-consumers .spinner,
+	body.incassoos_page_incassoos-settings .require-decryption-key-wrapper .spinner {
+		margin: 10px;
 	}
 }
 
