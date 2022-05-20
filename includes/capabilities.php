@@ -205,6 +205,15 @@ function incassoos_map_collection_caps( $caps = array(), $cap = '', $user_id = 0
 
 	switch ( $cap ) {
 
+		/** Viewing *****************************************************/
+
+		case 'view_incassoos_collection' :
+
+			// Defer to viewing caps
+			$caps = array( 'view_incassoos_collections' );
+
+			break;
+
 		/** Editing *****************************************************/
 
 		case 'edit_incassoos_collection' :
@@ -353,6 +362,15 @@ function incassoos_map_activity_caps( $caps = array(), $cap = '', $user_id = 0, 
 
 	switch ( $cap ) {
 
+		/** Viewing *****************************************************/
+
+		case 'view_incassoos_activity' :
+
+			// Defer to viewing caps
+			$caps = array( 'view_incassoos_activities' );
+
+			break;
+
 		/** Editing *****************************************************/
 
 		case 'edit_incassoos_activity' :
@@ -411,6 +429,15 @@ function incassoos_map_activity_caps( $caps = array(), $cap = '', $user_id = 0, 
 function incassoos_map_occasion_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
 	switch ( $cap ) {
+
+		/** Viewing *****************************************************/
+
+		case 'view_incassoos_occasion' :
+
+			// Defer to viewing caps
+			$caps = array( 'view_incassoos_occasions' );
+
+			break;
 
 		/** Editing *****************************************************/
 
@@ -514,6 +541,15 @@ function incassoos_map_order_caps( $caps = array(), $cap = '', $user_id = 0, $ar
 
 	switch ( $cap ) {
 
+		/** Viewing *****************************************************/
+
+		case 'view_incassoos_order' :
+
+			// Defer to viewing caps
+			$caps = array( 'view_incassoos_orders' );
+
+			break;
+
 		/** Editing *****************************************************/
 
 		case 'edit_incassoos_order' :
@@ -587,6 +623,15 @@ function incassoos_map_order_caps( $caps = array(), $cap = '', $user_id = 0, $ar
 function incassoos_map_product_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
 	switch ( $cap ) {
+
+		/** Viewing *****************************************************/
+
+		case 'view_incassoos_product' :
+
+			// Defer to viewing caps
+			$caps = array( 'view_incassoos_products' );
+
+			break;
 
 		/** Editing *****************************************************/
 

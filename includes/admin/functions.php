@@ -1236,15 +1236,19 @@ function incassoos_admin_handle_post_action() {
  */
 function incassoos_admin_post_action_view( $post_id ) {
 	global $parent_file, $submenu_file, $post_new_file, $post, $post_type,
-	       $post_type_object, $title, $is_IE, $post_ID, $user_ID, $action;
+	       $post_type_object, $title, $typenow, $post_ID, $user_ID;
 
 	// Bail when the post is not in view mode
 	if ( ! incassoos_admin_is_post_view( $post_id ) )
 		return;
 
-	$post = get_post( $post_id );
-	$post_type = $post->post_type;
-	$post_type_object = get_post_type_object( $post_type );
+	if ( ! in_array( $typenow, get_post_types( array( 'show_ui' => true ) ), true ) ) {
+		wp_die( __( 'Sorry, you are not allowed to view posts in this post type.', 'incassoos' ) );
+	}
+
+	if ( ! current_user_can( $post_type_object->cap->view_post, $post_id ) ) {
+		wp_die( __( 'Sorry, you are not allowed to view this item.', 'incassoos' ) );
+	}
 
 	if ( 'trash' == $post->post_status )
 		wp_die( __( 'You can&#8217;t view this item because it is in the Trash. Please restore it and try again.', 'incassoos' ) );
