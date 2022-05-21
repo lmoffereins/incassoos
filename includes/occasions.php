@@ -1461,6 +1461,21 @@ function incassoos_get_occasion_collection_hint( $post = 0 ) {
 	return $hint;
 }
 
+/**
+ * Return whether the Occasion's Collection is collected
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Occasion's Collection is collected
+ */
+function incassoos_is_occasion_collection_collected( $post = 0 ) {
+	$collection   = incassoos_get_occasion_collection( $post );
+	$is_collected = $collection ? incassoos_is_collection_collected( $collection ) : false;
+
+	return $is_collected;
+}
+
 /** Update ********************************************************************/
 
 /**

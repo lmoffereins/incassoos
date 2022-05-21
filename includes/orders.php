@@ -1163,6 +1163,21 @@ function incassoos_get_order_collection_hint( $post = 0 ) {
 	return $hint;
 }
 
+/**
+ * Return whether the Order's Collection is collected
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Order's Collection is collected
+ */
+function incassoos_is_order_collection_collected( $post = 0 ) {
+	$collection   = incassoos_get_order_collection( $post );
+	$is_collected = $collection ? incassoos_is_collection_collected( $collection ) : false;
+
+	return $is_collected;
+}
+
 /** Update ********************************************************************/
 
 /**

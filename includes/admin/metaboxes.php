@@ -519,7 +519,6 @@ function incassoos_admin_filter_content_metabox_title( $widget_title, $post ) {
 function incassoos_admin_collection_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view     = incassoos_admin_is_post_view( $post );
 	$is_published     = incassoos_is_post_published( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
@@ -982,6 +981,9 @@ function incassoos_admin_activity_details_metabox( $post ) {
 	$format_args      = incassoos_get_currency_format_args();
 	$min_price_value  = 1 / pow( 10, $format_args['decimals'] );
 
+	// Permissions
+	$can_view_collection = current_user_can( 'view_incassoos_collection', incassoos_get_activity_collection_id( $post ) );
+
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
 	$can_doaction     = ! empty( $actions_dropdown );
@@ -1079,7 +1081,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Collection:', 'incassoos' ); ?></label>
-			<?php if ( ! incassoos_is_activity_collected( $post ) ) : ?>
+			<?php if ( ! incassoos_is_activity_collection_collected( $post ) || ! $can_view_collection ) : ?>
 			<span id="activity-collection" class="value"><?php incassoos_the_activity_collection_hint( $post ); ?></span>
 			<?php else : ?>
 			<span id="activity-collection" class="value" title="<?php echo esc_attr( incassoos_get_activity_collection_hint( $post ) ); ?>"><?php incassoos_the_activity_collection_link( $post ); ?></span>
@@ -1315,8 +1317,9 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 
 	// Permissions
-	$can_close  = current_user_can( 'close_incassoos_occasion',  $post->ID );
-	$can_reopen = current_user_can( 'reopen_incassoos_occasion', $post->ID );
+	$can_view_collection = current_user_can( 'view_incassoos_collection', incassoos_get_occasion_collection_id( $post ) );
+	$can_close           = current_user_can( 'close_incassoos_occasion',  $post->ID );
+	$can_reopen          = current_user_can( 'reopen_incassoos_occasion', $post->ID );
 
 	// Closing action urls
 	$base_url   = add_query_arg( array( 'post' => $post->ID ), admin_url( 'post.php' ) );
@@ -1430,7 +1433,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 		<p>
 			<label><?php esc_html_e( 'Collection:', 'incassoos' ); ?></label>
-			<?php if ( ! incassoos_is_occasion_collected( $post ) ) : ?>
+			<?php if ( ! incassoos_is_occasion_collection_collected( $post ) || ! $can_view_collection ) : ?>
 			<span id="occasion-collection" class="value"><?php incassoos_the_occasion_collection_hint( $post ); ?></span>
 			<?php else : ?>
 			<span id="occasion-collection" class="value" title="<?php echo esc_attr( incassoos_get_occasion_collection_hint( $post ) ); ?>"><?php incassoos_the_occasion_collection_link( $post ); ?></span>
@@ -1648,6 +1651,9 @@ function incassoos_admin_order_details_metabox( $post ) {
 	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 
+	// Permissions
+	$can_view_collection = current_user_can( 'view_incassoos_collection', incassoos_get_order_collection_id( $post ) );
+
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
 	$can_doaction     = ! empty( $actions_dropdown );
@@ -1728,6 +1734,19 @@ function incassoos_admin_order_details_metabox( $post ) {
 		<p>
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
 			<span id="order-author" class="value"><?php incassoos_the_order_author( $post ); ?></span>
+		</p>
+
+		<?php endif; ?>
+
+		<?php if ( $is_post_view ) : ?>
+
+		<p>
+			<label><?php esc_html_e( 'Collection:', 'incassoos' ); ?></label>
+			<?php if ( ! incassoos_is_order_collection_collected( $post ) || ! $can_view_collection ) : ?>
+			<span id="order-collection" class="value"><?php incassoos_the_order_collection_hint( $post ); ?></span>
+			<?php else : ?>
+			<span id="order-collection" class="value" title="<?php echo esc_attr( incassoos_get_order_collection_hint( $post ) ); ?>"><?php incassoos_the_order_collection_link( $post ); ?></span>
+			<?php endif; ?>
 		</p>
 
 		<?php endif; ?>
