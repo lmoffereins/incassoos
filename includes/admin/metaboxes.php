@@ -1644,7 +1644,7 @@ function incassoos_admin_occasion_consumers_metabox( $post ) {
 function incassoos_admin_order_details_metabox( $post ) {
 
 	// Get details
-	$is_post_view  = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
+	$is_post_view  = incassoos_admin_is_post_view( $post );
 	$is_published  = incassoos_is_post_published( $post );
 	$consumer_type = incassoos_get_order_consumer_type( $post );
 
@@ -1787,7 +1787,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 function incassoos_admin_order_products_metabox( $post ) {
 
 	// Get details
-	$is_post_view   = ( $GLOBALS['pagenow'] !== 'post-new.php' ) && incassoos_admin_is_post_view( $post );
+	$is_post_view   = incassoos_admin_is_post_view( $post );
 	$order_products = incassoos_get_order_products( $post );
 
 	if ( $is_post_view ) {
