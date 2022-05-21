@@ -1024,8 +1024,9 @@ function incassoos_the_order_collection_id( $post = 0 ) {
  * @return int Order's Collection ID
  */
 function incassoos_get_order_collection_id( $post = 0 ) {
-	$post    = incassoos_get_order( $post );
-	$post_id = $post ? $post->post_parent : 0;
+	$post        = incassoos_get_order( $post );
+	$occasion_id = $post ? incassoos_get_order_occasion_id( $post ) : 0;
+	$post_id     = $occasion_id ? incassoos_get_occasion_collection_id( $occasion_id ) : 0;
 
 	return (int) apply_filters( 'incassoos_get_order_collection_id', $post_id, $post );
 }
