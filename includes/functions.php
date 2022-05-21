@@ -1802,10 +1802,6 @@ function incassoos_register_settings() {
 	// Loop through sections
 	foreach ( (array) $sections as $section_id => $section ) {
 
-		// Only proceed if current user can see this section
-		if ( ! current_user_can( $section_id ) )
-			continue;
-
 		// Only add section and fields if section has fields
 		$fields = incassoos_admin_get_settings_fields_for_section( $section_id );
 		if ( empty( $fields ) )

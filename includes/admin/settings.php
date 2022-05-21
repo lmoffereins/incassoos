@@ -29,10 +29,6 @@ function incassoos_admin_register_settings() {
 	// Loop through sections
 	foreach ( (array) $sections as $section_id => $section ) {
 
-		// Only proceed if current user can see this section
-		if ( ! current_user_can( $section_id ) )
-			continue;
-
 		// Only add section and fields if section has fields
 		$fields = incassoos_admin_get_settings_fields_for_section( $section_id );
 		if ( empty( $fields ) )
@@ -309,6 +305,10 @@ function incassoos_admin_get_settings_fields_for_section( $section_id = '' ) {
 
 	// Bail if section is empty
 	if ( empty( $section_id ) )
+		return false;
+
+	// Bail when the current user cannot see this section
+	if ( ! current_user_can( $section_id ) )
 		return false;
 
 	$fields = incassoos_admin_get_settings_fields();
