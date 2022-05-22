@@ -339,8 +339,20 @@ function incassoos_admin_load_consumers_page() {
  * @since 1.0.0
  */
 function incassoos_admin_consumers_page() {
-	$can_bulk_edit         = current_user_can( 'edit_incassoos_consumers' );
-	$is_encryption_enabled = incassoos_is_encryption_enabled();
+	$can_bulk_edit          = current_user_can( 'edit_incassoos_consumers' );
+	$can_export             = current_user_can( 'export_incassoos_consumers' );
+	$require_decryption_key = false;
+
+	// Determine context for decryption key input for export action
+	if ( incassoos_is_encryption_enabled() ) {
+		$export_type_id = incassoos_get_consumers_export_type_id();
+
+		if ( incassoos_get_export_type_is_decryption_key_required( $export_type_id ) ) {
+			$require_decryption_key = true;
+		} elseif ( incassoos_get_export_type_is_decryption_key_optional( $export_type_id ) ) {
+			$require_decryption_key = current_user_can( 'decrypt_incassoos_data' );
+		}
+	}
 
 	if ( isset( $_GET['updated']) ) :
 		$updated = explode( ',', $_GET['updated'] );
@@ -364,12 +376,12 @@ function incassoos_admin_consumers_page() {
 		<div id="select-meta" class="tablenav hide-if-no-js">
 			<button type="button" id="toggle-bulk-edit" class="button alignleft"><?php esc_html_e( 'Open bulk edit mode', 'incassoos' ); ?></button>
 
-			<?php if ( current_user_can( 'export_incassoos_consumers' ) ) : ?>
+			<?php if ( $can_export ) : ?>
 
 			<div class="import-export-consumers">
 				<span class="spinner"></span>
-				<div class="export-consumers-wrapper <?php if ( $is_encryption_enabled ) { echo 'require-decryption-key-wrapper'; } ?>">
-					<?php if ( $is_encryption_enabled ) : ?>
+				<div class="export-consumers-wrapper <?php if ( $require_decryption_key ) { echo 'require-decryption-key-wrapper'; } ?>">
+					<?php if ( $require_decryption_key ) : ?>
 
 					<label class="screen-reader-text" for="export-decryption-key"><?php esc_html_e( 'Decryption key', 'incassoos' ); ?></label>
 					<input type="password" name="export-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />

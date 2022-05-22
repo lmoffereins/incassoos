@@ -2138,7 +2138,7 @@ function incassoos_admin_get_post_action_types( $post ) {
 			// Add export action
 			$action_types['exporting']['actions']["export-{$export_type_id}"] = array(
 				'label'                  => incassoos_get_export_type_label( $export_type_id, 'export_file' ),
-				'require_decryption_key' => incassoos_get_export_type_require_decryption_key( $export_type_id )
+				'require_decryption_key' => incassoos_get_export_type_is_decryption_key_required( $export_type_id ) || incassoos_get_export_type_is_decryption_key_optional( $export_type_id )
 			);
 		}
 
@@ -2285,25 +2285,32 @@ function incassoos_admin_export_file( $args = array() ) {
 
 		// Bail when the export class is not present
 		if ( ! class_exists( $class ) ) {
-			$retval = new WP_Error( 'incassoos_export_type_class_not_found', esc_html__( 'Export type class does not exist.', 'incassoos' ) );
+			$retval = new WP_Error( 'incassoos_export_type_class_not_found', esc_html__( 'Export type file processor could not be found.', 'incassoos' ) );
 			break;
 		}
 
 		// Bail when the user cannot export the post
-		if ( $post && ! current_user_can( "export_incassoos_{$object_type}", $post->ID, $export_type ) ) {
+		if ( $post && ! current_user_can( "export_incassoos_{$object_type}", $post->ID, $export_type->id ) ) {
 			$retval = new WP_Error( 'incassoos_no_access', esc_html__( 'You are not allowed to export data from this post.', 'incassoos' ) );
 			break;
 		}
 
+		// Is decryption key optional?
+		$optional_decryption_key = incassoos_get_export_type_is_decryption_key_optional( $export_type->id );
+
 		// Bail when the decryption key was required but not provided
-		if ( incassoos_get_export_type_require_decryption_key( $parsed_args['export_type_id'] ) ) {
+		if ( incassoos_get_export_type_is_decryption_key_required( $export_type->id ) || $optional_decryption_key ) {
 
-			// Try to set the decryption key
-			$result = incassoos_set_decryption_key( $parsed_args['decryption_key'] );
+			// When optional, only proceed when key was provided
+			if ( ! $optional_decryption_key || ! empty( $parsed_args['decryption_key'] ) ) {
 
-			if ( is_wp_error( $result ) || ! $result ) {
-				$retval = $result ?: new WP_Error( 'incassoos_invalid_decryption_key', esc_html__( 'Invalid decryption key provided.', 'incassoos' ) );
-				break;
+				// Try to set the decryption key
+				$result = incassoos_set_decryption_key( $parsed_args['decryption_key'] );
+
+				if ( is_wp_error( $result ) || ! $result ) {
+					$retval = $result ?: new WP_Error( 'incassoos_invalid_decryption_key', esc_html__( 'Invalid decryption key provided.', 'incassoos' ) );
+					break;
+				}
 			}
 		}
 

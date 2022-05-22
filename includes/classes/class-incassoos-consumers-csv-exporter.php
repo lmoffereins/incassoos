@@ -33,12 +33,6 @@ class Incassoos_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 		// Set file type
 		$this->file_type = incassoos_get_consumers_export_type_id();
 
-		// Require the decryption key
-		if ( incassoos_is_encryption_enabled() && ! incassoos_get_decryption_key() ) {
-			$this->add_error( 'incassoos_missing_decryption_key', esc_html__( 'The required decryption key was not provided.', 'incassoos' ) );
-			return;
-		}
-
 		$columns   = $this->_get_columns();
 		$file_data = $this->_get_file_data();
 

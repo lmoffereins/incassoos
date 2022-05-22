@@ -573,7 +573,7 @@ final class Incassoos {
 				'class_name'             => 'Incassoos_Consumers_CSV_Exporter',
 				'class_file'             => $this->includes_dir . 'classes/class-incassoos-consumers-csv-exporter.php',
 				'show_in_list_callback'  => '__return_false',
-				'require_decryption_key' => true
+				'require_decryption_key' => 'optional'
 			)
 		);
 	}

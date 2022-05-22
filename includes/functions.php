@@ -2372,21 +2372,43 @@ function incassoos_get_export_type_label( $export_type_id, $label_type = 'name' 
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_get_export_type_require_decryption_key'
+ * @uses apply_filters() Calls 'incassoos_get_export_type_is_decryption_key_required'
  *
  * @param  string $export_type_id Export type id
  * @return bool Export type requires the decryption key
  */
-function incassoos_get_export_type_require_decryption_key( $export_type_id ) {
+function incassoos_get_export_type_is_decryption_key_required( $export_type_id ) {
 	$export_type = incassoos_get_export_type( $export_type_id );
-	$require    = false;
+	$is_required = false;
 
-	// Only require the decryption key when encryption is enabled
+	// Only require the decryption key when encryption is enabled and explictly required
 	if ( $export_type && incassoos_is_encryption_enabled() ) {
-		$require = (bool) $export_type->require_decryption_key;
+		$is_required = true === $export_type->require_decryption_key;
 	}
 
-	return (bool) apply_filters( 'incassoos_get_export_type_require_decryption_key', $require, $export_type );
+	return (bool) apply_filters( 'incassoos_get_export_type_is_decryption_key_required', $is_required, $export_type );
+}
+
+/**
+ * Return whether the export type optionally uses the decryption key
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_export_type_is_decryption_key_optional'
+ *
+ * @param  string $export_type_id Export type id
+ * @return bool Export type optionally uses the decryption key
+ */
+function incassoos_get_export_type_is_decryption_key_optional( $export_type_id ) {
+	$export_type = incassoos_get_export_type( $export_type_id );
+	$is_optional = false;
+
+	// Only require the decryption key when encryption is enabled and optionally required
+	if ( $export_type && incassoos_is_encryption_enabled() ) {
+		$is_optional = 'optional' === $export_type->require_decryption_key;
+	}
+
+	return (bool) apply_filters( 'incassoos_get_export_type_is_decryption_key_optional', $is_optional, $export_type );
 }
 
 /**
