@@ -65,24 +65,24 @@ function incassoos_admin_add_dashboard_widgets() {
 		'incassoos_admin_dashboard_status_widget'
 	);
 
-	// Recent activity
+	// Recent Activity
 	wp_add_dashboard_widget(
 		'incassoos_dashboard_recent',
-		_x( 'Recent activity', 'Dashboard widget', 'incassoos' ),
+		_x( 'Recent Activity', 'Dashboard widget', 'incassoos' ),
 		'incassoos_admin_dashboard_recent_widget'
 	);
 
-	// Uncollected items
+	// Uncollected Items
 	wp_add_dashboard_widget(
 		'incassoos_dashboard_uncollected',
-		_x( 'Uncollected items', 'Dashboard widget', 'incassoos' ),
+		_x( 'Uncollected Items', 'Dashboard widget', 'incassoos' ),
 		'incassoos_admin_dashboard_uncollected_widget'
 	);
 
-	// Quick actions
+	// Quick Actions
 	wp_add_dashboard_widget(
 		'incassoos_dashboard_actions',
-		_x( 'Quick actions', 'Dashboard widget', 'incassoos' ),
+		_x( 'Quick Actions', 'Dashboard widget', 'incassoos' ),
 		'incassoos_admin_dashboard_actions_widget'
 	);
 }

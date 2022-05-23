@@ -30,7 +30,7 @@ function incassoos_register_admin_menu() {
 	);
 
 	// Dashboard admin page
-	$dashboard = add_menu_page(
+	$dashboard_page = add_menu_page(
 		esc_html__( 'Incassoos Dashboard', 'incassoos' ),
 		esc_html__( 'Incassoos', 'incassoos' ),
 		'incassoos_admin_page-incassoos',
@@ -67,10 +67,11 @@ function incassoos_register_admin_menu() {
 		);
 
 		add_action( "load-{$settings_page}", 'incassoos_admin_load_settings_page' );
+		add_action( "load-{$settings_page}", 'incassoos_admin_settings_help_tabs' );
 	}
 
 	// Encryption page
-	$hooks[] = add_submenu_page(
+	$hooks[] = $encryption_page = add_submenu_page(
 		'incassoos',
 		esc_html__( 'Incassoos Encryption', 'incassoos' ),
 		esc_html__( 'Encryption', 'incassoos' ),
@@ -80,12 +81,21 @@ function incassoos_register_admin_menu() {
 	);
 
 	// Register admin page hooks
-	add_action( "load-{$dashboard}",                         'incassoos_admin_load_dashboard_page' );
+	add_action( "load-{$dashboard_page}",                    'incassoos_admin_load_dashboard_page' );
 	add_action( "load-{$consumers_page}",                    'incassoos_admin_load_consumers_page' );
 	add_action( 'incassoos_admin_page-incassoos',            'incassoos_admin_dashboard_page'      );
 	add_action( 'incassoos_admin_page-incassoos-consumers',  'incassoos_admin_consumers_page'      );
 	add_action( 'incassoos_admin_page-incassoos-settings',   'incassoos_admin_settings_page'       );
 	add_action( 'incassoos_admin_page-incassoos-encryption', 'incassoos_admin_encryption_page'     );
+
+	// Help tabs
+	add_action( 'load-edit.php',                             'incassoos_admin_post_type_help_tabs'   );
+	add_action( 'load-post-new.php',                         'incassoos_admin_single_post_help_tabs' );
+	add_action( 'load-post.php',                             'incassoos_admin_single_post_help_tabs' );
+	add_action( 'load-edit-tags.php',                        'incassoos_admin_taxonomy_help_tabs'    );
+	add_action( "load-{$dashboard_page}",                    'incassoos_admin_dashboard_help_tabs'   );
+	add_action( "load-{$consumers_page}",                    'incassoos_admin_consumers_help_tabs'   );
+	add_action( "load-{$encryption_page}",                   'incassoos_admin_encryption_help_tabs'  );
 
 	foreach ( $hooks as $hook ) {
 		add_action( "admin_head-{$hook}", 'incassoos_admin_menu_highlight' );

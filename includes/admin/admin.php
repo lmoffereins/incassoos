@@ -53,6 +53,7 @@ class Incassoos_Admin {
 		require( $this->admin_dir . 'dashboard.php'   );
 		require( $this->admin_dir . 'encryption.php'  );
 		require( $this->admin_dir . 'functions.php'   );
+		require( $this->admin_dir . 'help.php'        );
 		require( $this->admin_dir . 'metaboxes.php'   );
 		require( $this->admin_dir . 'settings.php'    );
 		require( $this->admin_dir . 'sub-actions.php' );
