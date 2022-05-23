@@ -731,7 +731,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 							'<a href="%s" aria-label="%s">%s</a>',
 							esc_url( add_query_arg( array( 'post_type' => incassoos_get_activity_post_type(), 'collection' => $post_id ), admin_url( 'edit.php' ) ) ),
 							/* translators: %s: post title */
-							esc_attr( sprintf( __( 'View activities of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+							esc_attr( sprintf( __( 'View activities of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post_id ) ) ),
 							sprintf( _n( '%d Activity', '%d Activities', $num_activities, 'incassoos' ), $num_activities )
 						);
 					}
@@ -742,7 +742,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 							'<a href="%s" aria-label="%s">%s</a>',
 							esc_url( add_query_arg( array( 'post_type' => incassoos_get_occasion_post_type(), 'collection' => $post_id ), admin_url( 'edit.php' ) ) ),
 							/* translators: %s: post title */
-							esc_attr( sprintf( __( 'View occasions of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+							esc_attr( sprintf( __( 'View occasions of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post_id ) ) ),
 							sprintf( _n( '%d Occasion', '%d Occasions', $num_occasions, 'incassoos' ), $num_occasions )
 						);
 
@@ -813,7 +813,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 						'<a class="view" href="%s" aria-label="%s">%s</a>',
 						esc_url( add_query_arg( array( 'post_type' => incassoos_get_order_post_type(), 'occasion' => $post_id ), admin_url( 'edit.php' ) ) ),
 						/* translators: %s: post title */
-						esc_attr( sprintf( __( 'View orders of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+						esc_attr( sprintf( __( 'View orders of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post_id ) ) ),
 						__( 'View' )
 					);
 					break;
@@ -938,7 +938,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
 				/* translators: %s: post title */
-				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title() ) ),
+				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 				__( 'View' )
 			);
 		}
@@ -956,7 +956,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
 				/* translators: %s: post title */
-				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title() ) ),
+				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 				__( 'View' )
 			);
 		}
@@ -970,7 +970,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_duplicate' ), admin_url( 'post.php' ) ), 'duplicate-activity_' . $post->ID ) ),
 				/* translators: %s: post title */
-				esc_attr( sprintf( __( 'Duplicate &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+				esc_attr( sprintf( __( 'Duplicate &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post ) ) ),
 				__( 'Duplicate', 'incassoos' )
 			);
 		}
@@ -985,7 +985,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
 				/* translators: %s: post title */
-				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title() ) ),
+				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 				__( 'View' )
 			);
 		}
@@ -999,7 +999,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_close' ), admin_url( 'post.php' ) ), 'close-occasion_' . $post->ID ) ),
 				/* translators: %s: post title */
-				esc_attr( sprintf( __( 'Close &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+				esc_attr( sprintf( __( 'Close &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post ) ) ),
 				__( 'Close', 'incassoos' )
 			);
 		}
@@ -1010,7 +1010,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_reopen' ), admin_url( 'post.php' ) ), 'reopen-occasion_' . $post->ID ) ),
 				/* translators: %s: post title */
-				esc_attr( sprintf( __( 'Reopen &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title() ) ),
+				esc_attr( sprintf( __( 'Reopen &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post ) ) ),
 				__( 'Reopen', 'incassoos' )
 			);
 		}
@@ -1023,7 +1023,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			'<a href="%s" aria-label="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
 			/* translators: %s: post title */
-			esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title() ) ),
+			esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 			__( 'View' )
 		);
 
