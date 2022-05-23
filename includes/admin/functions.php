@@ -788,7 +788,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					if ( $collection = incassoos_get_activity_collection_id( $post_id ) ) {
 						printf( '<a href="%s" title="%s">%s</a>',
 							esc_url( add_query_arg( 'collection', $collection, $posts_url ) ),
-							esc_attr( incassoos_get_collection_hint( $collection ) ),
+							esc_attr( sprintf( __( 'View activities of &#8220;%s&#8221;', 'incassoos' ), incassoos_get_collection_title( $collection ) ) ),
 							incassoos_get_collection_title( $collection )
 						);
 
@@ -829,7 +829,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					if ( $collection = incassoos_get_occasion_collection_id( $post_id ) ) {
 						printf( '<a href="%s" title="%s">%s</a>',
 							esc_url( add_query_arg( 'collection', $collection, $posts_url ) ),
-							esc_attr( incassoos_get_collection_hint( $collection ) ),
+							esc_attr( sprintf( __( 'View occasions of &#8220;%s&#8221;', 'incassoos' ), incassoos_get_collection_title( $collection ) ) ),
 							incassoos_get_collection_title( $collection )
 						);
 
