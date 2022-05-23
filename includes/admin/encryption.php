@@ -17,7 +17,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  */
-function incassoos_admin_encryption_page() { ?>
+function incassoos_admin_encryption_page() {
+	$can_decrypt = current_user_can( 'decrypt_incassoos_data' );
+
+	?>
 
 	<div class="page-information-box">
 		<h1 class="page-title"><?php incassoos_admin_the_page_title(); ?></h1>
@@ -27,7 +30,7 @@ function incassoos_admin_encryption_page() { ?>
 		<div class="encryption-not-supported">
 			<p><?php _e( 'Encryption helps with securing <strong>sensitive data</strong> by obscuring the data when registering it in your database. If the database would ever get compromised, there is no value in the obscured data. Only using a <strong>password</strong> can the original sensitive data be accessed again.', 'incassoos' ); ?></p>
 
-			<div class="notice notice-warning inline">
+			<div class="notice notice-error inline">
 				<p><?php printf( esc_html__( 'Encryption is currently not supported on %s.', 'incassoos' ), site_url() ); ?></p>
 			</div>
 
@@ -41,6 +44,7 @@ function incassoos_admin_encryption_page() { ?>
 		<?php else : ?>
 
 		<form method="post" class="encryption-form">
+			<?php if ( $can_decrypt ) : ?>
 			<script>
 				jQuery( 'body' )
 					.on( 'click', '.step-item .next-step', function( event ) {
@@ -118,6 +122,7 @@ function incassoos_admin_encryption_page() { ?>
 						$this.attr( 'type', $this.is( ':password' ) ? 'text' : 'password' ).next().toggleClass( 'password' );
 					});
 			</script>
+			<?php endif; ?>
 
 			<?php if ( ! incassoos_is_encryption_enabled() ) :
 
@@ -147,6 +152,13 @@ function incassoos_admin_encryption_page() { ?>
 			<p><?php printf( esc_html__( 'This page provides details of the encryption that is enabled for sensitive data in Incassoos on %s.', 'incassoos' ), site_url() ); ?></p>
 
 			<?php endif; ?>
+
+			<?php
+				// Keep only the opening information page when the user cannot decrypt
+				if ( ! $can_decrypt ) {
+					$wizard = array_slice( $wizard, 0, 1 );
+				}
+			?>
 
 			<ul class="encryption-step-items">
 				<?php foreach ( $wizard as $step => $args ) :
@@ -195,7 +207,7 @@ function incassoos_admin_encryption_page() { ?>
 						<?php elseif ( ! empty( $next['ajaxData'] ) ) : ?>
 							<button type="button" class="<?php echo $next_class; ?> next-step" data-ajax-data="<?php echo $next_ajax_data; ?>" data-ajax-then="<?php echo $next_ajax_then; ?>"><?php echo esc_html( $next['label'] ); ?></button>
 							<span class="spinner"></span>
-						<?php else : ?>
+						<?php elseif ( ! empty( $prev['label'] ) ) : ?>
 							<button type="button" class="<?php echo $next_class; ?> next-step"><?php echo esc_html( $next['label'] ); ?></button>
 						<?php endif; ?>
 
@@ -225,6 +237,8 @@ function incassoos_admin_encryption_page() { ?>
  * @return array Steps for enabling encryption
  */
 function incassoos_admin_get_enable_encryption_steps() {
+	$can_decrypt = current_user_can( 'decrypt_incassoos_data' );
+
 	return (array) apply_filters( 'incassoos_admin_get_enable_encryption_steps', array(
 
 		// Welcome
@@ -235,8 +249,8 @@ function incassoos_admin_get_enable_encryption_steps() {
 				'<ul>' . array_reduce( incassoos_admin_get_encryptable_data(), function( $carry, $item ) {
 					return $carry . '<li>' . $item . '</li>';
 				}, '' ) . '</ul>' .
-				'<p>' . esc_html__( 'The following button will start the wizard for enabling encryption.', 'incassoos' ) . '</p>',
-			'next_label'  => esc_html__( 'Start wizard', 'incassoos' )
+				( $can_decrypt ? '<p>' . esc_html__( 'The following button will start the wizard for enabling encryption.', 'incassoos' ) . '</p>' : '' ),
+			'next_label'  => $can_decrypt ? esc_html__( 'Start wizard', 'incassoos' ) : false
 		),
 
 		// Start
@@ -322,6 +336,8 @@ function incassoos_admin_get_enable_encryption_steps() {
  * @return array Steps for disabling encryption
  */
 function incassoos_admin_get_disable_encryption_steps() {
+	$can_decrypt = current_user_can( 'decrypt_incassoos_data' );
+
 	return (array) apply_filters( 'incassoos_admin_get_disable_encryption_steps', array(
 
 		// Welcome
@@ -333,9 +349,9 @@ function incassoos_admin_get_disable_encryption_steps() {
 				'<ul>' . array_reduce( incassoos_admin_get_encryptable_data(), function( $carry, $item ) {
 					return $carry . '<li>' . $item . '</li>';
 				}, '' ) . '</ul>' .
-				'<p>' . esc_html__( 'The following button will start the wizard for disabling encryption.', 'incassoos' ) . '</p>',
+				( $can_decrypt ? '<p>' . esc_html__( 'The following button will start the wizard for disabling encryption.', 'incassoos' ) . '</p>' : '' ),
 			'next' => array(
-				'label' => esc_html__( 'Start wizard', 'incassoos' ),
+				'label' => $can_decrypt ? esc_html__( 'Start wizard', 'incassoos' ) : false,
 				'class' => 'button-secondary'
 			)
 		),
@@ -399,7 +415,7 @@ function incassoos_admin_get_encryptable_data() {
 	return apply_filters( 'incassoos_admin_get_encryptable_data', array(
 		'incassoos-iban-organization'             => esc_html__( 'The IBAN of the organization', 'incassoos' ),
 		'incassoos-sepa-creditor-id-organization' => esc_html__( 'The SEPA Creditor Identifier of the organization', 'incassoos' ),
-		'incassoos-iban-consumers'                => esc_html__( 'The IBAN of all consumers', 'incassoos' )
+		'incassoos-iban-consumers'                => esc_html__( 'The IBAN of each consumer', 'incassoos' )
 	) );
 }
 

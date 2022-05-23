@@ -249,8 +249,8 @@ class Incassoos_Admin {
 			// Encryption
 			case 'incassoos_admin_page-incassoos-encryption' :
 
-				// Defer to decryption caps
-				$caps = array( 'decrypt_incassoos_data' );
+				// Defer to dashboard caps
+				$caps = array( 'view_incassoos_dashboard' );
 
 				break;
 
