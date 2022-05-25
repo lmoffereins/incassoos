@@ -1379,6 +1379,91 @@ function incassoos_validate_order( $args = array() ) {
 	return true;
 }
 
+/** Helpers *******************************************************************/
+
+/**
+ * Return whether the consumption of products is within a consumer's consumption limit
+ * for the occasion.
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_consumption_within_limit_for_occasion'
+ *
+ * @param  array $products Products list
+ * @param  int|WP_User $user User ID or object
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Is the consumption within limit?
+ */
+function incassoos_is_consumption_within_limit_for_occasion( $products, $user, $post = 0 ) {
+	$consumption_limit = incassoos_get_user_consumption_limit( $user );
+	$within_limit      = true;
+
+	// Only continue when consumption limit applies
+	if ( $consumption_limit ) {
+		$current_total  = incassoos_get_occasion_consumer_total( $user, $post, null );
+		$products_total = incassoos_get_total_from_products( $products );
+		$within_limit   = ( $current_total + $products_total ) < $consumption_limit;
+	}
+
+	return (bool) apply_filters( 'incassoos_is_consumption_within_limit_for_occasion', $within_limit, $products, $user, $post );
+}
+
+/**
+ * Return whether the consumption of products is within a consumer's consumption limit
+ * for the time window.
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_consumption_within_limit_for_time_window'
+ * @uses apply_filters() Calls 'incassoos_default_consumption_limit_time_window'
+ *
+ * @param  array $products Products list
+ * @param  int|WP_User $user User ID or object
+ * @param  int $time_window Optional. Time window in seconds. Defaults to 4 hours.
+ * @return bool Is the consumption within limit?
+ */
+function incassoos_is_consumption_within_limit_for_time_window( $products, $user, $time_window = 0 ) {
+	$consumption_limit = incassoos_get_user_consumption_limit( $user );
+	$within_limit      = true;
+
+	// Default time window to 4 hour
+	if ( empty( $time_window ) ) {
+		$time_window = (int) apply_filters( 'incassoos_default_consumption_limit_time_window', 4 * HOUR_IN_SECONDS, $user );
+	}
+
+	// Only continue when consumption limit applies
+	if ( $consumption_limit ) {
+		$current_total = 0;
+		$time_start    = strtotime( date_i18n( 'Y-m-d H:i:s' ) . " - {$time_window} seconds" );
+		$posts         = incassoos_get_orders( array(
+			'incassoos_consumer' => incassoos_get_user_id( $user ),
+			'date_query'         => array(
+				array(
+					'column'  => 'post_date',
+					'compare' => '>=',
+					array(
+						'year'   => date_i18n( 'Y', $time_start ),
+						'month'  => date_i18n( 'm', $time_start ),
+						'day'    => date_i18n( 'd', $time_start ),
+						'hour'   => date_i18n( 'H', $time_start ),
+						'minute' => date_i18n( 'i', $time_start ),
+						'second' => date_i18n( 's', $time_start ),
+					)
+				)
+			)
+		) );
+
+		foreach ( $posts as $post_id ) {
+			$current_total += incassoos_get_order_total( $post_id );
+		}
+
+		$products_total = incassoos_get_total_from_products( $products );
+		$within_limit   = ( $current_total + $products_total ) <= $consumption_limit;
+	}
+
+	return (bool) apply_filters( 'incassoos_is_consumption_within_limit_for_time_window', $within_limit, $products, $user, $time_window );
+}
+
 /** Consumer Types ************************************************************/
 
 /**
