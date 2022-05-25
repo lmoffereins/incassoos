@@ -1400,7 +1400,7 @@ function incassoos_is_consumption_within_limit_for_occasion( $products, $user, $
 
 	// Only continue when consumption limit applies
 	if ( $consumption_limit ) {
-		$current_total  = incassoos_get_occasion_consumer_total( $user, $post, null );
+		$current_total  = incassoos_get_occasion_consumer_total( $user, incassoos_get_order_occasion( $post ), null );
 		$products_total = incassoos_get_total_from_products( $products );
 		$within_limit   = ( $current_total + $products_total ) < $consumption_limit;
 	}
