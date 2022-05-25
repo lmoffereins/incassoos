@@ -60,7 +60,7 @@ add_action( 'wp_enqueue_scripts',          'incassoos_enqueue_scripts',         
 // Theme Compat
 add_filter( 'template_include',            'incassoos_template_include_theme_supports', 10 );
 
-// App page
+// Application page
 add_action( 'incassoos_app_head',          'incassoos_enqueue_scripts',             1    );
 add_action( 'incassoos_app_head',          'wp_resource_hints',                     2    );
 add_action( 'incassoos_app_head',          'wp_no_robots',                          1    );

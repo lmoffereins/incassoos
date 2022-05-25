@@ -447,24 +447,11 @@ function incassoos_document_title_parts( $title = array() ) {
  * @since 1.0.0
  */
 function incassoos_enqueue_scripts() {
-	$inc     = incassoos();
-	$version = incassoos_get_version();
+	$plugin  = incassoos();
+	$version = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : incassoos_get_version();
 
 	// App page
 	if ( incassoos_is_app() ) {
-
-		// Enqueue scripts
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_script( 'underscore' );
-		wp_enqueue_script( 'angular', $inc->assets_url . 'js/angular.min.js', array( 'jquery' ), '1.6.2', true );
-		wp_enqueue_script( 'fold-accents', $inc->assets_url . 'js/fold-accents.js', array(), $version, true );
-		wp_enqueue_script( 'incassoos-app', $inc->assets_url . 'js/app.js', array( 'jquery', 'jquery-ui-datepicker', 'underscore', 'angular', 'fold-accents' ), $version, true );
-
-		// Enqueue styles
-		wp_enqueue_style( 'bootstrap', $inc->assets_url . 'css/bootstrap.min.css', array(), '3.3.7' );
-		wp_enqueue_style( 'stuttter-datepicker', $inc->assets_url . 'css/datepicker.css', array(), '20150908' );
-		wp_enqueue_style( 'incassoos-app', $inc->assets_url . 'css/web-app.css', array( 'bootstrap', 'stuttter-datepicker' ), $version );
 
 		// Define consumer types
 		$consumer_types = array_combine(
@@ -480,8 +467,8 @@ function incassoos_enqueue_scripts() {
 		wp_localize_script( 'incassoos-app', 'incassoosL10n', apply_filters( 'incassoos_localize_app', array(
 			'settings' => array(
 				'urls' => array(
-					'assets'       => $inc->assets_url,
-					'templates'    => $inc->themes_url,
+					'assets'       => $plugin->assets_url,
+					'templates'    => $plugin->themes_url,
 					'consumers'    => esc_url_raw( incassoos_get_rest_url( 'consumer' ) ),
 					'occasions'    => esc_url_raw( incassoos_get_rest_url( 'occasion' ) ),
 					'orders'       => esc_url_raw( incassoos_get_rest_url( 'order'    ) ),
