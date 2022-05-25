@@ -434,6 +434,28 @@ function incassoos_get_products( $query_args = array() ) {
 	return apply_filters( 'incassoos_get_products', $posts, $query_args );
 }
 
+/** Helpers *******************************************************************/
+
+/**
+ * Return the total value for a set of products
+ *
+ * @since 1.0.0
+ *
+ * @param array $products Products
+ * @return float Products total value
+ */
+function incassoos_get_total_from_products( $products ) {
+    $defaults = array( 'amount' => 0, 'price' => 0 );
+    $total = 0;
+
+    foreach ( (array) $products as $product ) {
+        $product = wp_parse_args( $product, $defaults );
+        $total += intval( $product['amount'] ) * floatval( $product['price'] );
+    }
+
+    return (float) $total;
+}
+
 /** Update ********************************************************************/
 
 /**

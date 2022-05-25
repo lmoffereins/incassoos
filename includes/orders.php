@@ -546,11 +546,7 @@ function incassoos_get_order_total( $post = 0, $num_format = false ) {
 function incassoos_get_order_total_raw( $post = 0 ) {
 	$post     = incassoos_get_order( $post );
 	$products = incassoos_get_order_products( $post );
-	$total    = 0;
-
-	foreach ( $products as $product ) {
-		$total += ( $product['amount'] * $product['price'] );
-	}
+	$total    = incassoos_get_total_from_products( $products );
 
 	return (float) apply_filters( 'incassoos_get_order_total_raw', $total, $post );
 }
