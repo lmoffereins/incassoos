@@ -120,13 +120,13 @@ class Incassoos_Admin {
 	 * @return bool Plugin admin page
 	 */
 	public function is_incassoos() {
-		$scrn = get_current_screen();
+		$screen = get_current_screen();
 
 		return is_admin() && (
-			   incassoos_is_plugin_post_type( $scrn->post_type )
-			|| incassoos_is_plugin_taxonomy( $scrn->taxonomy )
-			|| 0 === strpos( $scrn->base, 'incassoos_page' )
-			|| 'toplevel_page_incassoos' === $scrn->base
+			   incassoos_is_plugin_post_type( $screen->post_type )
+			|| incassoos_is_plugin_taxonomy( $screen->taxonomy )
+			|| 0 === strpos( $screen->base, 'incassoos_page' )
+			|| 'toplevel_page_incassoos' === $screen->base
 		);
 	}
 
@@ -683,11 +683,11 @@ class Incassoos_Admin {
 		if ( isset( $_POST['collection_activities_metabox_nonce'] ) && wp_verify_nonce( $_POST['collection_activities_metabox_nonce'], 'collection_activities_metabox' ) ) {
 
 			// Activities
-			$activities  = incassoos_get_collection_activities( $post );
-			$cactivities = isset( $_POST['collection-activity'] ) ? (array) $_POST['collection-activity'] : array();
+			$activities            = incassoos_get_collection_activities( $post );
+			$collection_activities = isset( $_POST['collection-activity'] ) ? (array) $_POST['collection-activity'] : array();
 
 			// Remove previous matches
-			foreach ( array_diff( $activities, $cactivities ) as $item_id ) {
+			foreach ( array_diff( $activities, $collection_activities ) as $item_id ) {
 				wp_update_post( array(
 					'ID'          => (int) $item_id,
 					'post_parent' => 0
@@ -695,7 +695,7 @@ class Incassoos_Admin {
 			}
 
 			// Update new matches
-			foreach ( array_diff( $cactivities, $activities ) as $item_id ) {
+			foreach ( array_diff( $collection_activities, $activities ) as $item_id ) {
 				wp_update_post( array(
 					'ID'          => (int) $item_id,
 					'post_parent' => $post_id
@@ -707,11 +707,11 @@ class Incassoos_Admin {
 		if ( isset( $_POST['collection_occasions_metabox_nonce'] ) && wp_verify_nonce( $_POST['collection_occasions_metabox_nonce'], 'collection_occasions_metabox' ) ) {
 
 			// Occasions
-			$occasions  = incassoos_get_collection_occasions( $post );
-			$coccasions = isset( $_POST['collection-occasion'] ) ? (array) $_POST['collection-occasion'] : array();
+			$occasions            = incassoos_get_collection_occasions( $post );
+			$collection_occasions = isset( $_POST['collection-occasion'] ) ? (array) $_POST['collection-occasion'] : array();
 
 			// Remove previous matches
-			foreach ( array_diff( $occasions, $coccasions ) as $item_id ) {
+			foreach ( array_diff( $occasions, $collection_occasions ) as $item_id ) {
 				wp_update_post( array(
 					'ID'          => (int) $item_id,
 					'post_parent' => 0
@@ -719,7 +719,7 @@ class Incassoos_Admin {
 			}
 
 			// Update new matches
-			foreach ( array_diff( $coccasions, $occasions ) as $item_id ) {
+			foreach ( array_diff( $collection_occasions, $occasions ) as $item_id ) {
 				wp_update_post( array(
 					'ID'          => (int) $item_id,
 					'post_parent' => $post_id
