@@ -36,6 +36,25 @@ function incassoos_get_user( $user = false, $by = 'id' ) {
 }
 
 /**
+ * Return the user ID
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed $user User object or identifier. Defaults to the current user ID.
+ * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
+ * @return int|bool User ID or false when not found.
+ */
+function incassoos_get_user_id( $user = false, $by = 'id' ) {
+	$user = incassoos_get_user( $user, $by );
+
+	if ( $user ) {
+		return $user->ID;
+	} else {
+		return false;
+	}
+}
+
+/**
  * Return list of users matching criteria
  *
  * @since 1.0.0
@@ -176,7 +195,29 @@ function incassoos_pre_user_query( $users_query ) {
 /** Template **************************************************************/
 
 /**
- * Return the user display name
+ * Return the user's username
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_user_username'
+ *
+ * @param  mixed $user User object or identifier. Defaults to the current user ID.
+ * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
+ * @return string User username
+ */
+function incassoos_get_user_username( $user = false, $by = 'id' ) {
+	$user     = incassoos_get_user( $user, $by );
+	$username = '';
+
+	if ( $user ) {
+		$username = $user->user_login;
+	}
+
+	return apply_filters( 'incassoos_get_user_username', $username, $user );
+}
+
+/**
+ * Return the user's display name
  *
  * @since 1.0.0
  *
