@@ -901,7 +901,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 		-webkit-column-rule: 1px solid #eee;
 		   -moz-column-rule: 1px solid #eee;
 		        column-rule: 1px solid #eee;
-    }
+	}
 }
 
 @media screen and (max-width: 782px) {
@@ -1274,7 +1274,7 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 		-webkit-column-rule: 1px solid #e5e5e5;
 		   -moz-column-rule: 1px solid #e5e5e5;
 		        column-rule: 1px solid #e5e5e5;
-    }
+	}
 }
 
 @media screen and (max-width: 782px) {

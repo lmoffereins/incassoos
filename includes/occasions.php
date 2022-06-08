@@ -632,7 +632,7 @@ function incassoos_is_occasion_closed( $post = 0 ) {
 	$post   = incassoos_get_occasion( $post );
 	$closed = $post && (bool) get_post_meta( $post->ID, 'closed', true );
 
-	return (bool) apply_filters( 'incassoos_is_occasion_closed', $closed, $post );	
+	return (bool) apply_filters( 'incassoos_is_occasion_closed', $closed, $post );
 }
 
 /**
@@ -683,7 +683,7 @@ function incassoos_is_occasion_collectable( $post = 0 ) {
 	$post        = incassoos_get_occasion( $post );
 	$collectable = $post && ! incassoos_is_occasion_collected( $post ) && incassoos_is_occasion_closed( $post );
 
-	return (bool) apply_filters( 'incassoos_is_occasion_collectable', $collectable, $post );	
+	return (bool) apply_filters( 'incassoos_is_occasion_collectable', $collectable, $post );
 }
 
 /**

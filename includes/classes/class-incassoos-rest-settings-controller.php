@@ -223,8 +223,8 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 		$response = apply_filters( 'incassoos_rest_prepare_settings', $response, $request );
 		$response = rest_ensure_response( $response );
 
-		$response->header( 'X-WP-Total', 1 );
-		$response->header( 'X-WP-TotalPages', 1);
+		$response->header( 'X-WP-Total',      1 );
+		$response->header( 'X-WP-TotalPages', 1 );
 
 		return $response;
 	}
