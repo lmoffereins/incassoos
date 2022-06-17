@@ -1277,10 +1277,16 @@ function incassoos_update_activity_date( $date, $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @param  array $args Activity attributes to update
+ * @param  array|object $args Activity attributes to update
  * @return WP_Error|bool Error object on invalidation, true when validated
  */
 function incassoos_validate_activity( $args = array() ) {
+
+	// Array-fy when an object was provided
+	if ( ! is_array( $args ) ) {
+		$args = (array) $args;
+	}
+
 	$update = isset( $args['ID'] ) && ! empty( $args['ID'] );
 
 	// Parse defaults
