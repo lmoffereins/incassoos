@@ -137,7 +137,7 @@ function incassoos_registered_occasion_type_taxonomy() {
  * @since 1.0.0
  *
  * @param  array $query_args Optional. Query args for {@see WP_Term_Query}.
- * @return array Occasion type data.
+ * @return array Occasion Type data.
  */
 function incassoos_get_occasion_types( $query_args = array() ) {
 
@@ -154,7 +154,7 @@ function incassoos_get_occasion_types( $query_args = array() ) {
  * Return the default Occasion Type's term id
  *
  * @since 1.0.0
- * 
+ *
  * @uses apply_filters() Calls 'incassoos_get_default_occasion_type'
  *
  * @return int Occasion Type term id.

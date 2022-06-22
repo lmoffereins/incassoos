@@ -126,7 +126,57 @@ function incassoos_get_product_cat_tax_labels() {
  * @since 1.0.0
  */
 function incassoos_registered_product_cat_taxonomy() {
+	$taxonomy = incassoos_get_product_cat_tax_id();
+
+	// REST
 	add_action( 'incassoos_rest_api_init', 'incassoos_register_product_cat_rest_fields' );
+
+	// Admin
+	add_action( "{$taxonomy}_add_form_fields",  'incassoos_admin_taxonomy_add_form_fields',  10    );
+	add_action( "{$taxonomy}_edit_form_fields", 'incassoos_admin_taxonomy_edit_form_fields', 10, 2 );
+}
+
+/**
+ * Return the Product Category
+ *
+ * @since 1.0.0
+ *
+ * @param  array $query_args Optional. Query args for {@see WP_Term_Query}.
+ * @return array Product Category data.
+ */
+function incassoos_get_product_cats( $query_args = array() ) {
+
+	// Parse defaults
+	$query_args = wp_parse_args( $query_args, array(
+		'taxonomy'   => incassoos_get_product_cat_tax_id(),
+		'hide_empty' => false
+	) );
+
+	return get_terms( $query_args );
+}
+
+/**
+ * Return the default Product Category's term id
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_default_product_category'
+ *
+ * @return int Product Category term id.
+ */
+function incassoos_get_default_product_category() {
+	$terms = incassoos_get_product_cats( array(
+		'fields'     => 'ids',
+		'meta_key'   => '_default',
+		'meta_value' => 1
+	) );
+	$term = 0;
+
+	if ( $terms ) {
+		$term = $terms[0];
+	}
+
+	return apply_filters( 'incassoos_get_default_product_category', $term );
 }
 
 /**

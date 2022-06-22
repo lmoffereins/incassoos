@@ -1074,6 +1074,73 @@ function incassoos_get_plugin_taxonomy_post_types() {
 }
 
 /**
+ * Return whether the taxonomy supports default terms
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_taxonomy_supports_default_terms'
+ *
+ * @return bool Does the taxonomy support default terms?
+ */
+function incassoos_taxonomy_supports_default_terms( $taxonomy ) {
+	return (bool) apply_filters( 'incassoos_taxonomy_supports_default_terms', in_array( $taxonomy, array(
+		incassoos_get_occasion_type_tax_id(),
+		incassoos_get_product_cat_tax_id()
+	), true ) );
+}
+
+/**
+ * Process term meta when saving a taxonomy term
+ *
+ * @since 1.0.0
+ *
+ * @param  int    $term_id  Term ID.
+ * @param  int    $tt_id    Term taxonomy ID.
+ * @param  string $taxonomy Taxonomy name.
+ */
+function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
+
+	// Taxonomy supports default terms
+	if ( incassoos_taxonomy_supports_default_terms( $taxonomy ) ) {
+
+		// Term default as a checkbox
+		if ( ! isset( $_POST['term-default'] ) ) {
+			delete_term_meta( $term_id, '_default' );
+		} else {
+
+			// Remove previous metadata
+			foreach ( get_terms( array( 'taxonomy' => $taxonomy, 'hide_empty' => false ) ) as $term ) {
+				delete_term_meta( $term->term_id, '_default' );
+			}
+
+			// Set default term
+			update_term_meta( $term_id, '_default', 1 );
+		}
+	}
+}
+
+/**
+ * Return whether the given term is the default
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_default_term'
+ *
+ * @param  WP_Term|int $term Term object or id.
+ * @return bool Is this a default term?
+ */
+function incassoos_is_default_term( $term ) {
+	$term = get_term( $term );
+	$is   = false;
+
+	if ( $term && ! is_wp_error( $term ) ) {
+		$is = (bool) get_term_meta( $term->term_id, '_default', true );
+	}
+
+	return (bool) apply_filters( 'incassoos_is_default_term', $is, $term );
+}
+
+/**
  * Modify the term link
  *
  * @since 1.0.0
@@ -1103,53 +1170,6 @@ function incassoos_filter_term_link( $url, $term, $taxonomy ) {
 	}
 
 	return apply_filters( 'incassoos_filter_term_link', $url, $term, $taxonomy );
-}
-
-/**
- * Process term meta when saving a taxonomy term
- *
- * @since 1.0.0
- *
- * @param  int    $term_id  Term ID.
- * @param  int    $tt_id    Term taxonomy ID.
- * @param  string $taxonomy Taxonomy name.
- */
-function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
-
-	// Occasion Type
-	if ( incassoos_get_occasion_type_tax_id() === $taxonomy ) {
-
-		// Term default as a checkbox
-		if ( ! isset( $_POST['term-default'] ) ) {
-			delete_term_meta( $term_id, '_default' );
-		} else {
-			foreach ( incassoos_get_occasion_types() as $term ) {
-				delete_term_meta( $term->term_id, '_default' );
-			}
-			update_term_meta( $term_id, '_default', 1 );
-		}
-	}
-}
-
-/**
- * Return whether the given term is the default
- *
- * @since 1.0.0
- *
- * @uses apply_filters() Calls 'incassoos_is_default_term'
- *
- * @param  WP_Term|int $term Term object or id.
- * @return bool Is this a default term?
- */
-function incassoos_is_default_term( $term ) {
-	$term = get_term( $term );
-	$is   = false;
-
-	if ( $term && ! is_wp_error( $term ) ) {
-		$is = (bool) get_term_meta( $term->term_id, '_default', true );
-	}
-
-	return (bool) apply_filters( 'incassoos_is_default_term', $is, $term );
 }
 
 /** Notes *********************************************************************/
