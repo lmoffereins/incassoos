@@ -125,6 +125,18 @@ function incassoos_is_app_on_front() {
 /** URLs **********************************************************************/
 
 /**
+ * Return the url for the admin dashboard page
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_admin_url'
+ * @return string Url
+ */
+function incassoos_get_admin_url() {
+	return apply_filters( 'incassoos_get_admin_url', add_query_arg( 'page', 'incassoos', admin_url( 'admin.php' ) ) );
+}
+
+/**
  * Return the url for the app interface
  *
  * @since 1.0.0
@@ -1206,7 +1218,7 @@ function incassoos_nav_menu_get_items() {
 		// Administration
 		'admin' => array(
 			'title'       => esc_html_x( 'Administration', 'Menu item label', 'incassoos' ),
-			'url'         => add_query_arg( 'page', 'incassoos', admin_url( 'admin.php' ) )
+			'url'         => incassoos_get_admin_url()
 		)
 	) );
 
@@ -1462,19 +1474,26 @@ function incassoos_customize_nav_menu_searched_items( $items, $args ) {
  */
 function incassoos_admin_bar_menu( $wp_admin_bar ) {
 
-	// When on multisite
-	if ( is_user_logged_in() && is_multisite() ) {
-
-		// Get the parent menu id
-		$menu_id = 'blog-' . get_current_blog_id();
-
-		// Add link to the plugin dashboard
+	// Link to application under Site
+	if ( current_user_can( 'view_incassoos_application' ) ) {
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => $menu_id,
-				'id'     => $menu_id . '-incassoos',
-				'title'  => __( 'Incassoos', 'incassoos' ),
-				'href'   => add_query_arg( 'page', 'incassoos', admin_url( 'admin.php' ) )
+				'parent' => 'site-name',
+				'id'     => 'site-name-incassoos-app',
+				'title'  => __( 'Incassoos Application', 'incassoos' ),
+				'href'   => incassoos_get_app_url()
+			)
+		);
+	}
+
+	// Link to the plugin dashboard under Site
+	if ( current_user_can( 'view_incassoos_dashboard' ) ) {
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => 'site-name',
+				'id'     => 'site-name-incassoos-home',
+				'title'  => __( 'Incassoos Home', 'incassoos' ),
+				'href'   => incassoos_get_admin_url()
 			)
 		);
 	}

@@ -37,7 +37,7 @@ function incassoos_admin_encryption_page() {
 			<p><?php printf( esc_html__( "To be able to use encryption in Incassoos on %s, please update the website's PHP version to 7.2 or greater or make sure the site uses WordPress 5.2 or greater.", 'incassoos' ), site_url() ); ?></p>
 
 			<p class="step-navigation">
-				<a class="button button-primary alignright" href="<?php echo add_query_arg( 'page', 'incassoos' ); ?>"><?php esc_html_e( 'Return to dashboard', 'incassoos' ); ?></a>
+				<a class="button button-primary alignright" href="<?php echo incassoos_get_admin_url(); ?>"><?php esc_html_e( 'Return to dashboard', 'incassoos' ); ?></a>
 			</p>
 		</div>
 
