@@ -78,6 +78,21 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/untrash', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'integer',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'untrash_item' ),
+				'permission_callback' => array( $this, 'untrash_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
 	}
 
 	/**
@@ -192,6 +207,94 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 		}
 
 		return parent::update_additional_fields_for_object( $object, $request );
+	}
+
+	/**
+	 * Checks if a given request has access to restore a post from the Trash.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to untrash the item, WP_Error object otherwise.
+	 */
+	public function untrash_item_permissions_check( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		if ( $post && ! $this->check_delete_permission( $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_untrash_post',
+				__( 'Sorry, you are not allowed to restore this post from the Trash.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Restore a single post from the Trash.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function untrash_item( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		$id = $post->ID;
+
+		if ( ! $this->check_delete_permission( $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_untrash_post',
+				__( 'Sorry, you are not allowed to restore this post from the Trash.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only untrash if we have already trashed.
+		if ( 'trash' !== $post->post_status ) {
+			return new WP_Error(
+				'incassoos_rest_not_trashed',
+				__( 'The post has not been trashed.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = wp_untrash_post( $id );
+		$post     = get_post( $id );
+		$response = $this->prepare_item_for_response( $post, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_untrash',
+				__( 'The post cannot be restored from the Trash.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single post is untrashed via the REST API.
+		 *
+		 * They dynamic portion of the hook name, `$this->post_type`, refers to the post type slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Post          $post     The deleted or trashed post.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( "incassoos_rest_untrash_{$this->post_type}", $post, $response, $request );
+
+		return $response;
 	}
 }
 

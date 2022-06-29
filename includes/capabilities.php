@@ -156,6 +156,7 @@ function incassoos_get_order_post_type_caps() {
  */
 function incassoos_get_product_post_type_caps() {
 	return apply_filters( 'incassoos_get_product_post_type_caps', array(
+		'read_post'           => 'view_incassoos_product',
 		'view_post'           => 'view_incassoos_product',
 		'view_posts'          => 'view_incassoos_products',
 		'edit_post'           => 'edit_incassoos_product',
