@@ -1916,7 +1916,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 					'name'             => "taxonomy-{$product_cat_tax}",
 					'taxonomy'         => $product_cat_tax,
 					'hide_empty'       => false,
-					'selected'         => $cat_terms ? $cat_terms[0] : 0,
+					'selected'         => $cat_terms ? $cat_terms[0] : incassoos_get_default_product_category(),
 					'show_option_none' => esc_html__( '&mdash; No Category &mdash;', 'incassoos' ),
 				) );
 			?>

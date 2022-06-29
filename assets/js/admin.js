@@ -606,12 +606,20 @@ jQuery(document).ready( function($) {
 
 	// Setup term quick edit
 	if ( 'undefined' !== typeof inlineEditTax ) {
+		/**
+		 * Removed Default Term setting from quick edit untill inline values
+		 * can be set in the .hidden div in WP_Terms_List_Table::column_name().
+		 *
+		var taxonomiesForDefaultTerms = settings.taxonomiesForDefaultTerms.reduce( function( selector, tax ) {
+			return selector + (selector.length ? ', ' : '') + 'body.taxonomy-' + tax;
+		}, '');
 
-		// Term default
-		$( 'body.taxonomy-' + settings.ids.occasionType ).find( '#inlineedit fieldset:first-child .inline-edit-col' )
+		// Taxonomies with default terms
+		$( taxonomiesForDefaultTerms )
+			.find( '#inlineedit fieldset:first-child .inline-edit-col' )
 			.append( '<label><span class="title">' + l10n.termMetaDefault + '</span><span class="input-text-wrap"><input type="checkbox" name="term-default" value="1" /></span></label>' );
 
-		/* global inlineEditTax */
+		/* global inlineEditTax *
 		var wp_inline_edit_term = inlineEditTax.edit;
 		inlineEditTax.edit = function( id ) {
 			wp_inline_edit_term.apply( this, arguments );
@@ -619,11 +627,12 @@ jQuery(document).ready( function($) {
 			// Extend logic here
 			id = ( typeof( id ) === 'object' ) ? this.getId( id ) : id;
 
-            // Apply logic when this is the default
-            if ( +id === settings.occasionTypeDefault ) {
+            // Apply logic when this is a default term
+            if ( -1 !== [].indexOf(+id) ) {
 				$( ':input[name="term-default"]', '.inline-editor' ).prop( 'checked', true );
             }
 		};
+		 */
 	}
 
 	/** Consumers Page **************************************************/

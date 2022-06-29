@@ -1098,6 +1098,22 @@ function incassoos_get_plugin_taxonomy_post_types() {
 }
 
 /**
+ * Return the taxonomies that support default terms
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_taxonomies_for_default_terms'
+ *
+ * @return array Taxonomy names
+ */
+function incassoos_get_taxonomies_for_default_terms() {
+	return apply_filters( 'incassoos_get_taxonomies_for_default_terms', array(
+		incassoos_get_occasion_type_tax_id(),
+		incassoos_get_product_cat_tax_id()
+	) );
+}
+
+/**
  * Return whether the taxonomy supports default terms
  *
  * @since 1.0.0
@@ -1107,10 +1123,7 @@ function incassoos_get_plugin_taxonomy_post_types() {
  * @return bool Does the taxonomy support default terms?
  */
 function incassoos_taxonomy_supports_default_terms( $taxonomy ) {
-	return (bool) apply_filters( 'incassoos_taxonomy_supports_default_terms', in_array( $taxonomy, array(
-		incassoos_get_occasion_type_tax_id(),
-		incassoos_get_product_cat_tax_id()
-	), true ) );
+	return (bool) apply_filters( 'incassoos_taxonomy_supports_default_terms', in_array( $taxonomy, incassoos_get_taxonomies_for_default_terms() ) );
 }
 
 /**

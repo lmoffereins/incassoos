@@ -296,10 +296,7 @@ class Incassoos_Admin {
 				'decryptOptionNonce'          => wp_create_nonce( 'incassoos_decrypt_option_nonce' ),
 				'formatCurrency'              => incassoos_get_currency_format_args(),
 				'consumersFields'             => incassoos_admin_get_consumers_fields(),
-				'ids'                         => array(
-					'occasionType' => incassoos_get_occasion_type_tax_id()
-				),
-				'occasionTypeDefault'         => incassoos_get_default_occasion_type()
+				'taxonomiesForDefaultTerms'   => incassoos_get_taxonomies_for_default_terms()
 			),
 			'l10n' => array(
 				'showSelectedAll'      => __( 'Showing selected',                   'incassoos' ),
