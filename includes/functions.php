@@ -1019,6 +1019,30 @@ function incassoos_increment_post_title( $post = 0 ) {
 	return apply_filters( 'incassoos_increment_post_title', $new_title, $post );
 }
 
+/**
+ * Modify the post status of a post when it is restored from Trash
+ *
+ * Prior to WordPress 5.6.0, restored posts were always assigned their original status.
+ *
+ * @see `wp_untrash_post()`
+ *
+ * @since 1.0.0
+ *
+ * @param string $new_status      The new status of the post being restored.
+ * @param int    $post_id         The ID of the post being restored.
+ * @param string $previous_status The status of the post at the point where it was trashed.
+ * @return string Post status
+ */
+function incassoos_wp_untrash_post_status( $post_status, $post_id, $previous_status ) {
+
+	// Restore to previous status for plugin posts
+	if ( incassoos_is_plugin_post_type( $post_id ) ) {
+		$post_status = $previous_status;
+	}
+
+	return $post_status;
+}
+
 /** Taxonomies ****************************************************************/
 
 /**

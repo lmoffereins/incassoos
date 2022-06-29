@@ -80,6 +80,7 @@ add_filter( 'wp_insert_post_data',          'incassoos_insert_post_data',       
 add_action( 'post_updated',                 'incassoos_update_product_menu_orders', 20, 3 );
 add_action( 'save_post',                    'incassoos_update_occasion_total',      20    );
 add_action( 'after_delete_post',            'incassoos_update_occasion_total',      20    );
+add_filter( 'wp_untrash_post_status',       'incassoos_wp_untrash_post_status',     10, 3 );
 
 add_filter( 'incassoos_post_class',        'incassoos_filter_collection_class',    10, 3 );
 add_filter( 'incassoos_post_class',        'incassoos_filter_activity_class',      10, 3 );
