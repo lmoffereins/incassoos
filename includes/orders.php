@@ -79,43 +79,6 @@ function incassoos_get_order_post_type_supports() {
 	return apply_filters( 'incassoos_get_order_post_type_supports', false );
 }
 
-/** REST **********************************************************************/
-
-/**
- * Modify an Order before it is inserted via the REST API
- *
- * @since 1.0.0
- */
-function incassoos_rest_pre_insert_order( $post, $request ) {
-
-	/**
-	 * The order will be validated twice: here specifically in the REST API, and
-	 * before the post is inserted in the database. This requires metadata on the
-	 * post object.
-	 * 
-	 * @see incassoos_prevent_insert_post()
-	 */
-
-	// Consumer
-	if ( isset( $request['consumer'] ) ) {
-		$post->consumer = $request['consumer'];
-	}
-
-	// Products
-	if ( isset( $request['products'] ) ) {
-		$post->products = $request['products'];
-	}
-
-	// Validate order
-	$validated = incassoos_validate_order( $post );
-	if ( is_wp_error( $validated ) ) {
-		$validated->add_data( array( 'status' => 400 ) );
-		return $validated;
-	}
-
-	return $post;
-}
-
 /** Template ******************************************************************/
 
 /**
@@ -1194,6 +1157,14 @@ function incassoos_update_order_consumer( $consumer, $post = 0 ) {
 
 		// Save consumer
 		if ( $_consumer && $_consumer->exists() ) {
+			$prev_value = incassoos_get_order_consumer_id( $post );
+
+			// Bail when the current value is identical, because updating
+			// identical post metadata values will return `false`.
+			if ( $_consumer->ID === $prev_value ) {
+				return true;
+			}
+
 			$success = update_post_meta( $post->ID, 'consumer', $_consumer->ID );
 
 			// Remove any previous consumer type
@@ -1203,6 +1174,14 @@ function incassoos_update_order_consumer( $consumer, $post = 0 ) {
 
 		// Save consumer type
 		} elseif ( $consumer_type = incassoos_get_consumer_type( $consumer ) ) {
+			$prev_value = incassoos_get_order_consumer_type( $post );
+
+			// Bail when the current value is identical, because updating
+			// identical post metadata values will return `false`.
+			if ( $consumer_type->ID === $prev_value ) {
+				return true;
+			}
+
 			$success = update_post_meta( $post->ID, 'consumer_type', $consumer_type->id );
 
 			// Remove any previous consumer ID
@@ -1382,7 +1361,50 @@ function incassoos_validate_order( $args = array() ) {
 		return $products;
 	}
 
+	// Validate consumption limit
+	if ( ! incassoos_is_consumption_within_limit_for_occasion( $products, $consumer, $parent ) ) {
+		return new WP_Error(
+			'incassoos_consumption_limited',
+			__( "The consumer's consumption limit has been reached.", 'incassoos' )
+		);
+	}
+
 	return true;
+}
+
+/**
+ * Modify and validate an Order before it is inserted via the REST API
+ *
+ * @since 1.0.0
+ */
+function incassoos_rest_pre_insert_order( $post, $request ) {
+
+	/**
+	 * The order will be validated twice: here specifically in the REST API, and
+	 * before the post is inserted in the database. This requires metadata on the
+	 * post object.
+	 *
+	 * @see incassoos_prevent_insert_post()
+	 */
+
+	// Consumer
+	if ( isset( $request['consumer'] ) ) {
+		$post->consumer = $request['consumer'];
+	}
+
+	// Products
+	if ( isset( $request['products'] ) ) {
+		$post->products = $request['products'];
+	}
+
+	// Validate order
+	$validated = incassoos_validate_order( $post );
+	if ( is_wp_error( $validated ) ) {
+		$validated->add_data( array( 'status' => 400 ) );
+		return $validated;
+	}
+
+	return $post;
 }
 
 /** Helpers *******************************************************************/
