@@ -176,14 +176,14 @@ function incassoos_get_plugin_post_types() {
  *
  * @uses apply_filters() Calls 'incassoos_is_plugin_post_type'
  *
- * @param  string $post_type Optional. Post type to check. Defaults to the current post's post type.
+ * @param  string|int|WP_Post $post_type Optional. Post type to check or post ID or post object. Defaults to the current post's post type.
  * @return bool Is this a plugin post type?
  */
-function incassoos_is_plugin_post_type( $post_type = '' ) {
+function incassoos_is_plugin_post_type( $post_type = null ) {
 
 	// Default to the current post type
-	if ( ! $post_type ) {
-		$post_type = get_post_type();
+	if ( ! $post_type || ! is_string( $post_type ) ) {
+		$post_type = get_post_type( $post_type );
 	}
 
 	// Check post type
