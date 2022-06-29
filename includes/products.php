@@ -57,6 +57,17 @@ function incassoos_get_product_post_type_labels() {
 }
 
 /**
+ * Act when the Product post type has been registered
+ *
+ * @since 1.0.0
+ */
+function incassoos_registered_product_post_type() {
+	$post_type = incassoos_get_product_post_type();
+
+	add_filter( "rest_pre_insert_{$post_type}", 'incassoos_rest_pre_insert_product', 10, 2 );
+}
+
+/**
  * Return an array of features the Product post type supports
  *
  * @since 1.0.0
@@ -189,7 +200,7 @@ function incassoos_register_product_cat_rest_fields() {
 	// Get assets
 	$product = incassoos_get_product_post_type();
 
-	// Add categories to Product
+	// Add categories to Product endpoint
 	register_rest_field(
 		$product,
 		'categories',
@@ -495,15 +506,15 @@ function incassoos_get_products( $query_args = array() ) {
  * @return float Products total value
  */
 function incassoos_get_total_from_products( $products ) {
-    $defaults = array( 'amount' => 0, 'price' => 0 );
-    $total = 0;
+	$defaults = array( 'amount' => 0, 'price' => 0 );
+	$total = 0;
 
-    foreach ( (array) $products as $product ) {
-        $product = wp_parse_args( $product, $defaults );
-        $total += intval( $product['amount'] ) * floatval( $product['price'] );
-    }
+	foreach ( (array) $products as $product ) {
+		$product = wp_parse_args( $product, $defaults );
+		$total += intval( $product['amount'] ) * floatval( $product['price'] );
+	}
 
-    return (float) $total;
+	return (float) $total;
 }
 
 /** Update ********************************************************************/
@@ -612,4 +623,34 @@ function incassoos_validate_product( $args = array() ) {
 	}
 
 	return true;
+}
+
+/**
+ * Modify and validate an Product before it is inserted via the REST API
+ *
+ * @since 1.0.0
+ */
+function incassoos_rest_pre_insert_product( $post, $request ) {
+
+	/**
+	 * The product will be validated twice: here specifically in the REST API, and
+	 * before the post is inserted in the database. This requires metadata on the
+	 * post object.
+	 *
+	 * @see incassoos_prevent_insert_post()
+	 */
+
+	// Price
+	if ( isset( $request['price'] ) ) {
+		$post->price = $request['price'];
+	}
+
+	// Validate product
+	$validated = incassoos_validate_product( $post );
+	if ( is_wp_error( $validated ) ) {
+		$validated->add_data( array( 'status' => 400 ) );
+		return $validated;
+	}
+
+	return $post;
 }
