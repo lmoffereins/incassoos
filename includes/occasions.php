@@ -57,6 +57,17 @@ function incassoos_get_occasion_post_type_labels() {
 }
 
 /**
+ * Act when the Occasion post type has been registered
+ *
+ * @since 1.0.0
+ */
+function incassoos_registered_occasion_post_type() {
+	$post_type = incassoos_get_occasion_post_type();
+
+	add_filter( "rest_pre_insert_{$post_type}", 'incassoos_rest_pre_insert_occasion', 10, 2 );
+}
+
+/**
  * Return an array of features the Occasion post type supports
  *
  * @since 1.0.0
@@ -1627,7 +1638,7 @@ function incassoos_validate_occasion( $args = array() ) {
 	// Parse defaults
 	$args = wp_parse_args( $args, array(
 		'post_title'    => '',
-		'occasion_date' => $update ? incassoos_get_occasion_date( $args['ID'], 'd-m-Y' ) : ''
+		'occasion_date' => $update ? incassoos_get_occasion_date( $args['ID'], 'Y-m-d' ) : ''
 	) );
 
 	// Validate title
@@ -1637,10 +1648,40 @@ function incassoos_validate_occasion( $args = array() ) {
 	}
 
 	// Validate date
-	$date = incassoos_validate_date( $args['occasion_date'], 'd-m-Y' );
+	$date = incassoos_validate_date( $args['occasion_date'], 'Y-m-d' );
 	if ( is_wp_error( $date ) ) {
 		return $date;
 	}
 
 	return true;
+}
+
+/**
+ * Modify and validate an Occasion before it is inserted via the REST API
+ *
+ * @since 1.0.0
+ */
+function incassoos_rest_pre_insert_occasion( $post, $request ) {
+
+	/**
+	 * The occasion will be validated twice: here specifically in the REST API, and
+	 * before the post is inserted in the database. This requires metadata on the
+	 * post object.
+	 *
+	 * @see incassoos_prevent_insert_post()
+	 */
+
+	// Occasion date
+	if ( isset( $request['occasion_date'] ) ) {
+		$post->occasion_date = $request['occasion_date'];
+	}
+
+	// Validate occasion
+	$validated = incassoos_validate_occasion( $post );
+	if ( is_wp_error( $validated ) ) {
+		$validated->add_data( array( 'status' => 400 ) );
+		return $validated;
+	}
+
+	return $post;
 }
