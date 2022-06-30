@@ -123,7 +123,7 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 		$schema['properties'] = array_merge( $schema['properties'], array(
 			'price'           => array(
 				'description' => __( 'The price of the product.', 'incassoos' ),
-				'type'        => 'float',
+				'type'        => 'number',
 				'context'     => array( 'view', 'edit' )
 			),
 			'customSort'      => array(
