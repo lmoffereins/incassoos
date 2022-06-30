@@ -117,7 +117,7 @@ class Incassoos_REST_Orders_Controller extends WP_REST_Posts_Controller {
 			'consumer_name'   => array(
 				'description' => __( 'The name of the consumer of the order.', 'incassoos' ),
 				'type'        => 'string',
-				'context'     => array( 'view' ),
+				'context'     => array( 'view', 'edit' ),
 				'readonly'    => true
 			),
 			'products'        => array(
