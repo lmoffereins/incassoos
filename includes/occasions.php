@@ -1494,7 +1494,7 @@ function incassoos_is_occasion_collection_collected( $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @param  string      $date Date string
+ * @param  string      $date Date string. Format should be readable by `strtotime()`.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Update success.
  */
@@ -1637,8 +1637,9 @@ function incassoos_validate_occasion( $args = array() ) {
 
 	// Parse defaults
 	$args = wp_parse_args( $args, array(
-		'post_title'    => '',
-		'occasion_date' => $update ? incassoos_get_occasion_date( $args['ID'], 'Y-m-d' ) : ''
+		'post_title'           => '',
+		'occasion_date'        => $update ? incassoos_get_occasion_date( $args['ID'], 'Y-m-d' ) : '',
+		'occasion_date_format' => 'Y-m-d'
 	) );
 
 	// Validate title
@@ -1648,7 +1649,7 @@ function incassoos_validate_occasion( $args = array() ) {
 	}
 
 	// Validate date
-	$date = incassoos_validate_date( $args['occasion_date'], 'Y-m-d' );
+	$date = incassoos_validate_date( $args['occasion_date'], $args['occasion_date_format'] );
 	if ( is_wp_error( $date ) ) {
 		return $date;
 	}

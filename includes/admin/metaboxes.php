@@ -1350,6 +1350,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 			<?php if ( ! $is_post_view ) : ?>
 				<input type="text" id="occasion-date" name="occasion_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post->ID, 'occasion_date', true ) ) ); ?>" class="datepicker" />
+				<input type="hidden" id="occasion-date-format" name="occasion_date_format" value="d-m-Y" />
 			<?php else : ?>
 				<span id="occasion-date" class="value">
 					<?php if ( incassoos_is_occasion_same_date_created( $post ) ) : ?>

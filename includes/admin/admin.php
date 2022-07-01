@@ -838,7 +838,10 @@ class Incassoos_Admin {
 			 */
 
 			if ( isset( $_POST['occasion_date'] ) ) {
-				incassoos_update_occasion_date( $_POST['occasion_date'], $post_id );
+
+				// Reverse date format for update procedure
+				$date = DateTime::createFromFormat( 'd-m-Y', $_POST['occasion_date'] );
+				incassoos_update_occasion_date( $date->format( 'Y-m-d' ), $post_id );
 			}
 
 			foreach ( array(

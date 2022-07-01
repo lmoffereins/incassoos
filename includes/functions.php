@@ -719,11 +719,11 @@ function incassoos_is_post_with_total( $post = 0 ) {
  * - @see {incassoos_admin_post_notices()} Displays error post notice.
  * - @see {incassoos_admin_post_updated_messages()} Holds the relevant error messages.
  *
- * The filter in `wp_insert_post()` by default only defines 'empty' posts when
- * its post type has support for post title, content and excerpt. Since most plugin
- * assets do not have support for each of those items, custom validaters are put
- * in place to handle situations where they might be considered empty or should
- * not be inserted at all.
+ * The filter in `wp_insert_post()` by default only defines 'empty' posts
+ * when its post type has support for post title, content and excerpt. Since
+ * most plugin post types do not have support for each of those items, custom
+ * validators are put in place to handle situations where a post might be
+ * considered empty or should not be inserted at all.
  *
  * @see wp_insert_post()
  *
