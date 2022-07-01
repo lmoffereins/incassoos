@@ -390,6 +390,7 @@ final class Incassoos {
 				'show_in_nav_menus'     => false,
 				'show_ui'               => current_user_can( 'incassoos_activity_cat_admin' ),
 				'meta_box_cb'           => false, // No metaboxing
+				'show_in_rest'          => true   // Relevant for querying and updating
 			)
 		);
 
@@ -412,7 +413,7 @@ final class Incassoos {
 				'show_in_nav_menus'     => false,
 				'show_ui'               => current_user_can( 'incassoos_occasion_type_admin' ),
 				'meta_box_cb'           => false, // No metaboxing
-				'show_in_rest'          => false
+				'show_in_rest'          => true   // Relevant for querying and updating
 			)
 		);
 
@@ -435,7 +436,7 @@ final class Incassoos {
 				'show_in_nav_menus'     => false,
 				'show_ui'               => current_user_can( 'incassoos_product_cat_admin' ),
 				'meta_box_cb'           => false, // No metaboxing
-				'show_in_rest'          => false
+				'show_in_rest'          => true   // Relevant for querying and updating
 			)
 		);
 	}
