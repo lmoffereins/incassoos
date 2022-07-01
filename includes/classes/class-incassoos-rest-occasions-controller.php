@@ -73,6 +73,36 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/close', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'integer',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'close_item' ),
+				'permission_callback' => array( $this, 'close_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/reopen', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'integer',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'reopen_item' ),
+				'permission_callback' => array( $this, 'reopen_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
 	}
 
 	/**
@@ -238,6 +268,178 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		 */
 
 		return parent::update_additional_fields_for_object( $object, $request );
+	}
+
+	/**
+	 * Checks if a given request has access to close an Occasion
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to close the item, WP_Error object otherwise.
+	 */
+	public function close_item_permissions_check( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		if ( $post && ! current_user_can( 'close_incassoos_occasion', $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_close_post',
+				__( 'Sorry, you are not allowed to close this occasion.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Close a single Occasion
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function close_item( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		$id = $post->ID;
+
+		if ( ! current_user_can( 'close_incassoos_occasion', $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_close_post',
+				__( 'Sorry, you are not allowed to close this occasion.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only close if we haven't already.
+		if ( incassoos_is_occasion_locked( $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_locked',
+				__( 'The occasion is locked.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_close_occasion( $post );
+		$post     = get_post( $id );
+		$response = $this->prepare_item_for_response( $post, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_close',
+				__( 'The occasion cannot be closed.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single occasion is closed via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Post          $post     The deleted or trashed post.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( "incassoos_rest_close_occasion", $post, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to reopen an Occasion
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to reopen the item, WP_Error object otherwise.
+	 */
+	public function reopen_item_permissions_check( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		if ( $post && ! current_user_can( 'reopen_incassoos_occasion', $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_reopen_post',
+				__( 'Sorry, you are not allowed to reopen this occasion.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Close a single Occasion
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function reopen_item( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+
+		$id = $post->ID;
+
+		if ( ! current_user_can( 'reopen_incassoos_occasion', $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_reopen_post',
+				__( 'Sorry, you are not allowed to reopen this occasion.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only reopen if we have already closed.
+		if ( ! incassoos_is_occasion_closed( $post ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_not_closed',
+				__( 'The occasion is not closed.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_reopen_occasion( $post );
+		$post     = get_post( $id );
+		$response = $this->prepare_item_for_response( $post, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_reopen',
+				__( 'The occasion cannot be reopened.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single post is reopened via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Post          $post     The deleted or trashed post.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( "incassoos_rest_reopen_occasion", $post, $response, $request );
+
+		return $response;
 	}
 }
 
