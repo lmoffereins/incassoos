@@ -154,16 +154,15 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 				'format'      => 'date-time',
 				'context'     => array( 'view', 'edit' ),
 				'readonly'    => true
-			),
-			'close'        => array(
-				'description' => __( 'Whether to close the occasion.', 'incassoos' ),
-				'type'        => 'boolean',
-				'context'     => array( 'edit' )
 			)
 		) );
 
 		// Make raw title available in the view context
 		$schema['properties']['title']['properties']['raw']['context'][] = 'view';
+
+		/**
+		 * Taxonomy terms are added through the default post controller.
+		 */
 
 		return $schema;
 	}
@@ -234,30 +233,6 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 				return new WP_Error(
 					'incassoos_rest_invalid_date_field',
 					__( 'Could not update the date of the occasion.', 'incassoos' ),
-					array( 'status' => 400 )
-				);
-			}
-		}
-
-		// Close
-		if ( isset( $request['close'] ) && $request['close'] ) {
-
-			// Check access
-			if ( ! current_user_can( 'close_incassoos_occasion', $object->ID ) ) {
-				return new WP_Error(
-					'rest_forbidden_context',
-					__( 'Sorry, you are not allowed to close this item.', 'incassoos' ),
-					array( 'status' => 400 )
-				);
-			}
-
-			// Close the occasion
-			$result = incassoos_close_occasion( $object->ID );
-
-			if ( ! $result ) {
-				return new WP_Error(
-					'incassoos_rest_occasion_cannot_close',
-					__( 'Could not close the occasion.', 'incassoos' ),
 					array( 'status' => 400 )
 				);
 			}
