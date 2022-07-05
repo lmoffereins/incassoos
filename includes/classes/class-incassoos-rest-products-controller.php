@@ -136,6 +136,10 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 		// Make raw title available in the view context
 		$schema['properties']['title']['properties']['raw']['context'][] = 'view';
 
+		/**
+		 * Taxonomy terms are added through the default post controller.
+		 */
+
 		return $schema;
 	}
 
@@ -205,6 +209,10 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 				);
 			}
 		}
+
+		/**
+		 * Taxonomy terms are auto-updated through the default post controller.
+		 */
 
 		return parent::update_additional_fields_for_object( $object, $request );
 	}
