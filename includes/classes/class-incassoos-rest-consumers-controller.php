@@ -323,7 +323,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $schema['properties']['show'] ) ) {
-			$data['show'] = ! $item->get( '_incassoos_hide_in_list' );
+			$data['show'] = ! $item->get( '_incassoos_hidden_consumer' );
 		}
 
 		if ( ! empty( $schema['properties']['consumptionLimit'] ) ) {
@@ -442,9 +442,9 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['show'] ) && isset( $request['show'] ) ) {
 			if ( $request['show'] ) {
-				delete_user_meta( $item->ID, '_incassoos_hide_in_list' );
+				incassoos_set_consumer_shown( $item );
 			} else {
-				update_user_meta( $item->ID, '_incassoos_hide_in_list', '1' );
+				incassoos_set_consumer_hidden( $item );
 			}
 		}
 
@@ -465,7 +465,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		 * @param WP_REST_Request $request  Request object.
 		 * @param bool            $creating True when creating a post, false when updating.
 		 */
-		do_action( 'incassoos_rest_insert_user', $item, $request, false );
+		do_action( 'incassoos_rest_update_consumer', $item, $request, false );
 
 		$item = incassoos_get_user( $item->ID );
 

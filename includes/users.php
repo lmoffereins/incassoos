@@ -152,13 +152,13 @@ function incassoos_get_user_query( $args = array() ) {
  */
 function incassoos_pre_get_users( $users_query ) {
 
-	// Filter shortcut for hide/show
-	if ( null !== $users_query->get( 'incassoos_hide_in_list' ) ) {
+	// Filter shortcut for shown/hidden consumers
+	if ( null !== $users_query->get( 'incassoos_hidden_consumers' ) ) {
 		$meta_query = (array) $users_query->get( 'meta_query' ) ?: array();
 		$meta_query[] = array(
-			'key'     => '_incassoos_hide_in_list',
+			'key'     => '_incassoos_hidden_consumer',
 			'value'   => array( '1' ),
-			'compare' => $users_query->get( 'incassoos_hide_in_list' ) ? 'IN' : 'NOT IN'
+			'compare' => $users_query->get( 'incassoos_hidden_consumers' ) ? 'IN' : 'NOT IN'
 		);
 		$users_query->set( 'meta_query', $meta_query );
 	}
@@ -288,25 +288,25 @@ function incassoos_get_user_consumption_limit( $user = false, $by = 'id' ) {
 }
 
 /**
- * Return whether the user is hidden by default
+ * Return whether the user is a hidden consumer
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_user_hide_by_default'
+ * @uses apply_filters() Calls 'incassoos_is_consumer_hidden'
  *
  * @param  mixed $user_id User object or property. Defaults to the current user ID.
  * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
  * @return bool Hide user by default.
  */
-function incassoos_user_hide_by_default( $user = false, $by = 'id' ) {
+function incassoos_is_consumer_hidden( $user = false, $by = 'id' ) {
 	$user = incassoos_get_user( $user, $by );
 	$hide = false;
 
 	if ( $user ) {
-		$hide = (bool) $user->get( '_incassoos_hide_in_list', false );
+		$hide = (bool) $user->get( '_incassoos_hidden_consumer', false );
 	}
 
-	return (bool) apply_filters( 'incassoos_user_hide_by_default', $hide, $user );
+	return (bool) apply_filters( 'incassoos_is_consumer_hidden', $hide, $user );
 }
 
 /** Lists *****************************************************************/
@@ -1004,6 +1004,48 @@ function incassoos_decrypt_encryptable_usermeta( $decryption_key ) {
 			}
 		}
 	}
+}
+
+/** Update ********************************************************************/
+
+/**
+ * Set the consumer as hidden
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_User $user Optional. User ID or object. Defaults to the current user.
+ * @return bool Update success
+ */
+function incassoos_set_consumer_hidden( $user = 0 ) {
+	$user    = incassoos_get_user( $user );
+	$success = false;
+
+	if ( $user ) {
+		$success = update_user_meta( $user->ID, '_incassoos_hidden_consumer', 1 );
+	}
+
+	return $success;
+}
+
+/**
+ * Set the consumer as shown
+ *
+ * Effectively removes the '_incassoos_hidden_consumer' user attribute.
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_User $user Optional. User ID or object. Defaults to the current user.
+ * @return bool Update success
+ */
+function incassoos_set_consumer_shown( $user = 0 ) {
+	$user    = incassoos_get_user( $user );
+	$success = false;
+
+	if ( $user ) {
+		$success = delete_user_meta( $user->ID, '_incassoos_hidden_consumer' );
+	}
+
+	return $success;
 }
 
 /** Listings ******************************************************************/

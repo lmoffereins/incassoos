@@ -1136,7 +1136,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	// Collect hidden users
 	if ( ! $is_post_view ) {
 		foreach ( $users as $user ) {
-			if ( incassoos_user_hide_by_default( $user ) && ! in_array( $user->ID, $participants ) ) {
+			if ( incassoos_is_consumer_hidden( $user ) && ! in_array( $user->ID, $participants ) ) {
 				$hidden_users[] = $user->ID;
 			}
 		}

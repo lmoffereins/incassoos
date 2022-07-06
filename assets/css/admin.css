@@ -748,7 +748,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 .incassoos-item-list .hide-in-list,
 .incassoos-item-list.showing-selected .groups .activity-participant .select-user:not(:checked),
 .incassoos-item-list.showing-selected .groups .activity-participant .select-user:not(:checked) ~ *,
-.incassoos-item-list.showing-default-items .hide-by-default {
+.incassoos-item-list.showing-default-items .hidden-consumer {
 	display: none;
 }
 
@@ -1222,7 +1222,7 @@ body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name:after 
 	opacity: .35;
 }
 
-body.incassoos_page_incassoos-consumers .users .consumer.hide-by-default > .consumer-name:after {
+body.incassoos_page_incassoos-consumers .users .consumer.hidden-consumer > .consumer-name:after {
 	content: '\f530'; /* dashicons-hidden */
 }
 

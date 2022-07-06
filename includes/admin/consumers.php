@@ -30,10 +30,11 @@ function incassoos_admin_get_consumers_fields() {
 			'type'  => 'text'
 		),
 
-		// Hide in list
-		'_incassoos_hide_in_list' => array(
-			'label' => __( 'Hide in list', 'incassoos' ),
-			'type'  => 'checkbox'
+		// Hidden consumer
+		'_incassoos_hidden_consumer' => array(
+			'label'           => __( 'Hidden consumer', 'incassoos' ),
+			'type'            => 'checkbox',
+			'update_callback' => 'incassoos_admin_consumers_field_update_hidden_consumer'
 		),
 
 		// Consumption limit
@@ -106,6 +107,23 @@ function incassoos_admin_consumers_field_update_callback( $user, $value, $field_
 		return delete_user_meta( $user->ID, $field_id );
 	} else {
 		return update_user_meta( $user->ID, $field_id, $value );
+	}
+}
+
+/**
+ * Update callback for the Hidden Consumer field
+ *
+ * @since 1.0.0
+ *
+ * @param WP_User $user User object
+ * @param mixed   $value New user field value
+ * @return bool Update success.
+ */
+function incassoos_admin_consumers_field_update_hidden_consumer( $user, $value ) {
+	if ( empty( $value ) ) {
+		return incassoos_set_consumer_shown( $user );
+	} else {
+		return incassoos_set_consumer_hidden( $user );
 	}
 }
 
@@ -268,8 +286,8 @@ function incassoos_admin_load_consumers_page() {
 
 			break;
 
-		// Bulk edit: hide
-		case 'bulk-default-hide' :
+		// Bulk edit: hidden consumer
+		case 'bulk-set-hidden-consumer' :
 			check_admin_referer( 'incassoos-bulk-consumers', '_bulk_edit' );
 
 			// Bail when the users cannot be edited
@@ -278,7 +296,7 @@ function incassoos_admin_load_consumers_page() {
 
 			// Update user meta per user
 			foreach ( $users as $user_id ) {
-				update_user_meta( $user_id, '_incassoos_hide_in_list', 1 );
+				incassoos_set_consumer_hidden( $user_id );
 			}
 
 			// Redirect to consumers page
@@ -289,8 +307,8 @@ function incassoos_admin_load_consumers_page() {
 
 			break;
 
-		// Bulk edit: show
-		case 'bulk-default-show' :
+		// Bulk edit: shown consumer
+		case 'bulk-set-shown-consumer' :
 			check_admin_referer( 'incassoos-bulk-consumers', '_bulk_edit' );
 
 			// Bail when the users cannot be edited
@@ -299,7 +317,7 @@ function incassoos_admin_load_consumers_page() {
 
 			// Update user meta per user
 			foreach ( $users as $user_id ) {
-				update_user_meta( $user_id, '_incassoos_hide_in_list', 0 );
+				incassoos_set_consumer_shown( $user_id );
 			}
 
 			// Redirect to consumers page
@@ -461,8 +479,8 @@ function incassoos_admin_consumers_page() {
 			<label for="bulk-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action' ); ?></label>
 			<select id="bulk-action-selector" name="action">
 				<option value="-1"><?php esc_html_e( 'Bulk actions' ); ?></option>
-				<option value="bulk-default-hide"><?php esc_html_e( 'Hide by default', 'incassoos' ); ?></option>
-				<option value="bulk-default-show"><?php esc_html_e( 'Show by default', 'incassoos' ); ?></option>
+				<option value="bulk-set-hidden-consumer"><?php esc_html_e( 'Set hidden consumers', 'incassoos' ); ?></option>
+				<option value="bulk-set-shown-consumer"><?php esc_html_e( 'Set shown consumers', 'incassoos' ); ?></option>
 			</select>
 			<?php wp_nonce_field( 'incassoos-bulk-consumers', '_bulk_edit' ); ?>
 			<?php submit_button( __( 'Apply' ), 'action', 'bulkaction', false, array( 'id' => 'doaction' ) ); ?>
@@ -516,8 +534,8 @@ function incassoos_admin_consumers_list_class( $user ) {
 	$class = array();
 
 	// Add class for hidden consumers
-	if ( incassoos_user_hide_by_default( $user ) ) {
-		$class[] = 'hide-by-default'; /* Don't use 'hide-in-list' which affects search differently in admin.js */
+	if ( incassoos_is_consumer_hidden( $user ) ) {
+		$class[] = 'hidden-consumer'; /* Don't use 'hide-in-list' classname which affects search in admin.js */
 	}
 
 	// Add class for missing IBAN

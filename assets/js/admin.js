@@ -25,7 +25,7 @@ jQuery(document).ready( function($) {
 	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_activity_participants, #incassoos_occasion_consumers, body.incassoos_page_incassoos-consumers' ),
 	    $detailsBox = $( '#incassoos_collection_details, #incassoos_activity_details, #incassoos_occasion_details, #incassoos_order_details, #incassoos_product_details' ),
 	    $consumerList = $consumerBox.find( '.incassoos-item-list' ),
-	    consumerHiddenMatches = '.showing-default-items .hide-by-default, .search-hide, .hide-in-list';
+	    consumerHiddenMatches = '.showing-default-items .hidden-consumer, .search-hide, .hide-in-list';
 
 	$detailsBox
 		// Publishing action
