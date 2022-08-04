@@ -103,8 +103,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'consumptionLimit' => array(
-					'description' => __( 'Consumption limit for the object.', 'incassoos' ),
+				'spendingLimit' => array(
+					'description' => __( 'Spending limit for the object.', 'incassoos' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' )
 				),
@@ -326,13 +326,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			$data['show'] = ! $item->get( '_incassoos_hidden_consumer' );
 		}
 
-		if ( ! empty( $schema['properties']['consumptionLimit'] ) ) {
-			$data['consumptionLimit'] = incassoos_get_user_consumption_limit( $item );
-		}
-
-		// Default the custom sort value to 0
-		if ( ! empty( $schema['properties']['customSort'] ) ) {
-			$data['customSort'] = 0;
+		if ( ! empty( $schema['properties']['spendingLimit'] ) ) {
+			$data['spendingLimit'] = incassoos_get_user_spending_limit( $item );
 		}
 
 		if ( ! empty( $schema['properties']['group'] ) ) {
@@ -448,11 +443,11 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			}
 		}
 
-		if ( ! empty( $schema['properties']['consumptionLimit'] ) && isset( $request['consumptionLimit'] ) ) {
-			if ( ! (float) $request['consumptionLimit'] ) {
-				delete_user_meta( $item->ID, '_incassoos_consumption_limit' );
+		if ( ! empty( $schema['properties']['spendingLimit'] ) && isset( $request['spendingLimit'] ) ) {
+			if ( ! (float) $request['spendingLimit'] ) {
+				delete_user_meta( $item->ID, '_incassoos_spending_limit' );
 			} else {
-				update_user_meta( $item->ID, '_incassoos_consumption_limit', (float) $request['consumptionLimit'] );
+				update_user_meta( $item->ID, '_incassoos_spending_limit', (float) $request['spendingLimit'] );
 			}
 		}
 

@@ -1361,11 +1361,11 @@ function incassoos_validate_order( $args = array() ) {
 		return $products;
 	}
 
-	// Validate consumption limit
+	// Validate spending limit
 	if ( ! incassoos_is_consumption_within_limit_for_occasion( $products, $consumer, $parent ) ) {
 		return new WP_Error(
-			'incassoos_consumption_limited',
-			__( "The consumer's consumption limit has been reached.", 'incassoos' )
+			'incassoos_spending_limited',
+			__( "The consumer's spending limit has been reached.", 'incassoos' )
 		);
 	}
 
@@ -1410,7 +1410,7 @@ function incassoos_rest_pre_insert_order( $post, $request ) {
 /** Helpers *******************************************************************/
 
 /**
- * Return whether the consumption of products is within a consumer's consumption limit
+ * Return whether the consumption of products is within a consumer's spending limit
  * for the occasion.
  *
  * @since 1.0.0
@@ -1423,27 +1423,27 @@ function incassoos_rest_pre_insert_order( $post, $request ) {
  * @return bool Is the consumption within limit?
  */
 function incassoos_is_consumption_within_limit_for_occasion( $products, $user, $post = 0 ) {
-	$consumption_limit = incassoos_get_user_consumption_limit( $user );
-	$within_limit      = true;
+	$spending_limit = incassoos_get_user_spending_limit( $user );
+	$within_limit   = true;
 
-	// Only continue when consumption limit applies
-	if ( $consumption_limit ) {
+	// Only continue when spending limit applies
+	if ( $spending_limit ) {
 		$current_total  = incassoos_get_occasion_consumer_total( $user, incassoos_get_order_occasion( $post ), null );
 		$products_total = incassoos_get_total_from_products( $products );
-		$within_limit   = ( $current_total + $products_total ) < $consumption_limit;
+		$within_limit   = ( $current_total + $products_total ) < $spending_limit;
 	}
 
 	return (bool) apply_filters( 'incassoos_is_consumption_within_limit_for_occasion', $within_limit, $products, $user, $post );
 }
 
 /**
- * Return whether the consumption of products is within a consumer's consumption limit
+ * Return whether the consumption of products is within a consumer's spending limit
  * for the time window.
  *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_is_consumption_within_limit_for_time_window'
- * @uses apply_filters() Calls 'incassoos_default_consumption_limit_time_window'
+ * @uses apply_filters() Calls 'incassoos_default_spending_limit_time_window'
  *
  * @param  array $products Products list
  * @param  int|WP_User $user User ID or object
@@ -1451,16 +1451,16 @@ function incassoos_is_consumption_within_limit_for_occasion( $products, $user, $
  * @return bool Is the consumption within limit?
  */
 function incassoos_is_consumption_within_limit_for_time_window( $products, $user, $time_window = 0 ) {
-	$consumption_limit = incassoos_get_user_consumption_limit( $user );
-	$within_limit      = true;
+	$spending_limit = incassoos_get_user_spending_limit( $user );
+	$within_limit   = true;
 
 	// Default time window to 4 hour
 	if ( empty( $time_window ) ) {
-		$time_window = (int) apply_filters( 'incassoos_default_consumption_limit_time_window', 4 * HOUR_IN_SECONDS, $user );
+		$time_window = (int) apply_filters( 'incassoos_default_spending_limit_time_window', 4 * HOUR_IN_SECONDS, $user );
 	}
 
-	// Only continue when consumption limit applies
-	if ( $consumption_limit ) {
+	// Only continue when spending limit applies
+	if ( $spending_limit ) {
 		$current_total = 0;
 		$time_start    = strtotime( date_i18n( 'Y-m-d H:i:s' ) . " - {$time_window} seconds" );
 		$posts         = incassoos_get_orders( array(
@@ -1486,7 +1486,7 @@ function incassoos_is_consumption_within_limit_for_time_window( $products, $user
 		}
 
 		$products_total = incassoos_get_total_from_products( $products );
-		$within_limit   = ( $current_total + $products_total ) <= $consumption_limit;
+		$within_limit   = ( $current_total + $products_total ) <= $spending_limit;
 	}
 
 	return (bool) apply_filters( 'incassoos_is_consumption_within_limit_for_time_window', $within_limit, $products, $user, $time_window );

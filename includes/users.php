@@ -266,25 +266,25 @@ function incassoos_get_user_iban( $user = false, $by = 'id' ) {
 }
 
 /**
- * Return the user consumption limit
+ * Return the user spending limit
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_get_user_consumption_limit'
+ * @uses apply_filters() Calls 'incassoos_get_user_spending_limit'
  *
  * @param  mixed $user_id User object or property. Defaults to the current user ID.
  * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
- * @return float User consumption limit.
+ * @return float User spending limit.
  */
-function incassoos_get_user_consumption_limit( $user = false, $by = 'id' ) {
+function incassoos_get_user_spending_limit( $user = false, $by = 'id' ) {
 	$user  = incassoos_get_user( $user, $by );
 	$limit = 0;
 
 	if ( $user ) {
-		$limit = (float) $user->get( '_incassoos_consumption_limit' );
+		$limit = (float) $user->get( '_incassoos_spending_limit' );
 	}
 
-	return (float) apply_filters( 'incassoos_get_user_consumption_limit', $limit, $user );
+	return (float) apply_filters( 'incassoos_get_user_spending_limit', $limit, $user );
 }
 
 /**

@@ -37,9 +37,9 @@ function incassoos_admin_get_consumers_fields() {
 			'update_callback' => 'incassoos_admin_consumers_field_update_hidden_consumer'
 		),
 
-		// Consumption limit
-		'_incassoos_consumption_limit' => array(
-			'label' => __( 'Consumption limit', 'incassoos' ),
+		// Spending limit
+		'_incassoos_spending_limit' => array(
+			'label' => __( 'Spending limit', 'incassoos' ),
 			'type'  => 'price'
 		),
 	) );
