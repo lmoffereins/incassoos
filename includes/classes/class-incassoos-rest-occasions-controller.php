@@ -319,7 +319,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Post          $post     The deleted or trashed post.
+		 * @param WP_Post          $post     The closed post.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 */
@@ -354,7 +354,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 	}
 
 	/**
-	 * Close a single Occasion
+	 * Reopen a single Occasion
 	 *
 	 * @since 1.0.0
 	 *
@@ -405,7 +405,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Post          $post     The deleted or trashed post.
+		 * @param WP_Post          $post     The reopened post.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 */

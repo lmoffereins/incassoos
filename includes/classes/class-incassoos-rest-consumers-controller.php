@@ -108,34 +108,28 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' )
 				),
-				'customSort'      => array(
-					'description' => __( 'Custom sort value for ordering the object.', 'incassoos' ),
-					'type'        => 'integer',
-					'context'     => array( 'view' ),
-					'readonly'    => true
-				),
 				'group'           => array(
 					'description' => __( 'List group for the object.', 'incassoos' ),
 					'type'        => 'object',
-					'context'     => array( 'view' ),
+					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Unique identifier for the list group.', 'incassoos' ),
 							'type'        => 'integer',
-							'context'     => array( 'view' ),
+							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true
 						),
 						'name' => array(
 							'description' => __( 'Name of the list group.', 'incassoos' ),
 							'type'        => 'string',
-							'context'     => array( 'view' ),
+							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true
 						),
 						'order' => array(
 							'description' => __( 'Sort value for ordering the list group.', 'incassoos' ),
 							'type'        => 'integer',
-							'context'     => array( 'view' ),
+							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true
 						),
 					)
@@ -317,7 +311,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			$data['name'] = incassoos_get_user_display_name( $item );
 		}
 
-		if ( ! empty( $schema['properties']['avatar'] ) ) {
+		if ( ! empty( $schema['properties']['avatarUrl'] ) ) {
 			$size = $request->get_param( 'avatar_size' );
 			$data['avatarUrl'] = get_avatar_url( $item->ID, $size ? array( 'size' => $size ) : array() );
 		}
@@ -460,7 +454,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		 * @param WP_REST_Request $request  Request object.
 		 * @param bool            $creating True when creating a post, false when updating.
 		 */
-		do_action( 'incassoos_rest_update_consumer', $item, $request, false );
+		do_action( 'incassoos_rest_insert_consumer', $item, $request, false );
 
 		$item = incassoos_get_user( $item->ID );
 

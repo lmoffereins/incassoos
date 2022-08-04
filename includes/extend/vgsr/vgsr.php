@@ -73,19 +73,22 @@ class Incassoos_VGSR {
 		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
 
 		// Users
-		add_filter( 'incassoos_get_user_query_args',              array( $this, 'get_users_args'                   ), 10    );
-		add_filter( 'incassoos_get_user_list_group',              array( $this, 'get_user_list_group'              ), 10, 2 );
-		add_filter( 'incassoos_rest_consumers_collection_params', array( $this, 'rest_consumers_collection_params' ), 10    );
-		add_filter( 'incassoos_rest_prepare_consumer',            array( $this, 'rest_prepare_consumer'            ), 10, 3 );
-		add_filter( 'incassoos_get_user_match_options',           array( $this, 'user_match_options'               ), 10, 2 );
-		add_filter( 'incassoos_get_user_match_ids',               array( $this, 'user_match_ids'                   ), 10, 2 );
+		add_filter( 'incassoos_get_user_query_args',    array( $this, 'get_users_args'      ), 10    );
+		add_filter( 'incassoos_get_user_list_group',    array( $this, 'get_user_list_group' ), 10, 2 );
+		add_filter( 'incassoos_get_user_match_options', array( $this, 'user_match_options'  ), 10, 2 );
+		add_filter( 'incassoos_get_user_match_ids',     array( $this, 'user_match_ids'      ), 10, 2 );
 
 		// Email
 		add_filter( 'incassoos_get_custom_email_salutation', array( $this, 'custom_email_salutation' ), 10, 2 );
 
 		// Settings
-		add_filter( 'incassoos_admin_get_settings_fields', array( $this, 'settings_fields'       ), 10    );
-		add_filter( 'incassoos_rest_prepare_settings',     array( $this, 'rest_prepare_settings' ), 10, 2 );
+		add_filter( 'incassoos_admin_get_settings_fields', array( $this, 'settings_fields' ), 10    );
+
+		// REST
+		add_action( 'incassoos_rest_api_init',                    array( $this, 'rest_register_fields'             ), 10    );
+		add_filter( 'incassoos_rest_consumers_collection_params', array( $this, 'rest_consumers_collection_params' ), 10    );
+		add_filter( 'incassoos_rest_prepare_consumer',            array( $this, 'rest_prepare_consumer'            ), 10, 3 );
+		add_filter( 'incassoos_rest_prepare_settings',            array( $this, 'rest_prepare_settings'            ), 10, 2 );
 	}
 
 	/** Public methods **************************************************/
@@ -166,48 +169,6 @@ class Incassoos_VGSR {
 		}
 
 		return $group;
-	}
-
-	/**
-	 * Filters the collection parameters for a users request.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $params Collection parameters
-	 * @return array Collection parameters
-	 */
-	public function rest_consumers_collection_params( $params ) {
-
-		// Overwrite the default to order by relevance, then ancienniteit
-		$params['orderby']['enum'][]  = 'ancienniteit-relevance';
-		$params['orderby']['default'] = 'ancienniteit-relevance';
-
-		return $params;
-	}
-
-	/**
-	 * Filters the item data for a consumer response.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WP_REST_Response $response The response object.
-	 * @param WP_User          $item     User object.
-	 * @param WP_REST_Request  $request  Request object.
-	 * @return WP_REST_Response The response object
-	 */
-	public function rest_prepare_consumer( $response, $item, $request ) {
-
-		// Set ancienniteit as custom sort value
-		if ( isset( $response->data['customSort'] ) ) {
-			$response->data['customSort'] = vgsr_get_ancienniteit( $item->ID );
-		}
-
-		// Reverse jaargroep order for App
-		if ( $response->data['group']['order'] >= 1950 ) {
-			$response->data['group']['order'] = 9999 - $response->data['group']['order'];
-		}
-
-		return $response;
 	}
 
 	/**
@@ -300,6 +261,73 @@ class Incassoos_VGSR {
 		return $fields;
 	}
 
+	/** REST ************************************************************/
+
+	/**
+	 * Filters the collection parameters for a users request.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $params Collection parameters
+	 * @return array Collection parameters
+	 */
+	public function rest_register_fields() {
+
+		// Consumers: Anciënniteit
+		register_rest_field(
+			'incassoos-consumers',
+			'ancienniteit',
+			array(
+				'get_callback' => function( $prepared ) {
+					return vgsr_get_ancienniteit( $prepared['id'] );
+				},
+				'schema'       => array(
+					'description' => __( 'Anciënniteit sorting value for the object.', 'incassoos' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true
+				)
+			)
+		);
+	}
+
+	/**
+	 * Filters the collection parameters for a users request.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $params Collection parameters
+	 * @return array Collection parameters
+	 */
+	public function rest_consumers_collection_params( $params ) {
+
+		// Overwrite the default to order by relevance, then ancienniteit
+		$params['orderby']['enum'][]  = 'ancienniteit-relevance';
+		$params['orderby']['default'] = 'ancienniteit-relevance';
+
+		return $params;
+	}
+
+	/**
+	 * Filters the item data for a consumer response.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Response $response The response object.
+	 * @param WP_User          $item     User object.
+	 * @param WP_REST_Request  $request  Request object.
+	 * @return WP_REST_Response The response object
+	 */
+	public function rest_prepare_consumer( $response, $item, $request ) {
+
+		// Reverse jaargroep order for App
+		if ( $response->data['group']['order'] >= 1950 ) {
+			$response->data['group']['order'] = 9999 - $response->data['group']['order'];
+		}
+
+		return $response;
+	}
+
 	/**
 	 * Filters the data for the settings response.
 	 *
@@ -312,10 +340,13 @@ class Incassoos_VGSR {
 	public function rest_prepare_settings( $response, $request ) {
 
 		// Consumer settings
-		if ( isset( $response->data['consumers'] ) ) {
+		if ( isset( $response->data['consumer'] ) ) {
 
-			// Custom value sorting
-			$response->data['consumers']['customSortName'] = __( 'Anciënniteit', 'incassoos' );
+			// Declare custom ordering options
+			$response->data['consumer']['orderByOptions'] = array(
+				'ancienniteit' => __( 'Anciënniteit', 'incassoos' ),
+				'name'         => __( 'Name',         'incassoos' )
+			);
 		}
 
 		return $response;

@@ -105,19 +105,19 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
-				'occasions' => array(
+				'occasion' => array(
 					'description' => __( 'Settings concerning occasions.', 'incassoos' ),
 					'type'        => 'object',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
-				'consumers' => array(
+				'consumer' => array(
 					'description' => __( 'Settings concerning consumers.', 'incassoos' ),
 					'type'        => 'object',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
-				'products' => array(
+				'product' => array(
 					'description' => __( 'Settings concerning products.', 'incassoos' ),
 					'type'        => 'object',
 					'context'     => array( 'view' ),
@@ -183,8 +183,8 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 			);
 		}
 
-		if ( ! empty( $schema['properties']['occasions'] ) ) {
-			$data['occasions'] = array(
+		if ( ! empty( $schema['properties']['occasion'] ) ) {
+			$data['occasion'] = array(
 				'occasionType' => array(
 					'taxonomyId'   => incassoos_get_occasion_type_tax_id(),
 					'defaultValue' => incassoos_get_default_occasion_type(),
@@ -193,15 +193,19 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 			);
 		}
 
-		if ( ! empty( $schema['properties']['consumers'] ) ) {
-			$data['consumers'] = array(
-				'customSortName' => false
+		if ( ! empty( $schema['properties']['consumer'] ) ) {
+			$data['consumer'] = array(
+				'defaultAvatarUrl' => 'https://www.gravatar.com/avatar/?d=mm&f=y'
 			);
 		}
 
-		if ( ! empty( $schema['properties']['products'] ) ) {
-			$data['products'] = array(
-				'customSortName' => _x( 'Menu Order', 'Products Sort By option', 'incassoos' )
+		if ( ! empty( $schema['properties']['product'] ) ) {
+			$data['product'] = array(
+				'productCategory' => array(
+					'taxonomyId'   => incassoos_get_product_cat_tax_id(),
+					'defaultValue' => incassoos_get_default_product_category(),
+					'items'        => incassoos_get_product_cats( array( 'fields' => 'id=>name' ) )
+				)
 			);
 		}
 
