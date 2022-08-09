@@ -126,8 +126,8 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 				'type'        => 'number',
 				'context'     => array( 'view', 'edit' )
 			),
-			'customSort'      => array(
-				'description' => __( 'Custom sort value for ordering of the product.', 'incassoos' ),
+			'menu_order'      => array(
+				'description' => __( 'The order of the object in relation to other object of its type.', 'incassoos' ),
 				'type'        => 'integer',
 				'context'     => array( 'view', 'edit' )
 			)
@@ -176,7 +176,7 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 		global $post;
 
 		$object['price']      = incassoos_get_product_price( $post );
-		$object['customSort'] = incassoos_get_product_menu_order( $post );
+		$object['menu_order'] = incassoos_get_product_menu_order( $post );
 
 		/**
 		 * Support additional fields defined for the post type
