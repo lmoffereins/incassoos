@@ -111,6 +111,12 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
+				'order' => array(
+					'description' => __( 'Settings concerning orders.', 'incassoos' ),
+					'type'        => 'object',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
 				'consumer' => array(
 					'description' => __( 'Settings concerning consumers.', 'incassoos' ),
 					'type'        => 'object',
@@ -190,6 +196,12 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 					'defaultValue' => incassoos_get_default_occasion_type(),
 					'items'        => incassoos_get_occasion_types( array( 'fields' => 'id=>name' ) )
 				)
+			);
+		}
+
+		if ( ! empty( $schema['properties']['order'] ) ) {
+			$data['order'] = array(
+				'orderTimeLock' => incassoos_get_order_time_lock()
 			);
 		}
 
