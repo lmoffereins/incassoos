@@ -588,7 +588,9 @@ function incassoos_get_order_created( $post = 0, $date_format = '' ) {
 }
 
 /**
- * Return whether the Order is closed because of the time lock
+ * Return whether the Order is closed
+ *
+ * An Order can be locked because of the time lock or when its parent Occasion is closed.
  *
  * @since 1.0.0
  *
@@ -600,9 +602,9 @@ function incassoos_get_order_created( $post = 0, $date_format = '' ) {
 function incassoos_is_order_closed( $post = 0 ) {
 	$post      = incassoos_get_order( $post );
 	$time_lock = incassoos_get_order_time_lock();
-	$closed    = true;
+	$closed    = incassoos_is_order_occasion_closed( $post );
 
-	if ( $post && $time_lock ) {
+	if ( ! $closed && $post && $time_lock ) {
 
 		// Handle undefined gmt dates
 		if ( '0000-00-00 00:00:00' === $post->post_date_gmt ) {
@@ -942,6 +944,51 @@ function incassoos_get_order_occasion_link( $post = 0 ) {
 	$link     = $occasion ? incassoos_get_occasion_link( $occasion ) : '';
 
 	return $link;
+}
+
+/**
+ * Return whether the Order's Occasion is closed
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Is the Order's Occasion closed?
+ */
+function incassoos_is_order_occasion_closed( $post = 0 ) {
+	$occasion = incassoos_get_order_occasion( $post );
+	$closed   = $occasion ? incassoos_is_occasion_closed( $occasion ) : '';
+
+	return $closed;
+}
+
+/**
+ * Return whether the Order's Occasion is collected
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Is the Order's Occasion collected?
+ */
+function incassoos_is_order_occasion_collected( $post = 0 ) {
+	$occasion  = incassoos_get_order_occasion( $post );
+	$collected = $occasion ? incassoos_is_occasion_collected( $occasion ) : '';
+
+	return $collected;
+}
+
+/**
+ * Return whether the Order's Occasion is locked
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Is the Order's Occasion locked?
+ */
+function incassoos_is_order_occasion_locked( $post = 0 ) {
+	$occasion = incassoos_get_order_occasion( $post );
+	$locked   = $occasion ? incassoos_is_occasion_locked( $occasion ) : '';
+
+	return $locked;
 }
 
 /** Collection ****************************************************************/
