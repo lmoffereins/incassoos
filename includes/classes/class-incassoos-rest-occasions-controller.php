@@ -71,6 +71,11 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 				'permission_callback' => array( $this, 'update_item_permissions_check' ),
 				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 			),
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => array( $this, 'delete_item' ),
+				'permission_callback' => array( $this, 'delete_item_permissions_check' )
+			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
 
