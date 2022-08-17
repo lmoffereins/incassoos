@@ -223,7 +223,7 @@ class Incassoos_REST_Orders_Controller extends WP_REST_Posts_Controller {
 
 			if ( ! $result ) {
 				return new WP_Error(
-					'incassoos_rest_invalid_consumer_field',
+					'incassoos_rest_invalid_order_consumer_field',
 					__( 'Invalid consumer ID or consumer type.', 'incassoos' ),
 					array( 'status' => 400 )
 				);
@@ -236,7 +236,7 @@ class Incassoos_REST_Orders_Controller extends WP_REST_Posts_Controller {
 
 			if ( ! $result ) {
 				return new WP_Error(
-					'incassoos_rest_invalid_products_field',
+					'incassoos_rest_invalid_order_products_field',
 					__( 'Could not update the products of the order.', 'incassoos' ),
 					array( 'status' => 400 )
 				);

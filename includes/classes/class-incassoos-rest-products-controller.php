@@ -203,7 +203,7 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 
 			if ( ! $result ) {
 				return new WP_Error(
-					'incassoos_rest_invalid_products_field',
+					'incassoos_rest_invalid_product_price_field',
 					__( 'Could not update the price of the product.', 'incassoos' ),
 					array( 'status' => 400 )
 				);
