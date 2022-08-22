@@ -1,0 +1,4 @@
+<div class="login-pin-verify pin-login" :class="{ 'is-loading': step.isLoading }">
+	<input-pin-entries :value="step.pin"></input-pin-entries>
+	<input-numpad :disabled="disabled" v-model="step.pin"></input-numpad>
+</div>

@@ -1,0 +1,5 @@
+<div class="input-toggle" :class="{ 'default-toggle': ! customStyle }">
+	<button type="button" @click="input" class="toggle-option" :class="{ 'toggle-on': value, 'toggle-off': ! value }">
+		<span class="toggle-label" v-l10n="value ? 'Common.On' : 'Common.Off'"></span>
+	</button>
+</div>

@@ -1,0 +1,6 @@
+<div class="login-new-login">
+	<form @keyup.enter="next()" novalidate>
+		<input :disabled="disabled" v-focus class="userid" type="text" v-model="step.userid" spellcheck="false" />
+		<input :disabled="disabled" class="password" type="password" v-model="step.password" />
+	</form>
+</div>

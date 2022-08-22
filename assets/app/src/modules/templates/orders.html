@@ -1,0 +1,33 @@
+<div class="orders item-list-wrapper">
+	<div class="item-list-header">
+		<h2 class="section-topic" v-l10n.Order.ListHeading></h2>
+	</div>
+	<div class="item-list-body">
+		<ul class="item-list" v-focus-group="{ 'selector': 'button.select-item', forceUpdate: focusGroupKey }">
+			<li v-if="isOccasionClosed" class="item no-items">
+				<span class="occasion-closed" v-l10n.Order.Error.OccasionClosed></span>
+			</li>
+
+			<li class="item" v-for="o in orders" :key="o.id" :class="{ 'is-selected': isSelected(o.id) }">
+				<button
+					type="button"
+					@click="select(o.id)"
+					class="select-item"
+					v-l10n-title.Order.ConsumerConsumedAtDate="consumerConsumedAtDateArgs(o)">
+					<span class="item-title">{{o.consumer.name}}</span>
+					<div class="item-misc">
+						<span class="item-date">{{o.date | recent}}</span>
+					</div>
+				</button>
+			</li>
+
+			<li v-if="noOccasion" class="item no-items">
+				<span class="no-occasion-selected" v-l10n.Occasion.Error.NoOccasion></span>
+			</li>
+
+			<li v-if="noOrders" class="item no-items">
+				<span class="no-items-found" v-l10n.Occasion.NoOrders></span>
+			</li>
+		</ul>
+	</div>
+</div>

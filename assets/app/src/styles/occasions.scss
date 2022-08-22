@@ -1,0 +1,108 @@
+/* Occasions */
+
+#occasions {
+	width: min( calc( 100vw - 30px ), var(--panel-max-width) );
+
+	.occasion-selection {
+		display: flex;
+		flex-direction: column;
+		grid-gap: var(--content-row-gap);
+
+		.mode-selection {
+			display: flex;
+			flex-direction: row;
+
+			.mode-option {
+				flex: 1;
+				padding: 10px 15px;
+				border-radius: 0px;
+				@include text-overflow; 
+
+				// Button styles for <span>
+				font-size: .9rem;
+				text-align: center;
+
+				&.is-selected {
+					color: var(--text-default);
+					background: transparent;
+				}
+			}
+		}
+
+		.get-occasion {
+			.is-selected,
+			.is-selected:focus,
+			.is-selected:hover {
+				.select-item {
+					color: var(--color-primary-contrast);
+					background: var(--color-primary);
+				}
+			}
+
+			.select-item {
+				position: relative;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				grid-gap: 12px;
+
+				.item-name {
+					flex: 1;
+					min-width: 0;
+					@include text-overflow;
+				}
+			}
+		}
+	}
+
+	&.is-loading {
+		.mode-selection {
+			display: none;
+		}
+
+		.load-occasion {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 15px;
+		}
+	}
+
+	.close-action,
+	.reopen-action {
+		margin-right: auto;
+	}
+}
+
+#occasion {
+	.occasion {
+		display: flex;
+		flex-direction: column;
+		padding: 15px;
+
+		.occasion-selector {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			grid-gap: 5px;
+			padding: 25px 20px;
+
+			.occasion-title {
+				display: flex;
+				flex-direction: row;
+				max-width: 100%;
+				grid-gap: 5px;
+
+				.item-title {
+					@include text-overflow;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 400px) {
+	#occasions {
+		width: auto;
+	}
+}

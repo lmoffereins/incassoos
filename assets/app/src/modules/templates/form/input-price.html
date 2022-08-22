@@ -1,0 +1,12 @@
+<div class="input-price">
+	<input
+		type="number"
+		ref="price"
+		step="0.01"
+		:value="value"
+		@input="input"
+		@keydown.up.ctrl.prevent="plus010"
+		@keydown.up.shift.prevent="plus100"
+		@keydown.down.ctrl.prevent="minus010"
+		@keydown.down.shift.prevent="minus100" />
+</div>

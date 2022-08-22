@@ -1,0 +1,143 @@
+/* Panels */
+
+#panels {
+	position: absolute;
+	top: -9999px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 15px;
+	background: var(--background-default);
+	overflow: hidden scroll;
+	overflow: hidden overlay; // 'overlay' only in Webkit, apply to all scrollbars?
+	opacity: 0;
+	z-index: 20;
+	transition: opacity $transition-quick;
+	@include scrollbar;
+
+	&.active-panel {
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		opacity: 1;
+	}
+
+	&.active-panel.with-context {
+		background: var(--background-overlay);
+	}
+
+	.panel-wrapper {
+
+		// Set background context. NOTE: gives issue with darkmode switch!
+		// --background-default: var(--background-primary);
+
+		display: flex;
+		flex-direction: column;
+		max-width: min( 100%, var(--panel-max-width) );
+		margin: auto;
+		background: var(--background-primary);
+		border-radius: 4px;
+		opacity: 0;
+		transform: translateY(15vh);
+		transition:
+			var(--transition-background),
+			opacity $transition-quick,
+			transform $transition-quick
+		;
+
+		// Restore color in response to scrollbar
+		color: var(--text-default);
+
+		&.is-mounted {
+			transform: translateY(0px);
+			opacity: 1;
+		}
+
+		.single-panel {
+			display: flex;
+			flex-direction: column;
+			grid-gap: var(--content-row-gap);
+			min-height: 100%; // Use available space on small screens
+			padding: 20px 25px;
+
+			.panel-header {
+				display: flex;
+				flex-direction: row;
+				position: relative;
+				grid-gap: 25px;
+
+				.panel-header-image {
+					position: absolute;
+					top: -82px;
+					left: 50%;
+					padding: 4px;
+					background: var(--background-primary);
+					border-radius: 50%;
+					transform: translateX(-50%);
+					transition: var(--transition-background);
+
+					.avatar-image {
+						width: 80px;
+						height: 80px;
+					}
+				}
+
+				// May be used in case of .panel-subtitle
+				.panel-title-wrapper {
+					flex: 1;
+
+					.panel-subtitle {
+						font-size: .9rem;
+						font-weight: 200;
+					}
+				}
+
+				.panel-title {
+					flex: 1;
+					font-size: 1.3rem;
+				}
+
+				.panel-close {
+					margin-right: -5px;
+				}
+			}
+
+			.panel-content {
+				flex: 1;
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				grid-gap: var(--content-row-gap);
+			}
+
+			.panel-footer {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-end;
+				grid-gap: 5px;
+			}
+		}
+
+		.select-item:focus,
+		.select-item:hover {
+			background: var(--background-secondary);
+		}
+	}
+}
+
+@media screen and (max-width: 400px) {
+	#panels {
+		padding: 0px;
+
+		.panel-wrapper {
+			width: 100%;
+			min-height: 100%;
+			margin: 0px;
+
+			.single-panel .panel-header .panel-header-image {
+				display: none;
+			}
+		}
+	}
+}

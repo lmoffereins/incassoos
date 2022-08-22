@@ -1,0 +1,261 @@
+/* Sections */
+
+#sections {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+	width: 100%;
+	grid-gap: 15px;
+
+	.set-active-section {
+		display: none;
+	}
+
+	#consumers {
+		order: 1;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: max(250px, 20%);
+	}
+
+	#products {
+		order: 2;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		flex: 1;
+	}
+
+	#order-panel {
+		order: 3;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: max(300px, 20%);
+
+		#occasion {
+			order: 1;
+		}
+
+		#orders {
+			order: 2;
+			flex: 1;
+			overflow-y: hidden; // For showing receipt
+		}
+
+		#receipt {
+			order: 3;
+		}
+	}
+}
+
+// Double column
+@media screen and (min-width: 580px) and (max-width: 850px) {
+	#sections {
+		position: relative;
+
+		#consumers.is-not-active,
+		#products.is-not-active {
+			position: absolute;
+			top: 0px;
+			// Window - ( #order-panel + grid gap )
+			width: calc( (100% - 315px) / 2 );
+			height: 46px;
+			z-index: 10;
+
+			.item-list-header {
+				display: flex;
+				flex-direction: row;
+				padding: 0px;
+
+				.set-active-section {
+					display: block;
+					flex: 1;
+					padding: 15px;
+					border-radius: 0px;
+					@include text-overflow;
+
+					// Mimic .section-topic font style
+					font-size: .75rem;
+					font-weight: 200;
+					text-transform: uppercase;
+				}
+			}
+
+			.set-active-section ~ *,
+			.item-list-body {
+				display: none;
+			}
+		}
+
+		#consumers.is-not-active {
+			left: 0px;
+		}
+
+		#products.is-not-active {
+			// #order-panel + grid gap
+			right: 315px;
+		}
+
+		#consumers.is-active,
+		#products.is-active {
+			.item-list-header {
+				position: relative;
+				// .set-active-section + padding
+				// 46 + 15
+				padding-top: 61px;
+
+				.set-active-section {
+					display: none;
+				}
+
+				.section-topic {
+					position: absolute;
+					top: 0px;
+					width: 50%;
+					padding: 15px;
+					text-align: center;
+					@include text-overflow;
+				}
+			}
+		}
+
+		#consumers.is-active {
+			flex: 1;
+
+			.section-topic {
+				left: 25%;
+				transform: translateX(-50%);
+			}
+		}
+
+		#products.is-active {
+			.section-topic {
+				right: 25%;
+				transform: translateX(50%);
+			}
+		}
+	}
+}
+
+// Single column
+@media screen and (max-width: 580px) {
+	#sections {
+		#consumers.is-not-active,
+		#products.is-not-active,
+		#order-panel.is-not-active {
+			position: absolute;
+			top: 0px;
+			width: calc( 100% / 3 );
+			height: 46px;
+			z-index: 10;
+
+			.item-list-header {
+				display: flex;
+				flex-direction: row;
+				padding: 0px;
+			}
+
+			// #order-panel has no own .item-list-header
+			.set-active-section {
+				display: block;
+				flex: 1;
+				padding: 15px;
+				border-radius: 0px;
+				@include text-overflow;
+
+				// Mimic .section-topic font style
+				font-size: .75rem;
+				font-weight: 200;
+				text-transform: uppercase;
+			}
+
+			.set-active-section ~ *,
+			.item-list-body {
+				display: none;
+			}
+		}
+
+		#consumers.is-active,
+		#products.is-active {
+			.item-list-header {
+				position: relative;
+				// .set-active-section + padding
+				// 46 + 15
+				padding-top: 61px;
+			}
+		}
+
+		#consumers.is-active,
+		#products.is-active,
+		#order-panel.is-active {
+			.set-active-section {
+				display: none;
+			}
+
+			.section-topic {
+				position: absolute;
+				top: 0px;
+				width: calc( 100% / 3 );
+				padding: 15px;
+				text-align: center;
+				@include text-overflow;
+			}
+		}
+
+		#order-panel.is-active {
+			padding-top: 46px;
+
+			#orders .item-list-header {
+				padding: 0px;
+			}
+		}
+
+		#consumers.is-not-active {
+			left: 0px;
+		}
+
+		#products.is-not-active {
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+		#order-panel.is-not-active {
+			right: 0px;
+		}
+
+		#consumers.is-active {
+			flex: 1;
+
+			.section-topic {
+				left: 0px;
+			}
+		}
+
+		#products.is-active {
+			.section-topic {
+				left: 50%;
+				transform: translateX(-50%);
+			}
+		}
+
+		#order-panel.is-active {
+			flex: 1;
+
+			.section-topic {
+				right: 0px;
+			}
+
+			#receipt {
+				width: calc( 100% - 30px );
+				transform: translateX(15px);
+
+				.receipt-total {
+					left: -28px;
+				}
+			}
+		}
+	}
+}

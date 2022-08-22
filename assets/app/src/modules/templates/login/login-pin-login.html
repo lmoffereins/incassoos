@@ -1,0 +1,9 @@
+<div class="login-pin-login pin-login" :class="{ 'is-loading': step.isLoading }">
+	<!-- <input-radio-buttons class="login-users" :items="step.users" v-model="step.userid"></input-radio-buttons> -->
+	<input-pin-entries :value="step.pin"></input-pin-entries>
+	<input-numpad :disabled="disabled" v-model="step.pin">
+		<!-- <template v-slot:left v-if="step.canNewUser">
+			<button type="button" @click="toggle" class="numpad-option" v-l10n.Login.NewUser></button>
+		</template> -->
+	</input-numpad>
+</div>

@@ -1,0 +1,17 @@
+<div :id="listId" class="feedback" :class="{ 'is-active': feedback.length, 'show-all': showAll }">
+	<span v-if="feedback.length && title" class="feedback-title" v-l10n="title"></span>
+
+	<transition-group tag="ul" name="feedback-list" class="feedback-list">
+		<li class="item" v-for="f in feedback" :class="{ 'is-error dashicons-before dashicons-warning': f.isError, 'is-autoremove': f.autoRemove }" :key="f.$id">
+			<span class="feedback-message" v-l10n="[f.message, ...f.data.args]"></span>
+			<button
+				type="button"
+				v-if="removable"
+				@click="remove(f.$id)"
+				class="feedback-action feedback-close dashicons-before dashicons-no-alt"
+				v-l10n-title.Common.Remove>
+				<span class="screen-reader-text" v-l10n.Common.Remove></span>
+			</button>
+		</li>
+	</transition-group>
+</div>

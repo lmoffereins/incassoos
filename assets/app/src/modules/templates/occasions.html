@@ -1,0 +1,118 @@
+<div id="occasions" :class="{ 'is-loading': loadingMode }">
+	<div class="panel-header">
+		<h2 class="panel-title" v-l10n.Occasion.ListHeading></h2>
+		<close-button @click="close" class="panel-close" v-focus></close-button>
+	</div>
+
+	<div class="panel-content">
+		<div class="occasion-selection">
+			<div class="mode-selection">
+				<button
+					v-if="active && ! (activeMode || editMode)"
+					class="mode-option"
+					@click="mode = 'active'"
+					:disabled="loadingMode"
+					v-l10n-title.Occasion.ActiveOccasion
+					v-l10n.Occasion.ActiveOccasion></button>
+				<span
+					v-if="activeMode || editMode"
+					class="mode-option is-selected"
+					v-l10n-title.Occasion.ActiveOccasion
+					v-l10n.Occasion.ActiveOccasion></span>
+				<button
+					v-if="!getMode"
+					class="mode-option"
+					@click="mode = 'get'"
+					:disabled="editMode || loadingMode"
+					v-l10n-title.Occasion.SelectExisting
+					v-l10n.Occasion.SelectExisting></button>
+				<span
+					v-if="getMode"
+					class="mode-option is-selected"
+					v-l10n-title.Occasion.SelectExisting
+					v-l10n.Occasion.SelectExisting></span>
+				<button
+					v-if="!createMode"
+					class="mode-option"
+					@click="mode = 'create'"
+					:disabled="editMode || loadingMode"
+					v-l10n-title.Occasion.CreateNew
+					v-l10n.Occasion.CreateNew></button>
+				<span
+					v-if="createMode"
+					class="mode-option is-selected"
+					v-l10n-title.Occasion.CreateNew
+					v-l10n.Occasion.CreateNew></span>
+			</div>
+
+			<div v-if="getMode" class="get-occasion">
+				<ul class="item-list" v-focus-group="'button.select-item'">
+					<li class="item" v-for="o in occasions" :key="o.id" :class="{ 'is-selected': isSelected(o.id), 'is-closed': o.closed }">
+						<button type="button" class="select-item" @click="get(o)" v-l10n-title.Occasion.SelectItem="o.title">
+							<span class="item-name">{{o.title}}</span>
+							<i v-if="o.closed" class="dashicons dashicons-lock" v-l10n-title.Occasion.OccasionClosed></i>
+						</button>
+					</li>
+				</ul>
+			</div>
+
+			<div v-if="createMode || activeMode || editMode" class="item-details create-occasion">
+				<form class="detail-list edit-occasion" @submit.prevent novalidate>
+					<div class="detail-item occasion-title">
+						<span class="detail-label" v-l10n.Occasion.TitleLabel></span>
+						<span v-if="activeMode" class="detail-value">{{title}}</span>
+						<input v-if="!activeMode" type="text" :placeholder="'Occasion.TitlePlaceholder' | translate" class="detail-value" v-model="title" />
+					</div>
+
+					<div class="detail-item occasion-type">
+						<span class="detail-label" v-l10n.Occasion.OccasionTypeLabel></span>
+						<span v-if="activeMode" class="detail-value">{{occasionTypeLabel}}</span>
+						<input-radio-buttons v-if="!activeMode" :items="availableOccasionTypes" class="detail-value" v-model="occasionType"></input-radio-buttons>
+					</div>
+
+					<div class="detail-item occasion-date">
+						<span class="detail-label" v-l10n.Occasion.OccasionDateLabel></span>
+						<span v-if="activeMode" class="detail-value">{{occasionDate | date}}</span>
+						<input-datepicker v-if="!activeMode" class="detail-value" v-model="occasionDate" :title="'Occasion.OccasionDatepickerLabel'"></input-datepicker>
+					</div>
+				</form>
+
+				<div v-if="activeMode || editMode" class="detail-list occasion-statistics">
+					<div class="detail-item occasion-closed" v-if="occasionClosedDate">
+						<span class="detail-label" v-l10n.Occasion.OccasionClosedLabel></span>
+						<span class="detail-value">{{occasionClosedDate | datetime }}</span>
+					</div>
+
+					<div class="detail-item occasion-order-count">
+						<span class="detail-label" v-l10n.Occasion.OrderCount></span>
+						<span class="detail-value">{{orderCount}}</span>
+					</div>
+
+					<div class="detail-item occasion-product-quantity">
+						<span class="detail-label" v-l10n.Occasion.ProductQuantity></span>
+						<span class="detail-value">{{totalProductQuantity}}</span>
+					</div>
+
+					<div class="detail-item occasion-consumed-value">
+						<span class="detail-label" v-l10n.Occasion.ConsumedValue></span>
+						<span class="detail-value">{{totalConsumedValue | money}}</span>
+					</div>
+				</div>
+			</div>
+
+			<div v-if="loadingMode" class="load-occasion">
+				<span class="loading-title" v-l10n="loadingTitle"></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel-footer" v-if-not-empty>
+		<button type="button" v-if="editMode && deletable" @click="maybeDelete" class="delete-action" v-l10n.Common.Delete></button>
+		<button type="button" v-if="activeMode && editable" @click="edit" class="edit-action" v-l10n.Common.Edit></button>
+		<button type="button" v-if="editMode && closable" @click="closeOccasion" class="close-action" v-l10n.Occasion.Close></button>
+		<button type="button" v-if="editMode && reopenable" @click="reopenOccasion" class="reopen-action" v-l10n.Occasion.Reopen></button>
+		<button type="button" v-if="editMode" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
+		<button type="button" v-if="editMode" :disabled="!submittable" @click="update" class="update-action" v-l10n.Common.Save></button>
+		<button type="button" v-if="createMode" :disabled="!creatable" @click="get" class="get-action" v-l10n.Occasion.Create></button>
+	</div>
+</div>

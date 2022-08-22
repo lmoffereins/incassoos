@@ -1,0 +1,155 @@
+/* Generic */
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+
+	:focus {
+		@include focus-outline;
+	}
+}
+
+html {
+	font-size: 16px;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 0px;
+}
+
+.screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+button,
+input,
+select {
+	padding: 5px 9px;
+	font-family: #{$font-family-default};
+	font-size: .9rem;
+	background: var(--button-background);
+	border: 0px;
+	border-radius: 2px;
+	white-space: nowrap;
+	cursor: pointer;
+
+	&:focus,
+	&:hover,
+	&:active {
+		color: var(--text-default);
+		background: var(--button-background-hover);
+	}
+
+	&.icon-button {
+		padding: 5px;
+	}
+
+	&[disabled],
+	&[disabled]:focus,
+	&[disabled]:hover,
+	&[disabled]:active {
+		color: var(--button-color-disabled);
+		background: var(--button-background-disabled);
+	}
+}
+
+button.dashicons-before {
+	padding: 3px;
+	margin: -3px;
+	background: none;
+	border: 0px;
+	vertical-align: top;
+	color: inherit;
+	cursor: pointer;
+
+	&:focus,
+	&:hover,
+	&:active {
+		color: var(--color-primary-contrast);
+		background: var(--color-primary);
+	}
+
+	&:before {
+		font-size: 24px;
+		width: 24px;
+		height: 24px;
+	}
+}
+
+.dashicons,
+.dashicons-before:before {
+	margin-bottom: -1px;
+	transition: none;
+}
+
+.section-topic,
+.topic {
+	font-size: .75rem;
+	font-weight: 200;
+	text-transform: uppercase;
+}
+
+.avatar-image {
+	display: block;
+	position: relative;
+	width: 24px;
+	height: 24px;
+	background: var(--avatar-image-background);
+	border-radius: 50%;
+
+	// For hiding alt text
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+
+
+	&:before {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0px;
+		left: 50%;
+		width: calc( 100% / 24 * 11.2 );
+		height: calc( 100% / 24 * 11.2 );
+		background: var(--avatar-image-foreground);
+		border-radius: 50%;
+		transform: translate(-50%, calc( 100% / 24 * 8.5 ));
+	}
+
+	&:after {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 0px;
+		left: 50%;
+		width: 100%;
+		height: 240%;
+		background: var(--avatar-image-foreground);
+		border-radius: 50%;
+		transform: translate(-50%, 39.7%) scale(1.3);
+	}
+}
+
+/* Debug */
+
+[data-fsm-state]:before {
+	content: attr(data-fsm-state);
+	display: var(--debug-display);
+	padding: 2px 5px;
+	color: var(--debug-color);
+	background: rgba(0, 0, 0, .1);
+	border-radius: 2px;
+	pointer-events: none;
+}

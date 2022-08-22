@@ -1,0 +1,9 @@
+<div id="panels" :class="{ 'active-panel': isActive, 'with-context': withContext }">
+	<div v-if="panel" class="panel-wrapper" ref="wrapper">
+		<component
+			:is="panel.component"
+			class="single-panel"
+			@hook:mounted="onPanelMounted"
+		/>
+	</div>
+</div>

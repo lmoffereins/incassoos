@@ -1,0 +1,31 @@
+<main id="sections">
+	<section
+		id="consumers"
+		:class="{ 'is-active': isConsumersActive, 'is-not-active': ! isConsumersActive }">
+		<consumers @activeSection="setConsumersActive"></consumers>
+	</section>
+
+	<section
+		id="products"
+		:class="{ 'is-active': isProductsActive, 'is-not-active': ! isProductsActive }">
+		<products @activeSection="setProductsActive"></products>
+	</section>
+
+	<section
+		id="order-panel"
+		:class="{ 'is-active': isOrderPanelActive, 'is-not-active': ! isOrderPanelActive }">
+		<button type="button" @click="setOrderPanelActive" class="set-active-section" v-l10n.Order.ListHeading></button>
+
+		<div id="occasion">
+			<occasion></occasion>
+		</div>
+
+		<div id="orders">
+			<orders></orders>
+		</div>
+
+		<div id="receipt">
+			<receipt></receipt>
+		</div>
+	</section>
+</main>

@@ -1,0 +1,117 @@
+/* Main */
+
+@import "./variables";
+@import "./generic";
+
+#incassoos-app {
+	font-family: #{$font-family-default};
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+	color: var(--text-default);
+	background: var(--background-default);
+	user-select: none;
+	opacity: 0;
+	transition:
+		opacity .5s ease-in,
+		var(--transition-background)
+	;
+
+		// Colors
+		--text-default:               #{$text-color};
+		--color-primary:              #{$color-primary};
+		--color-primary-contrast:     #{$color-primary-contrast};
+		--color-secondary:            #{$color-secondary};
+		--color-secondary-contrast:   #{$color-secondary-contrast};
+		--background-default:         #{$body-background};
+		--background-primary:         #{$panel-background};
+		--background-secondary:       #{$panel-background-alt};
+		--background-overlay:         #{$body-background-overlay};
+		--background-focus:           #{$body-background-overlay-dark};
+		--list-border-color:          #{$border-color};
+		--scrollbar-color:            rgba(0, 0, 0, .1);
+
+		// Sizes
+		--panel-max-width:            450px;
+		--content-row-gap:            1.6rem;
+
+		// Button
+		--button-color:               #{$button-color};
+		--button-background:          #{$button-background};
+		--button-color-hover:         #{$button-hover-contrast};
+		--button-background-hover:    #{$button-hover};
+		--button-color-disabled:      #{$button-color-disabled};
+		--button-background-disabled: #{$button-disabled};
+
+		// Feedback
+		--feedback-color:             #eee;
+		--feedback-background:        rgba(40, 40, 40, .9);
+		--feedback-border-color:      rgb(215, 215, 215);
+
+		// Debug
+		--debug-color:                rgba(0, 0, 0, .5);
+		--debug-display:              none;
+
+		// Avatar
+		--avatar-image-foreground:    #fff;
+		--avatar-image-background:    #ccc;
+
+		// Transitions
+		--transition-background:      background #{$transition-quick};
+		--transition-scrollbar:       color 1s ease-out;
+
+	&.darkmode {
+		--text-default:               #{$text-color-dark};
+		--color-primary:              #{$color-primary-dark};
+		--color-primary-contrast:     #{$color-primary-contrast-dark};
+		--color-secondary:            #{$color-secondary-dark};
+		--color-secondary-contrast:   #{$color-secondary-contrast-dark};
+		--background-default:         #{$body-background-dark};
+		--background-primary:         #{$panel-background-dark};
+		--background-secondary:       #{$panel-background-alt-dark};
+		--background-overlay:         #{$body-background-overlay-dark};
+		--list-border-color:          #{$border-color-dark};
+		--scrollbar-color:            rgba(255, 255, 255, .1);
+		--debug-color:                rgba(255, 255, 255, .5);
+
+		// Button
+		--button-color:               #{$button-color-dark};
+		--button-background:          #{$button-background-dark};
+		--button-color-hover:         #{$button-hover-contrast-dark};
+		--button-background-hover:    #{$button-hover-dark};
+		--button-color-disabled:      #{$button-color-disabled-dark};
+		--button-background-disabled: #{$button-disabled-dark};
+
+		// Feedback
+		--feedback-color:             #111;
+		--feedback-background:        rgba(215, 215, 215, .9);
+		--feedback-border-color:      rgb(40, 40, 40);
+
+		// Avatar
+		// --avatar-image-foreground:    var(--button-background);
+		// --avatar-image-background:    var(--background-secondary);
+	}
+
+	&.debugmode {
+		--debug-display: block;
+	}
+
+	&.is-loaded {
+		opacity: 1;
+	}
+}
+
+@import "./consumers";
+@import "./dialog";
+@import "./feedback";
+@import "./form";
+@import "./list";
+@import "./login";
+@import "./occasions";
+@import "./orders";
+@import "./page";
+@import "./panels";
+@import "./products";
+@import "./receipt";
+@import "./sections";

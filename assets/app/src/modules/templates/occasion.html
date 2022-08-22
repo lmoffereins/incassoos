@@ -1,0 +1,10 @@
+<div class="occasion">
+	<button type="button" @click="open" class="occasion-selector" :disabled="isDisabled" v-l10n-title.Occasion.OpenOccasionPanel>
+		<span class="topic" v-l10n.Occasion.ListHeading></span>
+
+		<h2 class="occasion-title">
+			<i v-if="isClosed" class="dashicons dashicons-lock" v-l10n-title.Occasion.OccasionClosed></i>
+			<span class="item-title" v-l10n-title="title || 'Occasion.OpenOccasion'" v-l10n="title || 'Occasion.OpenOccasion'"></span>
+		</h2>
+	</button>
+</div>

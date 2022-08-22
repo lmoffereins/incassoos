@@ -1,0 +1,18 @@
+<basic-dialog
+	:dialog="dialog"
+	class="dialog-help-shortcuts"
+	@hook:beforeDestroy="close"
+>
+	<template v-slot:content>
+		<dl class="shortcuts">
+			<div class="shortcut" v-for="s in shortcuts">
+				<dt class="description" v-l10n="s.label"></dt>
+				<dd class="definition">
+					<span class="definition-key" v-for="k in s.keys">{{k}}</span>
+				</dd>
+			</div>
+		</dl>
+	</template>
+
+	<template v-slot:footer><!-- No footer --></template>
+</basic-dialog>

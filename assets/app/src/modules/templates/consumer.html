@@ -1,0 +1,57 @@
+<div id="single-consumer">
+	<div class="panel-header">
+		<div class="panel-header-image">
+			<object class="avatar-image" :data="active.avatarUrl" type="image/png" v-l10n-alt.Consumer.AvatarOf="active.name"></object>
+		</div>
+
+		<div class="panel-title-wrapper">
+			<h2 class="panel-title" v-l10n="active.name"></h2>
+			<span class="panel-subtitle" v-l10n="active.group.name"></span>
+		</div>
+
+		<close-button @click="close" class="panel-close"></close-button>
+	</div>
+
+	<div class="panel-content">
+		<div class="item-details">
+			<form v-if="editable" class="detail-list edit-consumer" @submit.prevent novalidate>
+				<div class="detail-item consumer-show">
+					<span class="detail-label" v-l10n.Consumer.ConsumerShow></span>
+					<span v-if="isViewing" class="detail-value">{{consumerShow | boolean}}</span>
+					<input-toggle v-if="!isViewing" v-model="consumerShow" class="detail-value"></input-toggle>
+				</div>
+
+				<div class="detail-item consumer-spending-limit">
+					<span class="detail-label" v-l10n.Consumer.SpendingLimit></span>
+					<span v-if="isViewing" class="detail-value">{{spendingLimit | money}}</span>
+					<input-price v-if="!isViewing" class="detail-value" v-model="spendingLimit"></input-price>
+				</div>
+			</form>
+
+			<feedback name="consumer" :items="feedback"></feedback>
+
+			<div class="detail-list consumer-statistics">
+				<div class="detail-item">
+					<span class="detail-label" v-l10n.Consumer.OrderCount></span>
+					<span class="detail-value">{{orderCount}}</span>
+				</div>
+
+				<div class="detail-item">
+					<span class="detail-label" v-l10n.Consumer.ProductQuantity></span>
+					<span class="detail-value">{{totalProductQuantity}}</span>
+				</div>
+
+				<div class="detail-item">
+					<span class="detail-label" v-l10n.Consumer.ConsumedValue></span>
+					<span class="detail-value">{{totalConsumedValue | money}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel-footer" v-if-not-empty>
+		<button type="button" v-if="isViewing && editable" @click="edit" class="edit-action" v-l10n.Common.Edit></button>
+		<button type="button" v-if="!isViewing" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
+		<button type="button" v-if="!isViewing" :disabled="!submittable" @click="update" class="update-action" v-l10n.Common.Save></button>
+	</div>
+</div>

@@ -1,0 +1,85 @@
+/* Dialog */
+
+#dialog-container {
+	.dialog {
+		position: absolute;
+		top: -9999px;
+		z-index: 35;
+		transition: var(--transition-background);
+
+		&.is-active {
+			top: 0px;
+			right: 0px;
+			bottom: 0px;
+			left: 0px;
+			background: var(--background-focus);
+		}
+
+		.dialog-wrapper {
+			position: absolute;
+			padding: 20px 25px 25px;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background: var(--background-secondary);
+			transition: var(--transition-background);
+			border-radius: 4px;
+		}
+
+		.basic-dialog {
+			display: flex;
+			flex-direction: column;
+			grid-gap: var(--content-row-gap);
+		}
+
+		.dialog-header {
+			display: flex;
+			flex-direction: row;
+			grid-gap: var(--content-row-gap);
+
+			.dialog-title {
+				flex: 1;
+				font-weight: 600;
+			}
+
+			.dialog-close {
+				margin-right: -5px;
+			}
+		}
+
+		.dialog-footer {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+			grid-gap: 5px;
+		}
+	}
+
+	.dialog-help-shortcuts {
+		.shortcuts {
+			display: flex;
+			flex-direction: column;
+			grid-gap: 5px;
+
+			.shortcut {
+				display: flex;
+				flex-direction: row;
+				grid-gap: var(--content-row-gap);
+
+				.description {
+					flex: 1;
+				}
+
+				.definition {
+					text-align: right;
+
+					.definition-key + .definition-key:before {
+						content: '+';
+						margin: 0px 4px;
+					}
+				}
+			}
+		}
+	}
+}

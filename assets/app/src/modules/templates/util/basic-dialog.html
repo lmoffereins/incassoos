@@ -1,0 +1,18 @@
+<div class="basic-dialog">
+	<div v-if="dialog.title" class="dialog-header">
+		<span class="dialog-title" v-l10n="dialog.title"></span>
+		<close-button v-if="dialog.closeOnEscape" @click="close" v-focus class="dialog-close"></close-button>
+	</div>
+	<div class="dialog-content">
+		<slot name="content">
+			<div v-l10n="dialog.content"></div>
+		</slot>
+	</div>
+	<div class="dialog-footer" v-if="slotFooter">
+		<slot name="footer" :close="close">
+			<div class="dialog-buttons">
+				<button type="button" @click="close" v-l10n.Common.OK></button>
+			</div>
+		</slot>
+	</div>
+</div>

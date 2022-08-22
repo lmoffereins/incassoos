@@ -1,0 +1,18 @@
+<basic-dialog
+	:dialog="dialog"
+	class="dialog-input-dropdown open"
+	@hook:beforeDestroy="close"
+>
+	<template v-slot:content>
+		<div class="detail-list input-dropdown-options">
+			<button type="button" v-for="(label, id) in dialog.items" @click="select(id)" class="dropdown-option" :class="{ 'is-selected': isSelected(id) }" v-l10n="label"></button>
+		</div>
+	</template>
+
+	<template v-slot:footer="slot">
+		<div class="dialog-buttons">
+			<button type="button" @click="slot.close" v-l10n.Common.Cancel></button>
+			<button type="button" @click="confirm" v-l10n.Common.OK></button>
+		</div>
+	</template>
+</basic-dialog>

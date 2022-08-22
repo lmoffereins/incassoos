@@ -1,0 +1,152 @@
+{
+	"initial": "VOID",
+	"states": {
+		"VOID": {
+			"on": {
+				"BOOTSTRAP": "INIT"
+			}
+		},
+		"INIT": {
+			"on": {
+				"START_INSTALLATION": "INSTALLATION",
+				"START_LOGIN": "LOGIN"
+			}
+		},
+		"INSTALLATION": {
+			"on": {
+				"FINISH_INSTALLATION": "OCCASIONS"
+			}
+		},
+		"LOGIN": {
+			"on": {
+				"CLOSE_LOGIN": "OCCASIONS"
+			}
+		},
+		"OCCASIONS": {
+			"on": {
+				"GET_OCCASION": "IDLE",
+				"SELECT_OCCASION": "VIEW_OCCASION",
+				"CANCEL_OCCASION": "IDLE"
+			}
+		},
+		"IDLE": {
+			"on": {
+				"START_OCCASION": "OCCASIONS",
+				"SELECT_OCCASION": "VIEW_OCCASION",
+				"START_RECEIPT": "RECEIPT",
+				"SELECT_ORDER": "VIEW_ORDER",
+				"TOGGLE_SETTINGS": "SETTINGS"
+			}
+		},
+		"RECEIPT": {
+			"on": {
+				"TOGGLE_SETTINGS": "RECEIPT_SETTINGS",
+				"SELECT_CONSUMER": "RECEIPT",
+				"INCREMENT_PRODUCT": "RECEIPT",
+				"DECREMENT_PRODUCT": "RECEIPT",
+				"CANCEL_RECEIPT": "IDLE",
+				"SUBMIT_RECEIPT": "IDLE"
+			}
+		},
+		"SETTINGS": {
+			"on": {
+				"SELECT_CONSUMER": "VIEW_CONSUMER",
+				"SELECT_PRODUCT": "VIEW_PRODUCT",
+				"CREATE_PRODUCT": "CREATE_PRODUCT",
+				"TOGGLE_SETTINGS": "IDLE"
+			}
+		},
+		"VIEW_OCCASION": {
+			"on": {
+				"EDIT_ITEM": "EDIT_OCCASION",
+				"START_OCCASION": "OCCASIONS",
+				"CLOSE_ITEM": "IDLE"
+			}
+		},
+		"VIEW_ORDER": {
+			"on": {
+				"SELECT_ORDER": "VIEW_ORDER",
+				"EDIT_ITEM": "EDIT_ORDER",
+				"CLOSE_ITEM": "IDLE"
+			}
+		},
+		"VIEW_CONSUMER": {
+			"on": {
+				"SELECT_CONSUMER": "VIEW_CONSUMER",
+				"EDIT_ITEM": "EDIT_CONSUMER",
+				"CLOSE_ITEM": "SETTINGS"
+			}
+		},
+		"VIEW_PRODUCT": {
+			"on": {
+				"SELECT_PRODUCT": "VIEW_PRODUCT",
+				"EDIT_ITEM": "EDIT_PRODUCT",
+				"CLOSE_ITEM": "SETTINGS"
+			}
+		},
+		"EDIT_OCCASION": {
+			"on": {
+				"CANCEL_EDIT": "VIEW_OCCASION",
+				"SAVE_OCCASION": "VIEW_OCCASION",
+				"CLOSE_OCCASION": "EDIT_OCCASION",
+				"REOPEN_OCCASION": "EDIT_OCCASION",
+				"DELETE_ITEM": "DELETE_OCCASION",
+				"CLOSE_ITEM": "IDLE"
+			}
+		},
+		"EDIT_ORDER": {
+			"on": {
+				"SELECT_CONSUMER": "EDIT_ORDER",
+				"INCREMENT_PRODUCT": "EDIT_ORDER",
+				"DECREMENT_PRODUCT": "EDIT_ORDER",
+				"CANCEL_EDIT": "VIEW_ORDER",
+				"SAVE_ORDER": "VIEW_ORDER"
+			}
+		},
+		"EDIT_CONSUMER": {
+			"on": {
+				"CANCEL_EDIT": "VIEW_CONSUMER",
+				"SAVE_CONSUMER": "VIEW_CONSUMER",
+				"CLOSE_ITEM": "SETTINGS"
+			}
+		},
+		"CREATE_PRODUCT": {
+			"on": {
+				"CLOSE_ITEM": "SETTINGS",
+				"SAVE_PRODUCT": "SETTINGS"
+			}
+		},
+		"EDIT_PRODUCT": {
+			"on": {
+				"CANCEL_EDIT": "VIEW_PRODUCT",
+				"DELETE_ITEM": "DELETE_PRODUCT",
+				"UNTRASH_PRODUCT": "SETTINGS",
+				"SAVE_PRODUCT": "VIEW_PRODUCT",
+				"CLOSE_ITEM": "SETTINGS"
+			}
+		},
+		"DELETE_OCCASION": {
+			"on": {
+				"CANCEL_DELETE": "EDIT_OCCASION",
+				"DELETE_OCCASION": "OCCASIONS"
+			}
+		},
+		"DELETE_PRODUCT": {
+			"on": {
+				"CANCEL_DELETE": "EDIT_PRODUCT",
+				"DELETE_PRODUCT": "SETTINGS"
+			}
+		},
+		"RECEIPT_SETTINGS": {
+			"on": {
+				"TOGGLE_SETTINGS": "RECEIPT"
+			}
+		},
+		"ADMINISTRATION": {
+			"on": {
+				"CLOSE_ADMINISTRATION": "IDLE",
+				"START_INSTALLATION": "INSTALLATION"
+			}
+		}
+	}
+}

@@ -1,0 +1,85 @@
+<div class="app" v-if="$isLoaded">
+
+	<div class="heading">
+		<hgroup>
+			<page-title>
+				<span>{{ $offline ? 'Offline' : 'Online' }}</span>
+				<span>Main state: {{$fsmState}}</span>
+				<span v-if="$isLoggedIn">User active</span>
+				<span v-if="$isSettings">In settings</span>
+				<edit-toggle></edit-toggle>
+				<cancel-toggle></cancel-toggle>
+			</page-title>
+		</hgroup>
+
+		<div class="heading-right">
+			<open-login></open-login>
+			<factory-reset></factory-reset>
+			<language-switcher></language-switcher>
+			<span class="date-time">{{test | date}}</span>
+		</div>
+	</div>
+
+	<div class="content">
+
+		<div class="panels">
+			<div class="panel" v-active-panel.LOGIN>
+				<login></login>
+			</div>
+
+			<div class="panel" v-active-panel.INSTALLATION>
+				<installation></installation>
+			</div>
+
+			<div class="panel" v-active-panel.OCCASION.EDIT_OCCASION>
+				<h2 v-l10n.Occasion.ListHeading></h2>
+				<occasions></occasions>
+			</div>
+
+			<div class="panel" v-panel-switcher v-active-panel.IDLE.RECEIPT.SETTINGS>
+				<div class="panel-switch-item panel-item-active">
+					<h2 v-l10n.Product.ListHeading></h2>
+					<products></products>
+				</div>
+
+				<div class="panel-switch-item">
+					<h2 v-l10n.Consumer.ListHeading></h2>
+					<consumers></consumers>
+				</div>
+			</div>
+
+			<div class="panel" v-active-panel.RECEIPT.RECEIPT_SETTINGS.VIEW_ORDER.EDIT_ORDER>
+				<h2 v-l10n.Receipt.ListHeading></h2>
+				<receipt></receipt>
+			</div>
+
+			<div class="panel" v-active-panel.VIEW_PRODUCT.EDIT_PRODUCT.DELETE_PRODUCT.CREATE_PRODUCT>
+				<h2 v-l10n.Product.ItemHeading></h2>
+				<product></product>
+			</div>
+				
+			<div class="panel" v-active-panel.VIEW_CONSUMER.EDIT_CONSUMER>
+				<h2 v-l10n.Consumer.ItemHeading></h2>
+				<consumer></consumer>
+			</div>
+
+			<div class="panel" v-active-panel.ORDERS>
+				<h2 v-l10n.Order.ListHeading></h2>
+				<orders></orders>
+			</div>
+
+			<div class="panel" v-active-panel.ADMINISTRATION>
+				<h2 v-l10n.Administration.Heading></h2>
+				<administration></administration>
+			</div>
+
+		</div>
+
+		<div class="miscellaneous">
+			<feedback name="global" :reverse="true"></feedback>
+			<dialog-container></dialog-container>
+		</div>
+
+	</div>
+
+</div>

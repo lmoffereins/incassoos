@@ -1,0 +1,31 @@
+<div id="incassoos-app" :class="{
+	'is-bootstrapped': $isBootstrapped,
+	'is-loaded': $isLoaded,
+	'darkmode': $darkmode,
+	'debugmode': $debugmode,
+	'offline': $offline
+}" v-if="$isLoaded">
+	<div id="page-heading" :data-fsm-state="$fsmState">
+		<div class="heading-left">
+			<global-login-toggle></global-login-toggle>
+			<global-edit-toggle></global-edit-toggle>
+			<global-cancel-toggle></global-cancel-toggle>
+		</div>
+
+		<hgroup class="heading-center">
+			<page-title></page-title>
+		</hgroup>
+
+		<div class="heading-right">
+			<span class="clock" v-text="$clock"></span>
+		</div>
+	</div>
+
+	<div id="page-body">
+		<panels></panels>
+		<sections></sections>
+	</div>
+
+	<dialog-container></dialog-container>
+	<feedback name="global" :reverse="true" :auto-remove="true"></feedback>
+</div>

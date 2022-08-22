@@ -1,0 +1,81 @@
+/* Login */
+
+#login-container {
+	position: relative;
+
+	&.login-state-new_login,
+	&.login-state-pin_login,
+	&.login-state-pin_register,
+	&.login-state-pin_register_confirm,
+	&.login-state-pin_verify {
+		width: 290px;
+	}
+
+	&[data-fsm-state]:before {
+		position: absolute;
+		top: -10px;
+		left: 25px;
+	}
+
+	.login-idle,
+	#administration,
+	.login-pin-login,
+	.login-pin-verify {
+		display: flex;
+		flex-direction: column;
+		grid-gap: var(--content-row-gap);
+	}
+
+	.pin-login {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		grid-gap: var(--content-row-gap);
+
+		.login-users {
+			justify-content: center;
+		}
+
+		.input-numpad {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+		}
+
+		&.is-loading {
+			.pin-entry {
+				animation: pin-jump .8s infinite;
+
+				&:nth-child(2) {
+					animation-delay: .05s;
+				}
+
+				&:nth-child(3) {
+					animation-delay: .1s;
+				}
+
+				&:nth-child(4) {
+					animation-delay: .15s;
+				}
+
+				&:nth-child(5) {
+					animation-delay: .2s;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 400px) {
+	#login-container {
+
+		&.login-state-new_login,
+		&.login-state-pin_login,
+		&.login-state-pin_register,
+		&.login-state-pin_register_confirm,
+		&.login-state-pin_verify {
+			width: auto;
+		}
+	}
+}

@@ -1,0 +1,62 @@
+<div class="products item-list-wrapper" :class="{ 'is-searching': isSearching, 'no-results': noSearchResults || ! products.length }">
+	<div class="item-list-header">
+		<button type="button" @click="setActiveSection" class="set-active-section" v-l10n.Product.ListHeading></button>
+
+		<h2 class="section-topic" v-l10n.Product.ListHeading></h2>
+
+		<div class="item-list-actions">
+			<input-search v-model="q"></input-search>
+			<button type="button" v-if="$isSettings && haveTrashedProducts" v-toggle="showTrashedProducts" v-l10n="toggleTrashedItemsLabel"></button>
+			<button type="button" v-if="creatable && !showTrashedProducts" @click="create" v-l10n.Common.Create></button>
+
+			<input-dropdown class="category-dropdown" v-model="filterProductCategory" :items="productCategories"></input-dropdown>
+			<input-dropdown class="order-by-dropdown" v-model="orderBy" :items="orderByOptions" :title="'Product.OrderBy'"></input-dropdown>
+		</div>
+	</div>
+
+	<div class="item-list-body">
+		<ul class="item-list" v-focus-group="{ 'selector': 'button.select-item', forceUpdate: focusGroupKey }">
+			<li class="item" v-for="p in products" :key="p.id" :class="{ 'is-selected': p.quantity }">
+				<button
+					type="button"
+					class="select-item"
+					@click.exact="select(p.id)"
+					@click.ctrl.exact="incrementByTen(p.id)"
+					@click.shift.exact="decrement(p.id)"
+					@click.right.exact.prevent="decrement(p.id)"
+					@click.shift.ctrl.exact="decrementByTen(p.id)"
+					@click.right.ctrl.exact.prevent="decrementByTen(p.id)"
+					v-l10n-title="selectLabel(p.title)">
+					<div class="item-content">
+						<span class="item-title">{{p.title}}</span>
+						<span class="item-price">{{p.price | money}}</span>
+					</div>
+					<div class="item-misc">
+						<span class="item-amount">{{p.quantity}}</span>
+					</div>
+
+					<button
+						type="button"
+						v-if="!$isSettings"
+						class="deselect-item"
+						tabindex="-1"
+						@click.stop.exact="decrement(p.id)"
+						@click.stop.ctrl.exact="decrementByTen(p.id)"
+						@click.right.stop
+						v-l10n-title.Product.SelectLess="p.title">
+						<span class="screen-reader-text" v-l10n.Product.SelectLess="p.title"></span>
+						<i class="dashicons dashicons-minus"></i>
+					</button>
+				</button>
+			</li>
+
+			<li v-if="noSearchResults" class="item no-items">
+				<span class="no-items-found" v-l10n.Generic.NoSearchResultsFor="q"></span>
+			</li>
+
+			<li v-else-if="! products.length" class="item no-items">
+				<span class="no-items-found" v-l10n.Product.NoProducts></span>
+			</li>
+		</ul>
+	</div>
+</div>

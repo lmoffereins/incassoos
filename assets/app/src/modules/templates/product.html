@@ -1,0 +1,57 @@
+<div id="single-product">
+	<div class="panel-header">
+		<h2 class="panel-title" v-l10n="componentTitle"></h2>
+		<close-button @click="close" class="panel-close"></close-button>
+	</div>
+
+	<div class="panel-content">
+		<div class="item-details">
+			<form class="detail-list edit-product" @submit.prevent novalidate>
+				<div class="detail-item product-title">
+					<span class="detail-label" v-l10n.Product.TitleLabel></span>
+					<span v-if="isViewing" class="detail-value">{{title}}</span>
+					<input v-if="!isViewing" type="text" :placeholder="'Product.TitlePlaceholder' | translate" class="detail-value" v-model="title" />
+				</div>
+
+				<div class="detail-item product-category">
+					<span class="detail-label" v-l10n.Product.ProductCategory></span>
+					<span v-if="isViewing">{{productCategoryLabel}}</span>
+					<input-dropdown v-if="!isViewing" :items="availableProductCategories" v-model="productCategory"></input-dropdown>
+				</div>
+
+				<div class="detail-item product-price">
+					<span class="detail-label" v-l10n.Product.PriceLabel></span>
+					<span v-if="isViewing" class="detail-value">{{price | money}}</span>
+					<input-price  v-if="!isViewing"class="detail-value" v-model="price"></input-price>
+				</div>
+			</form>
+
+			<feedback name="product" :items="feedback"></feedback>
+
+			<div v-if="!isCreating" class="detail-list product-statistics">
+				<div class="detail-item">
+					<span class="detail-label" v-l10n.Product.OrderCount></span>
+					<span class="detail-value">{{orderCount}}</span>
+				</div>
+
+				<div class="detail-item">
+					<span class="detail-label" v-l10n.Product.ProductQuantity></span>
+					<span class="detail-value">{{totalProductQuantity}}</span>
+				</div>
+
+				<div class="detail-item">
+					<span class="detail-label" v-l10n.Product.ConsumedValue></span>
+					<span class="detail-value">{{totalConsumedValue | money}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel-footer" v-if-not-empty>
+		<button type="button" v-if="!isViewing && deletable" @click="maybeDelete" class="delete-action" v-l10n.Common.Delete></button>
+		<button type="button" v-if="!isViewing && untrashable" @click="untrash" class="untrash-action" v-l10n.Common.Untrash></button>
+		<button type="button" v-if="isViewing" @click="edit" class="edit-action" v-l10n.Common.Edit></button>
+		<button type="button" v-if="!isViewing" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
+		<button type="button" v-if="!isViewing" :disabled="!submittable" @click="update" class="update-action" v-l10n="submitLabel"></button>
+	</div>
+</div>

@@ -1,0 +1,12 @@
+<basic-dialog
+	:dialog="dialog"
+	class="confirm-dialog"
+	@hook:beforeDestroy="close"
+>
+	<template v-slot:footer="slot">
+		<div class="dialog-buttons">
+			<button type="button" @click="slot.close" v-l10n.Common.Cancel></button>
+			<button type="button" @click="confirm" v-focus v-l10n.Common.OK></button>
+		</div>
+	</template>
+</basic-dialog>

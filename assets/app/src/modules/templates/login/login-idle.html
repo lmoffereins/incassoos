@@ -1,0 +1,24 @@
+<div class="login-idle">
+	<div class="detail-list">
+		<h4 class="detail-title" v-l10n.Common.Account></h4>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Account.ActionsLabel></span>
+			<div class="input-radio-buttons">
+				<button type="button" class="radio-input" v-if="step.canLogout()" @click="step.logout" v-l10n.Common.Logout></button>
+				<button type="button" class="radio-input" v-if="step.canLock()" @click="step.lock" v-l10n.Common.Lock></button>
+			</div>
+		</div>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Account.PinLabel></span>
+			<div class="input-radio-buttons">
+				<button type="button" class="radio-input" v-if="step.canRegisterPin()" @click="step.registerPin" v-l10n.Login.PinRegister></button>
+				<button type="button" class="radio-input" v-if="step.canRemovePin()" @click="step.removePin" v-l10n.Login.PinRemove></button>
+				<button type="button" class="radio-input" v-if="step.canRenewPin()" @click="step.renewPin" v-l10n.Login.PinRenew></button>
+			</div>
+		</div>
+	</div>
+
+	<administration></administration>
+</div>

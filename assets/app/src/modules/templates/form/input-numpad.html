@@ -1,0 +1,24 @@
+<div class="input-numpad">
+	<ul class="numpad-grid">
+		<li class="numpad-grid-cell" v-for="num in nums" :ref="num">
+			<button type="button" :disabled="disabled" class="numpad-option numpad-num" @click="add(num)">{{num}}</button>
+		</li>
+		<li class="numpad-grid-cell" ref="left">
+			<slot name="left" :back="back" :clear="clear">
+				<button type="button" @tap="back" @longpress="clear" class="numpad-option numpad-back dashicons-before dashicons-arrow-left" v-l10n-title.Common.Back>
+					<span class="screen-reader-text" v-l10n.Common.Back></span>
+				</button>
+			</slot>
+		</li>
+		<li class="numpad-grid-cell" ref="0">
+			<button type="button" :disabled="disabled" class="numpad-option numpad-num" @click="add(0)">0</button>
+		</li>
+		<li class="numpad-grid-cell" ref="right">
+			<slot name="right" :back="back" :clear="clear">
+				<button type="button" @tap="back" @longpress="clear" class="numpad-option numpad-back dashicons-before dashicons-arrow-left" v-l10n-title.Common.Back>
+					<span class="screen-reader-text" v-l10n.Common.Back></span>
+				</button>
+			</slot>
+		</li>
+	</ul>
+</div>

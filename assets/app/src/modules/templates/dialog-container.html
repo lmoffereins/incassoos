@@ -1,0 +1,12 @@
+<div id="dialog-container">
+	<div class="dialog" v-for="d in dialogs" :class="{ 'is-active': isActive(d.id) }">
+		<div class="dialog-wrapper">
+			<component
+				:is="d.component"
+				:key="d.id"
+				:dialog="d"
+				@hook:beforeDestroy="remove(d.id)"
+			/>
+		</div>
+	</div>
+</div>

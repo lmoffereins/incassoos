@@ -1,0 +1,11 @@
+<div class="input-radio-buttons">
+	<button
+		type="button"
+		v-for="(label, id) in items"
+		:ref="id"
+		@click="select(id)"
+		class="radio-option"
+		:class="{ 'is-selected': isSelected(id) }"
+		v-l10n="label"
+		:tabindex="tabindex(id)"></button>
+</div>

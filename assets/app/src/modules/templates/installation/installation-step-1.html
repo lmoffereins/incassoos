@@ -1,0 +1,10 @@
+<div class="installation-step1">
+	<form @keyup.enter="next()" novalidate>
+		<input type="text" :placeholder="step.domainPlaceholder" v-model="step.domain" spellcheck="false" /> <button type="button" @click="step.domain='incassoos.wp.test'; $event.preventDefault()" v-l10n.Common.Insert></button>
+
+		<div class="installation-domain-advanced" ng-toggle>
+			<input type="text" v-model="step.namespace" spellcheck="false" /> <span v-l10n.Installation.ConnectNamespace></span>
+			<label><input type="checkbox" v-model="step.isSecure" /> <span v-l10n.Installation.ConnectIsSecure></span></label>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,86 @@
+<div class="consumers item-list-wrapper" :class="{ 'is-settings': isSettings, 'is-searching': isSearching, 'no-results': noSearchResults }">
+	<div class="item-list-header">
+		<button type="button" @click="setActiveSection" class="set-active-section" v-l10n.Consumer.ListHeading></button>
+
+		<h2 class="section-topic" v-l10n.Consumer.ListHeading></h2>
+
+		<div class="item-list-actions">
+			<input-search v-model="q"></input-search>
+
+			<button
+				@click="expandAllGroups()"
+				class="expanded-groups-toggle icon-button"
+				v-l10n-title="allGroupsExpanded ? 'Consumer.CollapseGroups' : 'Consumer.ExpandGroups'">
+				<i class="dashicons" :class="{ 'dashicons-excerpt-view': ! allGroupsExpanded, 'dashicons-list-view': allGroupsExpanded }"></i>
+				<span class="screen-reader-text" v-l10n="allGroupsExpanded ? 'Consumer.CollapseGroups' : 'Consumer.ExpandGroups'"></span>
+			</button>
+			<input-dropdown class="order-by-dropdown" v-model="orderBy" :items="orderByOptions" :title="'Consumer.OrderBy'"></input-dropdown>
+		</div>
+	</div>
+
+	<div class="item-list-body">
+		<ul class="item-list parent-item-list" v-focus-group="{ 'selector': 'button.select-item', forceUpdate: focusGroupKey }">
+			<li class="item consumer-types" v-if="!isSearching">
+				<span
+					v-if="allGroupsExpanded"
+					class="select-item"
+					v-l10n.Consumer.TypesGroupName></span>
+				<button
+					v-else
+					class="select-item"
+					@click="expandOneGroup('types')"
+					v-l10n-title="expandGroupLabel('types')"
+					v-l10n.Consumer.TypesGroupName></button>
+
+				<div class="item-sublist" v-if="showGroupSubList('types')">
+					<ul class="item-list">
+						<li class="item" v-for="t in types" :key="t.id" :class="{ 'is-selected': ! isSettings && isSelected(t.id) }">
+							<button type="button" class="select-item" @click="select(t.id)" v-l10n-title.Consumer.Select="t.name">
+								<span class="item-name" v-l10n="t.name"></span>
+							</button>
+						</li>
+					</ul>
+				</div>
+			</li>
+
+			<li class="item" v-for="g in groups" :key="g.id">
+				<span
+					v-if="allGroupsExpanded"
+					class="select-item"
+					v-l10n="g.name"></span>
+				<button
+					type="button"
+					v-else
+					class="select-item"
+					@click="expandOneGroup(g.id)"
+					v-l10n-title="expandGroupLabel(g.id)"
+					v-l10n="g.name"></button>
+
+				<div class="item-sublist" v-if="showGroupSubList(g.id)">
+					<ul class="item-list">
+						<li
+							class="item"
+							v-for="c in groupConsumers(g.id)"
+							:key="c.id"
+							v-if="isSettings || isSelected(c.id) || c.show"
+							:class="{
+								'consumer-hidden': ! c.show,
+								'consumer-shown': c.show,
+								'is-selected': ! isSettings && isSelected(c.id)
+							}">
+							<button type="button" class="select-item" @click="select(c.id)" v-l10n-title.Consumer.Select="c.name">
+								<object class="avatar-image" :data="consumerAvatarUrl(c)" type="image/png" v-l10n-alt.Consumer.AvatarOf="c.name"></object>
+								<span class="item-name" v-l10n="c.name"></span>
+							</button>
+							<input-toggle class="toggle-show-item" v-if="isSettings" :value="c.show" @input="toggleShowConsumer(c)" v-l10n-title="c.show ? 'Common.Hide' : 'Common.Show'"></input-toggle>
+						</li>
+					</ul>
+				</div>
+			</li>
+
+			<li v-if="noSearchResults" class="item no-items">
+				<span class="no-items-found" v-l10n.Generic.NoSearchResultsFor="q"></span>
+			</li>
+		</ul>
+	</div>
+</div>

@@ -1,0 +1,73 @@
+/* Consumers */
+
+#consumers {
+	.is-selected {
+		.select-item,
+		.select-item:focus,
+		.select-item:hover {
+			background: var(--color-primary);
+			color: var(--color-primary-contrast);
+		}
+	}
+
+	.item:not(.consumer-types) .item-sublist .select-item {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		grid-gap: 12px;
+		padding-left: 49px;
+
+		.avatar-image {
+			position: absolute;
+			top: 50%;
+			left: 15px;
+			transform: translateY(-50%);
+		}
+
+		.item-name {
+			flex: 1;
+			min-width: 0;
+			@include text-overflow;
+		}
+	}
+
+	.toggle-show-item {
+		display: flex;
+
+		.toggle-option {
+			padding: 5px 10px;
+			border-radius: 0px;
+
+			&:after {
+				right: 12px;
+			}
+		}
+
+		.toggle-label {
+			position: absolute !important;
+			top: -9999px;
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+	}
+
+	.is-settings {
+		.consumer-types {
+			display: none;
+		}
+
+		.item-sublist .select-item {
+			width: calc( 100% - 54px );
+		}
+	}
+}
+
+#single-consumer {
+	width: min( calc( 100vw - 30px ), var(--panel-max-width) );
+}
+
+@media screen and (max-width: 400px) {
+	#single-consumer {
+		width: auto;
+	}
+}

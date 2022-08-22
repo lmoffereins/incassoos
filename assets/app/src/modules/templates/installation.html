@@ -1,0 +1,20 @@
+<div id="installation">
+	<div class="panel-header">
+		<h2 class="panel-title" v-l10n="title"></h2>
+	</div>
+
+	<div class="panel-content">
+		<span v-l10n="description"></span>
+
+		<component
+			:is="step.component"
+			:step="step"
+			@embeddedEnterState="onEmbeddedEnterState"
+		/>
+	</div>
+
+	<div class="panel-footer" v-if-not-empty>
+		<button type="button" v-if="canPrev" @click="prev" v-l10n="prevLabel"></button>
+		<button type="button" v-if="canNext" @click="next" v-l10n="nextLabel"></button>
+	</div>
+</div>

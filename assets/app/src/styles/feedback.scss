@@ -1,0 +1,98 @@
+/* Feedback */
+
+#feedback-global {
+	position: fixed;
+	left: 50%;
+	bottom: -125px;
+	// opacity: 0;
+	width: max-content;
+	max-width: calc( 100% - 50px );
+	transform: translate(-50%, -25px);
+	transition: all $transition-quick;
+	z-index: 100;
+
+	&.is-active {
+		bottom: 0px;
+		// opacity: 1;
+	}
+
+	.feedback-list {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		grid-gap: 1px;
+
+		.item {
+			display: flex;
+			flex-direction: row;
+			align-items: stretch;
+			color: var(--feedback-color);
+			background: var(--feedback-background);
+			font-size: .8rem;
+			border-radius: 2px;
+			transition: all .5s ease; //$transition-quick;
+
+			&.dashicons-before:before {
+				align-self: center;
+				transform: translateX(7px);
+			}
+
+			.feedback-message {
+				padding: 10px 15px;
+				margin-right: auto;
+			}
+
+			.feedback-action {
+				padding: 0px 4px;
+				border-left: 1px solid var(--feedback-border-color);
+				border-radius: 0px;
+
+				&:last-child {
+					border-top-right-radius: 2px;
+					border-bottom-right-radius: 2px;
+				}
+
+				&.feedback-close {
+					margin: 0px;
+				}
+
+				&:focus,
+				&:hover,
+				&:active {
+					color: var(--text-default);
+					background: var(--feedback-border-color);
+				}
+			}
+		}
+
+		.feedback-list-move,
+		.feedback-list-enter-active,
+		.feedback-list-leave-active {
+		}
+
+		.feedback-list-enter-from,
+		.feedback-list-leave-to {
+			opacity: 0;
+			transform: translateY(125px);
+		}
+
+		.feedback-list-leave-active {
+			position: absolute;
+			width: 100%;
+		}
+	}
+}
+
+.feedback {
+	display: none;
+	flex-direction: column;
+	grid-gap: 5px;
+
+	&.is-active {
+		display: flex;
+	}
+
+	&.show-one {
+
+	}
+}

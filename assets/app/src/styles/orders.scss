@@ -1,0 +1,48 @@
+/* Orders */
+
+#orders {
+	.item-list-wrapper {
+		height: 100%; // Not having to use flex - preferred for implemented media queries toggling display-none
+
+		// .item-list-transition-group {
+		// 	display: contents;
+
+		// 	.item-list-enter-active {
+		// 		transition:
+		// 			color 3s ease,
+		// 			background 3s ease
+		// 		;
+		// 	}
+
+		// 	.item-list-enter-from {
+		// 		color: var(--color-primary-primary);
+		// 		background: var(--color-primary);
+		// 	}
+		// }
+	}
+
+	.select-item {
+		display: flex;
+		flex-direction: row;
+		grid-gap: 15px;
+
+		.item-title {
+			flex: 1;
+			@include text-overflow;
+		}
+
+		.item-amount {
+			margin-left: 4px;
+			font-size: .8rem;
+		}
+	}
+
+	.is-selected {
+		.select-item,
+		.select-item:focus,
+		.select-item:hover {
+			color: var(--color-primary-contrast);
+			background: var(--color-primary);
+		}
+	}
+}

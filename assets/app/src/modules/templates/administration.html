@@ -1,0 +1,49 @@
+<div id="administration">
+	<div class="detail-list">
+		<h4 class="detail-title" v-l10n.Common.Settings></h4>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.SwitchLanguageLabel></span>
+			<language-switcher></language-switcher>
+		</div>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.DarkModeLabel></span>
+			<input-radio-buttons :items="darkmodeOptions" @input="setDarkmode" :value="$darkmodeSetting"></input-radio-buttons>
+		</div>
+	</div>
+
+	<div class="detail-list">
+		<h4 class="detail-title" v-l10n.Administration.AdministrationLabel></h4>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.OpenAdminLabel></span>
+			<button type="button" @click="openAdmin" v-l10n.Administration.OpenAdminAction></button>
+		</div>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.ShowShortcutsLabel></span>
+			<button type="button" @click="showShortcuts" ref="showShortcuts" v-l10n.Administration.ShowShortcutsAction></button>
+		</div>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.ClearCacheLabel></span>
+			<button type="button" @click="clearCache" ref="clearCache" v-l10n.Administration.ClearCacheAction></button>
+		</div>
+
+		<div class="detail-item" v-if="canRemoveUsers">
+			<span class="detail-label" v-l10n.Administration.RemoveUsersLabel></span>
+			<button type="button" @click="removeUsers" ref="removeUsers" v-l10n.Administration.RemoveUsersAction></button>
+		</div>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.DebugModeLabel></span>
+			<input-toggle @input="setDebugmode" :value="$debugmode"></input-toggle>
+		</div>
+
+		<div class="detail-item">
+			<span class="detail-label" v-l10n.Administration.FactoryResetLabel></span>
+			<factory-reset></factory-reset>
+		</div>
+	</div>
+</div>
