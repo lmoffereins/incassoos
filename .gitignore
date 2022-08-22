@@ -1,0 +1,8 @@
+### Build tools ###
+
+# Dependencies
+node_modules/
+
+# Backup of original app prototype
+assets/prototype/
+templates/prototype/
