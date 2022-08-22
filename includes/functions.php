@@ -119,7 +119,7 @@ function incassoos_get_app_slug() {
  * @return bool Is the app shown on the front page?
  */
 function incassoos_is_app_on_front() {
-	return (bool) apply_filters( 'incassoos_is_app_on_front', get_option( '_incassoos_app_on_front', 'incassoos' ) );
+	return (bool) apply_filters( 'incassoos_is_app_on_front', get_option( '_incassoos_app_on_front', false ) );
 }
 
 /** URLs **********************************************************************/
