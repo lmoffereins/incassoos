@@ -451,6 +451,10 @@ function incassoos_map_occasion_caps( $caps = array(), $cap = '', $user_id = 0, 
 				if ( incassoos_is_occasion_collected( $post ) ) {
 					$caps = array( 'do_not_allow' );
 
+				// Prevent editing closed occasions
+				} else if ( ! apply_filters( 'incassoos_allow_edit_closed_occasions', false, $post ) && incassoos_is_occasion_closed( $post ) ) {
+					$caps = array( 'do_not_allow' );
+
 				// Defer to editing caps
 				} else {
 					$caps = array( 'edit_incassoos_occasions' );
