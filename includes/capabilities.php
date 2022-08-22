@@ -508,6 +508,10 @@ function incassoos_map_occasion_caps( $caps = array(), $cap = '', $user_id = 0, 
 				if ( incassoos_is_occasion_locked( $post ) ) {
 					$caps = array( 'do_not_allow' );
 
+				// Prevent deleting occasions with orders
+				} else if ( ! apply_filters( 'incassoos_allow_delete_occasions_with_orders', false, $post ) && incassoos_get_occasion_order_count( $post ) ) {
+					$caps = array( 'do_not_allow' );
+
 				// Defer to deleting caps
 				} else {
 					$caps = array( 'delete_incassoos_occasions' );
