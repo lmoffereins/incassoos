@@ -739,6 +739,15 @@ function incassoos_map_generic_caps( $caps = array(), $cap = '', $user_id = 0, $
 
 			break;
 
+		/** Application *************************************************/
+
+		case 'view_incassoos_application' :
+
+			// Defer to basic rest caps
+			$caps = array( 'access_incassoos_rest_api' );
+
+			break;
+
 		/** REST API ****************************************************/
 
 		case 'access_incassoos_rest_consumer_types' :
