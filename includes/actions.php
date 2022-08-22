@@ -49,7 +49,7 @@ add_filter( 'posts_pre_query',             'incassoos_bypass_wp_query',         
 
 /** REST **********************************************************************/
 
-add_filter( 'incassoos_rest_api_init',     'incassoos_register_rest_routes',       10    );
+add_action( 'incassoos_rest_api_init',     'incassoos_register_rest_routes',       10    );
 
 /** Template ******************************************************************/
 
