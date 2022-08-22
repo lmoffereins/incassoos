@@ -888,7 +888,7 @@ class Incassoos_Admin {
 			 * Save posted inputs:
 			 * - Consumer
 			 *
-			 * Occasion is already saved in core through the `post_parent` name key.
+			 * Order's occasion is already saved in core through the `post_parent` name key.
 			 */
 
 			// Consumer. Prefer ids over types.

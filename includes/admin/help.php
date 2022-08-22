@@ -440,7 +440,7 @@ function incassoos_admin_dashboard_help_tabs() {
 			'id'      => 'overview',
 			'title'   => __( 'Overview' ),
 			'content' =>
-				'<p>' . __( 'Welcome to your Incassoos dashboard! This is the screen you will see when you start with Incassoos, and gives you access to all the management features of the plugin. This page provies quick access to the current status of your Incassoos installation and frequently used actions. You can get help for any screen by clicking the Help tab above the screen title.', 'incassoos' ) . '</p>',
+				'<p>' . __( 'Welcome to your Incassoos dashboard! This is the screen you will see when you start with Incassoos, and gives you access to all the management features of the plugin. This page provides quick access to the current status of your Incassoos installation and frequently used actions. You can get help for any screen by clicking the Help tab above the screen title.', 'incassoos' ) . '</p>',
 		)
 	);
 

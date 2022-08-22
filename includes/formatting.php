@@ -383,7 +383,7 @@ function incassoos_validate_price( $value ) {
  */
 function incassoos_validate_consumer_id( $value ) {
 	if ( empty( $value ) ) {
-		return new WP_Error( 'incassoos_user_invalid_id_or_type', __( 'Invalid consumer ID or type.', 'incassoos' ) );
+		return new WP_Error( 'incassoos_user_invalid_id_or_type', __( 'Invalid consumer ID or consumer type.', 'incassoos' ) );
 	}
 
 	// Consumer ID
