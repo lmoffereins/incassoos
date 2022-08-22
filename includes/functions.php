@@ -1845,7 +1845,8 @@ function incassoos_rest_remove_schema_properties( $schema, $properties = array()
 			'slug',
 			'template',
 			'type',
-			'link'
+			'link',
+			'password'
 		)
 	) );
 

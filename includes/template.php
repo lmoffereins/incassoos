@@ -448,44 +448,39 @@ function incassoos_document_title_parts( $title = array() ) {
  */
 function incassoos_enqueue_scripts() {
 	$plugin  = incassoos();
-	$version = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : incassoos_get_version();
+	$is_dev  = defined( 'WP_DEBUG' ) && WP_DEBUG;
+	$version = $is_dev ? time() : incassoos_get_version();
+	$min     = $is_dev ? '' : '.min';
 
 	// App page
 	if ( incassoos_is_app() ) {
 
-		// Define consumer types
-		$consumer_types = array_combine(
-			incassoos_get_consumer_types(),
-			array_map( 'incassoos_get_consumer_type_title', incassoos_get_consumer_types() )
-		);
+		// Load scripts 'n styles
+		wp_enqueue_script( 'incassoos-app', $plugin->assets_url . "app/build/main{$min}.js", array(), $version, true );
+		wp_enqueue_style( 'incassoos-app', $plugin->assets_url . 'app/build/main.css', array( 'dashicons' ) );
 
-		// Define occasion types
-		$occasion_types = incassoos_get_occasion_types();
-		$occasion_types = array_combine( wp_list_pluck( $occasion_types, 'term_id' ), wp_list_pluck( $occasion_types, 'name' ) );
+		// Get un-escaped logout url
+		$logout_url = wp_logout_url( incassoos_get_app_url() );
+		$logout_url = str_replace( '&amp;', '&', $logout_url );
 
 		// L10n
 		wp_localize_script( 'incassoos-app', 'incassoosL10n', apply_filters( 'incassoos_localize_app', array(
+			'isLocal' => true,
 			'settings' => array(
-				'urls' => array(
-					'assets'       => $plugin->assets_url,
-					'templates'    => $plugin->themes_url,
-					'consumers'    => esc_url_raw( incassoos_get_rest_url( 'consumer' ) ),
-					'occasions'    => esc_url_raw( incassoos_get_rest_url( 'occasion' ) ),
-					'orders'       => esc_url_raw( incassoos_get_rest_url( 'order'    ) ),
-					'products'     => esc_url_raw( incassoos_get_rest_url( 'product'  ) ),
-					'nonce'        => wp_create_nonce( 'wp_rest' ),
-				),
-				'defaultAvatar'       => 'https://www.gravatar.com/avatar/?d=mm&f=y',
-				'consumerTypes'       => $consumer_types,
-				'occasionTypes'       => $occasion_types,
-				'occasionTypeDefault' => incassoos_get_default_occasion_type(),
-				'orderTimeLock'       => incassoos_get_order_time_lock()
+				'adminUrl' => incassoos_get_admin_url(),
+				'api'      => array(
+					'root'      => site_url() . '/wp-json/',
+					'namespace' => incassoos_get_rest_namespace(),
+					'isSecure'  => is_ssl()
+				)
 			),
-			'l10n' => array(
-				'selectConsumer'  => esc_html__( 'Select Consumer', 'incassoos' ),
-				'newProduct'      => esc_html__( 'New Product',     'incassoos' ),
-				'unknownConsumer' => esc_html_x( 'Unknown', 'Consumer name', 'incassoos' ),
-				'unknownProduct'  => esc_html_x( 'Unknown', 'Product name',  'incassoos' )
+			'auth'    => array(
+				'id'        => incassoos_get_user_username(),
+				'userName'  => incassoos_get_user_display_name(),
+				'token'     => wp_create_nonce( 'wp_rest' ),
+				'logoutUrl' => $logout_url,
+				'language'  => get_user_locale(),
+				'roles'     => incassoos_get_roles_for_user()
 			)
 		) ) );
 	}
