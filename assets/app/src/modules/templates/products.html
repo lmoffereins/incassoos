@@ -9,8 +9,16 @@
 			<button type="button" v-if="$isSettings && haveTrashedProducts" v-toggle="showTrashedProducts" v-l10n="toggleTrashedItemsLabel"></button>
 			<button type="button" v-if="creatable && !showTrashedProducts" @click="create" v-l10n.Common.Create></button>
 
-			<input-dropdown class="category-dropdown" v-model="filterProductCategory" :items="productCategories"></input-dropdown>
-			<input-dropdown class="order-by-dropdown" v-model="orderBy" :items="orderByOptions" :title="'Product.OrderBy'"></input-dropdown>
+			<input-dropdown
+				v-if="haveProductCategories"
+				class="category-dropdown"
+				v-model="filterProductCategory"
+				:items="productCategories"></input-dropdown>
+			<input-dropdown
+				class="order-by-dropdown"
+				v-model="orderBy"
+				:items="orderByOptions"
+				:title="'Product.OrderBy'"></input-dropdown>
 		</div>
 	</div>
 

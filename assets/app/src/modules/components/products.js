@@ -138,6 +138,15 @@ define([
 			 */
 			toggleTrashedItemsLabel: function() {
 				return this.$isSettings && this.showTrashedProducts ? "Common.Back" : "Product.ShowTrashedItems";
+			},
+
+			/**
+			 * Return whether we have any product categories
+			 *
+			 * @return {Boolean} Do we have product categories?
+			 */
+			haveProductCategories: function() {
+				return _.keys(this.productCategories).length > 1;
 			}
 		}, Vuex.mapState("products", {
 			/**
