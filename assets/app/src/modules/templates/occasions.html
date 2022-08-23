@@ -61,7 +61,7 @@
 					<div class="detail-item occasion-title">
 						<span class="detail-label" v-l10n.Occasion.TitleLabel></span>
 						<span v-if="activeMode" class="detail-value">{{title}}</span>
-						<input v-if="!activeMode" type="text" :placeholder="'Occasion.TitlePlaceholder' | translate" class="detail-value" v-model="title" />
+						<input v-if="!activeMode" type="text" :placeholder="'Occasion.TitlePlaceholder' | translate" class="detail-value" v-model="title" v-focus />
 					</div>
 
 					<div class="detail-item occasion-type" v-if="haveOccasionTypes">
@@ -108,7 +108,7 @@
 
 	<div class="panel-footer" v-if-not-empty>
 		<button type="button" v-if="editMode && deletable" @click="maybeDelete" class="delete-action" v-l10n.Common.Delete></button>
-		<button type="button" v-if="activeMode && editable" @click="edit" class="edit-action" v-l10n.Common.Edit></button>
+		<button type="button" v-if="activeMode && editable" @click="edit" class="edit-action" v-focus v-l10n.Common.Edit></button>
 		<button type="button" v-if="editMode && closable" @click="closeOccasion" class="close-action" v-l10n.Occasion.Close></button>
 		<button type="button" v-if="editMode && reopenable" @click="reopenOccasion" class="reopen-action" v-l10n.Occasion.Reopen></button>
 		<button type="button" v-if="editMode" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
