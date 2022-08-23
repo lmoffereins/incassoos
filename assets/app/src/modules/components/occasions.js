@@ -127,7 +127,6 @@ define([
 			return {
 				mode: "create",
 				availableOccasionTypes: types,
-				haveOccasionTypes: !! _.keys(types).length,
 				loadingPayload: null,
 
 				// Form fields
@@ -167,6 +166,15 @@ define([
 				return this.loadingPayload && this.loadingPayload.id
 					? ["Occasion.LoadingOccasion", this.loadingPayload.title]
 					: ["Occasion.CreatingOccasion", this.title];
+			},
+
+			/**
+			 * Return whether we have any occasion types
+			 *
+			 * @return {Boolean} Do we have occasion types?
+			 */
+			haveOccasionTypes: function() {
+				return !! _.keys(this.availableOccasionTypes).length;
 			}
 		}, Vuex.mapState("occasions", {
 			"active": "active",
@@ -347,15 +355,6 @@ define([
 				} else if (this.getMode && ! this.occasions.length) {
 					this.mode = "create";
 				}
-			},
-
-			/**
-			 * Act when the available occasion types are updated
-			 *
-			 * @return {Void}
-			 */
-			availableOccasionTypes: function() {
-				this.haveOccasionTypes = !! _.keys(this.availableOccasionTypes).length;
 			}
 		},
 
