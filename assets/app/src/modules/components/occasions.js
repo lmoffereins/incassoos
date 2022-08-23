@@ -122,9 +122,12 @@ define([
 			inputRadioButtons: inputRadioButtons
 		},
 		data: function() {
+			var types = settings.occasion.occasionType && settings.occasion.occasionType.items || {};
+
 			return {
-				mode: "get",
-				availableOccasionTypes: settings.occasion.occasionType && settings.occasion.occasionType.items || {},
+				mode: "create",
+				availableOccasionTypes: types,
+				haveOccasionTypes: !! _.keys(types).length,
 				loadingPayload: null,
 
 				// Form fields
@@ -340,6 +343,15 @@ define([
 				} else if (this.activeMode) {
 					this.select();
 				}
+			},
+
+			/**
+			 * Act when the available occasion types are updated
+			 *
+			 * @return {Void}
+			 */
+			availableOccasionTypes: function() {
+				this.haveOccasionTypes = !! _.keys(this.availableOccasionTypes).length;
 			}
 		},
 

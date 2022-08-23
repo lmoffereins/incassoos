@@ -64,7 +64,7 @@
 						<input v-if="!activeMode" type="text" :placeholder="'Occasion.TitlePlaceholder' | translate" class="detail-value" v-model="title" />
 					</div>
 
-					<div class="detail-item occasion-type">
+					<div class="detail-item occasion-type" v-if="haveOccasionTypes">
 						<span class="detail-label" v-l10n.Occasion.OccasionTypeLabel></span>
 						<span v-if="activeMode" class="detail-value">{{occasionTypeLabel}}</span>
 						<input-radio-buttons v-if="!activeMode" :items="availableOccasionTypes" class="detail-value" v-model="occasionType"></input-radio-buttons>
