@@ -397,10 +397,12 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 		// Parse header tags
 		$time = time();
 		$header_tags = wp_parse_args( $this->header_tags, array(
-			'MsgId'    => date( 'YmdHis', $time ),       // Message identifier
+			'MsgId'    => date( 'dmyHis', $time ),       // Message identifier
 			'CreDtTm'  => date( 'Y-m-d\TH:i:s', $time ), // Timestamp ISO 8601
 			'NbOfTxs'  => count( $this->_transactions ), // Number of transactions
-			'InitgPty' => $this->party->organization     // Initiating party name
+			'InitgPty' => array(
+				'Nm' => $this->party->organization // Initiating party name
+			)
 		) );
 
 		// Setup tags and add to header
@@ -661,7 +663,7 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 	 * @return string Transaction identifier
 	 */
 	private function get_unique_transaction_id() {
-		return sprintf( '%s-%s-%s', date( 'Ymd' ), $this->get_transaction()->party->mandate, '0001' );
+		return sprintf( '%s-%s-%s', date( 'Y-m-d' ), $this->get_transaction()->party->mandate, '0001' );
  	}
 }
 
