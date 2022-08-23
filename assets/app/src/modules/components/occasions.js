@@ -342,6 +342,10 @@ define([
 				// View occasion when changing to active mode
 				} else if (this.activeMode) {
 					this.select();
+
+				// Go to create mode when there are no items to select
+				} else if (this.getMode && ! this.occasions.length) {
+					this.mode = "create";
 				}
 			},
 
@@ -409,6 +413,11 @@ define([
 		 * @return {Void}
 		 */
 		mounted: function() {
+
+			// When starting to select, turn to get mode
+			if (this.createMode && this.occasions.length) {
+				this.mode = "get";
+			}
 
 			// On initial creation, this observer is not triggered yet
 			this.active && onEnterViewOccasion.call(this);
