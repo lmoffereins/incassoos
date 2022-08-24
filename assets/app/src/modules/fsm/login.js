@@ -1349,7 +1349,5 @@ define([
 		}
 	);
 
-	window.loginFsm = fsm;
-
 	return fsm;
 });

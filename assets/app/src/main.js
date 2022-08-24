@@ -19,7 +19,7 @@ define([
 ], function( Vue, store, components, bootstrap, tmpl ) {
 
 	// Define main Vue instance
-	window.vm = new Vue({
+	var vm = new Vue({
 		el: "#root",
 		store: store,
 		template: tmpl,

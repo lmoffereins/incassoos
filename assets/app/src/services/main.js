@@ -142,9 +142,6 @@ define([
 		delete services[storeDefinition.service].storeDefinition;
 	});
 
-	// TEMP
-	window.services = services;
-
 	return {
 		/**
 		 * Initialize all services

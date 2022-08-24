@@ -177,7 +177,5 @@ define([
 		}
 	});
 
-	window.mainFsm = fsm;
-
 	return fsm;
 });

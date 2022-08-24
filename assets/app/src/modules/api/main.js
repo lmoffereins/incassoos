@@ -174,7 +174,5 @@ define("api", [
 	// When settings are updated, update API methods
 	settings.$onUpdate(updateEndpoints);
 
-	window.apiMethods = methods;
-
 	return methods;
 });
