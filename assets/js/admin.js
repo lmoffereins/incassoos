@@ -6,7 +6,7 @@
  */
 
 /* global incAdminL10n */
-jQuery(document).ready( function($) {
+jQuery( document ).ready( function( $ ) {
 
 	var settings = incAdminL10n && incAdminL10n.settings || {},
 		formatCurrency = settings.formatCurrency || {},
@@ -155,9 +155,10 @@ jQuery(document).ready( function($) {
 			$consumerList.toggleClass( 'no-list-columns' );
 		});
 
-	// Datepicker
+	// Setup datepicker for visible elements
 	if ( 'function' === typeof $.fn.datepicker ) {
-		$( '.datepicker' ).datepicker({ dateFormat: 'dd-mm-yy' });
+		var datepickerOptions = { dateFormat: 'dd-mm-yy' };
+		$( '.datepicker:visible' ).datepicker( datepickerOptions );
 	}
 
 	// Trigger the first auto-download when present
@@ -700,6 +701,18 @@ jQuery(document).ready( function($) {
 						break;
 					case 'textarea' :
 						$inline.find( '[name="' + field + '"]' ).text( val );
+						break;
+					case 'date' :
+
+						// Setup datepicker
+						if ( 'function' === typeof $.fn.datepicker ) {
+							var $datepicker = $inline.find( '.datepicker' );
+
+							$datepicker.datepicker( datepickerOptions );
+							$datepicker.datepicker( 'setDate', val );
+						} else {
+							$inline.find( '[name="' + field + '"]' ).val( val );
+						}
 						break;
 					default :
 						$inline.find( '[name="' + field + '"]' ).val( val );
