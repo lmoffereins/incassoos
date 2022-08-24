@@ -771,7 +771,15 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 
 		<?php else : ?>
 
-		<ul><li><?php esc_html_e( 'There are no collectable activities found.', 'incassoos' ); ?></li></ul>
+		<ul><li><?php
+
+			if ( incassoos_is_collection_locked( $post ) ) :
+				esc_html_e( 'There are no activities included in this collection.', 'incassoos' );
+			else :
+				esc_html_e( 'There are no collectable activities found.', 'incassoos' );
+			endif;
+
+		?></li></ul>
 
 		<?php endif; ?>
 	</div>
@@ -851,7 +859,15 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 
 		<?php else : ?>
 
-		<ul><li><?php esc_html_e( 'There are no collectable occasions found.', 'incassoos' ); ?></li></ul>
+		<ul><li><?php
+
+			if ( incassoos_is_collection_locked( $post ) ) :
+				esc_html_e( 'There are no occasions included in this collection.', 'incassoos' );
+			else :
+				esc_html_e( 'There are no collectable occasions found.', 'incassoos' );
+			endif;
+
+		?></li></ul>
 
 		<?php endif; ?>
 	</div>
