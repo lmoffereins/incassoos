@@ -63,6 +63,36 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/show', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'integer',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'show_item' ),
+				'permission_callback' => array( $this, 'show_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/hide', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'integer',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'hide_item' ),
+				'permission_callback' => array( $this, 'hide_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
 	}
 
 	/**
@@ -463,6 +493,178 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Checks if a given request has access to show a consumer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to show the item, WP_Error object otherwise.
+	 */
+	public function show_item_permissions_check( $request ) {
+		$item = $this->get_user( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		if ( $item && ! current_user_can( 'show_incassoos_consumer', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_show_consumer',
+				__( 'Sorry, you are not allowed to show this consumer.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Show a single consumer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function show_item( $request ) {
+		$item = $this->get_user( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$id = $item->ID;
+
+		if ( ! current_user_can( 'show_incassoos_consumer', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_show_consumer',
+				__( 'Sorry, you are not allowed to show this consumer.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only show if we haven't already.
+		if ( incassoos_is_consumer_locked( $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_locked',
+				__( 'The consumer is locked.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_show_consumer( $item );
+		$item     = incassoos_get_user( $id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_show',
+				__( 'The consumer cannot be shown.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single consumer is shown via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Post          $item     The shown user.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( "incassoos_rest_show_consumer", $item, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to hide an consumer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to hide the item, WP_Error object otherwise.
+	 */
+	public function hide_item_permissions_check( $request ) {
+		$item = $this->get_user( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		if ( $item && ! current_user_can( 'hide_incassoos_consumer', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_hide_consumer',
+				__( 'Sorry, you are not allowed to hide this consumer.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Hide a single consumer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function hide_item( $request ) {
+		$item = $this->get_user( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$id = $item->ID;
+
+		if ( ! current_user_can( 'hide_incassoos_consumer', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_hide_consumer',
+				__( 'Sorry, you are not allowed to hide this consumer.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only hide if we have already closed.
+		if ( ! incassoos_is_consumer_closed( $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_not_closed',
+				__( 'The consumer is not closed.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_hide_consumer( $item );
+		$item     = incassoos_get_user( $id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_hide',
+				__( 'The consumer cannot be hidden.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single consumer is hidden via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Post          $item     The hidden user.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( "incassoos_rest_hide_consumer", $item, $response, $request );
+
+		return $response;
 	}
 }
 
