@@ -127,6 +127,18 @@ define([
 				});
 			}
 		},
+		watch: {
+			/**
+			 * Act when the active panel is changed
+			 *
+			 * @return {Void}
+			 */
+			panel: function() {
+
+				// Communicate whether a panel is active
+				this.$root.$emit("panels/is-panel-active", !! this.panel);
+			}
+		},
 
 		/**
 		 * Register listeners when the component is created

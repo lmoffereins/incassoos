@@ -1,4 +1,4 @@
-<main id="sections">
+<main id="sections" v-if="$isLoaded" :inert="isPanelActive">
 	<section
 		id="consumers"
 		:class="{ 'is-active': isConsumersActive, 'is-not-active': ! isConsumersActive }">

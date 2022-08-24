@@ -55,6 +55,7 @@ define([
 		},
 		data: function() {
 			return {
+				isPanelActive: false,
 				activeSection: "products"
 			};
 		},
@@ -124,6 +125,16 @@ define([
 			var self = this,
 
 			/**
+			 * Set whether the panel is active
+			 *
+			 * @param  {Boolean} active A panel is active
+			 * @return {Void}
+			 */
+			onPanelActive = function ( active ) {
+				self.isPanelActive = active;
+			},
+
+			/**
 			 * Reset the active section when the window is resized above the threshold
 			 *
 			 * @return {Void}
@@ -136,6 +147,12 @@ define([
 					self.setProductsActive();
 				}
 			};
+
+			// Subscribe to the 'panels/is-panel-active' event
+			this.$root.$on("panels/is-panel-active", onPanelActive);
+			this.$registerUnobservable( function() {
+				self.$root.$off("panels/is-panel-active", onPanelActive);
+			});
 
 			// Register resize event listener
 			this.$registerUnobservable(
