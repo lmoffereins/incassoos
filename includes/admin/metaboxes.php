@@ -657,8 +657,8 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<span class="spinner"></span>
 			<?php wp_nonce_field( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' ); ?>
 			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+			<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1103,8 +1103,8 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<span class="spinner"></span>
 			<?php wp_nonce_field( 'doaction_activity-' . $post->ID, 'activity_doaction_nonce' ); ?>
 			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-activity"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-activity" name="doaction-activity" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+			<label class="screen-reader-text" for="doaction-activity"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-activity" name="doaction-activity" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1456,8 +1456,8 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			<span class="spinner"></span>
 			<?php wp_nonce_field( 'doaction_occasion-' . $post->ID, 'occasion_doaction_nonce' ); ?>
 			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-occasion"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-occasion" name="doaction-occasion" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+			<label class="screen-reader-text" for="doaction-occasion"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-occasion" name="doaction-occasion" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1765,8 +1765,8 @@ function incassoos_admin_order_details_metabox( $post ) {
 			<span class="spinner"></span>
 			<?php wp_nonce_field( 'doaction_order-' . $post->ID, 'order_doaction_nonce' ); ?>
 			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-order"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-order" name="doaction-order" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+			<label class="screen-reader-text" for="doaction-order"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-order" name="doaction-order" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1936,8 +1936,8 @@ function incassoos_admin_product_details_metabox( $post ) {
 			<span class="spinner"></span>
 			<?php wp_nonce_field( 'doaction_product-' . $post->ID, 'product_doaction_nonce' ); ?>
 			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-product"><?php esc_html_e( 'Run', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-product" name="doaction-product" value="<?php esc_attr_e( 'Run', 'incassoos' ); ?>" />
+			<label class="screen-reader-text" for="doaction-product"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="doaction-product" name="doaction-product" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
