@@ -1572,7 +1572,7 @@ function incassoos_close_occasion( $post = 0 ) {
 	do_action( 'incassoos_close_occasion', $post );
 
 	// Update closed date
-	update_post_meta( $post->ID, 'closed', wp_date( 'Y-m-d H:i:s' ) );
+	update_post_meta( $post->ID, 'closed', date( 'Y-m-d H:i:s' ) );
 
 	// Run action after closing
 	do_action( 'incassoos_closed_occasion', $post );

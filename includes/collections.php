@@ -1676,7 +1676,7 @@ function incassoos_stage_collection( $post = 0 ) {
 	$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_status = %s WHERE ID IN ($post_ids)", incassoos_get_collected_status_id() ) );
 
 	// Update staged date
-	update_post_meta( $post->ID, 'staged', wp_date( 'Y-m-d H:i:s' ) );
+	update_post_meta( $post->ID, 'staged', date( 'Y-m-d H:i:s' ) );
 
 	// Run action after staging
 	do_action( 'incassoos_staged_collection', $post );
@@ -1774,7 +1774,7 @@ function incassoos_collect_collection( $post = 0 ) {
 	// incassoos_send_collection_emails( $post );
 
 	// Update collected date
-	update_post_meta( $post->ID, 'collected', wp_date( 'Y-m-d H:i:s' ) );
+	update_post_meta( $post->ID, 'collected', date( 'Y-m-d H:i:s' ) );
 
 	// Run action after collecting
 	do_action( 'incassoos_collected_collection', $post );
@@ -1895,7 +1895,7 @@ function incassoos_send_collection_consumer_emails( $post = 0 ) {
 
 		// Register emails sent date
 		if ( $sent ) {
-			add_post_meta( $post->ID, 'consumer_emails_sent', wp_date( 'Y-m-d H:i:s' ) );
+			add_post_meta( $post->ID, 'consumer_emails_sent', date( 'Y-m-d H:i:s' ) );
 		}
 	}
 
