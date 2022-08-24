@@ -613,12 +613,12 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 			<span id="collection-consumer-emails-sent" class="value">
 				<?php
-				// Using '_U' as date format will return the correctly timezone'd numeric timestamp with '_' as a random prefix.
-				// The prefix is only there for circumventing the timezone correction in `mysql2date()` which would otherwise
-				// return the GMT date.
-				foreach ( incassoos_get_collection_consumer_emails_sent( $post, '_U' ) as $prefixed_date ) : ?>
+				// Using '0U' as date format to return the correct numeric timestamp of a date.
+				// The '0' functions as an innocent prefix for ignoring the timezone correction in `mysql2date()` which
+				// would otherwise return the date with the timezone offset, potentially resulting in the wrong date.
+				foreach ( incassoos_get_collection_consumer_emails_sent( $post, '0U' ) as $date ) : ?>
 				<span class="value">
-					<abbr title="<?php echo wp_date( $abbr_date_format, substr( $prefixed_date, 1 ) ); ?>"><?php echo wp_date( $date_format, substr( $prefixed_date, 1 ) ); ?></abbr>
+					<abbr title="<?php echo wp_date( $abbr_date_format, $date ); ?>"><?php echo wp_date( $date_format, $date ); ?></abbr>
 				</span>
 				<?php endforeach; ?>
 			</span>
