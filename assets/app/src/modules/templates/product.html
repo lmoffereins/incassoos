@@ -13,7 +13,7 @@
 					<input v-if="!isViewing" type="text" :placeholder="'Product.TitlePlaceholder' | translate" class="detail-value" v-model="title" />
 				</div>
 
-				<div class="detail-item product-category">
+				<div class="detail-item product-category" v-if="haveProductCategories">
 					<span class="detail-label" v-l10n.Product.ProductCategory></span>
 					<span v-if="isViewing">{{productCategoryLabel}}</span>
 					<input-dropdown v-if="!isViewing" :items="availableProductCategories" v-model="productCategory"></input-dropdown>

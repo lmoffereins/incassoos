@@ -193,6 +193,15 @@ define([
 				return this.orders.reduce( function( sum, i ) {
 					return sum + (i[0].quantity * i[0].price);
 				}, 0);
+			},
+
+			/**
+			 * Return whether we have any product categories
+			 *
+			 * @return {Boolean} Do we have product categories?
+			 */
+			haveProductCategories: function() {
+				return !! _.keys(this.availableProductCategories).length;
 			}
 		}, Vuex.mapState("products", {
 			/**
