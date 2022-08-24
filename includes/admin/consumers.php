@@ -30,6 +30,12 @@ function incassoos_admin_get_consumers_fields() {
 			'type'  => 'text'
 		),
 
+		// Debit mandate date
+		'_incassoos_debit_mandate_date' => array(
+			'label' => __( 'Mandate date', 'incassoos' ),
+			'type'  => 'date'
+		),
+
 		// Hidden consumer
 		'_incassoos_hidden_consumer' => array(
 			'label'           => __( 'Hidden consumer', 'incassoos' ),
@@ -89,7 +95,15 @@ function incassoos_admin_get_consumers_field( $field_id ) {
  * @return mixed Field value
  */
 function incassoos_admin_consumers_field_get_callback( $user, $field_id ) {
-	return implode( ',', (array) $user->get( $field_id ) );
+	$field = incassoos_admin_get_consumers_field( $field_id );
+	$value = implode( ',', (array) $user->get( $field_id ) );
+
+	// Parse database date value
+	if ( $field && 'date' === $field['type'] ) {
+		$value = mysql2date( 'd-m-Y', $value );
+	}
+
+	return $value;
 }
 
 /**
@@ -106,12 +120,28 @@ function incassoos_admin_consumers_field_update_callback( $user, $value, $field_
 	if ( empty( $value ) ) {
 		return delete_user_meta( $user->ID, $field_id );
 	} else {
+		$field = incassoos_admin_get_consumers_field( $field_id );
+
+		// Parse date input
+		if ( $field && 'date' === $field['type'] ) {
+
+			// Parse input date
+			$date = strtotime( trim( $value ) );
+
+			// Save mysql date string
+			if ( $date ) {
+				$value = date( 'Y-m-d 00:00:00', $date );
+			} else {
+				$value = '';
+			}
+		}
+
 		return update_user_meta( $user->ID, $field_id, $value );
 	}
 }
 
 /**
- * Update callback for the Hidden Consumer field
+ * Update callback for the consumer's Hidden Consumer field
  *
  * @since 1.0.0
  *
@@ -185,6 +215,11 @@ function incassoos_admin_consumers_field_input_callback( $field_id ) {
 			$min_price_value = 1 / pow( 10, $format_args['decimals'] );
 
 			$element = '<input type="number" class="small-text" min="0" step="' . $min_price_value . '" name="' . esc_attr( $field_id ) . '" value="" />';
+			break;
+
+		// Date using datepicker
+		case 'date' :
+			$element = '<input type="text" name="' . esc_attr( $field_id ) . '" placeholder="dd-mm-yyyy" class="datepicker" value="" />';
 			break;
 
 		// Other

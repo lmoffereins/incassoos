@@ -105,10 +105,11 @@ class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter
 				'amount'      => incassoos_get_collection_consumer_total( $user->ID, $this->post ),
 				'description' => incassoos_get_collection_transaction_description( $this->post ),
 				'party'       => array(
-					'id'   => $user->ID,
-					'name' => incassoos_get_user_display_name( $user->ID ),
-					'iban' => $iban,
-					'bic'  => incassoos_get_bic_from_iban( $iban )
+					'id'           => $user->ID,
+					'name'         => incassoos_get_user_display_name( $user->ID ),
+					'iban'         => $iban,
+					'bic'          => incassoos_get_bic_from_iban( $iban ),
+					'mandate_date' => incassoos_get_user_debit_mandate_date( $user->ID, 'id', 'U' )
 				)
 			);
 		}

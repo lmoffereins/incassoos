@@ -186,8 +186,14 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 				'iban'         => false,
 				'bic'          => false,
 				'mandate'      => $mandate,
-				'mandate_date' => strtotime( '2009-01-11' ),
+				'mandate_date' => false
 			) );
+
+			// Provide default mandate date when the value is missing
+			// Use arbitrary default date as per original Incassoos.
+			if ( ! $t->party->mandate_date ) {
+				$t->party->mandate_date = strtotime( '2009-11-01' );
+			}
 
 			$this->_transactions[] = $t;
 		}

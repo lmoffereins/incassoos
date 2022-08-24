@@ -266,6 +266,40 @@ function incassoos_get_user_iban( $user = false, $by = 'id' ) {
 }
 
 /**
+ * Return the user's debit mandate date
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_user_debit_mandate_date'
+ *
+ * @param  mixed $user User object or identifier. Defaults to the current user ID.
+ * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
+ * @param  string $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return string User debit mandate date
+ */
+function incassoos_get_user_debit_mandate_date( $user = false, $by = 'id', $date_format = '' ) {
+	$user = incassoos_get_user( $user, $by );
+	$date = '';
+
+	// Default to the registered date format
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
+	}
+
+	if ( $user ) {
+		$date = $user->get( '_incassoos_debit_mandate_date' );
+
+		if ( $date ) {
+			$date = mysql2date( $date_format, $date );
+		} else {
+			$date = '';
+		}
+	}
+
+	return apply_filters( 'incassoos_get_user_debit_mandate_date', $date, $user, $date_format );
+}
+
+/**
  * Return the user spending limit
  *
  * @since 1.0.0
