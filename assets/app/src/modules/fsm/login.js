@@ -887,6 +887,19 @@ define([
 	},
 
 	/**
+	 * When initiating, unset the active user when using a pin
+	 *
+	 * @return {Promise} Transition success
+	 */
+	onAfterInit = function() {
+
+		// Unset the active user when using a pin
+		if (authService.hasPin()) {
+			return authService.unsetActiveUser();
+		}
+	},
+
+	/**
 	 * When locking, unset the active user
 	 *
 	 * @return {Promise} Transition success
@@ -952,6 +965,7 @@ define([
 		transitions: transitions,
 		methods: {
 			// onBeforeTransition: onBeforeTransition,
+			onAfterInit: onAfterInit,
 			onAfterLock: onAfterLock,
 			onBeforeLogout: onBeforeLogout,
 			onBeforeCancel: onBeforeCancel
@@ -1333,19 +1347,15 @@ define([
 	mainFsm.observe(
 		"onBeforeTransition",
 		function( lifecycle ) {
-			var allowTransition = true;
 
 			// Only check transitions beyond the initial state(s)
 			if (-1 === [mainFsm.initialState, mainFsm.st.INIT].indexOf(lifecycle.from)) {
-				allowTransition = authService.isUserLoggedIn() || lifecycle.transition === mainFsm.tr.OPEN_LOGIN;
-			}
 
-			// Signal feedback when transition was blocked
-			if (! allowTransition) {
-				feedbackService.add("Login.Error.RequiresAuthentication");
+				// Require the user to be logged-in, apart from entering the login state
+				if (! (authService.isUserLoggedIn() || lifecycle.transition === mainFsm.tr.OPEN_LOGIN)) {
+					return Q.reject("Login.Error.RequiresAuthentication");
+				}
 			}
-
-			return allowTransition;
 		}
 	);
 
