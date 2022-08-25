@@ -1,4 +1,4 @@
-<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive }">
+<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive }" :inert="! isActive">
 	<close-button @click="cancel" class="receipt-close"></close-button>
 
 	<div class="receipt-total" :class="{ 'is-active': !! totalPrice }">
