@@ -51,6 +51,7 @@
 
 		// Debug
 		--debug-color:                rgba(0, 0, 0, .5);
+		--debug-background:           rgba(0, 0, 0, .1);
 		--debug-display:              none;
 
 		// Avatar
@@ -87,6 +88,10 @@
 		--feedback-color:             #111;
 		--feedback-background:        rgba(215, 215, 215, .9);
 		--feedback-border-color:      rgb(40, 40, 40);
+
+		// Debug
+		--debug-color:                rgba(255, 255, 255, .5);
+		--debug-background:           rgba(255, 255, 255, .1);
 
 		// Avatar
 		// --avatar-image-foreground:    var(--button-background);
