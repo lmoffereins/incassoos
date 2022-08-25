@@ -472,11 +472,15 @@ define([
 			/**
 			 * When selecting an order, set consumer data from active order
 			 *
+			 * Consider both selecting an order, fresh or iteratively, and
+			 * returning to the order from edit, either after save or cancel.
+			 *
 			 * @return {Void}
 			 */
-			fsm.observe(
+			fsm.observe([
 				fsm.on.after.SELECT_ORDER,
-				function() {
+				fsm.on.enter.VIEW_ORDER
+			], function() {
 					var order = context.rootState.orders.active;
 
 					// Register new active consumer

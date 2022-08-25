@@ -314,11 +314,15 @@ define([
 			/**
 			 * When viewing an order, set receipt data from active order
 			 *
+			 * Consider both selecting an order, fresh or iteratively, and
+			 * returning to the order from edit, either after save or cancel.
+			 *
 			 * @return {Void}
 			 */
-			fsm.observe(
-				fsm.on.enter.VIEW_ORDER,
-				function() {
+			fsm.observe([
+				fsm.on.after.SELECT_ORDER,
+				fsm.on.enter.VIEW_ORDER
+			], function() {
 					var order = context.rootState.orders.active;
 
 					// Register new set of list items
