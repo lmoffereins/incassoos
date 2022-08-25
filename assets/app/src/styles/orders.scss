@@ -3,28 +3,13 @@
 #orders {
 	.item-list-wrapper {
 		height: 100%; // Not having to use flex - preferred for implemented media queries toggling display-none
-
-		// .item-list-transition-group {
-		// 	display: contents;
-
-		// 	.item-list-enter-active {
-		// 		transition:
-		// 			color 3s ease,
-		// 			background 3s ease
-		// 		;
-		// 	}
-
-		// 	.item-list-enter-from {
-		// 		color: var(--color-primary-primary);
-		// 		background: var(--color-primary);
-		// 	}
-		// }
 	}
 
 	.select-item {
 		display: flex;
 		flex-direction: row;
 		grid-gap: 15px;
+		animation: active-background-fade 2s ease;
 
 		.item-title {
 			flex: 1;

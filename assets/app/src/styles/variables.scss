@@ -149,6 +149,11 @@ $transition-swift:         .15s ease;
 	80%      { transform: scale(1.12); }
 }
 
+@keyframes active-background-fade {
+	0%   { background: var(--color-primary); }
+	100% { background: transparent;          }
+}
+
 @keyframes pin-jump {
 	0%  { transform: translateY(-2px); }
 	30% { transform: translateY(10px); }
