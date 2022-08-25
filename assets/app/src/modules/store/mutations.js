@@ -34,6 +34,15 @@ define([
 		},
 
 		/**
+		 * Update reactive property for whether the application is ready
+		 *
+		 * @return {Void}
+		 */
+		setReady: function( state ) {
+			state.isReady = true;
+		},
+
+		/**
 		 * Update reactive property for the global fsm state
 		 *
 		 * @param {String} payload State name

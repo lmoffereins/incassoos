@@ -21,6 +21,7 @@ define([
 		// Application status
 		isBootstrapped: false,
 		isLoaded: false,
+		isReady: false,
 
 		// Global state machine
 		// fsm: fsm, // Used by `v-fsm` directive
@@ -47,6 +48,17 @@ define([
 	Object.defineProperty(Vue.prototype, "$isLoaded", {
 		get: function() {
 			return this.$store.state.isLoaded;
+		}
+	});
+
+	/**
+	 * Reactive listener for the main store's `isReady` state data
+	 *
+	 * @return {Boolean} Is the application ready?
+	 */
+	Object.defineProperty(Vue.prototype, "$isReady", {
+		get: function() {
+			return this.$store.state.isReady;
 		}
 	});
 

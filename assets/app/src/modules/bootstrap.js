@@ -107,6 +107,20 @@ define([
 			}
 		);
 
+		/**
+		 * When the idle state is entered, declare the application ready
+		 *
+		 * @return {Void}
+		 */
+		fsm.observe(
+			fsm.on.enter.IDLE,
+			function( lifecycle ) {
+
+				// Declare that the application is ready
+				context.commit("setReady");
+			}
+		);
+
 		// Register service context usage
 		services.defineStoreContextUsage(context);
 	};
