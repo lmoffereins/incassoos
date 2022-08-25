@@ -18,7 +18,7 @@
 				<div class="detail-item consumer-show">
 					<span class="detail-label" v-l10n.Consumer.ConsumerShow></span>
 					<span v-if="isViewing" class="detail-value">{{consumerShow | boolean}}</span>
-					<input-toggle v-if="!isViewing" v-model="consumerShow" class="detail-value"></input-toggle>
+					<input-toggle v-if="!isViewing" v-model="consumerShow" class="detail-value" v-focus></input-toggle>
 				</div>
 
 				<div class="detail-item consumer-spending-limit">
@@ -50,7 +50,7 @@
 	</div>
 
 	<div class="panel-footer" v-if-not-empty>
-		<button type="button" v-if="isViewing && editable" @click="edit" class="edit-action" v-l10n.Common.Edit></button>
+		<button type="button" v-if="isViewing && editable" @click="edit" class="edit-action" v-focus v-l10n.Common.Edit></button>
 		<button type="button" v-if="!isViewing" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
 		<button type="button" v-if="!isViewing" :disabled="!submittable" @click="update" class="update-action" v-l10n.Common.Save></button>
 	</div>
