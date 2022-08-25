@@ -46,7 +46,7 @@
 			</div>
 
 			<div v-if="getMode" class="get-occasion">
-				<ul class="item-list" v-focus-group="'button.select-item'">
+				<ul class="item-list">
 					<li class="item" v-for="o in occasions" :key="o.id" :class="{ 'is-selected': isSelected(o.id), 'is-closed': o.closed }">
 						<button type="button" class="select-item" @click="get(o)" v-l10n-title.Occasion.SelectItem="o.title">
 							<span class="item-name">{{o.title}}</span>

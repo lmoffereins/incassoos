@@ -23,7 +23,7 @@
 	</div>
 
 	<div class="item-list-body">
-		<ul class="item-list" v-focus-group="{ 'selector': 'button.select-item', forceUpdate: focusGroupKey }">
+		<ul class="item-list">
 			<li class="item" v-for="p in products" :key="p.id" :class="{ 'is-selected': p.quantity }">
 				<button
 					type="button"
