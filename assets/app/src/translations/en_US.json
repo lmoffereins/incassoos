@@ -27,6 +27,7 @@
 		"Heading": "Administration",
 		"OpenAdminLabel": "Dashboard",
 		"OpenAdminAction": "Open Dashboard",
+		"GoToAdminLabel": "Go to Dashboard",
 		"RemoveUsersLabel": "Users",
 		"RemoveUsersAction": "Log out all users",
 		"RemoveUsersSuccess": "All users are logged-out from the application.",

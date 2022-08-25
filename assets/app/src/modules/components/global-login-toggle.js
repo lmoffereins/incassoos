@@ -8,7 +8,7 @@ define([
 	"fsm"
 ], function( fsm ) {
 	return {
-		template: '<button type="button" @click="toggle" class="icon-button" v-l10n-title.Common.Account><i class="dashicons dashicons-admin-users"></i><span class="screen-reader-text" v-l10n.Common.Account></span></button>',
+		template: '<button type="button" v-if="$isLoggedIn" @click="toggle" class="icon-button" v-l10n-title.Common.Account><i class="dashicons dashicons-admin-users"></i><span class="screen-reader-text" v-l10n.Common.Account></span></button>',
 		methods: {
 			/**
 			 * Reset handler
