@@ -197,7 +197,8 @@ define([
 	defaultSubscription = {
 		next: _.noop,
 		error: _.noop,
-		complete: _.noop
+		complete: _.noop,
+		backgroundProcess: true
 	},
 
 	/**
@@ -285,6 +286,11 @@ define([
 			function onSuccess( result ) {
 				console.log("paginatedRequest/" + request.url + "/received", result.length);
 				subscription.next(result);
+
+				// Resolve the request early when allowing the process to run in the background
+				if (subscription.backgroundProcess) {
+					dfd.resolve(result);
+				}
 			},
 
 			// Act when the stream emits an error
