@@ -127,6 +127,7 @@ define([
 			return {
 				mode: "create",
 				availableOccasionTypes: types,
+				isLoading: false,
 				loadingPayload: null,
 
 				// Form fields
@@ -142,11 +143,10 @@ define([
 			 *
 			 * @return {Boolean} Is this the mode?
 			 */
-			getMode:     function() { return this.mode === "get";     },
-			createMode:  function() { return this.mode === "create";  },
-			activeMode:  function() { return this.mode === "active";  },
-			editMode:    function() { return this.mode === "edit";    },
-			loadingMode: function() { return this.mode === "loading"; },
+			getMode:    function() { return this.mode === "get";    },
+			createMode: function() { return this.mode === "create"; },
+			activeMode: function() { return this.mode === "active"; },
+			editMode:   function() { return this.mode === "edit";   },
 
 			/**
 			 * Return whether the occasion can be created
@@ -217,7 +217,9 @@ define([
 			 * @return {Void}
 			 */
 			get: function( dispatch, payload ) {
-				this.mode = "loading";
+				var self = this;
+
+				this.isLoading = true;
 				this.loadingPayload = payload;
 
 				// Setup payload attributes for creating a new item
@@ -230,7 +232,10 @@ define([
 				}
 
 				// Get or create item
-				dispatch("get", payload);
+				dispatch("get", payload).catch( function() {
+					self.isLoading = false;
+					self.loadingPayload = null;
+				});
 			},
 
 			/**

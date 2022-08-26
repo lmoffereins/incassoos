@@ -1,4 +1,4 @@
-<div id="occasions" :class="{ 'is-loading': loadingMode }">
+<div id="occasions" :class="{ 'is-loading': isLoading }">
 	<div class="panel-header">
 		<h2 class="panel-title" v-l10n.Occasion.ListHeading></h2>
 		<close-button @click="close" class="panel-close" v-focus></close-button>
@@ -11,38 +11,42 @@
 					v-if="active && ! (activeMode || editMode)"
 					class="mode-option"
 					@click="mode = 'active'"
-					:disabled="loadingMode"
-					v-l10n-title.Occasion.ActiveOccasion
-					v-l10n.Occasion.ActiveOccasion></button>
+					v-l10n-title.Occasion.ActiveOccasionLabel
+					v-l10n.Occasion.ActiveOccasionLabel></button>
 				<span
 					v-if="activeMode || editMode"
 					class="mode-option is-selected"
-					v-l10n-title.Occasion.ActiveOccasion
-					v-l10n.Occasion.ActiveOccasion></span>
+					v-l10n-title.Occasion.ActiveOccasionLabel
+					v-l10n.Occasion.ActiveOccasionLabel></span>
 				<button
 					v-if="!getMode && occasions.length"
 					class="mode-option"
 					@click="mode = 'get'"
-					:disabled="editMode || loadingMode"
-					v-l10n-title.Occasion.SelectExisting
-					v-l10n.Occasion.SelectExisting></button>
+					:disabled="editMode"
+					v-l10n-title.Occasion.SelectExistingLabel
+					v-l10n.Occasion.SelectExistingLabel></button>
 				<span
 					v-if="getMode"
 					class="mode-option is-selected"
-					v-l10n-title.Occasion.SelectExisting
-					v-l10n.Occasion.SelectExisting></span>
+					v-l10n-title.Occasion.SelectExistingLabel
+					v-l10n.Occasion.SelectExistingLabel></span>
 				<button
 					v-if="!createMode"
 					class="mode-option"
 					@click="mode = 'create'"
-					:disabled="editMode || loadingMode"
-					v-l10n-title.Occasion.CreateNew
-					v-l10n.Occasion.CreateNew></button>
+					:disabled="editMode"
+					v-l10n-title.Occasion.CreateNewLabel
+					v-l10n.Occasion.CreateNewLabel></button>
 				<span
 					v-if="createMode"
 					class="mode-option is-selected"
-					v-l10n-title.Occasion.CreateNew
-					v-l10n.Occasion.CreateNew></span>
+					v-l10n-title.Occasion.CreateNewLabel
+					v-l10n.Occasion.CreateNewLabel></span>
+			</div>
+
+			<div class="mode-description" v-if-not-empty>
+				<span class="description" v-if="getMode" v-l10n.Occasion.SelectExistingDescription></span>
+				<span class="description" v-if="createMode" v-l10n.Occasion.CreateNewDescription></span>
 			</div>
 
 			<div v-if="getMode" class="get-occasion">
@@ -99,14 +103,14 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div v-if="loadingMode" class="load-occasion">
-				<span class="loading-title" v-l10n="loadingTitle"></span>
-			</div>
+		<div v-if="isLoading" class="load-occasion">
+			<span class="loading-title" v-l10n="loadingTitle"></span>
 		</div>
 	</div>
 
-	<div class="panel-footer" v-if-not-empty>
+	<div class="panel-footer" v-if="!isLoading" v-if-not-empty>
 		<button type="button" v-if="editMode && deletable" @click="maybeDelete" class="delete-action" v-l10n.Common.Delete></button>
 		<button type="button" v-if="activeMode && editable" @click="edit" class="edit-action" v-focus v-l10n.Common.Edit></button>
 		<button type="button" v-if="editMode && closable" @click="closeOccasion" class="close-action" v-l10n.Occasion.Close></button>
