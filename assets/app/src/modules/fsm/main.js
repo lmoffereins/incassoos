@@ -5,13 +5,14 @@
  * @subpackage App/FSM
  */
 define([
+	"q",
 	"api",
 	"services",
 	"util",
 	"./machine",
 	"./lifecycle",
 	"./xstate.json"
-], function( api, services, util, StateMachine, lifecycler, xstate ) {
+], function( Q, api, services, util, StateMachine, lifecycler, xstate ) {
 	/**
 	 * Holds a reference to the feedback service
 	 * 
@@ -157,7 +158,7 @@ define([
 			 * Register transition errors in the global feedback
 			 *
 			 * @param  {String|Object} error Error message or data
-			 * @return {Void}
+			 * @return {Promise} The error
 			 */
 			onTransitionError: function( error, transition ) {
 
@@ -173,6 +174,8 @@ define([
 				if (error && error.onAfterError) {
 					error.onAfterError();
 				}
+
+				return Q.reject(error);
 			}
 		}
 	});
