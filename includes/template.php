@@ -442,6 +442,21 @@ function incassoos_document_title_parts( $title = array() ) {
 }
 
 /**
+ * Display the robots meta tag
+ *
+ * @since 1.0.0
+ */
+function incassoos_wp_robots() {
+
+	// App page
+	if ( incassoos_is_app() ) {
+		add_filter( 'wp_robots', 'wp_robots_no_robots' );
+	}
+
+	wp_robots();
+}
+
+/**
  * Enqueue plugin page scripts
  *
  * @since 1.0.0
