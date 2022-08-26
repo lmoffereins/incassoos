@@ -1,4 +1,4 @@
-<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive }" :inert="! isActive">
+<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive }" :inert="!isActive">
 	<close-button @click="cancel" class="receipt-close"></close-button>
 
 	<div class="receipt-total" :class="{ 'is-active': !! totalPrice }">
@@ -10,7 +10,7 @@
 			<object class="avatar-image" :data="consumer.avatarUrl" type="image/png" v-l10n-alt.Consumer.AvatarOf="consumer.name"></object>
 		</div>
 
-		<h2 class="topic" v-if="! order" v-l10n.Receipt.ListHeading></h2>
+		<h2 class="topic" v-if="!order" v-l10n.Receipt.ListHeading></h2>
 		<span class="topic" v-else>{{order.date | datetime}}</span>
 
 		<div class="item-title-wrapper">
