@@ -61,15 +61,13 @@ add_action( 'wp_enqueue_scripts',          'incassoos_enqueue_scripts',         
 add_filter( 'template_include',            'incassoos_template_include_theme_supports', 10 );
 
 // Application page
-add_action( 'incassoos_app_head',          '_wp_render_title_tag',                  1    );
+add_action( 'incassoos_app_head',          'incassoos_render_title_tag',            1    );
 add_action( 'incassoos_app_head',          'incassoos_enqueue_scripts',             1    );
 add_action( 'incassoos_app_head',          'wp_resource_hints',                     2    );
 add_action( 'incassoos_app_head',          'incassoos_wp_robots',                   1    );
-add_action( 'incassoos_app_head',          'print_emoji_detection_script',          7    );
 add_action( 'incassoos_app_head',          'wp_print_styles',                       8    );
 add_action( 'incassoos_app_head',          'wp_print_head_scripts',                 9    );
 add_action( 'incassoos_app_head',          'wp_generator'                                );
-add_action( 'incassoos_app_head',          'rel_canonical'                               );
 add_action( 'incassoos_app_head',          'wp_site_icon',                         99    );
 add_action( 'incassoos_app_footer',        'wp_print_footer_scripts',              20    );
 

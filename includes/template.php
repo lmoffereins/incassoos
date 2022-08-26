@@ -442,6 +442,17 @@ function incassoos_document_title_parts( $title = array() ) {
 }
 
 /**
+ * Display the document title tag
+ *
+ * @see _wp_render_title_tag() which runs only when the theme supports the title tag.
+ *
+ * @since 1.0.0
+ */
+function incassoos_render_title_tag() {
+	echo '<title>' . wp_get_document_title() . '</title>' . "\n";
+}
+
+/**
  * Display the robots meta tag
  *
  * @since 1.0.0
