@@ -3,7 +3,7 @@ Contributors: offereins
 Tags: incasso, cash register, debt collection, activities, consumptions
 Requires at least: 4.7
 Tested up to: 6.0.0
-Stable tag: 1.0.0-beta-1
+Stable tag: 1.0.0-beta-2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
