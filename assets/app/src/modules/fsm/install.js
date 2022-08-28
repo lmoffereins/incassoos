@@ -194,7 +194,7 @@ define([
 		onBeforeReset: function() {
 
 			// Close the installation
-			mainFsm.do(mainFsm.tr.FINISH_INSTALLATION);
+			mainFsm.do(mainFsm.tr.CLOSE_INSTALLATION);
 		}
 	}].map( function( step, index ) {
 

@@ -14,7 +14,7 @@
 		},
 		"INSTALLATION": {
 			"on": {
-				"FINISH_INSTALLATION": "OCCASIONS"
+				"CLOSE_INSTALLATION": "OCCASIONS"
 			}
 		},
 		"LOGIN": {

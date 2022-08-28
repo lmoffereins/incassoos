@@ -18,7 +18,7 @@ define([
 	/**
 	 * Bootstrap the application
 	 *
-	 * @return {Void}
+	 * @return {Promise} Transition success
 	 */
 	bootstrap = function( context ) {
 		/**
@@ -38,41 +38,44 @@ define([
 		/**
 		 * Transition to bootstrap the application environment
 		 */
-		fsm.do(fsm.tr.BOOTSTRAP, context).then( function() {
+		return fsm.do(fsm.tr.BOOTSTRAP, context).then( function() {
 
 			// After bootstrap, continue initialization
-			context.dispatch("init");
+			return context.dispatch("init");
 		});
 	},
 
 	/**
 	 * Initialize the application logic by continuing the state machine
 	 *
-	 * @return {Void}
+	 * @return {Promise} Transition success
 	 */
 	init = function( context ) {
-		console.log("actions/init");
 		/**
 		 * Mind the context:
-		 * - start installation when no settings are present
-		 * - start login process otherwise
+		 * - start the login process when the application is installed (ie. settings are present)
+		 * - start the installation process otherwise
 		 */
-		installService.isInstalled().then( function( installed ) {
-			fsm.do(installed ? fsm.tr.START_LOGIN : fsm.tr.START_INSTALLATION);
+		return installService.isInstalled().then( function( installed ) {
+			return fsm.do(installed ? fsm.tr.START_LOGIN : fsm.tr.START_INSTALLATION);
 		});
 	},
 
 	/**
 	 * Load the application data by continuing the state machine
 	 *
-	 * @return {Void}
+	 * @return {Promise} Transition success
 	 */
 	load = function( context ) {
-		console.log("actions/load");
 		/**
-		 * Transition to load the application data
+		 * Transition to load the application data:
+		 * - after finishing the installation process
+		 * - after closing the login process
 		 */
-		fsm.do([fsm.tr.FINISH_INSTALLATION, fsm.tr.CLOSE_LOGIN]);
+		return fsm.do([
+			fsm.tr.CLOSE_INSTALLATION,
+			fsm.tr.CLOSE_LOGIN
+		]);
 	};
 
 	return {
