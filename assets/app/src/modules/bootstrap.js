@@ -48,6 +48,22 @@ define([
 		);
 
 		/**
+		 * When the user is logged-in, maybe skip the login state
+		 *
+		 * @return {Void}
+		 */
+		fsm.observe(
+			fsm.on.done.START_LOGIN,
+			function( lifecycle ) {
+
+				// Close login when user is already logged-in (local installation)
+				if (services.get("auth").isUserLoggedIn()) {
+					fsm.do(fsm.tr.CLOSE_LOGIN);
+				}
+			}
+		);
+
+		/**
 		 * When the user is logged-in, load store data
 		 *
 		 * TODO: the 'action' event is triggered for both new-login and pin-login.
@@ -55,7 +71,6 @@ define([
 		 * @return {Promise} Load success
 		 */
 		services.get("auth").on("active", function( lifecycle ) {
-			console.log("bootstrap/loadonauthactive");
 			return Q.all([
 
 				// These require an authenticated user
@@ -78,20 +93,6 @@ define([
 		});
 
 		/**
-		 * When toggling settings, update the main store's settings flag
-		 *
-		 * @return {Void}
-		 */
-		fsm.observe([
-			fsm.on.enter.SETTINGS,
-			fsm.on.leave.SETTINGS
-		], function( lifecycle ) {
-
-			// Mutate the reactive settings flag
-			context.commit("toggleSettings", lifecycle.to === fsm.st.SETTINGS);
-		});
-
-		/**
 		 * When the idle state is entered, declare the application ready
 		 *
 		 * @return {Void}
@@ -104,6 +105,20 @@ define([
 				context.commit("setReady");
 			}
 		);
+
+		/**
+		 * When toggling settings, update the main store's settings flag
+		 *
+		 * @return {Void}
+		 */
+		fsm.observe([
+			fsm.on.enter.SETTINGS,
+			fsm.on.leave.SETTINGS
+		], function( lifecycle ) {
+
+			// Mutate the reactive settings flag
+			context.commit("toggleSettings", lifecycle.to === fsm.st.SETTINGS);
+		});
 
 		// Register service context usage
 		services.defineStoreContextUsage(context);
