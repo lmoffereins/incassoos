@@ -104,7 +104,7 @@ define([
 			 * @return {Object} List of event names per event type
 			 */
 			on: (function() {
-				var i, before = {}, leave = {}, enter = {}, after = {};
+				var i, before = {}, leave = {}, enter = {}, after = {}, done = {};
 
 				// Create dynamic on<STATE> lifecycle names
 				for (i in lifecycle.states) {
@@ -115,14 +115,16 @@ define([
 				// Create dynamic on<TRANSITION> lifecycle names
 				for (i in lifecycle.transitions) {
 					before[i] = util.camelCase.prepended("onBefore", lifecycle.transitions[i]);
-					after[i]  = util.camelCase.prepended("onAfter", lifecycle.transitions[i]);
+					after[i]  = util.camelCase.prepended("onAfter",  lifecycle.transitions[i]);
+					done[i]   = util.camelCase.prepended("onDone",   lifecycle.transitions[i]);
 				}
 
 				return {
 					before: before, // Before starting the transition
 					leave: leave,   // When leaving the current state
 					enter: enter,   // When entering the new state
-					after: after    // After the transition is done
+					after: after,   // After closing the transition
+					done: done      // When the transition is done
 				};
 			})(),
 

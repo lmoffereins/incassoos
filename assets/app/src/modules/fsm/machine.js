@@ -40,7 +40,7 @@ define([
 	 * @param {Object} options Constructor options
 	 * @return {Object} StateMachine
 	 */
-	return function( name, options ) {
+	return function machine( name, options ) {
 		options = options || name;
 
 		/**
@@ -85,9 +85,13 @@ define([
 		 * @return {Promise} Transition success
 		 */
 		machine.do = function( transition, options ) {
+			var self = this,
+
+			// Keep the name of the current state
+			from = self.state,
 
 			// Collect any additional arguments
-			var payload = Array.prototype.slice.call(arguments, 1);
+			payload = Array.prototype.slice.call(arguments, 1);
 
 			// Ensure `transition` is an array
 			Array.isArray(transition) || (transition = [transition]);
@@ -103,7 +107,29 @@ define([
 			}));
 
 			// Run the first possible transition
-			return Q.Promisify(transition && machine[util.camelCase(transition)].apply(machine, payload)).catch( function( error ) {
+			return Q.Promisify(
+				transition && machine[util.camelCase(transition)].apply(machine, payload)
+
+			// Run custom events after the transition ended
+			).then( function( result ) {
+
+				// Did not run the transition when it is empty
+				if (! transition) {
+					return result;
+				}
+
+				// Natively trigger observers for generic onDone and onDone<Transition> events
+				return self._fsm.observeEvents([
+					self._fsm.observersForEvent("onDone"),
+					self._fsm.observersForEvent(util.camelCase.prepended("onDone", transition))
+				], [{
+					transition: transition,
+					from: from,
+					to: self.state,
+					fsm: self._fsm.context
+				}, ...payload]);
+
+			}).catch( function( error ) {
 
 				// Apply custom error handling
 				if ("function" === typeof options.onTransitionError) {
