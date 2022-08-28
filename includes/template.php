@@ -464,7 +464,12 @@ function incassoos_wp_robots() {
 		add_filter( 'wp_robots', 'wp_robots_no_robots' );
 	}
 
-	wp_robots();
+	// Since WP 5.7 use `wp_robots()` and associated filters
+	if ( function_exists( 'wp_robots' ) ) {
+		wp_robots();
+	} else {
+		wp_no_robots();
+	}
 }
 
 /**
