@@ -697,8 +697,8 @@ define([
 		 */
 		removePin: function() {
 			dialogService.confirm({
-				title: "Login.AreYouSureRemovePin",
-				content: "Login.AreYouSureRemovePinContent",
+				id: "login-remove-pin",
+				content: "Login.AreYouSureRemovePin",
 
 				/**
 				 * Remove the user's pin when confirmed

@@ -177,6 +177,7 @@
 		"IdleTimeLock": "The application was locked due to user inactivity.",
 		"SwitchLoginMode": "Switch login mode",
 		"LockApplication": "Lock the application",
+		"AreYouSureRemovePin": "Are you sure you want to delete your pin?",
 		"Error": {
 			"EmptyUsername": "Could not login. The username cannot be empty.",
 			"EmptyPassword": "Could not login. The password cannot be empty.",

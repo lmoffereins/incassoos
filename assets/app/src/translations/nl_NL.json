@@ -171,6 +171,7 @@
 		"IdleTimeLock": "Het programma is vergrendeld vanwege inactiviteit.",
 		"SwitchLoginMode": "Wissel van loginwijze",
 		"LockApplication": "Applicatie vergrendelen",
+		"AreYouSureRemovePin": "Weet je zeker dat je je pincode wilt verwijderen?",
 		"Error": {
 			"EmptyUsername": "Inloggen mislukt. De gebruikersnaam mag niet leeg zijn.",
 			"EmptyPassword": "Inloggen mislukt. Het wachtwoord mag niet leeg zijn.",
