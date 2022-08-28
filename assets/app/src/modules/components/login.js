@@ -195,6 +195,7 @@ define([
 				step: steps.find( function( i ) {
 					return i.state === fsm.state;
 				}),
+				updateComponent: 0,
 
 				// Navigation
 				canCancel: fsm.seek(fsm.tr.CANCEL) || fsm.is(fsm.st.IDLE),
@@ -280,6 +281,13 @@ define([
 					fsm.observe(i, fsmObservers[i].bind(this))
 				);
 			}
+
+			// Force update the component when anything changed in the users set
+			this.$registerUnobservable(
+				authService.on("users", function() {
+					self.updateComponent++;
+				})
+			);
 
 			// Register global keyboard event listeners
 			this.$registerUnobservable(
