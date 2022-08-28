@@ -82,30 +82,14 @@ define([
 		 *
 		 * @return {Void}
 		 */
-		fsm.observe(
-			fsm.on.before.TOGGLE_SETTINGS,
-			function( lifecycle ) {
-				if (-1 !== [lifecycle.from, lifecycle.to].indexOf(fsm.st.SETTINGS)) {
+		fsm.observe([
+			fsm.on.enter.SETTINGS,
+			fsm.on.leave.SETTINGS
+		], function( lifecycle ) {
 
-					// Mutate the reactive settings flag
-					context.commit("toggleSettings");
-				}
-			}
-		);
-
-		/**
-		 * When the login opened, close the main store's settings flag
-		 *
-		 * @return {Void}
-		 */
-		fsm.observe(
-			fsm.on.after.OPEN_LOGIN,
-			function( lifecycle ) {
-
-				// Mutate the reactive settings flag
-				context.commit("toggleSettings", false);
-			}
-		);
+			// Mutate the reactive settings flag
+			context.commit("toggleSettings", lifecycle.to === fsm.st.SETTINGS);
+		});
 
 		/**
 		 * When the idle state is entered, declare the application ready
