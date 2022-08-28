@@ -350,16 +350,17 @@ define([
 					// Indicate loading state
 					this.isLoading = true;
 
-					// Save the pin. Add some duration
-					delayService(pinDuration).then( function() {
-						authService.savePin(self.pin).then(dfd.resolve).catch( function( error ) {
+					// Save the pin. Require minimum duration
+					Q.all([
+						authService.savePin(self.pin),
+						delayService(pinDuration)
+					]).then(dfd.resolve).catch( function( error ) {
 
-							// Stop loading state
-							self.isLoading = false;
+						// Stop loading state
+						self.isLoading = false;
 
-							// Notify error
-							dfd.reject(["Login.Error.SavePinFailed", error]);
-						});
+						// Notify error
+						dfd.reject(["Login.Error.SavePinFailed", error]);
 					});
 
 					return dfd.promise.then( function() {
@@ -440,7 +441,7 @@ define([
 				// Indicate loading state
 				this.isLoading = true;
 
-				// Add some duration
+				// Match the pin. Require minimum duration
 				delayService(pinDuration).then( function() {
 					if (authService.matchPin(self.pin, self.userid)) {
 
@@ -566,7 +567,7 @@ define([
 				// Indicate loading state
 				this.isLoading = true;
 
-				// Add some duration
+				// Require minimum duration
 				delayService(pinDuration).then( function() {
 					if (authService.matchPin(self.pin)) {
 						dfd.resolve();
