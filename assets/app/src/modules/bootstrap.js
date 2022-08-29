@@ -111,14 +111,14 @@ define([
 		 *
 		 * @return {Void}
 		 */
-		fsm.observe([
-			fsm.on.enter.SETTINGS,
-			fsm.on.leave.SETTINGS
-		], function( lifecycle ) {
+		fsm.observe(
+			fsm.on.after.TOGGLE_SETTINGS,
+			function( lifecycle ) {
 
-			// Mutate the reactive settings flag
-			context.commit("toggleSettings", lifecycle.to === fsm.st.SETTINGS);
-		});
+				// Mutate the reactive settings flag
+				context.commit("toggleSettings", lifecycle.to === fsm.st.SETTINGS);
+			}
+		);
 
 		// Register service context usage
 		services.defineStoreContextUsage(context);
