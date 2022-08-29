@@ -64,6 +64,7 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			grid-gap: var(--content-row-gap);
 			padding: 15px;
 		}
 	}

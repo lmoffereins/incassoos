@@ -13,8 +13,9 @@ define([
 	"./form/input-datepicker",
 	"./form/input-radio-buttons",
 	"./util/close-button",
-	"./../templates/occasions.html"
-], function( Vuex, dayjs, fsm, services, settings, inputDatepicker, inputRadioButtons, closeButton, tmpl ) {
+	"./../templates/occasions.html",
+	"./../../images/loader.svg"
+], function( Vuex, dayjs, fsm, services, settings, inputDatepicker, inputRadioButtons, closeButton, tmpl, loaderSvg ) {
 	/**
 	 * Holds a reference to the dialog service
 	 *
@@ -129,6 +130,7 @@ define([
 				availableOccasionTypes: types,
 				isLoading: false,
 				loadingPayload: null,
+				loadingImg: loaderSvg,
 
 				// Form fields
 				title: "",

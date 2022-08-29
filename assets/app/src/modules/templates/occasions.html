@@ -106,6 +106,7 @@
 		</div>
 
 		<div v-if="isLoading" class="load-occasion">
+			<img class="loading-image loader" :src="loadingImg" width="40" height="40" />
 			<span class="loading-title" v-l10n="loadingTitle"></span>
 		</div>
 	</div>
