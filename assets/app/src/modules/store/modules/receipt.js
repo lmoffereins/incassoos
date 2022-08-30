@@ -257,15 +257,14 @@ define([
 		resetFeedback: function( state, context ) {
 			var totalPrice = context.rootGetters["receipt/getTotalPrice"];
 
-			// Remove prior feedback by force
-			feedback.clear(true);
-
 			// When the consumer spending limit is passed
 			if (! context.rootGetters["consumers/isWithinSpendingLimit"](null, totalPrice)) {
-				feedback.add("invalid-receipt", {
+				feedback.add("spending-limit-reached", {
 					isError: true,
 					message: "Consumer.Error.SpendingLimitReached"
 				});
+			} else {
+				feedback.remove("spending-limit-reached");
 			}
 
 			// Use list copy for state update

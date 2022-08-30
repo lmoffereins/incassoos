@@ -1049,9 +1049,6 @@ define([
 				validated = false;
 				feedbackId = "invalid-".concat(prop);
 
-				// Remove any previous feedback
-				feedback.remove(feedbackId);
-
 				// Use available validator function
 				if (validators.hasOwnProperty(prop) && "function" === typeof validators[prop]) {
 					validated = validators[prop].call(item || copy(data), data[prop]);
@@ -1073,6 +1070,10 @@ define([
 							value: data[prop]
 						}
 					});
+
+				// Remove any previous feedback
+				} else {
+					feedback.remove(feedbackId);
 				}
 			}
 
