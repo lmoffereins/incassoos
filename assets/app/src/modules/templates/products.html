@@ -7,7 +7,7 @@
 		<div class="item-list-actions">
 			<input-search v-model="q"></input-search>
 			<button type="button" v-if="$isSettings && haveTrashedProducts" v-toggle="showTrashedProducts" v-l10n="toggleTrashedItemsLabel"></button>
-			<button type="button" v-if="creatable && !showTrashedProducts" @click="create" v-l10n.Common.Create></button>
+			<button type="button" v-if="creatable && !showTrashedProducts" @click="create" v-l10n.Product.CreateNew></button>
 
 			<input-dropdown
 				v-if="haveProductCategories"

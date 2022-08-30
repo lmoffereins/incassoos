@@ -60,7 +60,6 @@
 		"Confirm": "Bevestigen",
 		"Continue": "Verder",
 		"Create": "Maken",
-		"CreateNew": "Nieuwe maken",
 		"Delete": "Verwijderen",
 		"Done": "Klaar",
 		"Edit": "Bewerken",
@@ -87,7 +86,7 @@
 		"Untrash": "Herstellen",
 		"Yes": "Ja",
 		"Error": {
-			"Unknown": "Er ging iets fout: %s"
+			"Unknown": "Een onbekende fout: %s"
 		}
 	},
 	"Consumer": {
@@ -228,6 +227,7 @@
 		"ConsumedValue": "Waarde van bestellingen",
 		"NoOrders": "Er zijn nog geen bestellingen.",
 		"OpenOccasionPanel": "Open het gelegenheidscherm",
+		"AreYouSureDelete": "Weet je zeker dat je de gelegenheid %s wilt verwijderen?",
 		"Error": {
 			"NoOccasion": "Er is geen gelegenheid geselecteerd."
 		}
@@ -260,17 +260,19 @@
 		"SelectLess": "Minder %s",
 		"AllCategoriesOption": "Alle categorieën",
 		"OrderBy": "Sorteer op",
-		"OrderByTitle": "Titel",
+		"OrderByTitle": "Naam",
 		"OrderByMenuOrder": "Menuvolgorde",
 		"NoProducts": "Er zijn geen producten gevonden.",
 		"ShowTrashedItems": "Toon producten in de prullenbak",
+		"CreateNew": "Nieuw product",
 		"TitlePlaceholder": "Mijn product",
-		"TitleLabel": "Titel",
+		"TitleLabel": "Naam",
 		"ProductCategory": "Categorie",
 		"PriceLabel": "Prijs",
 		"OrderCount": "Aantal bestellingen",
 		"ProductQuantity":"Aantal bestelde producten",
 		"ConsumedValue": "Waarde van bestellingen",
+		"UnknownTitle": "Onbekend product",
 		"AreYouSureDelete": "Weet je zeker dat je het product %s wilt verwijderen?",
 		"Error": {
 			"TitleIsAlreadyInUse": "De naam is reeds in gebruik. Gebruik een andere naam.",

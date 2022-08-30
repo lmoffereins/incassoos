@@ -60,7 +60,6 @@
 		"Confirm": "Confirm",
 		"Continue": "Continue",
 		"Create": "Create",
-		"CreateNew": "Create New",
 		"Delete": "Delete",
 		"Done": "Done",
 		"Edit": "Edit",
@@ -231,6 +230,7 @@
 		"ConsumedValue": "Value of consumptions",
 		"OpenOccasionPanel": "Open the occasion panel",
 		"NoOrders": "There are no orders yet.",
+		"AreYouSureDelete": "Are you sure you want to delete the %s occasion?",
 		"Error": {
 			"NoOccasion": "There is no active occasion."
 		}
@@ -267,6 +267,7 @@
 		"OrderByMenuOrder": "Menu order",
 		"NoProducts": "No products were found.",
 		"ShowTrashedItems": "Show products in the Trash",
+		"CreateNew": "New Product",
 		"TitlePlaceholder": "My Product",
 		"TitleLabel": "Title",
 		"ProductCategory": "Category",
@@ -274,6 +275,7 @@
 		"OrderCount": "Order count",
 		"ProductQuantity": "Ordered products count",
 		"ConsumedValue": "Value of consumptions",
+		"UnknownTitle": "Unknown Product",
 		"AreYouSureDelete": "Are you sure you want to delete the %s product?",
 		"Error": {
 			"TitleIsAlreadyInUse": "This title is already in use. Provide a different title.",
