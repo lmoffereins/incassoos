@@ -346,7 +346,7 @@ define([
 			    hasPatches = false, i;
 
 			// When no feedback is present, check patches on the active item
-			if (hasNoErrors && listItem) {
+			if (hasNoErrors && listItem && state.active) {
 
 				// Only check patches on editable properties
 				for (i = 0; i < editableProps.length; i++) {

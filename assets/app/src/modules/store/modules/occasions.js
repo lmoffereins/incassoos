@@ -220,6 +220,8 @@ define([
 		isReopenable: function( state ) {
 			return state.active && !! state.active.closed;
 		}
+	}, {
+		feedback: feedback
 	}),
 
 	/**
