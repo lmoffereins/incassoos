@@ -237,7 +237,12 @@ define([
 			// where the second parameter is the item's array index.
 			if (! item || "number" === typeof item) {
 				item = id;
-				id = hash(new Date());
+
+				if (options.persistent) {
+					id = _.isPlainObject(id) ? id.message : id;
+				} else {
+					id = hash(new Date());
+				}
 			}
 
 			// Accept just a message or message with parameters
@@ -936,8 +941,8 @@ define([
 	/**
 	 * Return sanitization callback for the available items
 	 *
-	 * For each property sanitizer in `sanitizers` the `this` context will
-	 * be set to the original item that the sanitized property belongs to,
+	 * For each property sanitizer in `sanitizers` the context will be
+	 * set to the original item that the sanitized property belongs to,
 	 * so original property values can be found through `this.id` etc.
 	 *
 	 * @param  {Object} sanitizers Set of property sanitizer callbacks
@@ -961,8 +966,8 @@ define([
 			for (prop in data) {
 
 				// Use available sanitizer function
-				if (sanitizers.hasOwnProperty(prop) && sanitizers[prop]) {
-					sanitized[prop] = sanitizers[prop].apply(item || copy(data), [data[prop]]);
+				if (sanitizers.hasOwnProperty(prop) && "function" === typeof sanitizers[prop]) {
+					sanitized[prop] = sanitizers[prop].call(item || copy(data), data[prop]);
 
 				// Default to an unsanitized value
 				} else {
@@ -1028,7 +1033,7 @@ define([
 		 * @return {Array} Feedback list items
 		 */
 		return function validate( data, feedback ) {
-			var prop, item, validated = false;
+			var prop, item, validated, feedbackId;
 
 			// Default to a new feedback data object
 			feedback = feedback || createFeedback();
@@ -1039,23 +1044,28 @@ define([
 			// Get the current item
 			item = ("function" === typeof getItem) && getItem(data);
 
-			// Loop provided data
-			for (prop in data) {
+			// Loop validators
+			for (prop in validators) {
+				validated = false;
+				feedbackId = "invalid-".concat(prop);
+
+				// Remove any previous feedback
+				feedback.remove(feedbackId);
 
 				// Use available validator function
-				if (validators.hasOwnProperty(prop) && validators[prop]) {
-					validated = validators[prop].apply(item || copy(data), [data[prop]]);
+				if (validators.hasOwnProperty(prop) && "function" === typeof validators[prop]) {
+					validated = validators[prop].call(item || copy(data), data[prop]);
 
 				// Default to a generic validation
 				} else {
 					validated = "undefined" !== typeof data[prop];
 				}
 
-				// When value was invalidated. Ignore field `id`.
-				if ("id" !== prop && true !== validated) {
+				// When value was invalidated
+				if (true !== validated) {
 
 					// Add feedback
-					feedback.add({
+					feedback.add(feedbackId, {
 						isError: true,
 						message: validated || "Generic.Error.InvalidInputValue",
 						data: {

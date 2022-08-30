@@ -112,6 +112,7 @@
 		"SpendingLimit": "Bestedingslimiet",
 		"UpdatedConsumer": "De gegevens voor %s zijn bijgewerkt.",
 		"Error": {
+			"SpendingLimitShouldBeZeroOrHigher": "De bestedingslimiet moet groter of gelijk zijn aan nul.",
 			"SpendingLimitReached": "De bestedingslimiet van de afnemer is overschreden."
 		}
 	},
@@ -272,27 +273,16 @@
 		"ConsumedValue": "Waarde van bestellingen",
 		"AreYouSureDelete": "Weet je zeker dat je het product %s wilt verwijderen?",
 		"Error": {
-			"TitleIsAlreadyInUse": "De naam is reeds in gebruik. Geef een andere naam op.",
+			"TitleIsAlreadyInUse": "De naam is reeds in gebruik. Gebruik een andere naam.",
 			"TitleIsEmpty": "De naam mag niet leeg zijn.",
-			"PriceIsZero": "De prijs mag niet nul zijn.",
+			"PriceShouldBeGreaterThanZero": "De prijs moet groter zijn dan nul.",
 			"NoProductCategory": "Het product heeft geen categorie.",
-			"UnavailableProductCategory": "De categorie is niet beschikbaar."
+			"InvalidProductCategory": "De geselecteerde categorie bestaat niet."
 		}
 	},
 	"Receipt": {
 		"ListHeading": "Bonnetje",
 		"SelectAConsumer": "Selecteer een afnemer",
 		"FeedbackTitle": "Bonfouten"
-	},
-	"propLabels": {
-		"Consumer": {
-			"name": "Naam",
-			"limit": "Consumptielimiet",
-			"show": "In lijst tonen"
-		},
-		"Product": {
-			"title": "Titel",
-			"price": "Prijs"
-		}
 	}
 }

@@ -25,8 +25,7 @@ define([
 				id: 0,
 				name: "Consumer.TypesGroupName",
 				order: 0
-			},
-			editable: []
+			}
 		};
 	},
 

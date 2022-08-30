@@ -156,7 +156,9 @@ define([
 			 * @return {Boolean} Can occasion be created?
 			 */
 			creatable: function() {
-				return this.submittable && this.$fsmSeek(fsm.tr.GET_OCCASION);
+				return this.$fsmSeek(fsm.tr.GET_OCCASION)
+					&& !! this.title
+					&& dayjs(this.occasionDate).isValid();
 			},
 
 			/**

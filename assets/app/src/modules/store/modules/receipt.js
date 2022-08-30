@@ -247,21 +247,22 @@ define([
 		},
 
 		/**
-		 * Refresh the list feedback
+		 * Reset the list feedback
 		 *
 		 * Clears the list and re-evaluates feedback checks.
 		 *
 		 * @param {Object} context Store context
 		 * @return {Void}
 		 */
-		refreshFeedback: function( state, context ) {
+		resetFeedback: function( state, context ) {
+			var totalPrice = context.rootGetters["receipt/getTotalPrice"];
 
-			// Clear feedback
-			feedback.clear();
+			// Remove prior feedback by force
+			feedback.clear(true);
 
 			// When the consumer spending limit is passed
-			if (! context.rootGetters["consumers/isWithinSpendingLimit"](null, context.rootGetters["receipt/getTotalPrice"])) {
-				feedback.add({
+			if (! context.rootGetters["consumers/isWithinSpendingLimit"](null, totalPrice)) {
+				feedback.add("invalid-receipt", {
 					isError: true,
 					message: "Consumer.Error.SpendingLimitReached"
 				});
@@ -331,6 +332,21 @@ define([
 			);
 
 			/**
+			 * When selecting a consumer, clear the list feedback
+			 *
+			 * @param  {Object} payload Product id
+			 * @return {Void}
+			 */
+			fsm.observe(
+				fsm.on.after.SELECT_CONSUMER,
+				function( lifecycle, payload ) {
+
+					// Reset feedback items
+					context.commit("resetFeedback", context);
+				}
+			);
+
+			/**
 			 * When selecting a product, increment the receipt's product
 			 *
 			 * @param  {Object} payload Product id
@@ -343,8 +359,8 @@ define([
 					// Register new active product
 					context.commit("incrementItem", payload);
 
-					// Refresh feedback items
-					context.commit("refreshFeedback", context);
+					// Reset feedback items
+					context.commit("resetFeedback", context);
 				}
 			);
 
@@ -361,8 +377,8 @@ define([
 					// Register new active product
 					context.commit("decrementItem", payload);
 
-					// Refresh feedback items
-					context.commit("refreshFeedback", context);
+					// Reset feedback items
+					context.commit("resetFeedback", context);
 				}
 			);
 

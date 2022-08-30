@@ -112,7 +112,8 @@
 		"SpendingLimit": "Spending limit",
 		"UpdatedConsumer": "The details for %s are updated.",
 		"Error": {
-			"SpendingLimitReached": "The consumer's consumption limit is reached."
+			"SpendingLimitShouldBeZeroOrHigher": "Spending limit should be zero or higher.",
+			"SpendingLimitReached": "The consumer's spending limit is reached."
 		}
 	},
 	"Generic": {
@@ -275,11 +276,11 @@
 		"ConsumedValue": "Value of consumptions",
 		"AreYouSureDelete": "Are you sure you want to delete the %s product?",
 		"Error": {
-			"TitleIsAlreadyInUse": "This title is already in use. Please provide a different title.",
+			"TitleIsAlreadyInUse": "This title is already in use. Provide a different title.",
 			"TitleIsEmpty": "The title cannot be empty.",
-			"PriceIsZero": "The price cannot be zero.",
+			"PriceShouldBeGreaterThanZero": "The price should be greater than zero.",
 			"NoProductCategory": "The product is not categorized.",
-			"UnavailableProductCategory": "The category is not available."
+			"InvalidProductCategory": "The selected category does not exist."
 		}
 	},
 	"Receipt": {
@@ -289,18 +290,5 @@
 	},
 	"Settings": {
 		"OpenSettings": "Open settings"
-	},
-	"propLabels": {
-		"Consumer": {
-			"id": "ID",
-			"name": "Name",
-			"spendingLimit": "Spending limit",
-			"show": "Show in list"
-		},
-		"Product": {
-			"id": "ID",
-			"title": "Title",
-			"price": "Price"
-		}
 	}
 }

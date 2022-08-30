@@ -32,12 +32,7 @@ define([
 			price: parseFloat(resp.price),
 			status: resp.status || "publish",
 			productCategory: resp[settings.product.productCategory.taxonomyId][0] || 0,
-			menuOrder: parseInt(resp.menu_order),
-			editable: [
-				"title",
-				"price",
-				"productCategory"
-			]
+			menuOrder: parseInt(resp.menu_order)
 		};
 	},
 

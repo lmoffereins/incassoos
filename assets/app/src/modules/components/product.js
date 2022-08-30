@@ -114,7 +114,7 @@ define([
 				// Patch the active item
 				dispatch("patch", { [prop]: value });
 			}
-		}, 600);
+		}, 300);
 	};
 
 	return {

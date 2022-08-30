@@ -129,6 +129,12 @@
 			}
 		}
 
+		.feedback .feedback-list {
+			.item {
+				border-radius: 0px;
+			}
+		}
+
 		.item-list-footer {
 			display: flex;
 			flex-direction: row;
@@ -137,10 +143,6 @@
 				flex: 1;
 				padding: 15px;
 				border-radius: 0px;
-			}
-
-			.cancel-action {
-				flex: 2;
 			}
 
 			.submit-action {

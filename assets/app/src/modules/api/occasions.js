@@ -26,12 +26,7 @@ define([
 			occasionDate: new Date(resp.occasion_date),
 			occasionType: resp[settings.occasion.occasionType.taxonomyId][0] || 0,
 			closed: resp.closed || false,
-			consumers: resp.consumers || [],
-			editable: [
-				"title",
-				"occasionType",
-				"occasionDate"
-			]
+			consumers: resp.consumers || []
 		};
 	},
 

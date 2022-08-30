@@ -51,6 +51,78 @@ define([
 	}),
 
 	/**
+	 * Define sanitization function for consumers
+	 *
+	 * @type {Function} Consumer sanitization
+	 */
+	sanitize = util.sanitization({
+		/**
+		 * Sanitization of the `limit` consumer property
+		 *
+		 * @param  {String} input Input value
+		 * @return {Float} Sanitized value
+		 */
+		limit: util.sanitizePrice,
+
+		/**
+		 * Sanitization of the `show` consumer property
+		 *
+		 * @param  {Mixed} input Input value
+		 * @return {Boolean} Sanitized value
+		 */
+		show: function( input ) {
+			return !! input;
+		}
+	}),
+
+	/**
+	 * Holds validation functions for editable properties
+	 *
+	 * @type {Object} Item property validators
+	 */
+	validators = {
+		/**
+		 * Validation of the `spendingLimit` consumer property
+		 *
+		 * @param  {String} input Sanitized input value
+		 * @return {Boolean|String} Validation success or error code
+		 */
+		spendingLimit: function( input ) {
+			var validated = true;
+
+			// Value should be a number
+			if (! _.isNumber(input)) {
+				validated = false;
+
+			// Value should be 0 or higher
+			} else if (0 > input) {
+				validated = "Consumer.Error.SpendingLimitShouldBeZeroOrHigher";
+			}
+
+			return validated;
+		},
+
+		/**
+		 * Validation of the `show` consumer property
+		 *
+		 * @param  {Boolean} input Sanitized input value
+		 * @return {Boolean} Validation success
+		 */
+		show: _.isBoolean
+	},
+
+	/**
+	 * Define validation function for consumers
+	 *
+	 * @type {Function} Consumer validation
+	 */
+	validate = util.validation(validators, function( id ) {
+		return state.all.find( function( i ) {
+			return i.id === id;
+		});
+	}),
+
+	/**
 	 * The module getter methods
 	 *
 	 * @type {Object}
@@ -103,7 +175,7 @@ define([
 		 */
 		isSubmittable: list.isSubmittable([
 			fsm.st.EDIT_CONSUMER
-		]),
+		], _.keys(validators)),
 
 		/**
 		 * Return the order count of the active consumer in the context
@@ -196,93 +268,9 @@ define([
 
 				return isWithinLimit;
 			};
-		},
-
-		/**
-		 * Return the feedback list
-		 *
-		 * @return {Array} Feedback list
-		 */
-		getFeedback: function( state, getters, rootState ) {
-			var varToTriggerTheUpdateCycleWhenChanged = rootState.l10n;
-
-			return state.__feedback.map( function( i ) {
-
-				// Attach translated field arguments
-				if (i.data.field) {
-					i.data.args = l10nService.get("propLabels.Consumer." + i.data.field);
-				}
-
-				return i;
-			});
 		}
 	}, {
 		feedback: feedback
-	}),
-
-	/**
-	 * Define sanitization function for consumers
-	 *
-	 * @type {Function} Consumer sanitization
-	 */
-	sanitize = util.sanitization({
-		/**
-		 * Sanitization of the `limit` consumer property
-		 *
-		 * @param  {String} input Input value
-		 * @return {Float} Sanitized value
-		 */
-		limit: util.sanitizePrice,
-
-		/**
-		 * Sanitization of the `show` consumer property
-		 *
-		 * @param  {Mixed} input Input value
-		 * @return {Boolean} Sanitized value
-		 */
-		show: function( input ) {
-			return !! input;
-		}
-	}),
-
-	/**
-	 * Define validation function for consumers
-	 *
-	 * @type {Function} Consumer validation
-	 */
-	validate = util.validation({
-		/**
-		 * Validation of the `limit` consumer property
-		 *
-		 * @param  {String} input Sanitized input value
-		 * @return {Boolean|String} Validation success or error code
-		 */
-		limit: function( input ) {
-			var validated = true;
-
-			// Value should be a number
-			if (! _.isNumber(input)) {
-				validated = false;
-
-			// Value should not be 0 or lower
-			} else if (0 <= input) {
-				validated = "Error.ConsumerLimitCannotBeZeroOrLower";
-			}
-
-			return validated;
-		},
-
-		/**
-		 * Validation of the `show` consumer property
-		 *
-		 * @param  {Boolean} input Sanitized input value
-		 * @return {Boolean} Validation success
-		 */
-		show: _.isBoolean
-	}, function( id ) {
-		return state.all.find( function( i ) {
-			return i.id === id;
-		});
 	}),
 
 	/**
@@ -431,6 +419,23 @@ define([
 			);
 
 			/**
+			 * When entering the SETTINGS state, clear the active consumer.
+			 *
+			 * @return {Void}
+			 */
+			fsm.observe(
+				fsm.on.enter.SETTINGS,
+				function( lifecycle ) {
+
+					// Clear active consumer
+					context.commit("clearActive");
+
+					// Clear list feedback
+					context.commit("clearFeedback");
+				}
+			);
+
+			/**
 			 * When entering the IDLE state, clear the active consumer.
 			 *
 			 * @return {Void}
@@ -449,20 +454,6 @@ define([
 							return;
 						}
 					}
-
-					// Clear active consumer
-					context.commit("clearActive");
-				}
-			);
-
-			/**
-			 * When entering the SETTINGS state, clear the active consumer.
-			 *
-			 * @return {Void}
-			 */
-			fsm.observe(
-				fsm.on.enter.SETTINGS,
-				function( lifecycle ) {
 
 					// Clear active consumer
 					context.commit("clearActive");
@@ -526,7 +517,7 @@ define([
 		/**
 		 * Transition when selecting a consumer OR set the active consumer
 		 *
-		 * When already in the CONSUMER state, do not close the current item first.
+		 * When already in the CONSUMER state, do not close the active item first.
 		 *
 		 * @param {Object} payload Consumer id
 		 * @return {Promise} Transition success
@@ -593,7 +584,7 @@ define([
 		},
 
 		/**
-		 * Transition when closing the current item
+		 * Transition when closing the active item
 		 *
 		 * @return {Promise} Transition success
 		 */

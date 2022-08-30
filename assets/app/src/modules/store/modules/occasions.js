@@ -21,7 +21,8 @@ define([
 	var state = {
 		all: [],
 		searchQuery: "",
-		active: null
+		active: null,
+		__feedback: []
 	},
 
 	/**
@@ -37,6 +38,116 @@ define([
 	 * @type {Object}
 	 */
 	feedbackService = services.get("feedback"),
+
+	/**
+	 * Holds the feedback handler
+	 *
+	 * @type {Object}
+	 */
+	feedback = util.createFeedback({
+		name: "occasions",
+		persistent: true
+	}),
+
+	/**
+	 * Define sanitization function for occasions
+	 *
+	 * @type {Function} Product sanitization
+	 */
+	sanitize = util.sanitization({
+		/**
+		 * Sanitization of the `title` item property
+		 *
+		 * @param  {String} input Input value
+		 * @return {String} Sanitized value
+		 */
+		title: function( input ) {
+			return input.trim();
+		},
+
+		/**
+		 * Sanitization of the `occasionType` item property
+		 *
+		 * @param  {Number|String} input Input value
+		 * @return {Float} Sanitized value
+		 */
+		occasionType: function( input ) {
+			return isNaN(input) ? 0 : parseInt(input);
+		}
+	}),
+
+	/**
+	 * Holds validation functions for editable properties
+	 *
+	 * @type {Object} Item property validators
+	 */
+	validators = {
+		/**
+		 * Validation of the `title` item property
+		 *
+		 * @param  {String} input Sanitized input value
+		 * @return {Boolean|String} Validation success or error code
+		 */
+		title: function( input ) {
+			var validated = true;
+
+			// Value should contain characters
+			if (0 === input.length) {
+				validated = "Occasion.Error.TitleIsEmpty";
+			}
+
+			return validated;
+		},
+
+		/**
+		 * Validation of the `occasionDate` item property
+		 *
+		 * @param  {String} input Sanitized input value
+		 * @return {Boolean|String} Validation success or error code
+		 */
+		occasionDate: function( input ) {
+			var validated = true;
+
+			// Value should be a valid date object
+			if (! dayjs(input).isValid()) {
+				validated = "Occasions.Error.InvalidOccasionDate";
+			}
+
+			return validated;
+		},
+
+		/**
+		 * Validation of the `occasionType` item property
+		 *
+		 * @param  {String} input Sanitized input value
+		 * @return {Boolean|String} Validation success or error code
+		 */
+		occasionType: function( input ) {
+			var validated = true;
+
+			// Value should be a number larger than 0
+			if (0 >= input) {
+				validated = "Occasion.Error.NoOccasionType";
+
+			// Value should be an available term id
+			} else if (! settings.occasion.occasionType.items.hasOwnProperty(input)) {
+				validated = "Occasion.Error.UnavailableOccasionType";
+			}
+
+			return validated;
+		}
+	},
+
+	/**
+	 * Define validation function for occasions
+	 *
+	 * @type {Function} Occasion validation
+	 */
+	validate = util.validation(validators, function( id ) {
+		return state.all.find( function( i ) {
+			return i.id === id;
+		});
+	}),
 
 	/**
 	 * The module getter methods
@@ -67,14 +178,15 @@ define([
 		/**
 		 * Return whether the occasion can be updated
 		 *
+		 * Submittable for occasions is only defined for editing an occasion, not for
+		 * creating an occasion, because the active occasion remains the active item
+		 * during the creation process.
+		 *
 		 * @return {Boolean} Can occasion be updated?
 		 */
-		isSubmittable: function( state ) {
-			state.active && console.log(state.active.title, dayjs(state.active.occasionDate).isValid());
-			return state.active
-				&& !! state.active.title
-				&& dayjs(state.active.occasionDate).isValid();
-		},
+		isSubmittable: list.isSubmittable([
+			fsm.st.EDIT_OCCASION
+		], _.keys(validators)),
 
 		/**
 		 * Return whether the occasion can be deleted
@@ -115,7 +227,17 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	mutations = list.mutations(),
+	mutations = list.mutations({
+		/**
+		 * Modify the active product
+		 *
+		 * @param  {Object} payload Product data
+		 * @return {Void}
+		 */
+		patchActive: list.patchActive(sanitize, validate, feedback)
+	}, {
+		feedback: feedback
+	}),
 
 	/**
 	 * Create an occasion
@@ -421,7 +543,24 @@ define([
 
 						// Reset active product, removing applied edits
 						context.commit("setActive", { id: context.state.active.id });
+
+						// Clear the list feedback
+						context.commit("clearFeedback");
 					}
+				}
+			);
+
+			/**
+			 * When entering the OCCASIONS state, clear feedback data
+			 *
+			 * @return {Void}
+			 */
+			fsm.observe(
+				fsm.on.enter.OCCASIONS,
+				function() {
+
+					// Clear the list feedback
+					context.commit("clearFeedback");
 				}
 			);
 		},

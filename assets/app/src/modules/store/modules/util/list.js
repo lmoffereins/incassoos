@@ -80,10 +80,12 @@ define([
 			/**
 			 * Return if the feedback list has any errors
 			 *
+			 * Use `state.__feedback` to trigger state watchers.
+			 *
 			 * @return {Boolean} Feedback list has errors
 			 */
-			getFeedbackHasErrors: function( state ) {
-				return !! (options.feedback && options.feedback.hasErrors());
+			hasFeedbackErrors: function( state ) {
+				return state.__feedback && options.feedback.hasErrors();
 			}
 		}, getters || {});
 	},
@@ -324,26 +326,31 @@ define([
 	/**
 	 * Return getter function for checking if the item is submittable
 	 *
+	 * Checks for input validation errors and whether the item has any patches.
+	 *
 	 * TODO: apply auth check here?
 	 *
 	 * @param  {Array|String} submittableStates List of or single submittable FSM state(s)
+	 * @param  {Array} editableProps List of editable property names
+	 * @param  {Function} getBlankItem Optional. Function to return a new blank item.
 	 * @return {Function} Is the list submittable?
 	 */
-	isSubmittable = function( submittableStates ) {
+	isSubmittable = function( submittableStates, editableProps, getBlankItem ) {
+		editableProps = editableProps || [];
+		getBlankItem = getBlankItem || _.noop;
+
 		return function( state, getters ) {
 			var id = state.active && state.active.id,
-			    listItem = id && getters["getItemById"](id),
-			    hasNoErrors = ! getters["getFeedbackHasErrors"],
-			    hasPatches = (! listItem), i;
+			    listItem = id && getters["getItemById"](id) || getBlankItem() || {},
+			    hasNoErrors = ! getters["hasFeedbackErrors"],
+			    hasPatches = false, i;
 
 			// When no feedback is present, check patches on the active item
 			if (hasNoErrors && listItem) {
-				for (i in listItem) {
 
-					// Only check patches on editable properties
-					if (-1 !== listItem.editable.indexOf(i)) {
-						hasPatches = hasPatches || (listItem[i] !== state.active[i]);
-					}
+				// Only check patches on editable properties
+				for (i = 0; i < editableProps.length; i++) {
+					hasPatches = hasPatches || (listItem[editableProps[i]] !== state.active[editableProps[i]]);
 				}
 			}
 
@@ -355,7 +362,7 @@ define([
 	/**
 	 * Return mutation function for patching the active list item
 	 *
-	 * Use this function to apply 
+	 * Use this function to apply patches to the active item
 	 *
 	 * @param  {Function|Object} sanitize Sanitization function or set of sanitizer functions
 	 * @param  {Function|Object} validate Validation function or set of validator functions
@@ -365,10 +372,14 @@ define([
 	patchActive = function( sanitize, validate, feedback ) {
 
 		// Default to a standard sanitization function
-		sanitize = ("function" === typeof sanitize) ? sanitize : util.sanitization(sanitize || {});
+		if ("function" !== typeof sanitize) {
+			sanitize = util.sanitization(sanitize || {});
+		}
 
 		// Default to a standard validation function
-		validate = ("function" === typeof validate) ? validate : util.validation(validate || {});
+		if ("function" !== typeof validate) {
+			validate = util.validation(validate || {});
+		}
 
 		return function( state, payload ) {
 			if (state.active) {

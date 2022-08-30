@@ -37,11 +37,7 @@ define([
 				id: resp.group.id,
 				name: resp.group.name,
 				order: resp.group.order
-			},
-			editable: [
-				"spendingLimit",
-				"show"
-			]
+			}
 		};
 	},
 

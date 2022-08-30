@@ -120,7 +120,8 @@ define([
 			}
 		})),
 		methods: Object.assign(Vuex.mapMutations("receipt", {
-			"clear": "clearList"
+			"clear": "clearList",
+			"clearFeedback": "clearFeedback"
 		}), Vuex.mapActions("orders", {
 			/**
 			 * Edit the active item
@@ -184,6 +185,10 @@ define([
 				// Stop the receipt when there is no active consumer
 				} else if (! this.consumer.id) {
 					dispatch("cancel");
+
+				// Clear feedback when the list is empty
+				} else {
+					this.clearFeedback();
 				}
 			}
 		})),

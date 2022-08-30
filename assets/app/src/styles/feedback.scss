@@ -15,6 +15,16 @@
 		bottom: 0px;
 		// opacity: 1;
 	}
+}
+
+.feedback {
+	display: none;
+	flex-direction: column;
+	grid-gap: 5px;
+
+	&.is-active {
+		display: flex;
+	}
 
 	.feedback-list {
 		list-style: none;
@@ -80,19 +90,5 @@
 			position: absolute;
 			width: 100%;
 		}
-	}
-}
-
-.feedback {
-	display: none;
-	flex-direction: column;
-	grid-gap: 5px;
-
-	&.is-active {
-		display: flex;
-	}
-
-	&.show-one {
-
 	}
 }

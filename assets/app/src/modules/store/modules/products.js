@@ -58,44 +58,17 @@ define([
 	}),
 
 	/**
-	 * The module getter methods
+	 * Return a new blank item
 	 *
-	 * @type {Object}
+	 * @return {Object} New item
 	 */
-	getters = list.getters({
-		/**
-		 * Return whether the selected product is submittable
-		 *
-		 * Provide app states that allow submitting.
-		 *
-		 * @return {Boolean} Is the product submittable?
-		 */
-		isSubmittable: list.isSubmittable([
-			fsm.st.CREATE_PRODUCT,
-			fsm.st.EDIT_PRODUCT
-		]),
-
-		/**
-		 * Return the feedback list
-		 *
-		 * @return {Array} Feedback list
-		 */
-		getFeedback: function( state, getters, rootState ) {
-			var varToTriggerUpdateCycleOnItsChange = rootState.l10n;
-
-			return state.__feedback.map( function( item ) {
-
-				// Attach translated field arguments
-				if (item.data.field) {
-					item.data.args = l10nService.get("propLabels.Product.".concat(item.data.field));
-				}
-
-				return item;
-			});
-		}
-	}, {
-		feedback: feedback
-	}),
+	getBlankItem = function() {
+		return {
+			title: "",
+			price: 0,
+			productCategory: settings.product.productCategory.defaultValue
+		};
+	},
 
 	/**
 	 * Define sanitization function for products
@@ -104,7 +77,7 @@ define([
 	 */
 	sanitize = util.sanitization({
 		/**
-		 * Sanitization of the `title` product property
+		 * Sanitization of the `title` item property
 		 *
 		 * @param  {String} input Input value
 		 * @return {String} Sanitized value
@@ -114,7 +87,7 @@ define([
 		},
 
 		/**
-		 * Sanitization of the `price` product property
+		 * Sanitization of the `price` item property
 		 *
 		 * @param  {String} input Input value
 		 * @return {Float} Sanitized value
@@ -122,7 +95,7 @@ define([
 		price: util.sanitizePrice,
 
 		/**
-		 * Sanitization of the `productCategory` product property
+		 * Sanitization of the `productCategory` item property
 		 *
 		 * @param  {Number|String} input Input value
 		 * @return {Float} Sanitized value
@@ -133,13 +106,13 @@ define([
 	}),
 
 	/**
-	 * Define validation function for products
+	 * Holds validation functions for editable properties
 	 *
-	 * @type {Function} Product validation
+	 * @type {Object} Item property validators
 	 */
-	validate = util.validation({
+	validators = {
 		/**
-		 * Validation of the `title` product property
+		 * Validation of the `title` item property
 		 *
 		 * @param  {String} input Sanitized input value
 		 * @return {Boolean|String} Validation success or error code
@@ -148,7 +121,7 @@ define([
 			var id = this.id, all, validated = true;
 
 			// Get all existing titles
-		    all = state.all.filter( function( product ) {
+			all = state.all.filter( function( product ) {
 				return product.id !== id;
 			}).map( function( product ) {
 				return util.removeAccents(product.title.toLowerCase());
@@ -167,7 +140,9 @@ define([
 		},
 
 		/**
-		 * Validation of the `price` product property
+		 * Validation of the `price` item property
+		 *
+		 * TODO: use setting to allow for negative values
 		 *
 		 * @param  {String} input Sanitized input value
 		 * @return {Boolean|String} Validation success or error code
@@ -179,18 +154,18 @@ define([
 			if (! _.isNumber(input)) {
 				validated = false;
 
-			// Value should not be 0
-			} else if (0 === input) {
-				validated = "Product.Error.PriceIsZero";
+			// Value should be greater than 0
+			} else if (0 >= input) {
+				validated = "Product.Error.PriceShouldBeGreaterThanZero";
 			}
 
 			return validated;
 		},
 
 		/**
-		 * Validation of the `productCategory` product property
+		 * Validation of the `productCategory` item property
 		 *
-		 * @param {String} input Sanitized input value
+		 * @param  {String} input Sanitized input value
 		 * @return {Boolean|String} Validation success or error code
 		 */
 		productCategory: function( input ) {
@@ -202,15 +177,43 @@ define([
 
 			// Value should be an available term id
 			} else if (! settings.product.productCategory.items.hasOwnProperty(input)) {
-				validated = "Product.Error.UnavailableProductCategory";
+				validated = "Product.Error.InvalidProductCategory";
 			}
 
 			return validated;
 		}
-	}, function( id ) {
+	},
+
+	/**
+	 * Define validation function for products
+	 *
+	 * @type {Function} Product validation
+	 */
+	validate = util.validation(validators, function( id ) {
 		return state.all.find( function( i ) {
 			return i.id === id;
 		});
+	}),
+
+	/**
+	 * The module getter methods
+	 *
+	 * @type {Object}
+	 */
+	getters = list.getters({
+		/**
+		 * Return whether the selected product is submittable
+		 *
+		 * Provide app states that allow submitting.
+		 *
+		 * @return {Boolean} Is the product submittable?
+		 */
+		isSubmittable: list.isSubmittable([
+			fsm.st.CREATE_PRODUCT,
+			fsm.st.EDIT_PRODUCT
+		], _.keys(validators), getBlankItem)
+	}, {
+		feedback: feedback
 	}),
 
 	/**
@@ -225,12 +228,7 @@ define([
 		 * @return {Void}
 		 */
 		newActive: function( state ) {
-			state.active = {
-				id: undefined,
-				title: "",
-				price: 0,
-				productCategory: settings.product.productCategory.defaultValue
-			};
+			state.active = getBlankItem();
 		},
 
 		/**
@@ -446,7 +444,7 @@ define([
 			);
 
 			/**
-			 * When entering the SETTINGS state, clear the active product
+			 * When entering the SETTINGS state, clear product data
 			 *
 			 * @return {Void}
 			 */
@@ -456,6 +454,9 @@ define([
 
 					// Clear active product
 					context.commit("clearActive");
+
+					// Clear the list feedback
+					context.commit("clearFeedback");
 				}
 			);
 		},
