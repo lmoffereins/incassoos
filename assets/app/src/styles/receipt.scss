@@ -10,7 +10,7 @@
 		height: min( 480px, calc( 100vh - 235px ) );
 		max-height: 0px;
 		transition:
-			max-height .6s ease-out // $transition-quick-reverse
+			max-height $transition-quick
 		;
 
 		.close-button {
@@ -67,7 +67,8 @@
 			position: relative;
 			padding: 35px 70px 15px;
 			transform: translateY(120px);
-			transition: transform $transition-quick-reverse;
+			transition: transform .6s linear;
+			transition-delay: .2s;
 			text-align: center;
 
 			.item-list-header-image {
