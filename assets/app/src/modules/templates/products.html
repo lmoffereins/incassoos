@@ -29,11 +29,11 @@
 					type="button"
 					class="select-item"
 					@click.exact="select(p.id)"
-					@click.ctrl.exact="incrementByTen(p.id)"
-					@click.shift.exact="decrement(p.id)"
+					@click.shift.exact="incrementByTen(p.id)"
+					@click.ctrl.exact="decrement(p.id)"
 					@click.right.exact.prevent="decrement(p.id)"
-					@click.shift.ctrl.exact="decrementByTen(p.id)"
-					@click.right.ctrl.exact.prevent="decrementByTen(p.id)"
+					@click.ctrl.shift.exact="decrementByTen(p.id)"
+					@click.right.shift.exact.prevent="decrementByTen(p.id)"
 					v-l10n-title="selectLabel(p.title)">
 					<div class="item-content">
 						<span class="item-title">{{p.title}}</span>
