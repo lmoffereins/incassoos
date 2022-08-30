@@ -142,12 +142,6 @@
 			"on": {
 				"TOGGLE_SETTINGS": "RECEIPT"
 			}
-		},
-		"ADMINISTRATION": {
-			"on": {
-				"CLOSE_ADMINISTRATION": "IDLE",
-				"START_INSTALLATION": "INSTALLATION"
-			}
 		}
 	}
 }
