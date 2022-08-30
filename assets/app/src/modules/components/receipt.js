@@ -96,10 +96,23 @@ define([
 			}
 		}, Vuex.mapGetters("receipt", {
 			"feedback": "getFeedback",
-			"receipt": "getItems",
 			"totalPrice": "getTotalPrice",
 			"editable": "isEditable",
 			"submittable": "isSubmittable"
+		}), Vuex.mapState("receipt", {
+			/**
+			 * Return the receipt items in reverse
+			 *
+			 * @return {Array} Receipt items
+			 */
+			receipt: function( state, getters ) {
+				var items = getters.getItems.slice();
+
+				// Reverse the items
+				items.reverse();
+
+				return items;
+			}
 		}), Vuex.mapState("consumers", {
 			/**
 			 * Return the active consumer
