@@ -1,5 +1,5 @@
 <div class="receipt item-list-wrapper" :class="{ 'is-active': isActive }" :inert="!isActive">
-	<close-button @click="cancel" class="receipt-close"></close-button>
+	<close-button @click="close" class="receipt-close"></close-button>
 
 	<div class="receipt-total" :class="{ 'is-active': !! totalPrice }">
 		<span class="total-value">{{totalPrice | money}}</span>

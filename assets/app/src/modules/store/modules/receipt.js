@@ -422,16 +422,22 @@ define([
 		},
 
 		/**
-		 * Transition when cancelling the order edit OR closing the order OR cancelling the receipt
+		 * Transition when cancelling the order/receipt context
 		 *
+		 * @param {Object} payload Cancel parameters
 		 * @return {Promise} Transition success
 		 */
-		cancel: function( context ) {
-			return fsm.do([
-				fsm.tr.CANCEL_EDIT,
-				fsm.tr.CLOSE_ITEM,
-				fsm.tr.CANCEL_RECEIPT
-			]);
+		cancel: function( context, payload ) {
+			return payload && payload.close
+				? fsm.do([
+					fsm.tr.CLOSE_ITEM,
+					fsm.tr.CANCEL_RECEIPT
+				])
+				: fsm.do([
+					fsm.tr.CANCEL_EDIT,
+					fsm.tr.CLOSE_ITEM,
+					fsm.tr.CANCEL_RECEIPT
+				]);
 		}
 	}, {
 		feedback: feedback

@@ -161,7 +161,19 @@ define([
 			},
 
 			/**
-			 * Cancel the current state
+			 * Close the active item
+			 *
+			 * Dispatch the action without returning the promise.
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @return {Void}
+			 */
+			close: function( dispatch ) {
+				dispatch("cancel", { close: true });
+			},
+
+			/**
+			 * Cancel the current action
 			 *
 			 * Dispatch the action without returning the promise.
 			 *
