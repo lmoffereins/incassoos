@@ -156,15 +156,6 @@ define([
 	 */
 	getters = list.getters({
 		/**
-		 * Return the title of the active item
-		 *
-		 * @return {String} Item title
-		 */
-		getTitle: function( state ) {
-			return state.active && state.active.title;
-		},
-
-		/**
 		 * Return whether the occasion can be edited
 		 *
 		 * TODO: require `! state.active.closed`?

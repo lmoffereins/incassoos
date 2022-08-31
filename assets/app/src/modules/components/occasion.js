@@ -39,9 +39,16 @@ define([
 					fsm.tr.START_OCCASION,
 					fsm.tr.SELECT_OCCASION
 				]);
+			},
+		}), Vuex.mapState("occasions", {
+			/**
+			 * Return the active item's title
+			 *
+			 * @return {String} Title
+			 */
+			title: function( state ) {
+				return state.active && state.active.title;
 			}
-		}), Vuex.mapGetters("occasions", {
-			"title": "getTitle"
 		})),
 		methods: Vuex.mapActions("occasions", {
 			/**
