@@ -135,7 +135,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 				),
 				'spendingLimit' => array(
 					'description' => __( 'Spending limit for the object.', 'incassoos' ),
-					'type'        => 'integer',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' )
 				),
 				'group'           => array(
