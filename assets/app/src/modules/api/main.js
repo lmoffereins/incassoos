@@ -61,12 +61,20 @@ define("api", [
 		"rest_user_invalid_id": "API.Error.InvalidUserId",
 
 		// Assets
+		"incassoos_empty_title": "API.Error.EmptyTitle",
 		"incassoos_rest_invalid_order_consumer_field": "API.Error.InvalidConsumerField",
 		"incassoos_rest_invalid_order_products_field": "API.Error.InvalidProductsField",
 		"incassoos_rest_invalid_date_field": "API.Error.InvalidDateField",
-		"incassoos_rest_occasion_cannot_close": "Occasion.Error.CloseNotAllowed",
 		"incassoos_order_locked_occasion": "Order.Error.OccasionClosed",
-		"incassoos_rest_invalid_product_price_field": "API.Error.InvalidPriceField"
+		"incassoos_rest_invalid_product_price_field": "API.Error.InvalidPriceField",
+
+		// Occasion
+		"incassoos_rest_occasion_cannot_close_post": "Occasion.Error.CloseNotAllowed",
+		"incassoos_rest_is_locked": "Occasion.Error.IsLocked",
+		"incassoos_rest_cannot_close": "Occasion.Error.CannotClose",
+		"incassoos_rest_occasion_cannot_reopen_post": "Occasion.Error.ReopenNotAllowed",
+		"incassoos_rest_is_not_closed": "Occasion.Error.IsNotClosed",
+		"incassoos_rest_cannot_reopen": "Occasion.Error.CannotReopen"
 	},
 
 	/**

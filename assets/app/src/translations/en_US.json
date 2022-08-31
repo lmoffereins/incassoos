@@ -183,7 +183,7 @@
 			"EmptyPassword": "Could not login. The password cannot be empty.",
 			"InvalidCredentials": "Could not login. The credentials do not match with an account.",
 			"AccountMarkedAsSpammer": "Could not login. The account is marked as spammer.",
-			"AccessNotAllowed": "Sorry, your account is not configured to use the application.",
+			"AccessNotAllowed": "Sorry, your account is not configured to use this application.",
 			"RequiresAuthentication": "You should be logged-in to do that.",
 			"InvalidPin": "You cannot use that pincode.",
 			"SavePinFailed": "The pincode could not be saved.",
@@ -232,7 +232,17 @@
 		"NoOrders": "There are no orders yet.",
 		"AreYouSureDelete": "Are you sure you want to delete the %s occasion?",
 		"Error": {
-			"NoOccasion": "There is no active occasion."
+			"NoOccasion": "There is no active occasion.",
+			"TitleIsEmpty": "The title cannot be empty.",
+			"InvalidOccasionDate": "The date is not correctly defined.",
+			"NoOccasionType": "The occasion has no type.",
+			"InvalidOccasionType": "The selected type does not exist.",
+			"CloseNotAllowed": "Sorry, you are not allowed to close this occasion.",
+			"IsLocked": "The occasion is locked",
+			"CannotClose": "The occasion cannot be closed.",
+			"ReopenNotAllowed": "Sorry, you are not allowed to reopen this occasion.",
+			"IsNotClosed": "The occasion is not closed",
+			"CannotReopen": "The occasion cannot be reopened."
 		}
 	},
 	"Order": {
@@ -281,6 +291,7 @@
 			"TitleIsAlreadyInUse": "This title is already in use. Provide a different title.",
 			"TitleIsEmpty": "The title cannot be empty.",
 			"PriceShouldBeGreaterThanZero": "The price should be greater than zero.",
+			"InvalidPriceField": "The price is not correctly defined.",
 			"NoProductCategory": "The product is not categorized.",
 			"InvalidProductCategory": "The selected category does not exist."
 		}
