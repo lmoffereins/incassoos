@@ -20,6 +20,8 @@
 			padding: 20px 25px 25px;
 			top: 50%;
 			left: 50%;
+			width: max-content;
+			max-width: min( calc( 100% - 50px ), 430px );
 			transform: translate(-50%, -50%);
 			background: var(--background-secondary);
 			transition: var(--transition-background);
