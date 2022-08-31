@@ -10,12 +10,13 @@ define([
 	"fsm",
 	"services",
 	"settings",
+	"./feedback",
 	"./form/input-datepicker",
 	"./form/input-radio-buttons",
 	"./util/close-button",
 	"./../templates/occasions.html",
 	"./../../images/loader.svg"
-], function( Vuex, dayjs, fsm, services, settings, inputDatepicker, inputRadioButtons, closeButton, tmpl, loaderSvg ) {
+], function( Vuex, dayjs, fsm, services, settings, feedback, inputDatepicker, inputRadioButtons, closeButton, tmpl, loaderSvg ) {
 	/**
 	 * Holds a reference to the dialog service
 	 *
@@ -113,12 +114,31 @@ define([
 				self.$store.dispatch("occasions/cancel");
 			}
 		});
+	},
+
+	/**
+	 * Provide watcher to patch the prop on the active item
+	 *
+	 * @param  {String} prop Item's property name to patch
+	 * @return {Function} Patcher
+	 */
+	watchPatch = function( prop ) {
+		return _.debounce(function( dispatch, value ) {
+
+			// Only watch when editing
+			if (this.editMode) {
+
+				// Patch the active item
+				dispatch("patch", { [prop]: value });
+			}
+		}, 300);
 	};
 
 	return {
 		template: tmpl,
 		components: {
 			closeButton: closeButton,
+			feedback: feedback,
 			inputDatepicker: inputDatepicker,
 			inputRadioButtons: inputRadioButtons
 		},
@@ -193,6 +213,7 @@ define([
 			}
 		}), Vuex.mapGetters("occasions", {
 			"occasions": "getItems",
+			"feedback": "getFeedback",
 			"isSelected": "isActiveItem",
 			"editable": "isEditable",
 			"submittable": "isSubmittable",
@@ -230,7 +251,7 @@ define([
 				if (! payload || ! payload.id) {
 					payload = {
 						title: this.title,
-						occasionDate: dayjs(this.occasionDate).format("YYYY-MM-DD"),
+						occasionDate: this.occasionDate,
 						occasionType: this.occasionType
 					};
 				}
@@ -275,11 +296,7 @@ define([
 			 * @return {Void}
 			 */
 			update: function( dispatch ) {
-				dispatch("update", {
-					title: this.title,
-					occasionDate: dayjs(this.occasionDate).format("YYYY-MM-DD"),
-					occasionType: this.occasionType
-				});
+				dispatch("update");
 			},
 
 			/**
@@ -344,7 +361,7 @@ define([
 				dispatch("cancel", { close: true });
 			}
 		}),
-		watch: {
+		watch: Object.assign({
 			/**
 			 * Act when the selection mode is toggled
 			 *
@@ -365,7 +382,11 @@ define([
 					this.mode = "create";
 				}
 			}
-		},
+		}, Vuex.mapActions("occasions", {
+			title:        watchPatch("title"),
+			occasionDate: watchPatch("occasionDate"),
+			occasionType: watchPatch("occasionType")
+		})),
 
 		/**
 		 * Register listeners when the component is created

@@ -1038,22 +1038,25 @@ define([
 			// Default to a new feedback data object
 			feedback = feedback || createFeedback();
 
-			// Remove previously registered feedback
-			feedback.clear();
-
 			// Get the current item
 			item = ("function" === typeof getItem) && getItem(data);
 
 			// Loop validators
 			for (prop in validators) {
+
+				// Skip when property is not available for validation
+				if (! data.hasOwnProperty(prop)) {
+					continue;
+				}
+
 				validated = false;
 				feedbackId = "invalid-".concat(prop);
 
-				// Use available validator function
-				if (validators.hasOwnProperty(prop) && "function" === typeof validators[prop]) {
+				// Custom validation
+				if (validators.hasOwnProperty(prop)) {
 					validated = validators[prop].call(item || copy(data), data[prop]);
 
-				// Default to a generic validation
+				// Default validation
 				} else {
 					validated = "undefined" !== typeof data[prop];
 				}

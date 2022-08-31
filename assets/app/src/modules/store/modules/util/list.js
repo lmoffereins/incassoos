@@ -17,6 +17,8 @@ define([
 	 */
 	var getters = function( getters, options ) {
 		options = options || {};
+		options.validators = options.validators || {};
+		options.comparators = options.comparators || {};
 
 		return util.clone({
 			/**
@@ -57,6 +59,39 @@ define([
 				return function( id ) {
 					return state.active && state.active.id === id;
 				}
+			},
+
+			/**
+			 * Return the patches on the active item
+			 *
+			 * @type {Object} Active patches
+			 */
+			getActivePatches: function( state, getters ) {
+				var patches = {}, item, i;
+
+				// Bail early when there is no active item
+				if (! state.active) {
+					return patches;
+				}
+
+				// Get the original active item
+				item = getters["getItemById"](state.active.id);
+
+				for (i in options.validators) {
+
+					// Custom patch comparison
+					if (options.comparators.hasOwnProperty(i)) {
+						if (options.comparators[i](state.active[i], item)) {
+							patches[i] = state.active[i];
+						}
+
+					// Default comparison
+					} else if (state.active[i] !== item[i]) {
+						patches[i] = state.active[i];
+					}
+				}
+
+				return patches;
 			},
 
 			/**
@@ -331,31 +366,15 @@ define([
 	 * TODO: apply auth check here?
 	 *
 	 * @param  {Array|String} submittableStates List of or single submittable FSM state(s)
-	 * @param  {Array} editableProps List of editable property names
-	 * @param  {Function} getBlankItem Optional. Function to return a new blank item.
 	 * @return {Function} Is the list submittable?
 	 */
-	isSubmittable = function( submittableStates, editableProps, getBlankItem ) {
-		editableProps = editableProps || [];
-		getBlankItem = getBlankItem || _.noop;
-
+	isSubmittable = function( submittableStates ) {
 		return function( state, getters ) {
-			var id = state.active && state.active.id,
-			    listItem = id && getters["getItemById"](id) || getBlankItem() || {},
-			    hasNoErrors = ! getters["hasFeedbackErrors"],
-			    hasPatches = false, i;
-
-			// When no feedback is present, check patches on the active item
-			if (hasNoErrors && listItem && state.active) {
-
-				// Only check patches on editable properties
-				for (i = 0; i < editableProps.length; i++) {
-					hasPatches = hasPatches || (listItem[editableProps[i]] !== state.active[editableProps[i]]);
-				}
-			}
+			var hasNoErrors = ! getters["hasFeedbackErrors"],
+			    patches = getters["getActivePatches"];
 
 			// Checks pass and FSM states match
-			return hasNoErrors && hasPatches && fsm.is(submittableStates);
+			return hasNoErrors && _.keys(patches).length && fsm.is(submittableStates);
 		};
 	},
 

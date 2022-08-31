@@ -175,7 +175,7 @@ define([
 		 */
 		isSubmittable: list.isSubmittable([
 			fsm.st.EDIT_CONSUMER
-		], _.keys(validators)),
+		]),
 
 		/**
 		 * Return the order count of the active consumer in the context
@@ -270,6 +270,7 @@ define([
 			};
 		}
 	}, {
+		validators: validators,
 		feedback: feedback
 	}),
 
@@ -388,12 +389,12 @@ define([
 						feedbackService.add({
 							message: "Consumer.UpdatedConsumer",
 							data: {
-								args: [payload.name]
+								args: [resp.name]
 							}
 						});
 
 						// Update existing item in list
-						context.commit("setItemInList", resp);
+						context.dispatch("setActiveItemInList", resp);
 					});
 				}
 			);
@@ -567,7 +568,12 @@ define([
 		 * @return {Promise} Transition success
 		 */
 		update: function( context ) {
-			return fsm.do(fsm.tr.SAVE_CONSUMER, context.state.active);
+			var payload = context.getters["getActivePatches"];
+
+			// Update the active item
+			payload.id = state.active.id;
+
+			return fsm.do(fsm.tr.SAVE_CONSUMER, payload);
 		},
 
 		/**

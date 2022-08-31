@@ -81,6 +81,8 @@
 					</div>
 				</form>
 
+				<feedback name="occasion" :items="feedback"></feedback>
+
 				<div v-if="activeMode || editMode" class="detail-list occasion-statistics">
 					<div class="detail-item occasion-closed" v-if="occasionClosedDate">
 						<span class="detail-label" v-l10n.Occasion.OccasionClosedLabel></span>

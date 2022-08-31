@@ -171,13 +171,17 @@ define([
 		productCategory: function( input ) {
 			var validated = true;
 
-			// Value should be a number larger than 0
-			if (0 >= input) {
-				validated = "Product.Error.NoProductCategory";
+			// Only required when categories are defined
+			if (_.keys(settings.product.productCategory.items).length) {
 
-			// Value should be an available term id
-			} else if (! settings.product.productCategory.items.hasOwnProperty(input)) {
-				validated = "Product.Error.InvalidProductCategory";
+				// Value should be a number larger than 0
+				if (0 >= input) {
+					validated = "Product.Error.NoProductCategory";
+
+				// Value should be an available term id
+				} else if (! settings.product.productCategory.items.hasOwnProperty(input)) {
+					validated = "Product.Error.InvalidProductCategory";
+				}
 			}
 
 			return validated;
@@ -202,7 +206,7 @@ define([
 	 */
 	getters = list.getters({
 		/**
-		 * Return whether the selected product is submittable
+		 * Return whether the active item is submittable
 		 *
 		 * Provide app states that allow submitting.
 		 *
@@ -211,8 +215,9 @@ define([
 		isSubmittable: list.isSubmittable([
 			fsm.st.CREATE_PRODUCT,
 			fsm.st.EDIT_PRODUCT
-		], _.keys(validators), getBlankItem)
+		])
 	}, {
+		validators: validators,
 		feedback: feedback
 	}),
 
@@ -329,12 +334,16 @@ define([
 						feedbackService.add({
 							message: creating ? "Product.CreatedNewProduct" : "Product.UpdatedProduct",
 							data: {
-								args: [payload.title]
+								args: [resp.title]
 							}
 						});
 
 						// Register new item or update existing item in list
-						context.commit(creating ? "addItemToList" : "setItemInList", resp);
+						if (creating) {
+							context.commit("addItemToList");
+						} else {
+							context.dispatch("setActiveItemInList", resp);
+						}
 					});
 				}
 			);
@@ -532,7 +541,7 @@ define([
 		},
 
 		/**
-		 * Transition when editing the selected product
+		 * Transition when editing the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -541,7 +550,7 @@ define([
 		},
 
 		/**
-		 * Patch the selected product
+		 * Patch the active item
 		 *
 		 * @param  {Object} payload Property patches
 		 * @return {Void}
@@ -551,16 +560,21 @@ define([
 		},
 
 		/**
-		 * Transition when saving the selected product
+		 * Transition when saving the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
 		update: function( context ) {
-			return fsm.do(fsm.tr.SAVE_PRODUCT, context.state.active);
+			var payload = context.getters["getActivePatches"];
+
+			// Update the active item
+			payload.id = state.active.id;
+
+			return fsm.do(fsm.tr.SAVE_PRODUCT, payload);
 		},
 
 		/**
-		 * Transition when maybe deleting the selected product
+		 * Transition when maybe deleting the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -569,7 +583,7 @@ define([
 		},
 
 		/**
-		 * Transition when deleting the selected product
+		 * Transition when deleting the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -578,7 +592,7 @@ define([
 		},
 
 		/**
-		 * Transition when untrashing the selected product
+		 * Transition when untrashing the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -587,7 +601,7 @@ define([
 		},
 
 		/**
-		 * Transition when cancelling the product edit OR closing the selected product
+		 * Transition when cancelling the product edit OR closing the active item
 		 *
 		 * @return {Boolean} Transition success
 		 */

@@ -56,6 +56,10 @@
 	}
 
 	&.is-loading {
+		.panel-content {
+			justify-content: center;
+		}
+
 		.occasion-selection {
 			display: none;
 		}

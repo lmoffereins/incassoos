@@ -10,9 +10,10 @@ define([
 	"api",
 	"fsm",
 	"services",
+	"settings",
 	"util",
 	"./util/list"
-], function( Q, dayjs, api, fsm, services, util, list ) {
+], function( Q, dayjs, api, fsm, services, settings, util, list ) {
 	/**
 	 * The module state data
 	 *
@@ -125,16 +126,51 @@ define([
 		occasionType: function( input ) {
 			var validated = true;
 
-			// Value should be a number larger than 0
-			if (0 >= input) {
-				validated = "Occasion.Error.NoOccasionType";
+			// Only required when types are defined
+			if (_.keys(settings.occasion.occasionType.items).length) {
 
-			// Value should be an available term id
-			} else if (! settings.occasion.occasionType.items.hasOwnProperty(input)) {
-				validated = "Occasion.Error.UnavailableOccasionType";
+				// Value should be a number larger than 0
+				if (0 >= input) {
+					validated = "Occasion.Error.NoOccasionType";
+
+				// Value should be an available term id
+				} else if (! settings.occasion.occasionType.items.hasOwnProperty(input)) {
+					validated = "Occasion.Error.InvalidOccasionType";
+				}
 			}
 
 			return validated;
+		}
+	},
+
+	/**
+	 * Holds patch comparison functions for editable properties
+	 *
+	 * @type {Object} Item property patch comparators
+	 */
+	comparators = {
+		/**
+		 * Comparison of the `title` item property
+		 *
+		 * @param  {Mixed} input Value to compare
+		 * @param  {Object} item Original list item
+		 * @return {Boolean} Change is detected
+		 */
+		title: function( input, item ) {
+			return input !== item.titleRaw && input !== item.title;
+		},
+
+		/**
+		 * Comparison of the `occasionDate` item property
+		 *
+		 * @param  {Mixed} input Value to compare
+		 * @param  {Object} item Original list item
+		 * @return {Boolean} Change is detected
+		 */
+		occasionDate: function( input, item ) {
+
+			// Both are UTC date, so comparing apples to apples
+			return ! dayjs(input).isSame(item.occasionDate, "day");
 		}
 	},
 
@@ -177,7 +213,7 @@ define([
 		 */
 		isSubmittable: list.isSubmittable([
 			fsm.st.EDIT_OCCASION
-		], _.keys(validators)),
+		]),
 
 		/**
 		 * Return whether the occasion can be deleted
@@ -212,6 +248,8 @@ define([
 			return state.active && !! state.active.closed;
 		}
 	}, {
+		validators: validators,
+		comparators: comparators,
 		feedback: feedback
 	}),
 
@@ -291,10 +329,10 @@ define([
 				}
 			});
 
-		}).catch( function( e ) {
-			console.warn("occasions/load error", e);
+		}).catch( function( error ) {
+			console.error("occasions/load error", error);
 
-			return Q.reject(e);
+			return Q.reject(error);
 		});
 	},
 
@@ -379,7 +417,12 @@ define([
 					// 	return Q.reject("Generic.Error.NotAllowed");
 					// }
 
-					// Update the active occasion
+					// Bail when the payload contains errors
+					if (validate(payload).length) {
+						return Q.reject();
+					}
+
+					// Update the active item
 					payload.id = state.active.id;
 
 					return api.occasions.update(payload).then( function( resp ) {
@@ -605,7 +648,7 @@ define([
 		},
 
 		/**
-		 * Transition when editing the selected occasion
+		 * Transition when editing the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -614,17 +657,26 @@ define([
 		},
 
 		/**
-		 * Transition when updating the selected occasion
+		 * Patch the active item
 		 *
-		 * @param {Object} payload Occasion details
-		 * @return {Promise} Transition success
+		 * @param  {Object} payload Property patches
+		 * @return {Void}
 		 */
-		update: function( context, payload ) {
-			return fsm.do(fsm.tr.SAVE_OCCASION, payload);
+		patch: function( context, payload ) {
+			context.commit("patchActive", payload);
 		},
 
 		/**
-		 * Transition when maybe deleting the selected occasion
+		 * Transition when updating the active item
+		 *
+		 * @return {Promise} Transition success
+		 */
+		update: function( context ) {
+			return fsm.do(fsm.tr.SAVE_OCCASION, context.getters["getActivePatches"]);
+		},
+
+		/**
+		 * Transition when maybe deleting the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -633,7 +685,7 @@ define([
 		},
 
 		/**
-		 * Transition when deleting the selected occasion
+		 * Transition when deleting the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -642,7 +694,7 @@ define([
 		},
 
 		/**
-		 * Transition when closing the selected occasion
+		 * Transition when closing the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
@@ -651,7 +703,7 @@ define([
 		},
 
 		/**
-		 * Transition when reopening the selected occasion
+		 * Transition when reopening the active item
 		 *
 		 * @return {Promise} Transition success
 		 */
