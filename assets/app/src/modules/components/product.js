@@ -48,6 +48,7 @@ define([
 	onEnterViewProduct = function() {
 		var payload = this.$store.state.products.active;
 
+		this.editTitle = payload.title;
 		this.title = payload.title;
 		this.price = payload.price;
 		this.productCategory = payload.productCategory;
@@ -60,6 +61,7 @@ define([
 	 * @return {Void}
 	 */
 	onEnterSettings = function() {
+		this.editTitle = "";
 		this.title = "";
 		this.price = 0;
 		this.productCategory = settings.product.productCategory.defaultValue;
@@ -130,6 +132,7 @@ define([
 				availableProductCategories: settings.product.productCategory.items,
 
 				// Form fields
+				editTitle: "",
 				title: "",
 				price: 0,
 				productCategory: settings.product.productCategory.defaultValue,
@@ -144,6 +147,15 @@ define([
 			 */
 			isViewing: function() {
 				return this.$fsmIs(fsm.st.VIEW_PRODUCT);
+			},
+
+			/**
+			 * Return whether we're in the product editing state
+			 *
+			 * @return {Boolean} Is the product being created?
+			 */
+			isEditing: function() {
+				return this.$fsmIs(fsm.st.EDIT_PRODUCT);
 			},
 
 			/**
@@ -214,6 +226,10 @@ define([
 				// When creating
 				if (this.isCreating) {
 					return "Product.CreateProduct";
+
+				// When editing
+				} else if (this.isEditing) {
+					return ["Product.EditProduct", this.editTitle];
 
 				// When viewing, editing or otherwise
 				} else {
