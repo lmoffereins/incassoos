@@ -17,7 +17,6 @@ define([
 	 * @return {Void}
 	 */
 	var setupListeners = function( context ) {
-
 		/**
 		 * When leaving init, initialize store parts
 		 * 

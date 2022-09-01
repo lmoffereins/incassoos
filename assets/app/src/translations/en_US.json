@@ -141,7 +141,8 @@
 		},
 		"Error": {
 			"NotAllowed": "You are not allowed to do that.",
-			"InvalidInputValue": "An invalid value was entered in the %s field."
+			"InvalidInputValue": "An invalid value was entered in the %s field.",
+			"ApplicationIsOffline": "Your action is blocked because the application is offline."
 		}
 	},
 	"Installation": {

@@ -15,14 +15,21 @@ define([
 ], function( Q, api, services, util, StateMachine, lifecycler, xstate ) {
 	/**
 	 * Holds a reference to the feedback service
-	 * 
+	 *
 	 * @type {Object}
 	 */
 	var feedbackService = services.get("feedback"),
 
 	/**
+	 * Holds a reference to the offline service
+	 *
+	 * @type {Object}
+	 */
+	offlineService = services.get("offline"),
+
+	/**
 	 * Get lifecycle data from the xstate JSON structure
-	 * 
+	 *
 	 * @type {Object}
 	 */
 	lifecycle = lifecycler(xstate),
@@ -32,7 +39,7 @@ define([
 	 *
 	 * Events triggered in this domain are:
 	 *  - TRANSITION/to (destination, step)
-	 * 
+	 *
 	 * @type {Object}
 	 */
 	listeners = util.createListeners("fsm/main"),
@@ -181,6 +188,26 @@ define([
 			}
 		}
 	});
+
+	/**
+	 * Block transitions of the fsm early when the application is offline
+	 *
+	 * @return {Boolean} Transition success
+	 */
+	fsm.observe(
+		"onBeforeTransition",
+		function( lifecycle ) {
+
+			// Only check transitions beyond the initial state(s)
+			if (-1 === [fsm.initialState, fsm.st.INIT].indexOf(lifecycle.from)) {
+
+				// Require the application to be online
+				if (offlineService.isDown()) {
+					return Q.reject("Generic.Error.ApplicationIsOffline");
+				}
+			}
+		}
+	);
 
 	return fsm;
 });

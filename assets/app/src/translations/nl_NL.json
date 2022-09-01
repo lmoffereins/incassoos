@@ -140,7 +140,9 @@
 			"HelpShortcutsTitle": "Beschikbare sneltoetsen"
 		},
 		"Error": {
-			"InvalidInputValue": "Voor het veld %s is een onjuiste waarde opgegeven."
+			"NotAllowed": "Je hebt niet de rechten om dat te doen.",
+			"InvalidInputValue": "Voor het veld %s is een onjuiste waarde opgegeven.",
+			"ApplicationIsOffline": "Je actie is geblokkeerd omdat de applicatie offline is."
 		}
 	},
 	"Installation": {
