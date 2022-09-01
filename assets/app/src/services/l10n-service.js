@@ -183,9 +183,8 @@ define([
 
 		// Register global keyboard event listeners
 		shortcutsService.on({
-			/**
-			 * Switch active language to the next available language
-			 */
+
+			// Switch active language to the next available language
 			"shift+alt+L": {
 				label: "Administration.SwitchLanguage",
 				callback: function() {

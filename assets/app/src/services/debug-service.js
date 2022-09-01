@@ -59,12 +59,16 @@ define([
 
 		// Register global keyboard event listeners
 		shortcutsService.on({
-			/**
-			 * Toggle the debug mode
-			 */
+
+			// Toggle the debug mode
 			"shift+alt+D": {
 				label: "Administration.ToggleDebugModeLabel",
 				callback: set
+			},
+
+			// Emit custom event: "online"
+			"shift+alt+1": function() {
+				debugmode && util.emitEvent(window, "online");
 			}
 		});
 

@@ -71,9 +71,8 @@ define([
 
 		// Register global keyboard event listeners
 		shortcutsService.on({
-			/**
-			 * Toggle between light and dark mode
-			 */
+
+			// Toggle between light and dark mode
 			"shift+alt+M": {
 				label: "Administration.ToggleDarkMode",
 				callback: function() {
