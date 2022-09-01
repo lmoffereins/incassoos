@@ -22,11 +22,12 @@
 		</div>
 	</div>
 
-	<div id="page-body">
+	<div id="page-body" v-if="!$offline">
 		<panels></panels>
 		<sections></sections>
 	</div>
 
+	<offline-status></offline-status>
 	<dialog-container></dialog-container>
 	<feedback name="global" :reverse="true" :auto-remove="true"></feedback>
 </div>

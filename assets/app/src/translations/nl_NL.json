@@ -130,6 +130,10 @@
 		"Today": "Vandaag",
 		"SelectedDate": "Geselecteerde datum",
 		"NoSearchResultsFor": "Geen zoekresultaten voor '%s'",
+		"Offline": {
+			"StatusTitle": "Apparaat is niet verbonden",
+			"StatusDescription": "Zorg ervoor dat je apparaat een actieve internetverbinding heeft."
+		},
 		"Dialog": {
 			"AreYouSureTitle": "Weet je het zeker?",
 			"AreYouSureContent": "Bevestig de actie als je zeker weet dat je dit wilt doen.",

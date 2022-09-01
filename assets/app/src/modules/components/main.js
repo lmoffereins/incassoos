@@ -11,6 +11,7 @@ define([
 	"./global-edit-toggle",
 	"./global-leave-button",
 	"./global-login-toggle",
+	"./offline-status",
 	"./page-title",
 	"./panels",
 	"./sections"
@@ -21,6 +22,7 @@ define([
 	globalEditToggle,
 	globalLeaveButton,
 	globalLoginToggle,
+	offlineStatus,
 	pageTitle,
 	panels,
 	sections
@@ -32,6 +34,7 @@ define([
 		globalEditToggle: globalEditToggle,
 		globalLeaveButton: globalLeaveButton,
 		globalLoginToggle: globalLoginToggle,
+		offlineStatus: offlineStatus,
 		pageTitle: pageTitle,
 		panels: panels,
 		sections: sections

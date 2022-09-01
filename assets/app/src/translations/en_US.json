@@ -130,6 +130,10 @@
 		"Today": "Today",
 		"SelectedDate": "Selected date",
 		"NoSearchResultsFor": "No search results for '%s'",
+		"Offline": {
+			"StatusTitle": "Device not connected",
+			"StatusDescription": "Make sure your device has an active internet connection."
+		},
 		"Dialog": {
 			"AreYouSureTitle": "Are you sure?",
 			"AreYouSureContent": "Please confirm if you are sure to perform this action.",

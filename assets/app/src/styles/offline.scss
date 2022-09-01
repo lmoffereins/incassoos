@@ -1,0 +1,21 @@
+/* Offline */
+
+.offline {
+	#page-body {
+		display: none;
+	}
+}
+
+#offline-status {
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	grid-gap: 10px;
+	width: max-content;
+	max-width: min( calc(100% - 100px), 500px);
+	text-align: center;
+
+	.status-title {
+		font-size: 1.3em;
+	}
+}
