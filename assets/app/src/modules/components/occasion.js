@@ -77,7 +77,7 @@ define([
 				shortcutsService.on({
 					"shift+alt+O": {
 						label: "Occasion.OpenPanel",
-						callback: function() {
+						callback: function occasionOpenPanelOnShiftAltO() {
 							self.open();
 						}
 					}

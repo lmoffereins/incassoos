@@ -111,7 +111,7 @@ define([
 				shortcutsService.on({
 
 					// Confirm the dialog
-					"enter": function() {
+					"enter": function inputDatepickerConfirmOnEnter() {
 						self.confirm();
 					}
 				})

@@ -79,7 +79,7 @@ define([
 				shortcutsService.on({
 
 					// Confirm the dialog
-					"enter": function() {
+					"enter": function confirmDialogConfirmOnEnter() {
 						self.confirm();
 					}
 				})

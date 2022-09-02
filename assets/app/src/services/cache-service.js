@@ -152,7 +152,7 @@ define([
 			// Reset cache when hard-reloading the page
 			"ctrl+shift+R": {
 				label: "Administration.ClearCacheAndReloadLabel",
-				callback: function() {
+				callback: function cacheServiceResetOnCtrlShiftR() {
 					reset();
 				}
 			}

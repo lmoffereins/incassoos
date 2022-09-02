@@ -63,11 +63,13 @@ define([
 			// Toggle the debug mode
 			"shift+alt+D": {
 				label: "Administration.ToggleDebugModeLabel",
-				callback: set
+				callback: function debugServiceToggleDebugModeOnShiftAltD() {
+					set();
+				}
 			},
 
 			// Emit custom event: "online"
-			"shift+alt+1": function() {
+			"shift+alt+1": function debugServiceEmitOnlineEventOnShiftAlt1() {
 				debugmode && util.emitEvent(window, "online");
 			}
 		});

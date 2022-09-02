@@ -51,7 +51,7 @@ define([
 			// Open help window for shortcuts
 			"shift+alt+H": {
 				label: "Administration.OpenShortcutsHelp",
-				callback: function() {
+				callback: function shortcutsServiceOpenShortcutsOnShiftAltH() {
 					showShortcutsDialog();
 				}
 			}

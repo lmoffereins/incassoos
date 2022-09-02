@@ -325,7 +325,7 @@ define([
 			// Register global keyboard event listeners
 			this.$registerUnobservable(
 				shortcutsService.on({
-					"escape": function() {
+					"escape": function productsResetSearchQueryOnEscape() {
 
 						// Reset the search query
 						self.q = "";

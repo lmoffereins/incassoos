@@ -75,7 +75,7 @@ define([
 			// Toggle between light and dark mode
 			"shift+alt+M": {
 				label: "Administration.ToggleDarkMode",
-				callback: function() {
+				callback: function darkmodeServiceToggleDarkmodeOnShiftAltM() {
 					isDarkmode() ? set("light") : set("dark");
 				}
 			}

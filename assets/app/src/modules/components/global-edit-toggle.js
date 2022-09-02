@@ -119,7 +119,7 @@ define([
 				shortcutsService.on({
 					"ctrl+E": {
 						label: "Administration.ToggleEditModeLabel",
-						callback: function( e ) {
+						callback: function globalEditToggleOnCtrlE( e ) {
 
 							// Browsers may default to focussing the address bar
 							e.preventDefault();

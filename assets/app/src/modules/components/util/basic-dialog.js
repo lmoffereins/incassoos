@@ -81,7 +81,7 @@ define([
 			// Register global keyboard event listeners
 			this.$registerUnobservable(
 				shortcutsService.on({
-					"escape": function() {
+					"escape": function basicDialogCloseOnEscape() {
 						if (self.dialog.closeOnEscape) {
 							self.close();
 						}

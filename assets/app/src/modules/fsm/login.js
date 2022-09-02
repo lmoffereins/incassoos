@@ -1292,7 +1292,7 @@ define([
 		// Lock the application
 		"ctrl+L": {
 			label: "Login.LockApplication",
-			callback: function( e ) {
+			callback: function loginFsmLockApplicationOnCtrlL( e ) {
 
 				// Browsers may default to focussing the address bar
 				e.preventDefault();
@@ -1306,13 +1306,13 @@ define([
 		"alt+S": {
 			label: "Login.SwitchLoginMode",
 			keyUp: true, // Prevents continued switching when holding the keys
-			callback: function() {
+			callback: function loginFsmSwitchLoginModeOnAltS() {
 				fsm.do(STEPS.SWITCH_LOGIN);
 			}
 		},
 
 		// Cancel the login state
-		"escape": function() {
+		"escape": function loginFsmTransitionCancelOnEscape() {
 			fsm.do(STEPS.CANCEL);
 		}
 	});

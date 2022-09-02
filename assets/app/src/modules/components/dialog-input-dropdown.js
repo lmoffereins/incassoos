@@ -107,7 +107,7 @@ define([
 				shortcutsService.on({
 
 					// Confirm the dialog
-					"enter": function() {
+					"enter": function inputDropdownConfirmOnEnter() {
 						self.confirm();
 					}
 				})

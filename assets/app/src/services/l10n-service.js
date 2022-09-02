@@ -187,7 +187,7 @@ define([
 			// Switch active language to the next available language
 			"shift+alt+L": {
 				label: "Administration.SwitchLanguage",
-				callback: function() {
+				callback: function l10nServiceSwitchLanguageOnShiftAltL() {
 					var keys = _.keys(availableLanguages),
 					    currKey = keys.findIndex(key => key === getLanguage().key),
 					    nextKey = currKey === keys.length - 1 ? keys[0] : keys[currKey + 1];

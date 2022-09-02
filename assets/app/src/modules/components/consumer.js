@@ -217,7 +217,7 @@ define([
 			// Register global keyboard event listeners
 			this.$registerUnobservable(
 				shortcutsService.on({
-					"escape": function() {
+					"escape": function consumerTransitionCancelOnEscape() {
 						self.cancel();
 					}
 				})
