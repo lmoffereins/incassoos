@@ -409,6 +409,15 @@ define([
 		},
 
 		/**
+		 * Transition when opening or closing receipt settings
+		 *
+		 * @return {Promise} Transition success
+		 */
+		toggleSettings: function( context ) {
+			return fsm.do(fsm.tr.TOGGLE_SETTINGS);
+		},
+
+		/**
 		 * Transition when saving an order OR submitting the receipt
 		 *
 		 * @return {Promise} Transition success

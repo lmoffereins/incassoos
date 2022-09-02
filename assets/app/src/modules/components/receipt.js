@@ -78,6 +78,15 @@ define([
 			},
 
 			/**
+			 * Return whether this is the receipt settings state
+			 *
+			 * @return {Boolean} Is this is the settings state?
+			 */
+			isSettings: function() {
+				return this.$fsmIs(fsm.st.RECEIPT_SETTINGS);
+			},
+
+			/**
 			 * Return the submit label
 			 *
 			 * @return {String} Label
@@ -196,6 +205,18 @@ define([
 				dispatch("decrement", { id: payload, quantity: 10 });
 			}
 		}), Vuex.mapActions("receipt", {
+			/**
+			 * Toggle receipt settings
+			 *
+			 * Dispatch the action without returning the promise.
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @return {Void}
+			 */
+			toggleSettings: function( dispatch ) {
+				dispatch("toggleSettings");
+			},
+
 			/**
 			 * Create new order or save changes for the active item
 			 *

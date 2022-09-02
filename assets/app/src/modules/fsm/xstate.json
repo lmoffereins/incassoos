@@ -140,7 +140,8 @@
 		},
 		"RECEIPT_SETTINGS": {
 			"on": {
-				"TOGGLE_SETTINGS": "RECEIPT"
+				"TOGGLE_SETTINGS": "RECEIPT",
+				"SELECT_CONSUMER": "RECEIPT_SETTINGS"
 			}
 		}
 	}
