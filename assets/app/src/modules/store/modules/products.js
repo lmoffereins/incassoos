@@ -565,12 +565,7 @@ define([
 		 * @return {Promise} Transition success
 		 */
 		update: function( context ) {
-			var payload = context.getters["getActivePatches"];
-
-			// Update the active item
-			payload.id = state.active.id;
-
-			return fsm.do(fsm.tr.SAVE_PRODUCT, payload);
+			return fsm.do(fsm.tr.SAVE_PRODUCT, context.state.active);
 		},
 
 		/**

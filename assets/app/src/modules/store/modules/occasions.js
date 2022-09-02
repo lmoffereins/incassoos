@@ -672,7 +672,7 @@ define([
 		 * @return {Promise} Transition success
 		 */
 		update: function( context ) {
-			return fsm.do(fsm.tr.SAVE_OCCASION, context.getters["getActivePatches"]);
+			return fsm.do(fsm.tr.SAVE_OCCASION, context.state.active);
 		},
 
 		/**

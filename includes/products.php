@@ -577,8 +577,14 @@ function incassoos_update_product_menu_orders( $post_id, $post_after, $post_befo
  * @return bool Update success.
  */
 function incassoos_update_product_price( $price, $post = 0 ) {
-	$post    = incassoos_get_product( $post );
-	$success = false;
+	$post       = incassoos_get_product( $post );
+	$prev_value = get_post_meta( $post ? $post->ID : 0, 'price', true );
+	$success    = false;
+
+	// Bail when the stored value is identical to avoid update_metadata() returning false.
+	if ( (float) $price === (float) $prev_value ) {
+		return true;
+	}
 
 	if ( $post ) {
 		$success = update_post_meta( $post->ID, 'price', (float) $price );

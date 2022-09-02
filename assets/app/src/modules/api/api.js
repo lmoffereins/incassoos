@@ -363,6 +363,11 @@ define([
 			// Parse subscription callbacks
 			subscription = _.defaults(subscription || {}, defaultSubscription);
 
+			// Reset request attributes
+			request.headers = {};
+			request.params = {};
+			request.data = {};
+
 			// Setup request. Maybe apply authorization
 			options.auth.setHeaders(request).then( function() {
 
@@ -421,6 +426,11 @@ define([
 			if ("undefined" === typeof caller) {
 				return getMockedResponse();
 			}
+
+			// Reset request attributes
+			request.headers = {};
+			request.params = {};
+			request.data = {};
 
 			// Maybe apply authorization
 			return options.auth.setHeaders(request).then( function() {

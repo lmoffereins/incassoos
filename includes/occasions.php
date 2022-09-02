@@ -1507,9 +1507,20 @@ function incassoos_update_occasion_date( $date, $post = 0 ) {
 		// Parse input date
 		$date = strtotime( trim( $date ) );
 
-		// Save mysql date string
-		if ( $date ) {
-			$date = date( 'Y-m-d 00:00:00', $date );
+		// When empty, delete the metadata
+		if ( empty( $date ) ) {
+			$success = delete_post_meta( $post->ID, 'occasion_date' );
+		} else {
+
+			// Save mysql date string
+			$date       = date( 'Y-m-d 00:00:00', $date );
+			$prev_value = get_post_meta( $post->ID, 'occasion_date', true );
+
+			// Bail when the stored value is identical to avoid update_metadata() returning false.
+			if ( $date === $prev_value ) {
+				return true;
+			}
+
 			$success = update_post_meta( $post->ID, 'occasion_date', $date );
 		}
 	}

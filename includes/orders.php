@@ -1206,8 +1206,7 @@ function incassoos_update_order_consumer( $consumer, $post = 0 ) {
 		if ( $_consumer && $_consumer->exists() ) {
 			$prev_value = incassoos_get_order_consumer_id( $post );
 
-			// Bail when the current value is identical, because updating
-			// identical post metadata values will return `false`.
+			// Bail when the stored value is identical to avoid update_metadata() returning false.
 			if ( $_consumer->ID === $prev_value ) {
 				return true;
 			}
@@ -1223,8 +1222,7 @@ function incassoos_update_order_consumer( $consumer, $post = 0 ) {
 		} elseif ( $consumer_type = incassoos_get_consumer_type( $consumer ) ) {
 			$prev_value = incassoos_get_order_consumer_type( $post );
 
-			// Bail when the current value is identical, because updating
-			// identical post metadata values will return `false`.
+			// Bail when the stored value is identical to avoid update_metadata() returning false.
 			if ( $consumer_type->ID === $prev_value ) {
 				return true;
 			}
@@ -1335,8 +1333,15 @@ function incassoos_update_order_products( $products, $post = 0 ) {
 	$success = false;
 
 	if ( $post ) {
-		$products = incassoos_sanitize_order_products( $products );
-		$success  = update_post_meta( $post->ID, 'products', $products );
+		$products   = incassoos_sanitize_order_products( $products );
+		$prev_value = get_post_meta( $post->ID, 'products', true );
+
+		// Bail when the stored value is identical to avoid update_metadata() returning false.
+		if ( json_encode( $products ) === json_encode( $prev_value ) ) {
+			return true;
+		}
+
+		$success = update_post_meta( $post->ID, 'products', $products );
 
 		// Update order total
 		update_post_meta( $post->ID, 'total', incassoos_get_order_total_raw( $post ) );
