@@ -101,32 +101,70 @@
 		.item-list {
 			background: transparent;
 
-			.select-item {
-				display: flex;
-				flex-direction: row;
-				grid-gap: 15px;
-				cursor: default;
+			.item {
+				position: relative;
 
-				.item-title {
-					flex: 1;
-				}
-
-				.item-ordered {
+				.select-item {
+					position: relative;
 					display: flex;
 					flex-direction: row;
-					grid-gap: 3px;
+					grid-gap: 15px;
+					cursor: default;
+					width: calc( 100% - ( 2 * 38px ) );
+					transition: margin .1s ease-in;
+					background: var(--background-primary); // Identical to #receipt
+					z-index: 1;
 
-					.item-amount + i {
-						margin-top: 5px;
-						font-size: .9rem;
-						width: .9rem;
-						height: .9rem;
+					.item-title {
+						flex: 1;
+						min-width: 0;
+						@include text-overflow;
+					}
+
+					.item-ordered {
+						display: flex;
+						flex-direction: row;
+						grid-gap: 3px;
+						white-space: nowrap;
+
+						.item-amount + i {
+							margin-top: 5px;
+							font-size: .9rem;
+							width: .9rem;
+							height: .9rem;
+						}
+					}
+				}
+
+				li:first-child .select-item {
+					border: none;
+				}
+
+				.item-actions {
+					position: absolute;
+					top: 0px;
+					right: 0px;
+					bottom: 0px;
+					display: flex;
+					flex-direction: row;
+					align-items: stretch;
+					width: calc( 2 * 38px );
+
+					.item-action {
+						border-radius: 0px;
 					}
 				}
 			}
+		}
 
-			li:first-child .select-item {
-				border: none;
+		&.is-editing {
+			.item-list .item {
+				&:hover,
+				&:focus-within {
+					.select-item {
+						margin-right: calc( 2 * 38px );
+					}
+				}
 			}
 		}
 

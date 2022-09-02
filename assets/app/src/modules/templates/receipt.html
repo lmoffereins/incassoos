@@ -1,4 +1,4 @@
-<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive }" :inert="!isActive">
+<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive, 'is-editing': isEditing }" :inert="!isActive">
 	<close-button @click="close" class="receipt-close"></close-button>
 
 	<div class="receipt-total" :class="{ 'is-active': !! totalPrice }">
@@ -30,6 +30,27 @@
 						<i class="dashicons dashicons-no-alt"></i>
 						<span class="item-price">{{r.price | money}}</span>
 					</div>
+				</div>
+
+				<div class="item-actions" v-if="isEditing">
+					<button
+						type="button"
+						@click.exact="decrement(r.id)"
+						@click.shift.exact="decrementByTen(r.id)"
+						class="item-action item-decrement"
+						v-l10n-title.Product.SelectLess="r.title">
+						<i class="dashicons dashicons-minus"></i>
+						<span class="screen-reader-text" v-l10n.Product.SelectLess="r.title"></span>
+					</button>
+					<button
+						type="button"
+						@click.exact="increment(r.id)"
+						@click.shift.exact="incrementByTen(r.id)"
+						class="item-action item-increment"
+						v-l10n-title.Product.SelectMore="r.title">
+						<i class="dashicons dashicons-plus"></i>
+						<span class="screen-reader-text" v-l10n.Product.SelectMore="r.title"></span>
+					</button>
 				</div>
 			</li>
 		</ul>

@@ -147,6 +147,54 @@ define([
 			edit: function( dispatch ) {
 				dispatch("edit");
 			}
+		}), Vuex.mapActions("products", {
+			/**
+			 * Increment the product's quantity
+			 *
+			 * Dispatch the action without returning the promise.
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @param  {Number} payload Product id
+			 * @return {Void}
+			 */
+			increment: function( dispatch, payload ) {
+				dispatch("select", payload);
+			},
+
+			/**
+			 * Decrement the product's quantity
+			 *
+			 * Dispatch the action without returning the promise.
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @param  {Number} payload Product id
+			 * @return {Void}
+			 */
+			decrement: function( dispatch, payload ) {
+				dispatch("decrement", payload);
+			},
+
+			/**
+			 * Increment the product's quantity by 10
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @param  {Number} payload Product id
+			 * @return {Void}
+			 */
+			incrementByTen: function( dispatch, payload ) {
+				dispatch("select", { id: payload, quantity: 10 });
+			},
+
+			/**
+			 * Decrement the product's quantity by 10
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @param  {Number} payload Product id
+			 * @return {Void}
+			 */
+			decrementByTen: function( dispatch, payload ) {
+				dispatch("decrement", { id: payload, quantity: 10 });
+			}
 		}), Vuex.mapActions("receipt", {
 			/**
 			 * Create new order or save changes for the active item
