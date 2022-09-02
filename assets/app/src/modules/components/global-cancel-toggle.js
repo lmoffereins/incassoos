@@ -27,7 +27,8 @@ define([
 		fsm.tr.CANCEL_EDIT,
 		fsm.tr.CLOSE_ITEM,
 		fsm.tr.CANCEL_OCCASION,
-		fsm.tr.CANCEL_RECEIPT
+		fsm.tr.CANCEL_RECEIPT,
+		fsm.tr.CLOSE_SETTINGS
 	];
 
 	return {

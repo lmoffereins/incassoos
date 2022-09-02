@@ -110,9 +110,10 @@ define([
 		 *
 		 * @return {Void}
 		 */
-		fsm.observe(
+		fsm.observe([
 			fsm.on.after.TOGGLE_SETTINGS,
-			function( lifecycle ) {
+			fsm.on.after.CLOSE_SETTINGS
+		], function( lifecycle ) {
 
 				// Mutate the reactive settings flag
 				context.commit("toggleSettings", lifecycle.to === fsm.st.SETTINGS);
