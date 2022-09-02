@@ -62,6 +62,17 @@ define([
 			},
 
 			/**
+			 * Return the contents of a new item
+			 *
+			 * To be redefined per module.
+			 *
+			 * @return {Object} New item
+			 */
+			getNewItem: function( state ) {
+				return {};
+			},
+
+			/**
 			 * Return the patches on the active item
 			 *
 			 * @type {Object} Active patches
@@ -74,8 +85,8 @@ define([
 					return patches;
 				}
 
-				// Get the original active item
-				item = getters["getItemById"](state.active.id);
+				// Get the original active item or a sample of a new item
+				item = getters["getItemById"](state.active.id) || getters["getNewItem"];
 
 				for (i in options.validators) {
 
@@ -230,6 +241,15 @@ define([
 				state.active = util.copy(state.all.find( function( i ) {
 					return i.id === payload.id;
 				}) || payload || null);
+			},
+
+			/**
+			 * Set a new item as the active item
+			 *
+			 * @return {Void}
+			 */
+			setNewActive: function( state, payload ) {
+				state.active = payload;
 			},
 
 			/**

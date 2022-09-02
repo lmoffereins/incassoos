@@ -58,19 +58,6 @@ define([
 	}),
 
 	/**
-	 * Return a new blank item
-	 *
-	 * @return {Object} New item
-	 */
-	getBlankItem = function() {
-		return {
-			title: "",
-			price: 0,
-			productCategory: settings.product.productCategory.defaultValue
-		};
-	},
-
-	/**
 	 * Define sanitization function for products
 	 *
 	 * @type {Function} Product sanitization
@@ -206,6 +193,19 @@ define([
 	 */
 	getters = list.getters({
 		/**
+		 * Return a new active product
+		 *
+		 * @return {Void}
+		 */
+		getNewItem: function() {
+			return {
+				title: "",
+				price: 0,
+				productCategory: settings.product.productCategory.defaultValue
+			};
+		},
+
+		/**
 		 * Return whether the active item is submittable
 		 *
 		 * Provide app states that allow submitting.
@@ -227,15 +227,6 @@ define([
 	 * @type {Object}
 	 */
 	mutations = list.mutations({
-		/**
-		 * Setup a new active product
-		 *
-		 * @return {Void}
-		 */
-		newActive: function( state ) {
-			state.active = getBlankItem();
-		},
-
 		/**
 		 * Modify the active product
 		 *
@@ -289,7 +280,7 @@ define([
 					}
 
 					// Register new active product
-					context.commit("newActive");
+					context.commit("setNewActive", getters.getNewItem());
 				}
 			);
 
@@ -340,7 +331,7 @@ define([
 
 						// Register new item or update existing item in list
 						if (creating) {
-							context.commit("addItemToList");
+							context.commit("addItemToList", resp);
 						} else {
 							context.dispatch("setActiveItemInList", resp);
 						}
