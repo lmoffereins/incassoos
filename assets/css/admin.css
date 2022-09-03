@@ -213,6 +213,7 @@ body.incassoos-post-view #postdivrich .inside {
 }
 
 .incassoos-object-details p:last-child,
+.incassoos-item-list p:last-child,
 .incassoos-object-details ul:last-child {
 	margin-bottom: 0px;
 }
@@ -296,12 +297,14 @@ body.incassoos-post-view #postdivrich .inside {
 	margin: 6px 0px 0px 0px;
 }
 
-.incassoos-object-details p {
+.incassoos-object-details p,
+.incassoos-item-list p {
 	padding: 0px 12px 12px;
 	margin: 0px;
 }
 
-.incassoos-object-details p:first-child {
+.incassoos-object-details p:first-child,
+.incassoos-item-list p:first-child {
 	margin: 8px 0px 0px;
 }
 
