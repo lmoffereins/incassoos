@@ -1089,6 +1089,7 @@ function incassoos_admin_restrict_manage_posts( $post_type, $which ) {
 		$dropdown_options = array(
 			'taxonomy'        => $taxonomy,
 			'name'            => $taxonomy,
+			'hide_if_empty'   => true,
 			'show_option_all' => get_taxonomy( $taxonomy )->labels->all_items,
 			'hide_empty'      => 0,
 			'hierarchical'    => 1,
@@ -1115,6 +1116,7 @@ function incassoos_admin_restrict_manage_posts( $post_type, $which ) {
 		$dropdown_options = array(
 			'taxonomy'        => $taxonomy,
 			'name'            => $taxonomy,
+			'hide_if_empty'   => true,
 			'show_option_all' => get_taxonomy( $taxonomy )->labels->all_items,
 			'hide_empty'      => 0,
 			'hierarchical'    => 1,
@@ -1141,6 +1143,7 @@ function incassoos_admin_restrict_manage_posts( $post_type, $which ) {
 		$dropdown_options = array(
 			'taxonomy'        => $taxonomy,
 			'name'            => $taxonomy,
+			'hide_if_empty'   => true,
 			'show_option_all' => get_taxonomy( $taxonomy )->labels->all_items,
 			'hide_empty'      => 0,
 			'hierarchical'    => 1,
