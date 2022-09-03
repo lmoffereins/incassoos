@@ -132,12 +132,12 @@ define([
 			// Point to a single consumer
 			request.url = request.baseUrl.concat("/", payload.id);
 
-			// Set the consumption limit
+			// Set the consumption limit. Can be 0.
 			if ("undefined" !== typeof payload.spendingLimit) {
 				request.data.spendingLimit = payload.spendingLimit;
 			}
 
-			// Set the show
+			// Set the show parameter for hidden consumer. Can be false.
 			if ("undefined" !== typeof payload.show) {
 				request.data.show = payload.show;
 			}

@@ -40,17 +40,17 @@ define([
 	preSingleOccasionRequest = function( request, payload ) {
 
 		// Set the title
-		if ("undefined" !== typeof payload.title) {
+		if (payload.title) {
 			request.data.title = payload.title;
 		}
 
 		// Parse occasion date into the proper format
-		if ("undefined" !== typeof payload.occasionDate) {
+		if (payload.occasionDate) {
 			request.data.occasion_date = dayjs(payload.occasionDate).format("YYYY-MM-DD");
 		}
 
 		// Define occasion type at the properly named taxonomy parameter
-		if ("undefined" !== typeof payload.occasionType) {
+		if (payload.occasionType) {
 			request.data[settings.occasion.occasionType.taxonomyId] = payload.occasionType;
 		}
 

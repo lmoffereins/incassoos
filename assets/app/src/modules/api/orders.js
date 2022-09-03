@@ -47,17 +47,17 @@ define([
 	preSingleOrderRequest = function( request, payload ) {
 
 		// Define the order's consumer
-		if ("undefined" !== typeof payload.consumer) {
+		if (payload.consumer) {
 			request.data.consumer = payload.consumer;
 		}
 
 		// Define the order's parent
-		if ("undefined" !== typeof payload.occasion) {
+		if (payload.occasion) {
 			request.data.parent = payload.occasion;
 		}
 
 		// Define the order's products
-		if ("undefined" !== typeof payload.items) {
+		if (payload.items) {
 			request.data.products = payload.items.map( function( i ) {
 				return {
 					id: i.id,

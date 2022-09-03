@@ -46,17 +46,17 @@ define([
 	preSingleProductRequest = function( request, payload ) {
 
 		// Define the product's name
-		if ("undefined" !== typeof payload.title) {
+		if (payload.title) {
 			request.data.title = payload.title;
 		}
 
 		// Define the product's price
-		if ("undefined" !== typeof payload.price) {
+		if (payload.price) {
 			request.data.price = payload.price;
 		}
 
 		// Define product category at the properly named taxonomy parameter
-		if ("undefined" !== typeof payload.productCategory) {
+		if (payload.productCategory) {
 			request.data[settings.product.productCategory.taxonomyId] = payload.productCategory;
 		}
 
