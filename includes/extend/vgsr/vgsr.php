@@ -85,10 +85,9 @@ class Incassoos_VGSR {
 		add_filter( 'incassoos_admin_get_settings_fields', array( $this, 'settings_fields' ), 10    );
 
 		// REST
-		add_action( 'incassoos_rest_api_init',                    array( $this, 'rest_register_fields'             ), 10    );
-		add_filter( 'incassoos_rest_consumers_collection_params', array( $this, 'rest_consumers_collection_params' ), 10    );
-		add_filter( 'incassoos_rest_prepare_consumer',            array( $this, 'rest_prepare_consumer'            ), 10, 3 );
-		add_filter( 'incassoos_rest_prepare_settings',            array( $this, 'rest_prepare_settings'            ), 10, 2 );
+		add_action( 'incassoos_rest_api_init',         array( $this, 'rest_register_fields'  ), 10    );
+		add_filter( 'incassoos_rest_prepare_consumer', array( $this, 'rest_prepare_consumer' ), 10, 3 );
+		add_filter( 'incassoos_rest_prepare_settings', array( $this, 'rest_prepare_settings' ), 10, 2 );
 	}
 
 	/** Public methods **************************************************/
@@ -289,23 +288,6 @@ class Incassoos_VGSR {
 				)
 			)
 		);
-	}
-
-	/**
-	 * Filters the collection parameters for a users request.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $params Collection parameters
-	 * @return array Collection parameters
-	 */
-	public function rest_consumers_collection_params( $params ) {
-
-		// Overwrite the default to order by relevance, then ancienniteit
-		$params['orderby']['enum'][]  = 'ancienniteit-relevance';
-		$params['orderby']['default'] = 'ancienniteit-relevance';
-
-		return $params;
 	}
 
 	/**
