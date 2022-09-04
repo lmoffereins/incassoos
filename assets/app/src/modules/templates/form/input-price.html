@@ -1,8 +1,8 @@
 <div class="input-price">
 	<input
-		type="number"
+		type="text"
+		inputmode="decimal"
 		ref="price"
-		step="0.01"
 		:value="value"
 		@input="input"
 		@keydown.up.ctrl.prevent="plus010"
