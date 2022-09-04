@@ -226,6 +226,13 @@ define([
 			 * @return {Void}
 			 */
 			submit: function( dispatch ) {
+
+				// Bail when the receipt is not submittable
+				if (! this.submittable) {
+					return;
+				}
+
+				// Create or update order
 				dispatch("submit");
 			},
 
