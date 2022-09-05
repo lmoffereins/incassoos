@@ -258,12 +258,19 @@ class Incassoos_Admin {
 			/** Settings Sections *******************************************/
 
 			case 'incassoos_settings_main' :
-			case 'incassoos_settings_collecting' :
+			case 'incassoos_settings_collection' :
 			case 'incassoos_settings_emails' :
 			case 'incassoos_settings_slugs' :
 
-				// Defer to collecting caps
+				// Defer to collection collecting caps
 				$caps = array( 'collect_incassoos_collections' );
+
+				break;
+
+			case 'incassoos_settings_order' :
+
+				// Defer to order editing caps
+				$caps = array( 'edit_incassoos_orders' );
 
 				break;
 		}

@@ -84,10 +84,17 @@ function incassoos_admin_get_settings_sections() {
 			'page'     => 'incassoos'
 		),
 
-		// Collecting settings
-		'incassoos_settings_collecting' => array(
-			'title'    => __( 'Collecting Settings', 'incassoos' ),
-			'callback' => 'incassoos_admin_setting_callback_collecting_section',
+		// Collection settings
+		'incassoos_settings_collection' => array(
+			'title'    => __( 'Collection Settings', 'incassoos' ),
+			'callback' => 'incassoos_admin_setting_callback_collection_section',
+			'page'     => 'incassoos'
+		),
+
+		// Order settings
+		'incassoos_settings_order' => array(
+			'title'    => __( 'Order Settings', 'incassoos' ),
+			'callback' => 'incassoos_admin_setting_callback_order_section',
 			'page'     => 'incassoos'
 		),
 
@@ -136,23 +143,15 @@ function incassoos_admin_get_settings_fields() {
 				'sanitize_callback' => 'incassoos_sanitize_currency',
 				'args'              => array()
 			),
-
-			// Order time lock
-			'_incassoos_order_time_lock' => array(
-				'title'             => esc_html__( 'Time Lock', 'incassoos' ),
-				'callback'          => 'incassoos_admin_setting_callback_order_time_lock',
-				'sanitize_callback' => 'absint',
-				'args'              => array()
-			),
 		),
 
 		/** User Section **************************************************/
 
 		'incassoos_settings_user' => array(),
 
-		/** Collecting Section ********************************************/
+		/** Collection Section ********************************************/
 
-		'incassoos_settings_collecting' => array(
+		'incassoos_settings_collection' => array(
 
 			// Transaction description
 			'_incassoos_transaction_description' => array(
@@ -198,6 +197,19 @@ function incassoos_admin_get_settings_fields() {
 			'_incassoos_default_collection_withdrawal_delay' => array(
 				'title'             => esc_html__( 'Default withdrawal delay', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_default_collection_withdrawal_delay',
+				'sanitize_callback' => 'absint',
+				'args'              => array()
+			),
+		),
+
+		/** Order Section *************************************************/
+
+		'incassoos_settings_order' => array(
+
+			// Order time lock
+			'_incassoos_order_time_lock' => array(
+				'title'             => esc_html__( 'Time Lock', 'incassoos' ),
+				'callback'          => 'incassoos_admin_setting_callback_order_time_lock',
 				'sanitize_callback' => 'absint',
 				'args'              => array()
 			),
@@ -386,26 +398,6 @@ function incassoos_admin_setting_callback_currency() {
 	<?php
 }
 
-/**
- * Order time lock setting field
- *
- * @since 1.0.0
- */
-function incassoos_admin_setting_callback_order_time_lock() {
-
-	ob_start(); ?>
-
-	<input type="number" step="1" min="0" name="_incassoos_order_time_lock" id="_incassoos_order_time_lock" class="code small-text" value="<?php echo get_option( '_incassoos_order_time_lock', 0 ); ?>">
-
-	<?php $input = ob_get_clean(); ?>
-
-	<label for="_incassoos_order_time_lock">
-		<?php printf( esc_html__( 'Enable editing of uncollected orders up to %s minutes after they are created.', 'incassoos' ), $input ); ?>
-	</label>
-
-	<?php
-}
-
 /** User Section **********************************************************/
 
 /**
@@ -469,16 +461,16 @@ function incassoos_admin_setting_callback_users_for_role( $args ) {
 	<?php
 }
 
-/** Collecting Section ****************************************************/
+/** Collection Section ****************************************************/
 
 /**
- * Collecting settings section description for the settings page
+ * Collection settings section description for the settings page
  *
  * @since 1.0.0
  */
-function incassoos_admin_setting_callback_collecting_section() { ?>
+function incassoos_admin_setting_callback_collection_section() { ?>
 
-	<p><?php esc_html_e( 'Manage the details for the creation of your debit collection documents.', 'incassoos' ); ?></p>
+	<p><?php esc_html_e( 'Manage the details for the management of collections.', 'incassoos' ); ?></p>
 
 	<?php
 }
@@ -571,6 +563,40 @@ function incassoos_admin_setting_callback_default_collection_withdrawal_delay() 
 	<input name="_incassoos_default_collection_withdrawal_delay" id="_incassoos_default_collection_withdrawal_delay" type="number" min="0" class="small-text" value="<?php echo get_option( '_incassoos_default_collection_withdrawal_delay', 5 ); ?>" />
 
 	<p class="description"><?php esc_html_e( 'The amount of days between communicating the collection withdrawal and the actual transaction execution.', 'incassoos' ); ?></p>
+
+	<?php
+}
+
+/** Order Section *********************************************************/
+
+/**
+ * Order settings section description for the settings page
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_setting_callback_order_section() { ?>
+
+	<p><?php esc_html_e( 'Manage the details for the management of orders.', 'incassoos' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Order time lock setting field
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_setting_callback_order_time_lock() {
+
+	ob_start(); ?>
+
+	<input type="number" step="1" min="0" name="_incassoos_order_time_lock" id="_incassoos_order_time_lock" class="code small-text" value="<?php echo get_option( '_incassoos_order_time_lock', 0 ); ?>">
+
+	<?php $input = ob_get_clean(); ?>
+
+	<label for="_incassoos_order_time_lock">
+		<?php printf( esc_html__( 'Enable editing of uncollected orders up to %s minutes after they are created.', 'incassoos' ), $input ); ?>
+	</label>
 
 	<?php
 }
