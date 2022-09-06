@@ -989,8 +989,8 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 	// Occasion
 	if ( incassoos_get_occasion( $post ) ) {
 
-		// Provide view link for collected
-		if ( incassoos_is_occasion_collected( $post ) || ! current_user_can( $post_type_object->cap->edit_posts ) ) {
+		// Provide view link for locked
+		if ( incassoos_is_occasion_locked( $post ) || ! current_user_can( $post_type_object->cap->edit_posts ) ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
