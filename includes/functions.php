@@ -1920,6 +1920,18 @@ function incassoos_get_currency( $default = 'USD' ) {
 }
 
 /**
+ * Return whether to send an email on occasion close or reopen
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_occasion_email_on_close_or_reopen'
+ * @return bool Send email on occasion close or reopen?
+ */
+function incassoos_get_occasion_email_on_close_or_reopen() {
+	return (bool) apply_filters( 'incassoos_get_occasion_email_on_close_or_reopen', get_option( '_incassoos_occasion_email_on_close_or_reopen', false ) );
+}
+
+/**
  * Return the order time lock in minutes
  *
  * @since 1.0.0

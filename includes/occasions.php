@@ -1738,3 +1738,56 @@ function incassoos_rest_pre_insert_occasion( $post, $request ) {
 
 	return $post;
 }
+
+/** Email *********************************************************************/
+
+/**
+ * Send an email when an Occasion is closed or reopened
+ *
+ * @since 1.0.0
+ *
+ * @param  WP_Post $post Post object
+ */
+function incassoos_send_occasion_email_on_close_or_reopen( $post ) {
+
+	// Bail when not sending the email
+	if ( ! incassoos_get_occasion_email_on_close_or_reopen() ) {
+		return;
+	}
+
+	$is_closed = incassoos_is_occasion_closed( $post );
+	$args      = array(
+		'post'    => $post,
+		'subject' => $is_closed
+			? __( 'An occasion was closed in Incassoos', 'incassoos' )
+			: __( 'An occasion was reopened in Incassoos', 'incassoos' ),
+		'message' => '<p>' . sprintf(
+				$is_closed
+					? __( 'The occasion %1$s was just closed by %2$s.',   'incassoos' )
+					: __( 'The occasion %1$s was just reopened by %2$s.', 'incassoos' ),
+				incassoos_get_occasion_link( $post ),
+				incassoos_get_user_display_name()
+			) . '</p>' .
+			'<p><strong>' . __( 'Occasion summary', 'incassoos' ) . '</strong></p>' .
+			'<table cellspacing="0" cellpadding="0" border="0" width="100%">' .
+				'<tr><td width="200px">' . __( 'Title:',                  'incassoos' ) . '</td><td>' . incassoos_get_occasion_title( $post ) . '</td></tr>' .
+				'<tr><td width="200px">' . __( 'Occasion date:',          'incassoos' ) . '</td><td>' . incassoos_get_occasion_date( $post ) . '</td></tr>' .
+				( $is_closed ? '<tr><td width="200px">' . __( 'Closed:',  'incassoos' ) . '</td><td>' . incassoos_get_occasion_closed_date( $post, 'd-m-Y H:i' ) . '</td></tr>' : '' ) .
+				'<tr><td width="200px">' . __( 'Order count:',            'incassoos' ) . '</td><td>' . incassoos_get_occasion_order_count( $post ) . '</td></tr>' .
+				'<tr><td width="200px">' . __( 'Ordered products count:', 'incassoos' ) . '</td><td>' . incassoos_get_occasion_product_count( $post ) . '</td></tr>' .
+				'<tr><td width="200px">' . __( 'Value of consumptions:',  'incassoos' ) . '</td><td>' . incassoos_get_occasion_total( $post, true ) . '</td></tr>' .
+			'</table>' .
+			'<p><a href="' . esc_url( incassoos_get_occasion_url( $post ) ) . '">' . __( 'View occasion', 'incassoos' ) . '</a></p>'
+	);
+
+	foreach ( incassoos_get_users_for_role( incassoos_get_supervisor_role() ) as $user_id ) {
+		$user = incassoos_get_user( $user_id );
+		if ( $user ) {
+			$args['to']      = $user->user_email;
+			$args['user_id'] = $user->ID;
+
+			// Send the email
+			incassoos_send_email( $args );
+		}
+	}
+}

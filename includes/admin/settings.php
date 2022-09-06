@@ -91,6 +91,13 @@ function incassoos_admin_get_settings_sections() {
 			'page'     => 'incassoos'
 		),
 
+		// Occasion settings
+		'incassoos_settings_occasion' => array(
+			'title'    => __( 'Occasion Settings', 'incassoos' ),
+			'callback' => 'incassoos_admin_setting_callback_occasion_section',
+			'page'     => 'incassoos'
+		),
+
 		// Order settings
 		'incassoos_settings_order' => array(
 			'title'    => __( 'Order Settings', 'incassoos' ),
@@ -197,6 +204,19 @@ function incassoos_admin_get_settings_fields() {
 			'_incassoos_default_collection_withdrawal_delay' => array(
 				'title'             => esc_html__( 'Default withdrawal delay', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_default_collection_withdrawal_delay',
+				'sanitize_callback' => 'absint',
+				'args'              => array()
+			),
+		),
+
+		/** Occasion Section **********************************************/
+
+		'incassoos_settings_occasion' => array(
+
+			// Email notification on close/reopen
+			'_incassoos_occasion_email_on_close_or_reopen' => array(
+				'title'             => esc_html__( 'Email on Close or Reopen', 'incassoos' ),
+				'callback'          => 'incassoos_admin_setting_callback_occasion_email_on_close_or_reopen',
 				'sanitize_callback' => 'absint',
 				'args'              => array()
 			),
@@ -563,6 +583,33 @@ function incassoos_admin_setting_callback_default_collection_withdrawal_delay() 
 	<input name="_incassoos_default_collection_withdrawal_delay" id="_incassoos_default_collection_withdrawal_delay" type="number" min="0" class="small-text" value="<?php echo get_option( '_incassoos_default_collection_withdrawal_delay', 5 ); ?>" />
 
 	<p class="description"><?php esc_html_e( 'The amount of days between communicating the collection withdrawal and the actual transaction execution.', 'incassoos' ); ?></p>
+
+	<?php
+}
+
+/** Occasion Section ******************************************************/
+
+/**
+ * Occasion settings section description for the settings page
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_setting_callback_occasion_section() { ?>
+
+	<p><?php esc_html_e( 'Manage the details for the management of occasions.', 'incassoos' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Occasion email on close or reopen setting field
+ *
+ * @since 1.0.0
+ */
+function incassoos_admin_setting_callback_occasion_email_on_close_or_reopen() { ?>
+
+	<input name="_incassoos_occasion_email_on_close_or_reopen" id="_incassoos_occasion_email_on_close_or_reopen" type="checkbox" value="1" <?php checked( get_option( '_incassoos_occasion_email_on_close_or_reopen', false ) ); ?>>
+	<label for="_incassoos_occasion_email_on_close_or_reopen"><?php esc_html_e( 'Send an email to each Supervisor when an occasion is closed or reopened.', 'incassoos' ); ?></label>
 
 	<?php
 }

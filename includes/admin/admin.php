@@ -267,6 +267,13 @@ class Incassoos_Admin {
 
 				break;
 
+			case 'incassoos_settings_occasion' :
+
+				// Defer to occasion editing caps
+				$caps = array( 'edit_incassoos_occasions' );
+
+				break;
+
 			case 'incassoos_settings_order' :
 
 				// Defer to order editing caps

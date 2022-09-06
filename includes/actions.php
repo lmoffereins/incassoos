@@ -93,6 +93,9 @@ add_filter( 'incassoos_get_post_notes',    'wptexturize',                       
 add_filter( 'incassoos_get_post_notes',    'convert_smilies',                      20    );
 add_filter( 'incassoos_get_post_notes',    'wpautop',                              10    );
 
+add_action( 'incassoos_closed_occasion',   'incassoos_send_occasion_email_on_close_or_reopen', 10 );
+add_action( 'incassoos_reopened_occasion', 'incassoos_send_occasion_email_on_close_or_reopen', 10 );
+
 /** Taxonomy ******************************************************************/
 
 add_action( 'create_term',                 'incassoos_save_term_meta',             10, 3 );
