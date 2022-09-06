@@ -618,12 +618,53 @@ function incassoos_get_occasion_closed_date( $post = 0, $date_format = '' ) {
 	}
 
 	if ( $date ) {
-		$date = mysql2date( $date_format, $date );
+		$date = incassoos_mysql2date_gmt( $date_format, $date );
 	} else {
 		$date = '';
 	}
 
 	return apply_filters( 'incassoos_get_occasion_closed_date', $date, $post, $date_format );
+}
+
+/**
+ * Output the Occasion's closed date without timezone offset
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ */
+function incassoos_the_occasion_closed_date_gmt( $post = 0, $date_format = '' ) {
+	echo incassoos_get_occasion_closed_date_gmt( $post, $date_format );
+}
+
+/**
+ * Return the Occasion's closed date without timezone offset
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_occasion_closed_date_gmt'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return string|bool Occasion closed date without timezone offset or False when not found.
+ */
+function incassoos_get_occasion_closed_date_gmt( $post = 0, $date_format = '' ) {
+	$post = incassoos_get_occasion( $post );
+	$date = get_post_meta( $post ? $post->ID : 0, 'closed', true );
+
+	// Default to the registered date format
+	if ( empty( $date_format ) ) {
+		$date_format = get_option( 'date_format' );
+	}
+
+	if ( $date ) {
+		$date = mysql2date( $date_format, $date );
+	} else {
+		$date = '';
+	}
+
+	return apply_filters( 'incassoos_get_occasion_closed_date_gmt', $date, $post, $date_format );
 }
 
 /**
@@ -1582,7 +1623,7 @@ function incassoos_close_occasion( $post = 0 ) {
 	// Run action before closing
 	do_action( 'incassoos_close_occasion', $post );
 
-	// Update closed date
+	// Update closed date (in GMT)
 	update_post_meta( $post->ID, 'closed', date( 'Y-m-d H:i:s' ) );
 
 	// Run action after closing

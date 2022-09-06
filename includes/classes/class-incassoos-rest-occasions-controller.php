@@ -206,7 +206,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 
 		$object['occasion_date'] = $this->prepare_date_response( incassoos_get_occasion_date( $post, 'Y-m-d H:i:s' ) );
 		$object['consumers'] = incassoos_get_occasion_consumers( $post );
-		$object['closed'] = $this->prepare_date_response( incassoos_get_occasion_closed_date( $post, 'Y-m-d H:i:s' ) );
+		$object['closed'] = $this->prepare_date_response( incassoos_get_occasion_closed_date_gmt( $post, 'Y-m-d H:i:s' ) );
 
 		/**
 		 * Support additional fields defined for the post type
