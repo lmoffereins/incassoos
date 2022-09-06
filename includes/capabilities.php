@@ -1310,11 +1310,30 @@ function incassoos_get_registrant_role() {
 function incassoos_get_users_for_roles() {
 	$roles = array();
 
-	foreach ( incassoos_get_dynamic_roles() as $role => $args ) {
-		$roles[ $role ] = get_option( "_incassoos_users_for_role-{$role}", array() );
+	foreach ( incassoos_get_dynamic_roles() as $role_id => $args ) {
+		$roles[ $role_id ] = get_option( "_incassoos_users_for_role-{$role_id}", array() );
 	}
 
 	return apply_filters( 'incassoos_get_users_for_roles', $roles );
+}
+
+/**
+ * Return the users that are assigned to a specific role
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_users_for_role'
+ * @return array Users for roles
+ */
+function incassoos_get_users_for_role( $role_id = '' ) {
+	$roles = incassoos_get_dynamic_roles();
+	$users = array();
+
+	if ( isset( $roles[ $role_id ] ) ) {
+		$users = array_map( 'intval', get_option( "_incassoos_users_for_role-{$role_id}", array() ) );
+	}
+
+	return apply_filters( 'incassoos_get_users_for_role', $users, $role_id );
 }
 
 /**
