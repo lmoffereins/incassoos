@@ -402,6 +402,40 @@ function incassoos_validate_consumer_id( $value ) {
 	return $value;
 }
 
+/** Generic *******************************************************************/
+
+/**
+ * Convert given MySQL date string into a different format corrected for GMT
+ *
+ * @since 1.0.0
+ *
+ * @see mysql2date()
+ *
+ * @param string $format    Format of the date to return.
+ * @param string $date      Date string to convert.
+ * @param bool   $translate Whether the return date should be translated. Default true.
+ * @return string|int|false Integer if `$format` is 'U' or 'G', string otherwise.
+ *                          False on failure.
+ */
+function incassoos_mysql2date_gmt( $format, $date, $translate = true ) {
+	if ( empty( $date ) ) {
+		return false;
+	}
+
+	$datetime = date_create( $date );
+
+	if ( false === $datetime ) {
+		return false;
+	}
+
+	// Redefine date from GMT date
+	$time = $datetime->getTimestamp() + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+	$date = gmdate( 'Y-m-d H:i:s', $time );
+
+	// Use core function to process
+	return mysql2date( $format, $date, $translate );
+}
+
 /** Roman Numerals ************************************************************/
 
 /**
