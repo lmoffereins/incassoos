@@ -134,9 +134,19 @@
 			width: 100%;
 			min-height: 100%;
 			margin: 0px;
+			transform: none;
 
 			.single-panel .panel-header .panel-header-image {
-				display: none;
+				position: initial;
+				margin: auto -5px;
+				padding: 0px;
+				background: none;
+				transform: none;
+
+				.avatar-image {
+					width: 46px;
+					height: 46px;
+				}
 			}
 		}
 	}
