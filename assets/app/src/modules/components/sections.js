@@ -42,6 +42,25 @@ define([
 				window.removeEventListener("resize", callback);
 			}
 		}
+	},
+
+	/**
+	 * Reset the active section when the window is resized above the threshold
+	 *
+	 * @return {Void}
+	 */
+	onResize = function sectionOnResize() {
+		var width = document.body.clientWidth;
+
+		// Reset the active section to products
+		if (width > 580) {
+			this.isOrderPanelActive && this.setProductsActive();
+			this.resetFixedReceipt();
+			this.$root.$emit("sections/resize-large");
+		} else {
+			this.setFixedReceipt();
+			this.$root.$emit("sections/resize-small");
+		}
 	};
 
 	return {
@@ -113,6 +132,32 @@ define([
 			 */
 			setOrderPanelActive: function() {
 				this.activeSection = "order-panel";
+			},
+
+			/**
+			 * Set the receipt in the fixed position
+			 *
+			 * @return {Void}
+			 */
+			setFixedReceipt: function() {
+
+				// Check if elements are rendered
+				if (this.$refs.sections && this.$refs.orderPanel.contains(this.$refs.receipt)) {
+					this.$refs.sections.append(this.$refs.receipt);
+				}
+			},
+
+			/**
+			 * Reset the receipt from the fixed position
+			 *
+			 * @return {Void}
+			 */
+			resetFixedReceipt: function() {
+
+				// Check if elements are rendered
+				if (this.$refs.orderPanel && ! this.$refs.orderPanel.contains(this.$refs.receipt)) {
+					this.$refs.orderPanel.append(this.$refs.receipt);
+				}
 			}
 		},
 
@@ -135,29 +180,40 @@ define([
 			},
 
 			/**
-			 * Reset the active section when the window is resized above the threshold
+			 * Set the active section from the receipt
 			 *
+			 * @param  {String} section The section to set as active
 			 * @return {Void}
 			 */
-			onResize = function sectionOnResize() {
-				var width = document.body.clientWidth;
-
-				// Reset the active section to products
-				if (width > 580 && self.isOrderPanelActive) {
-					self.setProductsActive();
+			onSetActiveSection = function ( section ) {
+				if (-1 !== ["consumers", "products", "order-panel"].indexOf(section)) {
+					self.activeSection = section;
 				}
 			};
 
-			// Subscribe to the 'panels/is-panel-active' event
+			// Subscribe to external events
 			this.$root.$on("panels/is-panel-active", onPanelActive);
+			this.$root.$on("receipt/set-active-section", onSetActiveSection);
 			this.$registerUnobservable( function() {
 				self.$root.$off("panels/is-panel-active", onPanelActive);
+				self.$root.$off("receipt/set-active-section", onSetActiveSection);
 			});
 
 			// Register resize event listener
 			this.$registerUnobservable(
-				addResizeListener(onResize)
+				addResizeListener(onResize.bind(this))
 			);
+		},
+
+		/**
+		 * Register listeners when the component is updated
+		 *
+		 * @return {Void}
+		 */
+		updated: function() {
+
+			// Run resize handler when the component is rendered
+			onResize.apply(this);
 		}
 	};
 });

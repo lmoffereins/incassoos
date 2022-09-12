@@ -1,4 +1,4 @@
-<main id="sections" v-if="$isReady" :inert="isPanelActive">
+<main id="sections" ref="sections" v-if="$isReady" :inert="isPanelActive">
 	<section
 		id="consumers"
 		:class="{ 'is-active': isConsumersActive, 'is-not-active': ! isConsumersActive }">
@@ -13,6 +13,7 @@
 
 	<section
 		id="order-panel"
+		ref="orderPanel"
 		:class="{ 'is-active': isOrderPanelActive, 'is-not-active': ! isOrderPanelActive }">
 		<button type="button" @click="setOrderPanelActive" class="set-active-section" v-l10n.Order.ListHeading></button>
 
@@ -24,7 +25,7 @@
 			<orders></orders>
 		</div>
 
-		<div id="receipt">
+		<div id="receipt" ref="receipt">
 			<receipt></receipt>
 		</div>
 	</section>

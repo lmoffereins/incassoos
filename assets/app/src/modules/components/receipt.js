@@ -19,7 +19,25 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	var shortcutsService = services.get("shortcuts");
+	var shortcutsService = services.get("shortcuts"),
+
+	/**
+	 * Reset attributes when closing a receipt
+	 *
+	 * @return {Void}
+	 */
+	onEnterIdle = function() {
+		this.isExpanded = false;
+	},
+
+	/**
+	 * Set attributes when viewing an order
+	 *
+	 * @return {Void}
+	 */
+	onEnterViewOrder = function() {
+		this.isExpanded = true;
+	};
 
 	return {
 		template: tmpl,
@@ -29,6 +47,7 @@ define([
 		},
 		data: function() {
 			return {
+				isExpanded: false,
 				defaultAvatarUrl: settings.consumer.defaultAvatarUrl
 			};
 		},
@@ -141,7 +160,21 @@ define([
 				return state.active;
 			}
 		})),
-		methods: Object.assign(Vuex.mapMutations("receipt", {
+		methods: Object.assign({
+			/**
+			 * Signal to set the active section
+			 *
+			 * @return {Void}
+			 */
+			setActiveConsumersSection: function( event ) {
+
+				// Prevent `v-toggle` on the .item-list-header parent
+				event && event.stopPropagation && event.stopPropagation();
+
+				// Switch active section
+				this.$root.$emit("receipt/set-active-section", "consumers");
+			}
+		}, Vuex.mapMutations("receipt", {
 			"clear": "clearList",
 			"clearFeedback": "clearFeedback"
 		}), Vuex.mapActions("orders", {
@@ -262,6 +295,19 @@ define([
 		})),
 		watch: Object.assign({
 			/**
+			 * Act when the receipt is toggled expanded or not
+			 *
+			 * @return {Void}
+			 */
+			isExpanded: function() {
+				var self = this;
+
+				this.$nextTick(function() {
+					util.triggerElementChanged(self.$el);
+				});
+			},
+
+			/**
 			 * Act when the receipt's total price changed
 			 *
 			 * @return {Void}
@@ -300,7 +346,42 @@ define([
 		 * @return {Void}
 		 */
 		created: function() {
-			var self = this;
+			var self = this,
+
+			/**
+			 * Act when the screen is resized to small
+			 *
+			 * @return {Void}
+			 */
+			onSectionsResizeSmall = function() {
+
+				// Reset attributes after any other updates to sections
+				self.$nextTick( function() {
+					self.isExpanded = false;
+				});
+			},
+
+			/**
+			 * Collection of fsm observers
+			 *
+			 * @type {Object}
+			 */
+			fsmObservers = {};
+			fsmObservers[fsm.on.enter.IDLE] = onEnterIdle;
+			fsmObservers[fsm.on.enter.VIEW_ORDER] = onEnterViewOrder;
+
+			// Register observers, bind the component's context
+			for (i in fsmObservers) {
+				this.$registerUnobservable(
+					fsm.observe(i, fsmObservers[i].bind(this))
+				);
+			}
+
+			// Subscribe to the 'sections/resize-small' event
+			this.$root.$on("sections/resize-small", onSectionsResizeSmall);
+			this.$registerUnobservable( function() {
+				self.$root.$off("sections/resize-small", onSectionsResizeSmall);
+			});
 
 			// Register global keyboard event listeners
 			this.$registerUnobservable(

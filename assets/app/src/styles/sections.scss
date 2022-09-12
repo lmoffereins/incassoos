@@ -143,6 +143,8 @@
 // Single column
 @media screen and (max-width: 580px) {
 	#sections {
+		flex-direction: column;
+
 		#consumers.is-not-active,
 		#products.is-not-active,
 		#order-panel.is-not-active {
@@ -205,14 +207,6 @@
 			}
 		}
 
-		#order-panel.is-active {
-			padding-top: 46px;
-
-			#orders .item-list-header {
-				padding: 0px;
-			}
-		}
-
 		#consumers.is-not-active {
 			left: 0px;
 		}
@@ -228,6 +222,7 @@
 
 		#consumers.is-active {
 			flex: 1;
+			width: auto;
 
 			.section-topic {
 				left: 0px;
@@ -243,18 +238,51 @@
 
 		#order-panel.is-active {
 			flex: 1;
+			padding-top: 46px;
+			width: auto;
 
 			.section-topic {
 				right: 0px;
 			}
 
-			#receipt {
-				width: calc( 100% - 30px );
-				transform: translateX(15px);
+			#orders .item-list-header {
+				padding: 0px;
+			}
+		}
 
-				.receipt-total {
-					left: -28px;
+		#receipt {
+			position: relative;
+			order: 99;
+			width: calc( 100vw - 30px );
+			transform: translateX(15px);
+			z-index: 100;
+
+			.receipt.is-active {
+				max-height: 70px;
+
+				&.is-collapsed {
+					.receipt-total {
+						top: -20px;
+					}
+
+					.item-list-header {
+						.topic {
+							display: none;
+						}
+
+						.item-subtitle {
+							visibility: hidden;
+						}
+					}
 				}
+
+				&.is-expanded {
+					max-height: min( 480px, calc( 100vh - 235px ) );
+				}
+			}
+
+			.receipt-total {
+				left: -28px;
 			}
 		}
 	}

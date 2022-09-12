@@ -27,7 +27,7 @@
 			justify-content: center;
 			align-items: center;
 			left: -45px;
-			top: 15px;
+			top: 10px;
 			z-index: 10;
 			width: 90px;
 			height: 90px;
@@ -40,10 +40,11 @@
 			font-size: 1.1rem;
 			opacity: 0;
 			transform: scale(.5);
-			pointer-events: none;
+			cursor: pointer;
 			transition:
 				transform .2s cubic-bezier(0, 3, 1, 1),
-				opacity .15s ease-out
+				opacity .15s ease-out,
+				top .2s ease
 			;
 
 			.total-value {
@@ -70,6 +71,7 @@
 			transition: transform .6s linear;
 			transition-delay: .2s;
 			text-align: center;
+			cursor: pointer;
 
 			.item-list-header-image {
 				position: absolute;
@@ -86,10 +88,14 @@
 					height: 80px;
 				}
 			}
+
+			.item-subtitle {
+				min-height: 1em;
+			}
 		}
 
 		&.is-active {
-			max-height: 100vh; // High enough ceiling
+			max-height: min( 480px, calc( 100vh - 235px ) ); // 100vh; High enough ceiling
 			transition: max-height $transition-quick;
 
 			.item-list-header {

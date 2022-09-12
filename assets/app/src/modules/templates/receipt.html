@@ -1,12 +1,12 @@
-<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive, 'is-editing': isEditing }" :inert="!isActive">
+<div class="receipt item-list-wrapper" :class="{ 'is-active': isActive, 'is-expanded': isExpanded, 'is-collapsed': ! isExpanded, 'is-editing': isEditing }" :inert="!isActive">
 	<close-button @click="close" class="receipt-close"></close-button>
 
-	<div class="receipt-total" :class="{ 'is-active': !! totalPrice }">
+	<div v-toggle="isExpanded" class="receipt-total" :class="{ 'is-active': !! totalPrice }">
 		<span class="total-value">{{totalPrice | money}}</span>
 	</div>
 
-	<div class="item-list-header">
-		<div class="item-list-header-image">
+	<div v-toggle="isExpanded" class="item-list-header">
+		<div class="item-list-header-image" @click="setActiveConsumersSection">
 			<object class="avatar-image" :data="consumer.avatarUrl" type="image/png" v-l10n-alt.Consumer.AvatarOf="consumer.name"></object>
 		</div>
 
