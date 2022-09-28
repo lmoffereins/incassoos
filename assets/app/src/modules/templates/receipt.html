@@ -53,6 +53,10 @@
 					</button>
 				</div>
 			</li>
+
+			<li v-if="!receipt.length" class="item no-items">
+				<span class="no-items-found" v-l10n.Receipt.NoItems></span>
+			</li>
 		</ul>
 	</div>
 

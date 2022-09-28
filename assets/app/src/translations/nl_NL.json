@@ -302,6 +302,10 @@
 	"Receipt": {
 		"ListHeading": "Bonnetje",
 		"SelectAConsumer": "Selecteer een afnemer",
-		"FeedbackTitle": "Bonfouten"
+		"FeedbackTitle": "Bonfouten",
+		"NoItems": "Het bonnetje is nog leeg."
+	},
+	"Settings": {
+		"OpenSettings": "Open instellingen"
 	}
 }

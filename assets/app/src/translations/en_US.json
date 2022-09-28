@@ -304,7 +304,8 @@
 	"Receipt": {
 		"ListHeading": "Receipt",
 		"SelectAConsumer": "Select a consumer",
-		"FeedbackTitle": "Receipt errors"
+		"FeedbackTitle": "Receipt errors",
+		"NoItems": "The receipt is empty."
 	},
 	"Settings": {
 		"OpenSettings": "Open settings"
