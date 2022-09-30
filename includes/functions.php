@@ -2171,16 +2171,22 @@ function incassoos_get_post_consumers_export_type_labels( $context = null ) {
  */
 function incassoos_show_post_consumers_export_type( $context ) {
 
-	// Match post types
-	$show = in_array( get_post_type( $context ), array(
-		incassoos_get_collection_post_type(),
-		incassoos_get_activity_post_type(),
-		incassoos_get_occasion_post_type()
-	), true );
+	// Define retval
+	$show = false;
 
-	// Require post to be collected
-	if ( ! incassoos_is_post_collected( $context ) ) {
-		$show = false;
+	// Get the context's post type
+	switch ( get_post_type( $context ) ) {
+
+		// Require Collection to be collected
+		case incassoos_get_collection_post_type() :
+			$show = ! incassoos_is_post_collected( $context );
+			break;
+
+		// Activity, Occasion
+		case incassoos_get_activity_post_type() :
+		case incassoos_get_occasion_post_type() :
+			$show = true;
+			break;
 	}
 
 	return (bool) apply_filters( 'incassoos_show_post_consumers_export_type', $show, $context );
@@ -2206,12 +2212,17 @@ function incassoos_get_post_consumptions_export_type_id() {
  * @return bool Show the export type?
  */
 function incassoos_show_post_consumptions_export_type( $context ) {
-	$post_type = get_post_type( $context );
-	$show      = false;
 
-	// Require occasion to be locked
-	if ( incassoos_get_occasion_post_type() === $post_type && incassoos_is_occasion_locked( $context ) ) {
-		$show = true;
+	// Define retval
+	$show = false;
+
+	// Get the context's post type
+	switch ( get_post_type( $context ) ) {
+
+		// Occasion
+		case incassoos_get_occasion_post_type() :
+			$show = true;
+			break;
 	}
 
 	return (bool) apply_filters( 'incassoos_show_post_consumptions_export_type', $show, $context );
@@ -2237,16 +2248,18 @@ function incassoos_get_post_products_export_type_id() {
  * @return bool Show the export type?
  */
 function incassoos_show_post_products_export_type( $context ) {
-	$post_type = get_post_type( $context );
-	$show      = false;
 
-	// Require occasion to be locked
-	if ( incassoos_get_occasion_post_type() === $post_type && incassoos_is_occasion_locked( $context ) ) {
-		$show = true;
+	// Define retval
+	$show = false;
 
-	// Require order to be locked
-	} elseif ( incassoos_get_order_post_type() === $post_type && incassoos_is_order_locked( $context ) ) {
-		$show = true;
+	// Get the context's post type
+	switch ( get_post_type( $context ) ) {
+
+		// Occasion, Order
+		case incassoos_get_occasion_post_type() :
+		case incassoos_get_order_post_type() :
+			$show = true;
+			break;
 	}
 
 	return (bool) apply_filters( 'incassoos_show_post_products_export_type', $show, $context );

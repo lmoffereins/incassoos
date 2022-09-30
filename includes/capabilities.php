@@ -391,6 +391,19 @@ function incassoos_map_activity_caps( $caps = array(), $cap = '', $user_id = 0, 
 
 			break;
 
+		/** Exporting ***************************************************/
+
+		case 'export_incassoos_activity' :
+
+			$post = incassoos_get_activity( $args[0] );
+			if ( $post ) {
+
+				// Defer to editing caps
+				$caps = array( 'edit_incassoos_activities' );
+			}
+
+			break;
+
 		/** Deleting ****************************************************/
 
 		case 'delete_incassoos_activity' :
@@ -497,6 +510,19 @@ function incassoos_map_occasion_caps( $caps = array(), $cap = '', $user_id = 0, 
 
 			break;
 
+		/** Exporting ***************************************************/
+
+		case 'export_incassoos_occasion' :
+
+			$post = incassoos_get_occasion( $args[0] );
+			if ( $post ) {
+
+				// Defer to editing caps
+				$caps = array( 'edit_incassoos_occasions' );
+			}
+
+			break;
+
 		/** Deleting ****************************************************/
 
 		case 'delete_incassoos_occasion' :
@@ -580,6 +606,19 @@ function incassoos_map_order_caps( $caps = array(), $cap = '', $user_id = 0, $ar
 				} else {
 					$caps = array( 'edit_incassoos_orders' );
 				}
+			}
+
+			break;
+
+		/** Exporting ***************************************************/
+
+		case 'export_incassoos_order' :
+
+			$post = incassoos_get_order( $args[0] );
+			if ( $post ) {
+
+				// Defer to editing caps
+				$caps = array( 'edit_incassoos_orders' );
 			}
 
 			break;
