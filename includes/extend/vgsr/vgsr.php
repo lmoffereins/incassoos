@@ -88,6 +88,9 @@ class Incassoos_VGSR {
 		add_action( 'incassoos_rest_api_init',         array( $this, 'rest_register_fields'  ), 10    );
 		add_filter( 'incassoos_rest_prepare_consumer', array( $this, 'rest_prepare_consumer' ), 10, 3 );
 		add_filter( 'incassoos_rest_prepare_settings', array( $this, 'rest_prepare_settings' ), 10, 2 );
+
+		// App
+		add_filter( 'incassoos_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 	}
 
 	/** Public methods **************************************************/
@@ -332,6 +335,21 @@ class Incassoos_VGSR {
 		}
 
 		return $response;
+	}
+
+	/** App *************************************************************/
+
+	/**
+	 * Enqueue plugin page scripts
+	 *
+	 * @since 1.0.0
+	 */
+	public function enqueue_scripts() {
+
+		// App page
+		if ( incassoos_is_app() ) {
+			wp_enqueue_style( 'incassoos-vgsr-app', $this->plugin_url . 'assets/css/app.css', array( 'incassoos-app' ) );
+		}
 	}
 }
 
