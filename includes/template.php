@@ -476,6 +476,8 @@ function incassoos_wp_robots() {
  * Enqueue plugin page scripts
  *
  * @since 1.0.0
+ *
+ * @uses do_action() Calls 'incassoos_enqueue_scripts'
  */
 function incassoos_enqueue_scripts() {
 	$plugin  = incassoos();
@@ -515,4 +517,24 @@ function incassoos_enqueue_scripts() {
 			)
 		) ) );
 	}
+
+	do_action( 'incassoos_enqueue_scripts' );
+}
+
+/**
+ * Modify the list of body classes
+ *
+ * @since 1.0.0
+ *
+ * @param  array $classes List of classes
+ * @return array List of classes
+ */
+function incassoos_body_class( $classes ) {
+
+	// App page
+	if ( incassoos_is_app() ) {
+		$classes[] = 'incassoos-app';
+	}
+
+	return $classes;
 }

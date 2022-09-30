@@ -56,6 +56,7 @@ add_action( 'incassoos_rest_api_init',     'incassoos_register_rest_routes',    
 add_filter( 'show_admin_bar',              'incassoos_show_admin_bar',             10    );
 add_filter( 'document_title_parts',        'incassoos_document_title_parts',       10    ); // Since WP 4.4
 add_action( 'wp_enqueue_scripts',          'incassoos_enqueue_scripts',            10    );
+add_action( 'body_class',                  'incassoos_body_class',                 10    );
 
 // Theme Compat
 add_filter( 'template_include',            'incassoos_template_include_theme_supports', 10 );
