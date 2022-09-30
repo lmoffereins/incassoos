@@ -42,6 +42,17 @@ define([
 			}
 		},
 
+		// Main settings
+		main: {
+			currencyFormatArgs: {
+				format: "%s",
+				symbol: "",
+				decimals: 2,
+				decimal_point: util.getNumberFormatSeparator("decimal"),
+				thousands_sep: util.getNumberFormatSeparator("thousand")
+			}
+		},
+
 		// Login settings
 		login: {
 			loginAttemptsAllowed: 3,

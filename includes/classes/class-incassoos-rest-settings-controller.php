@@ -99,6 +99,12 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
+				'main' => array(
+					'description' => __( 'Main system settings.', 'incassoos' ),
+					'type'        => 'object',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
 				'login' => array(
 					'description' => __( 'Settings concerning login.', 'incassoos' ),
 					'type'        => 'object',
@@ -179,6 +185,12 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 					'consumers'     => incassoos_get_consumers_rest_base(),
 					'consumerTypes' => incassoos_get_consumer_types_rest_base()
 				)
+			);
+		}
+
+		if ( ! empty( $schema['properties']['main'] ) ) {
+			$data['main'] = array(
+				'currencyFormatArgs' => incassoos_get_currency_format_args()
 			);
 		}
 

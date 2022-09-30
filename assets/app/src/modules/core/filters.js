@@ -8,8 +8,9 @@ define([
 	"vue",
 	"dayjs",
 	"services",
+	"settings",
 	"util"
-], function( Vue, dayjs, services, util ) {
+], function( Vue, dayjs, services, settings, util ) {
 	/**
 	 * Holds a reference to the l10n service
 	 *
@@ -118,7 +119,7 @@ define([
 	 * @return {String} Formatted money
 	 */
 	Vue.filter("money", function( value, format ) {
-		format = format || l10nService.get("Generic.MoneyFormat");
+		format = format || l10nService.get("Generic.MoneyFormat").sprintf(settings.main.currencyFormatArgs.symbol);
 
 		// Make it a number
 		value = util.sanitizePrice(value);

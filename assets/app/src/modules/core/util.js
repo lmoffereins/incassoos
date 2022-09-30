@@ -30,14 +30,14 @@ define([
 		"DATETIME-LOCAL": 1,
 		TEL: 1,
 		URL: 1
-    },
+	},
 
-    /**
-     * Holds the map of keyboard keys and codes
-     *
-     * @type {Object}
-     */
-    keyboardMap = {
+	/**
+	 * Holds the map of keyboard keys and codes
+	 *
+	 * @type {Object}
+	 */
+	keyboardMap = {
 		backspace: 8,
 		tab: 9,
 		enter: 13,
@@ -137,14 +137,14 @@ define([
 		"back-slash": 220,
 		"close-braket": 221,
 		"single-quote": 222
-    },
+	},
 
-    /**
-     * List of internal event listeners
-     *
-     * @type {Object} List of listeners per event
-     */
-    customListeners = {},
+	/**
+	 * List of internal event listeners
+	 *
+	 * @type {Object} List of listeners per event
+	 */
+	customListeners = {},
 
 	/**
 	 * Return camelcased version of a text
@@ -808,6 +808,32 @@ define([
 	},
 
 	/**
+	 * Holds the number separator types for `getNumberFormatSeparator`
+	 *
+	 * @type {Object}
+	 */
+	numberFormatSeparatorTypes = {
+		decimal: "decimal",
+		thousand: "group",
+		group: "group"
+	},
+
+	/**
+	 * Return the local number formatting separators
+	 *
+	 * @param  {String} separatorType Separator type
+	 * @return {String} Separator
+	 */
+	getNumberFormatSeparator = function( separatorType ) {
+		var numberWithGroupAndDecimalSeparator = 1000.1;
+
+		return Intl.NumberFormat()
+			.formatToParts(numberWithGroupAndDecimalSeparator)
+			.find(part => part.type === (numberFormatSeparatorTypes[separatorType] || separatorType))
+			.value;
+	},
+
+	/**
 	 * Format a number
 	 *
 	 * @param  {Number} value  Number to parse
@@ -816,7 +842,9 @@ define([
 	 * @return {String} Formatted number
 	 */
 	numberFormat = function( value, format, options ) {
-		var decSep = ",", thouSep = ".", decimalCount, formatted;
+		var decSep = getNumberFormatSeparator("decimal"),
+		    thouSep = getNumberFormatSeparator("thousand"),
+		    decimalCount, formatted;
 
 		format = format || "#.###,##";
 		options = options || {};
@@ -1098,13 +1126,14 @@ define([
 
 	return {
 		camelCase: camelCase,
-		copy: copy,
-		emitEvent: emitEvent,
-		generateId: generateId,
-		hash: hash,
 		clone: clone,
+		copy: copy,
 		createFeedback: createFeedback,
 		createListeners: createListeners,
+		emitEvent: emitEvent,
+		generateId: generateId,
+		getNumberFormatSeparator: getNumberFormatSeparator,
+		hash: hash,
 		isActiveInputNode: isActiveInputNode,
 		keyboardMapper: keyboardMapper,
 		makeArray: makeArray,

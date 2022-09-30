@@ -86,7 +86,7 @@ function incassoos_get_currencies( $currency = '' ) {
 		'ERN' => array( 'symbol' => 'Nfk',          'name' => __( 'Eritrean nakfa',                   'incassoos' ) ),
 		'EEK' => array( 'symbol' => 'kr',           'name' => __( 'Estonian kroon',                   'incassoos' ) ),
 		'ETB' => array( 'symbol' => 'Br',           'name' => __( 'Ethiopian birr',                   'incassoos' ) ),
-		// 'EUR' => array( 'symbol' => '€',            'name' => __( 'Euro',                             'incassoos' ) ),
+	//  'EUR' => array( 'symbol' => '€',            'name' => __( 'Euro',                             'incassoos' ) ),
 		'FKP' => array( 'symbol' => '£',            'name' => __( 'Falkland Islands pound',           'incassoos' ) ),
 		'FJD' => array( 'symbol' => '$',            'name' => __( 'Fijian dollar',                    'incassoos' ) ),
 		'GMD' => array( 'symbol' => 'D',            'name' => __( 'Gambian dalasi',                   'incassoos' ) ),
@@ -272,6 +272,7 @@ function incassoos_get_currency_format_args() {
 	// Default arguments
 	$args = wp_parse_args( $args, array(
 		'format'        => $currency['symbol'] . ' %s',
+		'symbol'        => $currency['symbol'],
 		'decimals'      => 2,
 
 		// Supply interpunction for use outside of `number_format_i18n()`
