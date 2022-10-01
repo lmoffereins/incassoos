@@ -2171,21 +2171,28 @@ function incassoos_get_post_consumers_export_type_labels( $context = null ) {
  */
 function incassoos_show_post_consumers_export_type( $context ) {
 
+	// Get post from context
+	$post = get_post( $context );
+
 	// Define retval
 	$show = false;
 
 	// Get the context's post type
-	switch ( get_post_type( $context ) ) {
+	switch ( get_post_type( $post ) ) {
 
 		// Require Collection to be collected
 		case incassoos_get_collection_post_type() :
-			$show = ! incassoos_is_post_collected( $context );
+			$show = ! incassoos_is_post_collected( $post ) && !! incassoos_get_collection_consumer_count( $post );
 			break;
 
-		// Activity, Occasion
+		// Activity
 		case incassoos_get_activity_post_type() :
+			$show = $post ? !! incassoos_get_activity_participant_count( $post ) : true;
+			break;
+
+		// Occasion
 		case incassoos_get_occasion_post_type() :
-			$show = true;
+			$show = $post ? !! incassoos_get_occasion_consumer_count( $post ) : true;
 			break;
 	}
 
@@ -2213,15 +2220,18 @@ function incassoos_get_post_consumptions_export_type_id() {
  */
 function incassoos_show_post_consumptions_export_type( $context ) {
 
+	// Get post from context
+	$post = get_post( $context );
+
 	// Define retval
 	$show = false;
 
 	// Get the context's post type
-	switch ( get_post_type( $context ) ) {
+	switch ( get_post_type( $post ) ) {
 
 		// Occasion
 		case incassoos_get_occasion_post_type() :
-			$show = true;
+			$show = $post ? !! incassoos_get_occasion_order_count( $post ) : true;
 			break;
 	}
 
@@ -2249,16 +2259,23 @@ function incassoos_get_post_products_export_type_id() {
  */
 function incassoos_show_post_products_export_type( $context ) {
 
+	// Get post from context
+	$post = get_post( $context );
+
 	// Define retval
 	$show = false;
 
 	// Get the context's post type
-	switch ( get_post_type( $context ) ) {
+	switch ( get_post_type( $post ) ) {
 
-		// Occasion, Order
+		// Occasion
 		case incassoos_get_occasion_post_type() :
+			$show = $post ? !! incassoos_get_occasion_product_count( $post ) : true;
+			break;
+
+		// Order
 		case incassoos_get_order_post_type() :
-			$show = true;
+			$show = $post ? !! incassoos_get_order_product_count( $post ) : true;
 			break;
 	}
 
