@@ -488,7 +488,8 @@ final class Incassoos {
 			array(
 				'label'       => _x( 'Unknown users', 'Consumer type', 'incassoos' ),
 				'label_user'  => _x( 'Unknown user [%s]', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'Unknown user <span class="count">(%s)</span>', 'Unknown users <span class="count">(%s)</span>', 'Consumer type', 'incassoos' )
+				'label_count' => _nx_noop( 'Unknown user <span class="count">(%s)</span>', 'Unknown users <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
+				'_hidden'     => true
 			)
 		);
 

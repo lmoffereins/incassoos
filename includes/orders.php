@@ -1646,7 +1646,8 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 	$args['id'] = $type_id;
 	$args = wp_parse_args( $args, array(
 		'label'       => ucfirst( $type_id ),
-		'label_count' => ucfirst( $type_id ) . ' <span class="count">(%s)</span>'
+		'label_count' => ucfirst( $type_id ) . ' <span class="count">(%s)</span>',
+		'_hidden'     => false
 	) );
 
 	// Allow filtering
@@ -1763,7 +1764,12 @@ function incassoos_query_consumer_types( $query_args ) {
 	$items = array();
 
 	foreach ( incassoos_get_consumer_types() as $type ) {
-		$items[] = incassoos_get_consumer_type( $type );
+		$item = incassoos_get_consumer_type( $type );
+
+		// Exclude hidden items
+		if ( ! $item->_hidden ) {
+			$items[] = $item;
+		}
 	}
 
 	$items_count = count($items);
