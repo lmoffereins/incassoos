@@ -708,8 +708,11 @@ jQuery( document ).ready( function( $ ) {
 						if ( 'function' === typeof $.fn.datepicker ) {
 							var $datepicker = $inline.find( '.datepicker' );
 
-							$datepicker.datepicker( datepickerOptions );
-							$datepicker.datepicker( 'setDate', val );
+							$datepicker
+								.datepicker( datepickerOptions )
+								.datepicker( 'setDate', val )
+								// Hide widget after `setDate` triggers unwanted initial render
+								.datepicker( 'widget' ).hide();
 						} else {
 							$inline.find( '[name="' + field + '"]' ).val( val );
 						}
