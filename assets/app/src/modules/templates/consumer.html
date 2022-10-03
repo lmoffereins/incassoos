@@ -52,6 +52,6 @@
 	<div class="panel-footer" v-if-not-empty>
 		<button type="button" v-if="isViewing && editable" @click="edit" class="edit-action" v-focus v-l10n.Common.Edit></button>
 		<button type="button" v-if="!isViewing" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
-		<button type="submit" v-if="!isViewing" form="the-consumer" :disabled="!submittable" @click="update" class="update-action" v-l10n.Common.Save></button>
+		<button type="submit" v-if="!isViewing" form="the-consumer" :disabled="!submittable" @click="update" class="update-action submit-button" v-l10n.Common.Save></button>
 	</div>
 </div>

@@ -119,7 +119,7 @@
 		<button type="button" v-if="editMode && closable" @click="closeOccasion" class="close-action" v-l10n.Occasion.Close></button>
 		<button type="button" v-if="editMode && reopenable" @click="reopenOccasion" class="reopen-action" v-l10n.Occasion.Reopen></button>
 		<button type="button" v-if="editMode" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
-		<button type="submit" v-if="editMode" form="the-occasion" :disabled="!submittable" @click="update" class="update-action" v-l10n.Common.Save></button>
+		<button type="submit" v-if="editMode" form="the-occasion" :disabled="!submittable" @click="update" class="update-action submit-button" v-l10n.Common.Save></button>
 		<button type="submit" v-if="createMode" form="the-occasion" :disabled="!creatable" @click="get" class="get-action" v-l10n.Occasion.Create></button>
 	</div>
 </div>

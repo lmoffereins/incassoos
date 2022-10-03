@@ -94,6 +94,16 @@ button.dashicons-before {
 	}
 }
 
+button.submit-button:not([disabled]) {
+	background: var(--color-submit);
+	color: var(--color-submit-contrast);
+
+	&:focus,
+	&:hover {
+		box-shadow: inset 100px 100px rgba(0, 0, 0, .1);
+	}
+}
+
 .dashicons,
 .dashicons-before:before {
 	margin-bottom: -1px;

@@ -52,6 +52,6 @@
 		<button type="button" v-if="!isViewing && untrashable" @click="untrash" class="untrash-action" v-l10n.Common.Untrash></button>
 		<button type="button" v-if="isViewing" @click="edit" class="edit-action" v-focus v-l10n.Common.Edit></button>
 		<button type="button" v-if="!isViewing" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
-		<button type="submit" v-if="!isViewing" form="the-product" :disabled="!submittable" @click="update" class="update-action" v-l10n="submitLabel"></button>
+		<button type="submit" v-if="!isViewing" form="the-product" :disabled="!submittable" @click="update" class="update-action submit-button" v-l10n="submitLabel"></button>
 	</div>
 </div>
