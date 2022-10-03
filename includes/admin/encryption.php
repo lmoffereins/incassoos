@@ -207,7 +207,7 @@ function incassoos_admin_encryption_page() {
 						<?php elseif ( ! empty( $next['ajaxData'] ) ) : ?>
 							<button type="button" class="<?php echo $next_class; ?> next-step" data-ajax-data="<?php echo $next_ajax_data; ?>" data-ajax-then="<?php echo $next_ajax_then; ?>"><?php echo esc_html( $next['label'] ); ?></button>
 							<span class="spinner"></span>
-						<?php elseif ( ! empty( $prev['label'] ) ) : ?>
+						<?php elseif ( ! empty( $next['label'] ) ) : ?>
 							<button type="button" class="<?php echo $next_class; ?> next-step"><?php echo esc_html( $next['label'] ); ?></button>
 						<?php endif; ?>
 
