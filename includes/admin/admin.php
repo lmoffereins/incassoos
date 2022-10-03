@@ -259,7 +259,7 @@ class Incassoos_Admin {
 
 			case 'incassoos_settings_main' :
 			case 'incassoos_settings_collection' :
-			case 'incassoos_settings_emails' :
+			case 'incassoos_settings_email' :
 			case 'incassoos_settings_slugs' :
 
 				// Defer to collection collecting caps
