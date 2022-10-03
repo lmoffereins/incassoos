@@ -11,7 +11,7 @@
  * Plugin Name:       Incassoos
  * Description:       Register, manage and collect consumptions
  * Plugin URI:        https://github.com/vgsr/incassoos/
- * Version:           1.0.0-beta.5
+ * Version:           1.0.0-beta.6
  * Author:            Laurens Offereins
  * Author URI:        https://github.com/vgsr/
  * Text Domain:       incassoos
@@ -70,7 +70,7 @@ final class Incassoos {
 
 		/** Versions ****************************************************/
 
-		$this->version              = '1.0.0-beta.5';
+		$this->version              = '1.0.0-beta.6';
 		$this->db_version           = 10000;
 
 		/** Paths *******************************************************/
