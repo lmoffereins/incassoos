@@ -11,7 +11,7 @@ $font-family-default: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxy
 //
 
 $text-color: #444;
-$text-color-dark: #c9d1d9;
+$text-color-dark: #fafaff; // #c9d1d9;
 
 /**
  * Return a color's contrast color for text as light or dark
@@ -38,7 +38,7 @@ $text-color-dark: #c9d1d9;
 // ### Light mode
 //
 
-$color-primary:                 #eac078; // rgb(52, 166, 56); // Green
+$color-primary:                 #eac078;
 $color-secondary:               #bf70db;
 $color-primary-contrast:        text-contrast($color-primary);
 $color-secondary-contrast:      text-contrast($color-secondary);
