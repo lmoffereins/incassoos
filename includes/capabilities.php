@@ -1023,6 +1023,12 @@ function incassoos_get_cap_translations() {
 		'edit_incassoos_consumers'        => _x( 'Edit Consumers',             'Capability name', 'incassoos' ),
 		'edit_incassoos_settings'         => _x( 'Edit Settings',              'Capability name', 'incassoos' ),
 
+		// Encryption
+		'decrypt_incassoos_data'          => _x( 'Decrypt data',               'Capability name', 'incassoos' ),
+
+		// REST API
+		'access_incassoos_rest_api'       => _x( 'Access REST API',            'Capability name', 'incassoos' ),
+
 		// Collection
 		'view_incassoos_collections'      => _x( 'View Collections',           'Capability name', 'incassoos' ),
 		'edit_incassoos_collections'      => _x( 'Edit Collections',           'Capability name', 'incassoos' ),
