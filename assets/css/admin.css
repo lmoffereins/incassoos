@@ -67,6 +67,13 @@ body.incassoos #wpbody-content {
 	margin-top: 45px;
 }
 
+@media screen and (max-width: 600px) {
+
+	.incassoos-admin-header {
+		top: 46px;
+	}
+}
+
 /* List Table */
 
 .fixed .column-price,
@@ -1281,6 +1288,7 @@ body.incassoos_page_incassoos-consumers .inline-edit .submit {
 }
 
 @media screen and (max-width: 782px) {
+
 	body.incassoos_page_incassoos-consumers .tablenav {
 		height: 40px;
 		margin: 20px 0px 5px 0px;
@@ -1401,6 +1409,7 @@ body.incassoos .require-decryption-key-wrapper .button {
 }
 
 @media screen and (max-width: 782px) {
+
 	body.incassoos .require-decryption-key-wrapper:not(.opened):before {
 		width: 42px;
 		height: 40px;
