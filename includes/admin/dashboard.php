@@ -254,7 +254,7 @@ function incassoos_admin_dashboard_uncollected_widget() {
 	if ( current_user_can( 'view_incassoos_collections' ) ) {
 		$recent_collections = incassoos_admin_dashboard_recent_posts( array(
 			'id'             => 'recently-collected',
-			'title'          => esc_html__( '%d Collections', 'incassoos' ),
+			'title'          => _n_noop( '%d Collection', '%d Collections', 'incassoos' ),
 			'detail_cb'      => 'incassoos_get_collection_total',
 			'detail_args'    => array( 0, true ),
 			'count_in_title' => true,
@@ -269,7 +269,7 @@ function incassoos_admin_dashboard_uncollected_widget() {
 	if ( current_user_can( 'view_incassoos_activities' ) ) {
 		$recent_activities = incassoos_admin_dashboard_recent_posts( array(
 			'id'             => 'uncollected-activities',
-			'title'          => esc_html__( '%d Activities', 'incassoos' ),
+			'title'          => _n_noop( '%d Activity', '%d Activities', 'incassoos' ),
 			'detail_cb'      => 'incassoos_get_activity_total',
 			'detail_args'    => array( 0, true ),
 			'count_in_title' => true,
@@ -284,7 +284,7 @@ function incassoos_admin_dashboard_uncollected_widget() {
 	if ( current_user_can( 'view_incassoos_occasions' ) ) {
 		$recent_occasions = incassoos_admin_dashboard_recent_posts( array(
 			'id'             => 'uncollected-occasions',
-			'title'          => esc_html__( '%d Occasions', 'incassoos' ),
+			'title'          => _n_noop( '%d Occasion', '%d Occasions', 'incassoos' ),
 			'detail_cb'      => 'incassoos_get_occasion_total',
 			'detail_args'    => array( 0, true ),
 			'count_in_title' => true,
@@ -352,8 +352,9 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 
 		echo '<div id="' . $args['id'] . '" class="activity-block recent-posts">';
 
+		// Parse post count in nooped plural translation
 		if ( isset( $args['count_in_title'] ) && ! empty( $args['count_in_title'] ) ) {
-			$args['title'] = sprintf( $args['title'], $posts->post_count );
+			$args['title'] = sprintf( translate_nooped_plural( $args['title'], $posts->post_count, 'incassoos' ), number_format_i18n( $posts->post_count ) );
 		}
 
 		echo '<h3>' . $args['title'] . '</h3>';
