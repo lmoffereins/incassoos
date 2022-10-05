@@ -270,6 +270,18 @@ define([
 	},
 
 	/**
+	 * Return the raw list of shortcuts
+	 *
+	 * @return {Object} Registered shortcuts
+	 */
+	getAllShortcuts = function() {
+		return {
+			keyUpListeners: keyUpListeners,
+			keyDownListeners: keyDownListeners
+		};
+	},
+
+	/**
 	 * Return a single shortcut's display data
 	 *
 	 * Helper function to `getShortcuts()`.
@@ -325,6 +337,7 @@ define([
 	};
 
 	return {
+		getAllShortcuts: getAllShortcuts,
 		getShortcuts: getShortcuts,
 		init: init,
 		on: registerShortcuts,
