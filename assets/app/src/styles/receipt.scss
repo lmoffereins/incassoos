@@ -117,7 +117,10 @@
 					grid-gap: 15px;
 					cursor: default;
 					width: calc( 100% - ( 2 * 38px ) );
-					transition: margin .1s ease-in;
+					transition:
+						var(--transition-background),
+						margin .1s ease-in
+					;
 					background: var(--background-primary); // Identical to #receipt
 					z-index: 1;
 
