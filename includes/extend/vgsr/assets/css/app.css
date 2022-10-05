@@ -1,13 +1,13 @@
 body.incassoos-app #incassoos-app {
 	--color-primary: #33a537;
-	--color-primary-contrast: #fafaff;
+	--color-primary-contrast: #c9d1d9;
 	--color-secondary: #93e953;
 	--color-secondary-contrast: #444;
 }
 
 body.incassoos-app #incassoos-app.darkmode {
 	--color-primary: #237125;
-	--color-primary-contrast: #fafaff;
+	--color-primary-contrast: #c9d1d9;
 	--color-secondary: #649b39;
-	--color-secondary-contrast: #fafaff;
+	--color-secondary-contrast: #c9d1d9;
 }
