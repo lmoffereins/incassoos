@@ -66,7 +66,7 @@
 		<button type="button" v-if="isSettings" @click="toggleSettings" class="continue-action" v-l10n.Common.Continue></button>
 		<button type="button" v-if="isViewing && editable" @click="edit" class="edit-action" v-l10n.Common.Edit></button>
 		<button type="button" v-if="isEditing" @click="cancel" class="cancel-action" v-l10n.Common.Cancel></button>
-		<button type="button" v-if="isEditing && receipt.length" @click="clear" class="clear-action" v-l10n.Common.Clear></button>
+		<button type="button" v-if="isEditing && receipt.length && consumer.id" @click="clear" class="clear-action" v-l10n.Common.Clear></button>
 		<button type="button" v-if="isEditing && submittable" @click="submit" class="submit-action submit-button" v-l10n="labelSubmit"></button>
 	</div>
 </div>
