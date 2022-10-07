@@ -453,6 +453,20 @@ function incassoos_render_title_tag() {
 }
 
 /**
+ * Display the theme-color meta tag
+ *
+ * @since 1.0.0
+ */
+function incassoos_render_theme_color_tag() {
+	$color = apply_filters( 'incassoos_app_theme_color', '#eac078' );
+
+	if ( $color ) {
+		echo '<meta name="theme-color" content="' . esc_attr( $color ) . '">' . "\n";
+		echo '<meta name="msapplication-navbutton-color" content="' . esc_attr( $color ) . '">' . "\n";
+	}
+}
+
+/**
  * Display the robots meta tag
  *
  * @since 1.0.0

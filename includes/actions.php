@@ -66,6 +66,7 @@ add_action( 'incassoos_app_head',          'incassoos_render_title_tag',        
 add_action( 'incassoos_app_head',          'incassoos_enqueue_scripts',             1    );
 add_action( 'incassoos_app_head',          'wp_resource_hints',                     2    );
 add_action( 'incassoos_app_head',          'incassoos_wp_robots',                   1    );
+add_action( 'incassoos_app_head',          'incassoos_render_theme_color_tag',      5    );
 add_action( 'incassoos_app_head',          'wp_print_styles',                       8    );
 add_action( 'incassoos_app_head',          'wp_print_head_scripts',                 9    );
 add_action( 'incassoos_app_head',          'wp_generator'                                );

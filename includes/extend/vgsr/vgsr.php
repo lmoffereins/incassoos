@@ -90,6 +90,7 @@ class Incassoos_VGSR {
 		add_filter( 'incassoos_rest_prepare_settings', array( $this, 'rest_prepare_settings' ), 10, 2 );
 
 		// App
+		add_filter( 'incassoos_app_theme_color', array( $this, 'app_theme_color' ), 10 );
 		add_filter( 'incassoos_enqueue_scripts', array( $this, 'enqueue_scripts' ), 10 );
 	}
 
@@ -338,6 +339,24 @@ class Incassoos_VGSR {
 	}
 
 	/** App *************************************************************/
+
+	/**
+	 * Modify the app theme color
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $color Color
+	 * @return string Color
+	 */
+	public function app_theme_color( $color ) {
+
+		// Color was not emptied
+		if ( $color ) {
+			$color = '#33a537';
+		}
+
+		return $color;
+	}
 
 	/**
 	 * Enqueue plugin page scripts
