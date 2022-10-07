@@ -224,6 +224,11 @@ define([
 				fsm.on.before.EDIT_ITEM,
 				function( lifecycle ) {
 
+					// Reject transition when the occasion is closed
+					if (fsm.st.EDIT_ORDER === lifecycle.to && context.rootState.occasions.active.closed) {
+						return Q.reject("Order.Error.OccasionClosed");
+					}
+
 					// Reject transition when the order is locked
 					if (fsm.st.EDIT_ORDER === lifecycle.to && context.getters["isActiveItemLocked"]) {
 						return Q.reject("Order.Error.TimeLocked");

@@ -102,10 +102,11 @@ define([
 		 */
 		isEditable: function( state, getters, rootState, rootGetters ) {
 
-			// Require items, selected consumer, selected occasion, order is not locked and no errors
+			// Require items, selected consumer, selected occasion is not closed, order is not locked and no errors
 			return state.all.length
 				&& !! rootState.consumers.active
 				&& !! rootState.occasions.active
+				&& ! rootState.occasions.active.closed
 				&& ! rootGetters["orders/isActiveItemLocked"]
 				&& ! feedback.hasErrors();
 		},
