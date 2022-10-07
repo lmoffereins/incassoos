@@ -31,9 +31,14 @@
 		display: flex;
 		flex-direction: column;
 		grid-gap: var(--content-row-gap);
+		overflow: hidden; // For out-of-box animations
 
 		.login-users {
 			justify-content: center;
+		}
+
+		.input-pin-entries {
+			margin: 50px 0px;
 		}
 
 		.input-numpad {
@@ -41,6 +46,25 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-end;
+
+			.numpad-grid {
+				height: 100%;
+
+				.numpad-grid-cell .numpad-option {
+					font-size: 1.5rem;
+				}
+
+				.numpad-grid-cell .numpad-back:before {
+					font-size: 1.5em;
+					width: 1.5em;
+				}
+			}
+		}
+
+		&.login-pin-register-confirm {
+			.pin-register-entries {
+				animation: slide-from-right .3s 1;
+			}
 		}
 
 		&.is-loading {

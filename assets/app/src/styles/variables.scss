@@ -154,6 +154,11 @@ $transition-swift:         .15s ease;
 	100% { background: transparent;          }
 }
 
+@keyframes slide-from-right {
+	0%   { transform: translateX(100px); }
+	100% { transform: translateX(0px);   }
+}
+
 @keyframes pin-jump {
 	0%  { transform: translateY(-2px); }
 	30% { transform: translateY(10px); }
