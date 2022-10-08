@@ -1810,7 +1810,9 @@ function incassoos_admin_order_products_metabox( $post ) {
 	if ( $is_post_view ) {
 		$products = $order_products;
 	} else {
-		$products = incassoos_get_products();
+		$products = incassoos_get_products( array(
+			'hidden' => false
+		) );
 	}
 
 	// List item class

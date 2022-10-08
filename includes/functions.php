@@ -1154,6 +1154,19 @@ function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 			update_term_meta( $term_id, '_default', 1 );
 		}
 	}
+
+	// Product Category
+	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) {
+
+		// Term hidden as a checkbox
+		if ( ! isset( $_POST['term-hidden'] ) ) {
+			delete_term_meta( $term_id, '_hidden' );
+
+		// Set hidden term
+		} else {
+			update_term_meta( $term_id, '_hidden', 1 );
+		}
+	}
 }
 
 /**

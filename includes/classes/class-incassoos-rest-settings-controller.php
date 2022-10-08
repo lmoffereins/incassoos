@@ -228,7 +228,8 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 				'productCategory' => array(
 					'taxonomyId'   => incassoos_get_product_cat_tax_id(),
 					'defaultValue' => incassoos_get_default_product_category(),
-					'items'        => incassoos_get_product_cats( array( 'fields' => 'id=>name' ) )
+					'items'        => incassoos_get_product_cats( array( 'fields' => 'id=>name' ) ),
+					'hiddenItems'  => incassoos_get_hidden_product_categories()
 				)
 			);
 		}

@@ -191,6 +191,18 @@ function incassoos_parse_query_vars( $posts_query ) {
 	// Product query
 	if ( incassoos_get_product_post_type() === reset( $post_type ) ) {
 
+		// Filter hidden Product Categories
+		if ( null !== $posts_query->get( 'hidden', null ) ) {
+			$tax_query = (array) $posts_query->get( 'tax_query', array() );
+			$tax_query[] = array(
+				'taxonomy' => incassoos_get_product_cat_tax_id(),
+				'terms'    => incassoos_get_hidden_product_categories(),
+				'field'    => 'term_id',
+				'operator' => $posts_query->get( 'hidden', false ) ? 'IN' : 'NOT IN'
+			);
+			$posts_query->set( 'tax_query', $tax_query );
+		}
+
 		// Default to ordering by page number in menu_order, then title.
 		// REST calls default ordering to 'date', so their ordering should
 		// be handled in the client.

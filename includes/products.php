@@ -191,6 +191,49 @@ function incassoos_get_default_product_category() {
 }
 
 /**
+ * Return whether this is the default Product Category
+ *
+ * @since 1.0.0
+ *
+ * @param  int Product Category term id.
+ * @return bool Is this the default product category?
+ */
+function incassoos_is_default_product_category( $term_id ) {
+	return $term_id === incassoos_get_default_product_category();
+}
+
+/**
+ * Return the hidden Product Category term id's
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_hidden_product_categories'
+ *
+ * @return array Product Category term ids.
+ */
+function incassoos_get_hidden_product_categories() {
+	$terms = incassoos_get_product_cats( array(
+		'fields'     => 'ids',
+		'meta_key'   => '_hidden',
+		'meta_value' => 1
+	) );
+
+	return apply_filters( 'incassoos_get_hidden_product_categories', $terms );
+}
+
+/**
+ * Return whether this is a hidden Product Category
+ *
+ * @since 1.0.0
+ *
+ * @param  int Product Category term id.
+ * @return bool Is this a hidden product category?
+ */
+function incassoos_is_hidden_product_category( $term_id ) {
+	return in_array( (int) $term_id, incassoos_get_hidden_product_categories(), true );
+}
+
+/**
  * Register REST fields for the Product Category taxonomy
  *
  * @since 1.0.0

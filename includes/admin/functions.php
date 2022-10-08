@@ -2022,14 +2022,25 @@ function incassoos_admin_load_posts_view() {
  * @return string Term name
  */
 function incassoos_admin_filter_term_name( $name, $term ) {
+	$a_term = is_a( $term, 'WP_Term' );
 
 	// Taxonomy supports default terms
-	if ( is_a( $term, 'WP_Term' ) && incassoos_taxonomy_supports_default_terms( $term->taxonomy ) ) {
+	if ( $a_term && incassoos_taxonomy_supports_default_terms( $term->taxonomy ) ) {
 
 		// Default term
 		if ( incassoos_is_default_term( $term ) ) {
 			/* translators: %s: term name */
 			$name = sprintf( __( '%s <span class="status">&mdash; Default</span>', 'incassoos' ), $name );
+		}
+	}
+
+	// Product Category
+	if ( $a_term && $term->taxonomy === incassoos_get_product_cat_tax_id() ) {
+
+		// Default term
+		if ( incassoos_is_hidden_product_category( $term->term_id ) ) {
+			/* translators: %s: term name */
+			$name = sprintf( __( '%s <span class="status">&mdash; Hidden</span>', 'incassoos' ), $name );
 		}
 	}
 
@@ -2056,6 +2067,18 @@ function incassoos_admin_taxonomy_add_form_fields( $taxonomy ) {
 	</div>
 
 	<?php endif;
+
+	// Product Category
+	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) : ?>
+
+	<div class="form-field term-hidden-wrap">
+		<label for="term-hidden"><?php esc_html_e( 'Hidden', 'incassoos' ); ?></label>
+		<input type="checkbox" id="term-hidden" name="term-hidden" value="1" />
+
+		<p class="description"><?php esc_html_e( 'Mark whether this should be a hidden product category. Products in this category will be hidden from selection in orders.', 'incassoos' ); ?></p>
+	</div>
+
+	<?php endif;
 }
 
 /**
@@ -2079,6 +2102,22 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 			<input type="checkbox" id="term-default" name="term-default" value="1" <?php checked( get_term_meta( $term->term_id, '_default', true ) ); ?>/>
 
 			<p class="description"><?php esc_html_e( 'Mark whether this should be the default term.', 'incassoos' ); ?></p>
+		</td>
+	</tr>
+
+	<?php endif;
+
+	// Product Category
+	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) : ?>
+
+	<tr class="form-field term-hidden-wrap">
+		<th scope="row" valign="top">
+			<label for="term-hidden"><?php esc_html_e( 'Hidden', 'incassoos' ); ?></label>
+		</th>
+		<td>
+			<input type="checkbox" id="term-hidden" name="term-hidden" value="1" <?php checked( get_term_meta( $term->term_id, '_hidden', true ) ); ?>/>
+
+			<p class="description"><?php esc_html_e( 'Mark whether this should be a hidden product category. Products in this category will be hidden from selection in orders.', 'incassoos' ); ?></p>
 		</td>
 	</tr>
 
