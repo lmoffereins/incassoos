@@ -417,7 +417,9 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
  * @since 1.0.0
  */
 function incassoos_admin_dashboard_actions_widget() {
-	$actions = array();
+	$actions = array(
+		'open-application' => sprintf( '<a class="button button-secondary" href="%s" target="_blank">%s</a>', incassoos_get_app_url(), __( 'Open application', 'incassoos' ) )
+	);
 
 	// Assets
 	$assets = array_filter( array(
