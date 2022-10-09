@@ -16,7 +16,14 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	var shortcutsService = services.get("shortcuts");
+	var shortcutsService = services.get("shortcuts"),
+
+	/**
+	 * Holds a reference to the delay service
+	 *
+	 * @type {Object}
+	 */
+	delayService = services.get("delay");
 
 	return {
 		props: {
@@ -108,7 +115,11 @@ define([
 
 					// Confirm the dialog
 					"enter": function inputDropdownConfirmOnEnter() {
-						self.confirm();
+
+						// Confirm dialog after item selection completes
+						delayService(0).then( function() {
+							self.confirm();
+						});
 					}
 				})
 			);
@@ -120,9 +131,16 @@ define([
 		 * @return {Void}
 		 */
 		mounted: function() {
+			var selected = this.$el.querySelector(".dropdown-option.is-selected");
 
-			// Open with focus on the first dropdown option
-			this.$el.querySelector(".dropdown-option:first-child").focus();
+			// Open with focus on selected item
+			if (selected) {
+				selected.focus();
+
+			// Or on the first dropdown option
+			} else {
+				this.$el.querySelector(".dropdown-option:first-child").focus();
+			}
 		}
 	};
 });
