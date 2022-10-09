@@ -177,7 +177,9 @@ define([
 					return util.clone(i, {
 						quantity: product ? product.quantity : 0
 					});
-				}), this.orderBy);
+				}), function( i ) {
+					return "string" === typeof i[self.orderBy] ? util.removeAccents(i[self.orderBy]).toLowerCase() : i[self.orderBy];
+				});
 			},
 
 			/**

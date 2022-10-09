@@ -92,7 +92,9 @@ define([
 						self.consumers.filter( function( i ) {
 							return i.group.id === groupId;
 						}),
-						self.orderBy
+						function( i ) {
+							return "string" === typeof i[self.orderBy] ? util.removeAccents(i[self.orderBy]).toLowerCase() : i[self.orderBy];
+						}
 					);
 				};
 			},
