@@ -13,11 +13,11 @@
 				v-if="haveProductCategories"
 				class="category-dropdown"
 				v-model="filterProductCategory"
-				:items="productCategories"></input-dropdown>
+				:options="productCategories"></input-dropdown>
 			<input-dropdown
 				class="order-by-dropdown"
 				v-model="orderBy"
-				:items="orderByOptions"
+				:options="orderByOptions"
 				:title="'Product.OrderBy'"></input-dropdown>
 		</div>
 	</div>

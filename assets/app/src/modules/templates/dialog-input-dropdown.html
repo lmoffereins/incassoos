@@ -5,7 +5,16 @@
 >
 	<template v-slot:content>
 		<div class="detail-list input-dropdown-options">
-			<button type="button" v-for="(label, id) in dialog.items" @click="select(id)" class="dropdown-option" :class="{ 'is-selected': isSelected(id) }" v-l10n="label"></button>
+			<button
+				type="button"
+				v-for="item in dialog.items"
+				@click="select(item.id)"
+				class="dropdown-option"
+				:class="{ 'is-selected': isSelected(item.id) }"
+				v-l10n-title="item.label">
+				<span class="item-label" v-l10n="item.label"></span>
+				<i v-if="item.icon" class="item-icon dashicons" :class="'dashicons-' + item.icon" v-l10n-title="item.iconTitle"></i>
+			</button>
 		</div>
 	</template>
 

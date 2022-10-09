@@ -129,6 +129,7 @@
 		"NextMonth": "Volgende maand",
 		"Today": "Vandaag",
 		"SelectedDate": "Geselecteerde datum",
+		"SelectValue": "Selecteer",
 		"NoSearchResultsFor": "Geen zoekresultaten voor '%s'",
 		"Offline": {
 			"StatusTitle": "Apparaat is niet verbonden",

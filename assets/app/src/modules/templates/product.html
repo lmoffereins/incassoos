@@ -16,13 +16,13 @@
 				<div class="detail-item product-category" v-if="haveProductCategories">
 					<span class="detail-label" v-l10n.Product.ProductCategory></span>
 					<span v-if="isViewing">{{productCategoryLabel}}</span>
-					<input-dropdown v-if="!isViewing" :items="availableProductCategories" v-model="productCategory"></input-dropdown>
+					<input-dropdown v-if="!isViewing" :options="availableProductCategories" class="detail-value" v-model="productCategory"></input-dropdown>
 				</div>
 
 				<div class="detail-item product-price">
 					<span class="detail-label" v-l10n.Product.PriceLabel></span>
 					<span v-if="isViewing" class="detail-value">{{price | money}}</span>
-					<input-price  v-if="!isViewing"class="detail-value" v-model="price"></input-price>
+					<input-price  v-if="!isViewing" class="detail-value" v-model="price"></input-price>
 				</div>
 			</form>
 

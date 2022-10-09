@@ -1,10 +1,20 @@
 <div class="input-dropdown" :class="{ 'open': isOpen && ! dialog }">
 	<button type="button" class="dropdown-toggle" @click="toggle" ref="input">
+		<i v-if="getIcon" class="dropdown-item-icon dashicons" :class="'dashicons-' + getIcon" v-l10n-title="getIconTitle"></i>
 		<span class="dropdown-title" v-l10n="getTitle"></span>
-		<i class="dashicons dashicons-arrow-down-alt2"></i>
+		<i class="dropdown-open-icon dashicons dashicons-arrow-down-alt2"></i>
 	</button>
 
 	<div class="input-dropdown-options">
-		<button type="button" v-for="(label, id) in items" @click="select(id)" class="dropdown-option" :class="{ 'is-selected': isSelected(id) }" v-l10n="label"></button>
+		<button
+			type="button"
+			v-for="item in items"
+			@click="select(item.id)"
+			class="dropdown-option"
+			:class="{ 'is-selected': isSelected(item.id) }"
+			v-l10n-title="item.label">
+			<i v-if="item.icon" class="item-icon dashicons" :class="'dashicons-' + item.icon" v-l10n-title="item.iconTitle"></i>
+			<span class="item-label" v-l10n="item.label"></span>
+		</button>
 	</div>
 </div>

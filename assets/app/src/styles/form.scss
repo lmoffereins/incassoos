@@ -121,11 +121,14 @@
 	position: relative;
 
 	.dropdown-toggle {
-		.dashicons {
+		display: flex;
+		grid-gap: 10px;
+
+		.dropdown-open-icon {
 			width: 1em;
 			height: 1em;
 			font-size: 1em;
-			margin: 4px -2px 0px 2px;
+			margin: 4px -2px 0px -4px;
 		}
 	}
 
@@ -147,7 +150,13 @@
 		margin: 0px;
 
 		.dropdown-option {
+			display: flex;
+			grid-gap: 10px;
 			text-align: left;
+
+			.item-label {
+				flex: 1;
+			}
 
 			&.is-selected {
 				color: var(--color-primary-contrast);

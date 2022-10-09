@@ -14,7 +14,7 @@
 				<i class="dashicons" :class="{ 'dashicons-excerpt-view': ! allGroupsExpanded, 'dashicons-list-view': allGroupsExpanded }"></i>
 				<span class="screen-reader-text" v-l10n="allGroupsExpanded ? 'Consumer.CollapseGroups' : 'Consumer.ExpandGroups'"></span>
 			</button>
-			<input-dropdown class="order-by-dropdown" v-model="orderBy" :items="orderByOptions" :title="'Consumer.OrderBy'"></input-dropdown>
+			<input-dropdown class="order-by-dropdown" v-model="orderBy" :options="orderByOptions" :title="'Consumer.OrderBy'"></input-dropdown>
 		</div>
 	</div>
 

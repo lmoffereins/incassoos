@@ -18,7 +18,7 @@ define([
 
 	return {
 		props: {
-			items: {
+			options: {
 				type: Object,
 				required: true
 			},
@@ -42,6 +42,29 @@ define([
 		},
 		computed: {
 			/**
+			 * Return options as list of objects
+			 *
+			 * @return {Array} Dropdown options
+			 */
+			items: function() {
+				var items = [], i;
+
+				for (i in this.options) {
+					if (this.options.hasOwnProperty(i)) {
+						items.push(_.isPlainObject(this.options[i])
+							? Object.assign({ id: i }, this.options[i])
+							: {
+								id: i,
+								label: this.options[i]
+							}
+						);
+					}
+				}
+
+				return items;
+			},
+
+			/**
 			 * Return whether this is the selected value
 			 *
 			 * @param  {String}  id Value to check
@@ -49,9 +72,23 @@ define([
 			 */
 			isSelected: function() {
 				var self = this;
+
 				return function( id ) {
 					return self.value && id === self.value.toString();
 				};
+			},
+
+			/**
+			 * Return the selected item
+			 *
+			 * @return {Object} Selected item
+			 */
+			getItem: function() {
+				var self = this;
+
+				return this.items.find( function( i ) {
+					return i.id === self.value.toString();
+				});
 			},
 
 			/**
@@ -62,7 +99,31 @@ define([
 			 * @return {String} Dropdown title
 			 */
 			getTitle: function() {
-				return this.title || this.items[this.value] || "Generic.SelectValue";
+				var item = this.getItem;
+
+				return this.title || (item && item.label) || "Generic.SelectValue";
+			},
+
+			/**
+			 * Return the selected item icon
+			 *
+			 * @return {String} Selected item icon
+			 */
+			getIcon: function() {
+				var item = this.getItem;
+
+				return item && item.icon;
+			},
+
+			/**
+			 * Return the selected item icon title
+			 *
+			 * @return {String} Selected item icon title
+			 */
+			getIconTitle: function() {
+				var item = this.getItem;
+
+				return item && item.iconTitle;
 			}
 		},
 		methods: {
@@ -85,7 +146,7 @@ define([
 					dialogService.open({
 						id: "input-dropdown",
 						type: "input/dropdown",
-						title: this.title || this.dialog || "Generic.SelectValue",
+						title: this.title || ("string" === typeof this.dialog && this.dialog) || "Generic.SelectValue",
 						selected: this.value,
 						items: this.items,
 

@@ -33,7 +33,7 @@ define([
 				}
 			}
 		},
-		template: '<input-dropdown class="language-switcher" v-model="selected" :items="languages" :dialog="dialogTitle"></input-dropdown>',
+		template: '<input-dropdown class="language-switcher" v-model="selected" :options="languages" :dialog="dialogTitle"></input-dropdown>',
 		components: {
 			inputDropdown: inputDropdown
 		},

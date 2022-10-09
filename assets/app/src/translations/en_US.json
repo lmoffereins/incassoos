@@ -129,6 +129,7 @@
 		"NextMonth": "Next month",
 		"Today": "Today",
 		"SelectedDate": "Selected date",
+		"SelectValue": "Select",
 		"NoSearchResultsFor": "No search results for '%s'",
 		"Offline": {
 			"StatusTitle": "Device not connected",
