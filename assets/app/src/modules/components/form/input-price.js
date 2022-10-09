@@ -58,6 +58,15 @@ define([
 			},
 
 			/**
+			 * Emit the input's value plus 0.01
+			 *
+			 * @return {Void}
+			 */
+			plus001: function() {
+				this._emit(0.01);
+			},
+
+			/**
 			 * Emit the input's value plus 0.1
 			 *
 			 * @return {Void}
@@ -73,6 +82,15 @@ define([
 			 */
 			plus100: function() {
 				this._emit(1);
+			},
+
+			/**
+			 * Emit the input's value minus 0.01
+			 *
+			 * @return {Void}
+			 */
+			minus001: function() {
+				this._emit(-0.01);
 			},
 
 			/**

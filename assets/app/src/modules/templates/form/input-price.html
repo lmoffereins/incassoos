@@ -5,8 +5,10 @@
 		ref="price"
 		:value="value"
 		@input="input"
-		@keydown.up.ctrl.prevent="plus010"
-		@keydown.up.shift.prevent="plus100"
-		@keydown.down.ctrl.prevent="minus010"
-		@keydown.down.shift.prevent="minus100" />
+		@keydown.up.exact.prevent="plus001"
+		@keydown.up.ctrl.exact.prevent="plus010"
+		@keydown.up.shift.exact.prevent="plus100"
+		@keydown.down.exact.prevent="minus001"
+		@keydown.down.ctrl.exact.prevent="minus010"
+		@keydown.down.shift.exact.prevent="minus100" />
 </div>
