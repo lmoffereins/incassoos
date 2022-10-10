@@ -27,22 +27,6 @@ define([
 	 *
 	 * @return {Void}
 	 */
-	getProductCategories = function() {
-		var categories = {};
-
-		// When categories are used, get cats from settings and prepend all-option
-		if (_.keys(settings.product.productCategory.items).length) {
-			categories = Object.assign({ "0": "Product.AllCategoriesOption" }, settings.product.productCategory.items);
-		}
-
-		return categories;
-	},
-
-	/**
-	 * When entering the `IDLE` state
-	 *
-	 * @return {Void}
-	 */
 	onEnterIdle = function() {
 
 		// Reset the category filter
@@ -84,11 +68,11 @@ define([
 
 			return {
 				focusGroupKey: 0,
+				settingsKey: 0,
 				q: "",
 				orderBy: _.keys(options)[0], // TODO: store in/get from user preferences?
 				orderByOptions: options,
 				filterProductCategory: "0",
-				productCategories: getProductCategories(),
 				showTrashedProducts: false
 			};
 		},
@@ -141,12 +125,59 @@ define([
 			},
 
 			/**
+			 * Return the available product categories
+			 *
+			 * @return {Object} Product categories
+			 */
+			productCategories: function() {
+				var cats = {}, i;
+
+				// Update listener
+				this.settingsKey;
+
+				// When categories are used, get cats from settings and prepend all-option
+				if (_.keys(settings.product.productCategory.items).length) {
+					cats = Object.assign({ "0": "Product.AllCategoriesOption" }, settings.product.productCategory.items);
+				}
+
+				// Remove hidden categories outside of settings
+				if (! this.$isSettings) {
+					cats = _.omit(cats, settings.product.productCategory.hiddenItems);
+				}
+
+				for (i in cats) {
+					if (cats.hasOwnProperty(i)) {
+						cats[i] = { label: cats[i] };
+
+						// Identify hidden categories
+						if (-1 !== settings.product.productCategory.hiddenItems.indexOf(parseInt(i))) {
+							cats[i].icon      = "hidden";
+							cats[i].iconTitle = "Product.HiddenProductCategory";
+						}
+					}
+				}
+
+				return cats;
+			},
+
+			/**
 			 * Return whether we have any product categories
 			 *
 			 * @return {Boolean} Do we have product categories?
 			 */
 			haveProductCategories: function() {
 				return _.keys(this.productCategories).length > 1;
+			},
+
+			/**
+			 * Return whether the product category is hidden
+			 *
+			 * @return {Boolean} Is the product category hidden?
+			 */
+			isProductCategoryHidden: function() {
+				return function( productCategory ) {
+					return -1 !== settings.product.productCategory.hiddenItems.indexOf(productCategory);
+				};
 			}
 		}, Vuex.mapState("products", {
 			/**
@@ -157,6 +188,9 @@ define([
 			products: function( state ) {
 				var self = this;
 
+				// Update listener
+				this.settingsKey;
+
 				// Get items. Filter for trashed products
 				return _.orderBy(state.all.filter( function( i ) {
 					return (self.$isSettings && self.showTrashedProducts ? "trash" : "publish") === i.status;
@@ -164,6 +198,10 @@ define([
 				// Filter for product category
 				}).filter( function( i ) {
 					return self.filterProductCategory === "0" || self.filterProductCategory === i.productCategory.toString();
+
+				// Filter for hidden product categories
+				}).filter( function( i ) {
+					return self.$isSettings || -1 === settings.product.productCategory.hiddenItems.indexOf(i.productCategory);
 
 				// Filter for searched items by title
 				}).filter( function( i ) {
@@ -338,6 +376,8 @@ define([
 			// Update values in component when settings are updated
 			this.$registerUnobservable(
 				settings.$onUpdate( function() {
+					self.settingsKey++;
+
 					if (settings.product.orderByOptions) {
 						var orderByValues = _.keys(settings.product.orderByOptions);
 
@@ -346,8 +386,6 @@ define([
 							self.orderBy = orderByValues[0];
 						}
 					}
-
-					self.productCategories = getProductCategories();
 				})
 			);
 		}

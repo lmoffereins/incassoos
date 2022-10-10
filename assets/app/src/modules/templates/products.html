@@ -55,6 +55,14 @@
 						<span class="screen-reader-text" v-l10n.Product.SelectLess="p.title"></span>
 						<i class="dashicons dashicons-minus"></i>
 					</button>
+
+					<div
+						v-if="$isSettings && isProductCategoryHidden(p.productCategory)"
+						class="hidden-item"
+						v-l10n-title.Product.HiddenProduct>
+						<span class="screen-reader-text" v-l10n.Product.HiddenProduct></span>
+						<i class="dashicons dashicons-hidden"></i>
+					</div>
 				</button>
 			</li>
 

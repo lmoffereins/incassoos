@@ -65,6 +65,13 @@
 					background: var(--button-background-hover);
 				}
 			}
+
+			.hidden-item {
+				display: flex;
+				align-items: center;
+				padding: 5px 9px;
+				text-align: center;
+			}
 		}
 	}
 

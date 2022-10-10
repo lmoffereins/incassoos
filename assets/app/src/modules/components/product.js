@@ -31,13 +31,47 @@ define([
 	shortcutsService = services.get("shortcuts"),
 
 	/**
-	 * Return the product category's label
+	 * Return the available product categories
+	 *
+	 * @return {Object} Product categories
+	 */
+	getAvailableProductCategories = function() {
+		var items = settings.product.productCategory.items, cats = {}, i;
+
+		for (i in items) {
+			if (items.hasOwnProperty(i)) {
+				cats[i] = { label: items[i] };
+
+				// Identify hidden categories
+				if (-1 !== settings.product.productCategory.hiddenItems.indexOf(parseInt(i))) {
+					cats[i].icon      = "hidden";
+					cats[i].iconTitle = "Product.HiddenProductCategory";
+				}
+			}
+		}
+
+		return cats;
+	},
+
+	/**
+	 * Return the product category's attribute
 	 *
 	 * @param  {Number|String} categoryId Category id
-	 * @return {String} Product category label
+	 * @return {String} Product category attribute
 	 */
-	getProductCategoryLabel = function( categoryId ) {
-		return settings.product.productCategory.items && settings.product.productCategory.items[categoryId];
+	getProductCategory = function( categoryId ) {
+		var item = {
+			id: categoryId,
+			label: settings.product.productCategory.items[categoryId]
+		};
+
+		// Identify hidden category
+		if (-1 !== settings.product.productCategory.hiddenItems.indexOf(parseInt(categoryId))) {
+			item.icon = "hidden";
+			item.iconTitle = "Product.HiddenProductCategory";
+		}
+
+		return item;
 	},
 
 	/**
@@ -52,7 +86,7 @@ define([
 		this.title = payload.title;
 		this.price = payload.price;
 		this.productCategory = payload.productCategory;
-		this.productCategoryLabel = getProductCategoryLabel(payload.productCategory);
+		this.productCategoryItem = getProductCategory(payload.productCategory);
 	},
 
 	/**
@@ -65,7 +99,7 @@ define([
 		this.title = "";
 		this.price = 0;
 		this.productCategory = settings.product.productCategory.defaultValue;
-		this.productCategoryLabel = getProductCategoryLabel(settings.product.productCategory.defaultValue);
+		this.productCategoryItem = getProductCategory(settings.product.productCategory.defaultValue);
 	},
 
 	/**
@@ -129,14 +163,14 @@ define([
 		},
 		data: function() {
 			return {
-				availableProductCategories: settings.product.productCategory.items,
+				availableProductCategories: getAvailableProductCategories(),
 
 				// Form fields
 				editTitle: "",
 				title: "",
 				price: 0,
 				productCategory: settings.product.productCategory.defaultValue,
-				productCategoryLabel: getProductCategoryLabel(settings.product.productCategory.defaultValue)
+				productCategoryItem: getProductCategory(settings.product.productCategory.defaultValue)
 			};
 		},
 		computed: Object.assign({
@@ -395,7 +429,7 @@ define([
 			// Update values in component when settings are updated
 			this.$registerUnobservable(
 				settings.$onUpdate( function() {
-					self.availableProductCategories = settings.product.productCategory.items;
+					self.availableProductCategories = getAvailableProductCategories();
 				})
 			);
 		},

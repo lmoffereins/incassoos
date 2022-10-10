@@ -197,7 +197,16 @@
 		}
 
 		.detail-value {
+			display: flex;
+			align-items: center;
+			grid-gap: 10px;
 			text-align: right;
+
+			.detail-icon.dashicons {
+				width: 18px;
+				height: 18px;
+				font-size: 18px;
+			}
 		}
 	}
 }

@@ -277,6 +277,8 @@
 		"Select": "Select %s",
 		"SelectMore": "More %s",
 		"SelectLess": "Less %s",
+		"HiddenProduct": "This product is hidden",
+		"HiddenProductCategory": "This is a hidden product category",
 		"AllCategoriesOption": "All categories",
 		"OrderBy": "Order by",
 		"OrderByTitle": "Title",
