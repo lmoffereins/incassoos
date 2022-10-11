@@ -65,19 +65,19 @@
 					<div class="detail-item occasion-title">
 						<span class="detail-label" v-l10n.Occasion.TitleLabel></span>
 						<span v-if="activeMode" class="detail-value">{{title}}</span>
-						<input v-if="!activeMode" type="text" :placeholder="'Occasion.TitlePlaceholder' | translate" class="detail-value" v-model="title" v-focus />
+						<input v-if="!activeMode" type="text" :placeholder="'Occasion.TitlePlaceholder' | translate" class="detail-value-input" v-model="title" v-focus />
 					</div>
 
 					<div class="detail-item occasion-type" v-if="haveOccasionTypes">
 						<span class="detail-label" v-l10n.Occasion.OccasionTypeLabel></span>
 						<span v-if="activeMode" class="detail-value">{{occasionTypeLabel}}</span>
-						<input-radio-buttons v-if="!activeMode" :items="availableOccasionTypes" class="detail-value" v-model="occasionType"></input-radio-buttons>
+						<input-radio-buttons v-if="!activeMode" :items="availableOccasionTypes" class="detail-value-input" v-model="occasionType"></input-radio-buttons>
 					</div>
 
 					<div class="detail-item occasion-date">
 						<span class="detail-label" v-l10n.Occasion.OccasionDateLabel></span>
 						<span v-if="activeMode" class="detail-value">{{occasionDate | date}}</span>
-						<input-datepicker v-if="!activeMode" class="detail-value" v-model="occasionDate" :title="'Occasion.OccasionDatepickerLabel'"></input-datepicker>
+						<input-datepicker v-if="!activeMode" class="detail-value-input" v-model="occasionDate" :title="'Occasion.OccasionDatepickerLabel'"></input-datepicker>
 					</div>
 				</form>
 

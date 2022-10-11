@@ -10,7 +10,7 @@
 				<div class="detail-item product-title">
 					<span class="detail-label" v-l10n.Product.TitleLabel></span>
 					<span v-if="isViewing" class="detail-value">{{title}}</span>
-					<input v-if="!isViewing" type="text" :placeholder="'Product.TitlePlaceholder' | translate" class="detail-value" v-model="title" v-focus />
+					<input v-if="!isViewing" type="text" :placeholder="'Product.TitlePlaceholder' | translate" class="detail-value-input" v-model="title" v-focus />
 				</div>
 
 				<div class="detail-item product-category" v-if="haveProductCategories">
@@ -19,13 +19,13 @@
 						<i v-if="productCategoryItem.icon" class="detail-icon dashicons" :class="'dashicons-' + productCategoryItem.icon" v-l10n-title="productCategoryItem.iconTitle"></i>
 						{{productCategoryItem.label}}
 					</span>
-					<input-dropdown v-if="!isViewing" :options="availableProductCategories" class="detail-value" v-model="productCategory"></input-dropdown>
+					<input-dropdown v-if="!isViewing" :options="availableProductCategories" class="detail-value-input" v-model="productCategory"></input-dropdown>
 				</div>
 
 				<div class="detail-item product-price">
 					<span class="detail-label" v-l10n.Product.PriceLabel></span>
 					<span v-if="isViewing" class="detail-value">{{price | money}}</span>
-					<input-price  v-if="!isViewing" class="detail-value" v-model="price"></input-price>
+					<input-price  v-if="!isViewing" class="detail-value-input" v-model="price"></input-price>
 				</div>
 			</form>
 
