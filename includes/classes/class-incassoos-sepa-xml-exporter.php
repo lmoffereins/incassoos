@@ -177,8 +177,8 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 			) );
 
 			// Generate default mandate identifier
-			$index    = isset( $t->party['id'] ) ? (int) $t->party['id'] : $index;
-			$mandate  = zeroise( $index + date( 'm' ) * 100 + date( 'H' ), 4 ) . '-' . zeroise( round( mt_rand() / 1000000 ), 4 );
+			$party_id = isset( $t->party['id'] ) ? (int) $t->party['id'] : $index;
+			$mandate  = zeroise(( 1001 + $index ), 4 ) . '-' . zeroise(( 7649 + $party_id ), 4 );
 
 			// Parse defaults
 			$t->party = (object) wp_parse_args( $t->party, array(
