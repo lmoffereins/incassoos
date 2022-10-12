@@ -226,7 +226,7 @@ define([
 
 					// Reject transition when the occasion is closed
 					if (fsm.st.EDIT_ORDER === lifecycle.to && context.rootState.occasions.active.closed) {
-						return Q.reject("Order.Error.OccasionClosed");
+						return Q.reject("Order.Error.OccasionClosedEditing");
 					}
 
 					// Reject transition when the order is locked

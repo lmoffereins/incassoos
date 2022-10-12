@@ -258,6 +258,7 @@
 		"ConsumerConsumedAtDate": "%s consumed %s at %s",
 		"Error": {
 			"OccasionClosed": "The occasion is closed for new orders.",
+			"OccasionClosedEditing": "The occasion is closed for editing orders.",
 			"TimeLocked": "The order cannot be edited anymore."
 		}
 	},

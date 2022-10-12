@@ -256,6 +256,7 @@
 		"ConsumerConsumedAtDate": "%s heeft voor %s besteld op %s",
 		"Error": {
 			"OccasionClosed": "Er zijn geen nieuwe bestellingen mogelijk, omdat de gelegenheid is gesloten.",
+			"OccasionClosedEditing": "Er zijn geen bewerkingen mogelijk, omdat de gelegenheid is gesloten.",
 			"TimeLocked": "De bestelling kan niet meer aangepast worden."
 		}
 	},
