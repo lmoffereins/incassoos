@@ -538,17 +538,17 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 					'DtOfSgntr' => $mandate_date                      // Signature date
 				),
 			),
+			'DbtrAgt' => array(                                       // Debtor agent
+				'FinInstnId' => array(                                // Financial institution identifier
+					'BIC' => $transaction->party->bic,                // Debtor's financial institution's BIC
+				),
+			),
 			'Dbtr' => array(                                          // Debtor details
 				'Nm' => $transaction->party->name,                    // Debtor's name
 			),
 			'DbtrAcct' => array(                                      // Debtor account
 				'Id' => array(                                        // Account identifier
 					'IBAN' => $transaction->party->iban,              // Debtor's IBAN
-				),
-			),
-			'DbtrAgt' => array(                                       // Debtor agent
-				'FinInstnId' => array(                                // Financial institution identifier
-					'BIC' => $transaction->party->bic,                // Debtor's financial institution's BIC
 				),
 			),
 			'InstrForCdtrAgt' => 'ALL',                               // Creditor agent instruction
@@ -588,17 +588,17 @@ class Incassoos_SEPA_XML_Exporter extends Incassoos_XML_Exporter {
 					'DtOfSgntr' => $mandate_date                      // Signature date
 				),
 			),
+			'CdtAgt' => array(                                        // Creditor agent
+				'FinInstnId' => array(                                // Financial institution identifier
+					'BIC' => $transaction->party->bic,                // Creditor's financial institution's BIC
+				),
+			),
 			'Cdt' => array(                                           // Creditor details
 				'Nm' => $transaction->party->name,                    // Creditor's name
 			),
 			'CdtAcct' => array(                                       // Creditor account
 				'Id' => array(                                        // Account identifier
 					'IBAN' => $transaction->party->iban,              // Creditor's IBAN
-				),
-			),
-			'CdtAgt' => array(                                        // Creditor agent
-				'FinInstnId' => array(                                // Financial institution identifier
-					'BIC' => $transaction->party->bic,                // Creditor's financial institution's BIC
 				),
 			),
 			'InstrForDbtrAgt' => 'ALL',                               // Debtor agent instruction
