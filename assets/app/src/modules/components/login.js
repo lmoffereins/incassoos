@@ -292,6 +292,16 @@ define([
 			// Register global keyboard event listeners
 			this.$registerUnobservable(
 				shortcutsService.on({
+
+					// Switch login mode
+					"alt+S": {
+						label: "Login.SwitchLoginMode",
+						keyUp: true, // Prevents continued switching when holding the keys
+						callback: function loginTransitionSwitchLoginOnAltS() {
+							fsm.do(fsm.tr.SWITCH_LOGIN);
+						}
+					},
+
 					"escape": function loginTransitionCancelOnEscape() {
 						self.cancel();
 					}

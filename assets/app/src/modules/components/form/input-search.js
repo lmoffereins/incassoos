@@ -62,7 +62,13 @@ define([
 			 *
 			 * @return {Void}
 			 */
-			cancel: function() {
+			cancel: function( event ) {
+
+				// Stop propagation when a search was present
+				if (this.$refs.search.value.length) {
+					event.stopPropagation();
+				}
+
 				this.isOpen = false;
 				this.$emit("input", "");
 				this.$emit("cancel");

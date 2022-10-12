@@ -193,9 +193,9 @@ define([
 			options.exact = -1 !== keys.indexOf("+");
 		}
 
-		// Set `propagate` property. Shortcut events propagate by default.
+		// Set `propagate` property. Shortcut events do not propagate by default.
 		if ("undefined" === typeof options.propagate) {
-			options.propagate = true;
+			options.propagate = false;
 		}
 
 		// Set `context` property. Default context is based on state.

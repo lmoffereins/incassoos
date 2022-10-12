@@ -57,6 +57,7 @@ define([
 			return {
 				focusGroupKey: 0,
 				q: "",
+				shortcutsOff: false,
 				orderBy: _.keys(options)[0], // TODO: store in/get from user preferences?
 				orderByOptions: options,
 				oneGroupExpanded: false,
@@ -240,6 +241,18 @@ define([
 					: this.oneGroupExpanded === id
 						? false
 						: id || false;
+			},
+
+			/**
+			 * Unregister global keyboard event listeners
+			 *
+			 * @return {Void}
+			 */
+			unregisterShortcuts: function() {
+				if (this.shortcutsOff) {
+					this.shortcutsOff();
+					this.shortcutsOff = false;
+				}
 			}
 		}, Vuex.mapMutations("consumers", {
 			"toggleShowConsumer": "toggleShow"
@@ -304,6 +317,23 @@ define([
 			 * @return {Void}
 			 */
 			q: function( dispatch ) {
+				var self = this;
+
+				if (this.q) {
+					if (! this.shortcutsOff) {
+
+						// Register global keyboard event listeners
+						this.shortcutsOff = shortcutsService.on({
+							"escape": function consumersResetSearchQueryOnEscape() {
+
+								// Reset the search query
+								self.q = "";
+							}
+						});
+					}
+				} else {
+					this.unregisterShortcuts();
+				}
 
 				// Remove any group expansion
 				this.oneGroupExpanded = false;
@@ -336,16 +366,10 @@ define([
 				);
 			}
 
-			// Register global keyboard event listeners
-			this.$registerUnobservable(
-				shortcutsService.on({
-					"escape": function consumersResetSearchQueryOnEscape() {
-
-						// Reset the search query
-						self.q = "";
-					}
-				})
-			);
+			// Unregister global keyboard event listeners
+			this.$registerUnobservable( function() {
+				self.unregisterShortcuts();
+			});
 
 			// Update values in component when settings are updated
 			this.$registerUnobservable(

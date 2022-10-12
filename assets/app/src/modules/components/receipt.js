@@ -47,6 +47,7 @@ define([
 		},
 		data: function() {
 			return {
+				shortcutsOff: false,
 				isExpanded: false,
 				defaultAvatarUrl: settings.consumer.defaultAvatarUrl
 			};
@@ -173,6 +174,18 @@ define([
 
 				// Switch active section
 				this.$root.$emit("receipt/set-active-section", "consumers");
+			},
+
+			/**
+			 * Unregister global keyboard event listeners
+			 *
+			 * @return {Void}
+			 */
+			unregisterShortcuts: function() {
+				if (this.shortcutsOff) {
+					this.shortcutsOff();
+					this.shortcutsOff = false;
+				}
 			}
 		}, Vuex.mapMutations("receipt", {
 			"clear": "clearList",
@@ -314,6 +327,32 @@ define([
 			 */
 			totalPrice: function() {
 				util.triggerElementChanged(this.$el);
+			},
+
+			/**
+			 * Act when the receipt changes active state
+			 *
+			 * @return {Void}
+			 */
+			isActive: function() {
+				var self = this;
+
+				if (this.isActive) {
+					if (! this.shortcutsOff) {
+
+						// Register global keyboard event listeners
+						this.shortcutsOff = shortcutsService.on({
+							"enter": function receiptSubmitOnEnter() {
+								self.submit();
+							},
+							"escape": function receiptTransitionCancelOnEscape() {
+								self.cancel();
+							}
+						});
+					}
+				} else {
+					this.unregisterShortcuts();
+				}
 			}
 		}, Vuex.mapActions("receipt", {
 			/**
@@ -383,17 +422,10 @@ define([
 				self.$root.$off("sections/resize-small", onSectionsResizeSmall);
 			});
 
-			// Register global keyboard event listeners
-			this.$registerUnobservable(
-				shortcutsService.on({
-					"enter": function receiptSubmitOnEnter() {
-						self.submit();
-					},
-					"escape": function receiptTransitionCancelOnEscape() {
-						self.cancel();
-					}
-				})
-			);
+			// Unregister global keyboard event listeners
+			this.$registerUnobservable( function() {
+				self.unregisterShortcuts();
+			})
 
 			// Update values in component when settings are updated
 			this.$registerUnobservable(

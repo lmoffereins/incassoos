@@ -70,6 +70,7 @@ define([
 				focusGroupKey: 0,
 				settingsKey: 0,
 				q: "",
+				shortcutsOff: false,
 				orderBy: _.keys(options)[0], // TODO: store in/get from user preferences?
 				orderByOptions: options,
 				filterProductCategory: "0",
@@ -239,6 +240,18 @@ define([
 			 */
 			setActiveSection: function() {
 				this.$emit("activeSection");
+			},
+
+			/**
+			 * Unregister global keyboard event listeners
+			 *
+			 * @return {Void}
+			 */
+			unregisterShortcuts: function() {
+				if (this.shortcutsOff) {
+					this.shortcutsOff();
+					this.shortcutsOff = false;
+				}
 			}
 		}, Vuex.mapActions("products", {
 			/**
@@ -332,6 +345,23 @@ define([
 			 * @return {Void}
 			 */
 			q: function( dispatch ) {
+				var self = this;
+
+				if (this.q) {
+					if (! this.shortcutsOff) {
+
+						// Register global keyboard event listeners
+						this.shortcutsOff = shortcutsService.on({
+							"escape": function productsResetSearchQueryOnEscape() {
+
+								// Reset the search query
+								self.q = "";
+							}
+						});
+					}
+				} else {
+					this.unregisterShortcuts();
+				}
 
 				// Apply search
 				dispatch("search", this.q);
@@ -362,16 +392,10 @@ define([
 				);
 			}
 
-			// Register global keyboard event listeners
-			this.$registerUnobservable(
-				shortcutsService.on({
-					"escape": function productsResetSearchQueryOnEscape() {
-
-						// Reset the search query
-						self.q = "";
-					}
-				})
-			);
+			// Unregister global keyboard event listeners
+			this.$registerUnobservable( function() {
+				self.unregisterShortcuts();
+			});
 
 			// Update values in component when settings are updated
 			this.$registerUnobservable(

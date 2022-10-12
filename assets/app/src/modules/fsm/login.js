@@ -1300,20 +1300,6 @@ define([
 				// Lock the application
 				fsm.do(STEPS.LOCK);
 			}
-		},
-
-		// Switch login mode
-		"alt+S": {
-			label: "Login.SwitchLoginMode",
-			keyUp: true, // Prevents continued switching when holding the keys
-			callback: function loginFsmSwitchLoginModeOnAltS() {
-				fsm.do(STEPS.SWITCH_LOGIN);
-			}
-		},
-
-		// Cancel the login state
-		"escape": function loginFsmTransitionCancelOnEscape() {
-			fsm.do(STEPS.CANCEL);
 		}
 	});
 

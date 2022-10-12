@@ -5,6 +5,13 @@
 	</button>
 
 	<div class="input-searchbar">
-		<input class="search-option" ref="search" type="text" :value="value" @input="input" @submit="input"/>
+		<input
+			class="search-option"
+			ref="search"
+			type="text"
+			:value="value"
+			@input="input"
+			@submit="input"
+			@keydown.escape="cancel" />
 	</div>
 </div>
