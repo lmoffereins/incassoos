@@ -265,32 +265,36 @@ function incassoos_admin_removable_query_args( $args ) {
  * @return bool Is this a plugin page?
  */
 function incassoos_admin_is_plugin_page() {
-	$is     = false;
-	$scrn   = get_current_screen();
+
+	// Define return value
+	$retval = false;
+
+	// Get the screen context
+	$screen = get_current_screen();
 
 	/**
 	 * The screen's parentage is not set untill before the '*_admin_notices' hooks.
 	 *
 	 * @see wp-admin/admin-header.php
 	 */
-	$parent = empty( $scrn->parent_base ) ? $GLOBALS['parent_file'] : $scrn->parent_base;
+	$parent = empty( $screen->parent_base ) ? $GLOBALS['parent_file'] : $screen->parent_base;
 
 	// Plugin page
-	if ( 'incassoos' === $parent || 0 === strpos( $scrn->base, 'incassoos' ) ) {
-		$is = true;
+	if ( 'incassoos' === $parent || 0 === strpos( $screen->base, 'incassoos' ) ) {
+		$retval = true;
 	}
 
 	// Post type page
-	if ( incassoos_is_plugin_post_type( $scrn->post_type ) ) {
-		$is = true;
+	if ( incassoos_is_plugin_post_type( $screen->post_type ) ) {
+		$retval = true;
 	}
 
 	// Taxonomy page
-	if ( incassoos_is_plugin_taxonomy( $scrn->taxonomy ) ) {
-		$is = true;
+	if ( incassoos_is_plugin_taxonomy( $screen->taxonomy ) ) {
+		$retval = true;
 	}
 
-	return (bool) apply_filters( 'incassoos_admin_is_plugin_page', $is );
+	return (bool) apply_filters( 'incassoos_admin_is_plugin_page', $retval );
 }
 
 /**
@@ -419,7 +423,7 @@ function incassoos_admin_get_page_title() {
  */
 function incassoos_admin_get_pages() {
 
-	// Setup return value
+	// Define page list
 	$pages = array(
 		'incassoos'            => __( 'Dashboard', 'incassoos' ),
 		'incassoos-consumers'  => __( 'Consumers', 'incassoos' ),
@@ -469,17 +473,26 @@ function incassoos_admin_has_pages() {
 }
 
 /**
- * Return the current admin page
+ * Return the current admin page in the plugin's context
  *
  * @since 1.0.0
  *
- * @return string The current admin page. Defaults to the first page.
+ * @return string The current admin page. Defaults to empty string.
  */
 function incassoos_admin_get_current_page() {
-	$pages        = array_keys( incassoos_admin_get_pages() );
-	$current_page = ( isset( $_GET['page'] ) && in_array( $_GET['page'], $pages ) ) ? $_GET['page'] : $pages[0];
 
-	return $current_page;
+	// Define return value
+	$retval = '';
+
+	// Get page list slugs
+	$pages = array_keys( incassoos_admin_get_pages() );
+
+	// Check page in the plugin context
+	if ( incassoos_admin_is_plugin_page() && isset( $_GET['page'] ) && in_array( $_GET['page'], $pages ) ) {
+		$retval = $_GET['page'];
+	}
+
+	return $retval;
 }
 
 /** Misc ****************************************************************/
@@ -1674,10 +1687,10 @@ function incassoos_admin_redirect_post_location( $location, $post_id ) {
 function incassoos_admin_post_notices() {
 
 	// Get the screen context
-	$scrn = get_current_screen();
+	$screen = get_current_screen();
 
 	// Bail when this is not a plugin's post page
-	if ( 'post' !== $scrn->base || empty( $scrn->post_type ) || ! incassoos_is_plugin_post_type( $scrn->post_type ) )
+	if ( 'post' !== $screen->base || empty( $screen->post_type ) || ! incassoos_is_plugin_post_type( $screen->post_type ) )
 		return;
 
 	// Bail when no error was reported
@@ -1700,15 +1713,15 @@ function incassoos_admin_post_notices() {
 	);
 
 	// Get error prefix
-	if ( isset( $types[ $scrn->post_type ] ) ) {
-		$prefix = $types[ $scrn->post_type ];
+	if ( isset( $types[ $screen->post_type ] ) ) {
+		$prefix = $types[ $screen->post_type ];
 	} else {
 		$prefix = esc_html__( 'Post could not be saved: %s', 'incassoos' );
 	}
 
 	// Get error for display
-	if ( isset( $messages[ $scrn->post_type ][ $_GET['error'] ] ) ) {
-		$error = $messages[ $scrn->post_type ][ $_GET['error'] ];
+	if ( isset( $messages[ $screen->post_type ][ $_GET['error'] ] ) ) {
+		$error = $messages[ $screen->post_type ][ $_GET['error'] ];
 	} else {
 		$error = esc_html__( 'Something went wrong.', 'incassoos' );
 	}
