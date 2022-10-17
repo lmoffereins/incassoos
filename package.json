@@ -4,6 +4,7 @@
 		"@easepick/bundle": "^1.2.0",
 		"axios": "^0.27.2",
 		"dayjs": "^1.11.2",
+		"hammerjs": "^2.0.8",
 		"javascript-state-machine": "^3.1.0",
 		"localforage": "^1.10.0",
 		"lodash": "^4.17.21",
