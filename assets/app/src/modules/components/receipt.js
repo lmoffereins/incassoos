@@ -6,6 +6,7 @@
  */
 define([
 	"vuex",
+	"hammerjs",
 	"fsm",
 	"services",
 	"settings",
@@ -13,7 +14,7 @@ define([
 	"./feedback",
 	"./util/close-button",
 	"./../templates/receipt.html"
-], function( Vuex, fsm, services, settings, util, feedback, closeButton, tmpl ) {
+], function( Vuex, Hammer, fsm, services, settings, util, feedback, closeButton, tmpl ) {
 	/**
 	 * Holds a reference to the shortcuts service
 	 *
@@ -174,6 +175,19 @@ define([
 
 				// Switch active section
 				this.$root.$emit("receipt/set-active-section", "consumers");
+			},
+
+			/**
+			 * Signal to select another active order
+			 *
+			 * @param  {String} direction Selection direction
+			 * @return {Void}
+			 */
+			selectOrder: function( direction ) {
+				direction = direction || "next";
+
+				// Communicate to select the order
+				this.$root.$emit("receipt/select-".concat(direction, "-order"));
 			},
 
 			/**
@@ -425,7 +439,7 @@ define([
 			// Unregister global keyboard event listeners
 			this.$registerUnobservable( function() {
 				self.unregisterShortcuts();
-			})
+			});
 
 			// Update values in component when settings are updated
 			this.$registerUnobservable(
@@ -433,6 +447,45 @@ define([
 					self.defaultAvatarUrl = settings.consumer.defaultAvatarUrl;
 				})
 			);
+		},
+
+		/**
+		 * Register listeners when the component is mounted
+		 *
+		 * @return {Void}
+		 */
+		mounted: function() {
+			var self = this,
+
+			/**
+			 * Construct element instance for touch events
+			 *
+			 * @type {Hammer}
+			 */
+			hammer = new Hammer(this.$el),
+
+			/**
+			 * Act when the receipt is swiped
+			 *
+			 * @return {Void}
+			 */
+			onReceiptSwipe = function( event ) {
+
+				// Swipe rtl
+				if (event.deltaX < 0) {
+					self.selectOrder("next");
+
+				// Swipe ltr
+				} else {
+					self.selectOrder("previous");
+				}
+			};
+
+			// Register touch event listeners
+			hammer.on("swipe", onReceiptSwipe);
+			this.$registerUnobservable( function() {
+				hammer.off("swipe", onReceiptSwipe);
+			});
 		}
 	};
 });

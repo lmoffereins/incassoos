@@ -53,6 +53,39 @@ define([
 			},
 
 			/**
+			 * Return the index of the active order
+			 *
+			 * @return {Number} Active order index
+			 */
+			activeOrderIx: function( state ) {
+				return this.orders.findIndex( function( i ) {
+					return state.active && i.id === state.active.id;
+				});
+			},
+
+			/**
+			 * Return the previous order id
+			 *
+			 * @return {Number} Order id
+			 */
+			previousOrderId: function( state, getters ) {
+				var currIx = this.activeOrderIx;
+
+				return -1 !== currIx && currIx > 0 ? this.orders[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the next order id
+			 *
+			 * @return {Number} Order id
+			 */
+			nextOrderId: function( state, getters ) {
+				var currIx = this.activeOrderIx;
+
+				return -1 !== currIx && currIx < this.orders.length - 1 ? this.orders[currIx + 1].id : false;
+			},
+
+			/**
 			 * Return whether the order is selected
 			 *
 			 * @param  {Number}  id Order identifier
@@ -113,7 +146,7 @@ define([
 						this.$store.dispatch("consumers/select", order.consumer.id);
 					}
 
-				// Open the orde
+				// Open the order
 				} else {
 					dispatch("select", payload);
 				}
@@ -140,6 +173,41 @@ define([
 				// Update focus group key
 				this.focusGroupKey++;
 			}
+		},
+
+		/**
+		 * Register listeners when the component is created
+		 *
+		 * @return {Void}
+		 */
+		created: function() {
+			var self = this,
+
+			/**
+			 * Set the active order from the previous order
+			 *
+			 * @return {Void}
+			 */
+			onSelectPreviousOrder = function () {
+				self.previousOrderId && self.select(self.previousOrderId);
+			},
+
+			/**
+			 * Set the active order from the next order
+			 *
+			 * @return {Void}
+			 */
+			onSelectNextOrder = function () {
+				self.nextOrderId && self.select(self.nextOrderId);
+			};
+
+			// Subscribe to external events
+			this.$root.$on("receipt/select-previous-order", onSelectPreviousOrder);
+			this.$root.$on("receipt/select-next-order", onSelectNextOrder);
+			this.$registerUnobservable( function() {
+				self.$root.$off("receipt/select-previous-order", onSelectPreviousOrder);
+				self.$root.$off("receipt/select-next-order", onSelectNextOrder);
+			});
 		}
 	};
 });
