@@ -10,7 +10,7 @@
 <html <?php language_attributes(); ?> class="no-js no-svg">
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="profile" href="https://gmpg.org/xfn/11">
 
 <?php incassoos_app_head(); ?>
