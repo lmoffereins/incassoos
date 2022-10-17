@@ -145,6 +145,11 @@
 	#sections {
 		flex-direction: column;
 
+		// When receipt is hidden
+		&:not(:has(.receipt.is-active)) {
+			grid-gap: 0px;
+		}
+
 		#consumers.is-not-active,
 		#products.is-not-active,
 		#order-panel.is-not-active {
