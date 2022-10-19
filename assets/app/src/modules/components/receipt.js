@@ -361,6 +361,12 @@ define([
 							},
 							"escape": function receiptTransitionCancelOnEscape() {
 								self.cancel();
+							},
+							"left": function receiptTransitionSelectOrderOnLeft() {
+								self.selectOrder("previous");
+							},
+							"right": function receiptTransitionSelectOrderOnRight() {
+								self.selectOrder("next");
 							}
 						});
 					}
