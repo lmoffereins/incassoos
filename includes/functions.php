@@ -2646,6 +2646,7 @@ function incassoos_delete_export_details( $file_id ) {
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_send_email_args'
+ * @uses apply_filters() Calls 'incassoos_pre_send_email'
  *
  * @param  array  $args Email parameters
  * @return bool Was the email sent?
@@ -2678,14 +2679,22 @@ function incassoos_send_email( $args = array() ) {
 	// Assume all mails are in HTML
 	$args['headers']['content-type'] = 'Content-Type: text/html';
 
-	$args        = apply_filters( 'incassoos_send_email_args', $args, $original_args );
-	$to          = $args['to'];
-	$subject     = $args['subject'];
-	$message     = $args['message'];
-	$headers     = $args['headers'];
-	$attachments = $args['attachments'];
+	// Filter arguments
+	$args = apply_filters( 'incassoos_send_email_args', $args, $original_args );
 
-	return wp_mail( $to, $subject, $message, $headers, $attachments );
+	// Return a non-null value to short-circuit sending email
+	$sent = apply_filters( 'incassoos_pre_send_email', null, $args );
+	if ( null === $sent ) {
+		$to          = $args['to'];
+		$subject     = $args['subject'];
+		$message     = $args['message'];
+		$headers     = $args['headers'];
+		$attachments = $args['attachments'];
+
+		$sent = wp_mail( $to, $subject, $message, $headers, $attachments );
+	}
+
+	return $sent;
 }
 
 /** Files *********************************************************************/
