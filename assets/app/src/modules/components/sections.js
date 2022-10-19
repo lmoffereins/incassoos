@@ -5,26 +5,62 @@
  * @subpackage App/Components
  */
 define([
+	"services",
 	"./consumers",
 	"./occasion",
 	"./orders",
 	"./products",
 	"./receipt",
 	"./../templates/sections.html"
-], function( consumers, occasion, orders, products, receipt, tmpl ) {
+], function( services, consumers, occasion, orders, products, receipt, tmpl ) {
+	/**
+	 * Holds a reference to the shortcuts service
+	 *
+	 * @type {Object}
+	 */
+	var shortcutsService = services.get("shortcuts"),
+
+	/**
+	 * Holds the screen breakpoint values
+	 *
+	 * @type {Object}
+	 */
+	BREAKPOINTS = {
+		SMALL: 580,
+		MEDIUM: 850
+	},
+
+	/**
+	 * Holds the section identifiers
+	 *
+	 * @type {Object}
+	 */
+	SECTIONS = {
+		CONSUMERS: "consumers",
+		PRODUCTS: "products",
+		ORDER_PANEL: "order-panel"
+	},
+
+	/**
+	 * Holds the list of section identifiers
+	 *
+	 * @type {Array}
+	 */
+	SECTIONS_ALL = [SECTIONS.CONSUMERS, SECTIONS.PRODUCTS, SECTIONS.ORDER_PANEL],
+
 	/**
 	 * Register the callback to listen for the resize event
 	 *
 	 * Prefer to use `window.matchMedia()` as it only triggers on passing the threshold.
 	 *
 	 * @param {Function} callback Listener callback
-	 * @return {Fucntion} Deregistration callback
+	 * @return {Function} Deregistration callback
 	 */
-	var addResizeListener = function( callback ) {
+	addResizeListener = function( callback ) {
 		var matches;
 
 		if (window.matchMedia) {
-			matches = window.matchMedia("(max-width: 580px)");
+			matches = window.matchMedia("(max-width: ".concat(BREAKPOINTS.SMALL, "px)"));
 			matches.addListener(callback);
 		} else {
 			window.addEventListener("resize", callback);
@@ -53,7 +89,7 @@ define([
 		var width = document.body.clientWidth;
 
 		// Reset the active section to products
-		if (width > 580) {
+		if (width > BREAKPOINTS.SMALL) {
 			this.isOrderPanelActive && this.setProductsActive();
 			this.resetFixedReceipt();
 			this.$root.$emit("sections/resize-large");
@@ -75,7 +111,7 @@ define([
 		data: function() {
 			return {
 				isPanelActive: false,
-				activeSection: "products"
+				activeSection: SECTIONS.PRODUCTS
 			};
 		},
 		computed: {
@@ -85,7 +121,7 @@ define([
 			 * @return {Boolean} Is the consumers section active?
 			 */
 			isConsumersActive: function() {
-				return this.activeSection === "consumers";
+				return this.activeSection === SECTIONS.CONSUMERS;
 			},
 
 			/**
@@ -94,7 +130,7 @@ define([
 			 * @return {Boolean} Is the products section active?
 			 */
 			isProductsActive: function() {
-				return this.activeSection === "products";
+				return this.activeSection === SECTIONS.PRODUCTS;
 			},
 
 			/**
@@ -103,7 +139,7 @@ define([
 			 * @return {Boolean} Is the order panel section active?
 			 */
 			isOrderPanelActive: function() {
-				return this.activeSection === "order-panel";
+				return this.activeSection === SECTIONS.ORDER_PANEL;
 			}
 		},
 		methods: {
@@ -113,7 +149,7 @@ define([
 			 * @return {Void}
 			 */
 			setConsumersActive: function() {
-				this.activeSection = "consumers";
+				this.activeSection = SECTIONS.CONSUMERS;
 			},
 
 			/**
@@ -122,7 +158,7 @@ define([
 			 * @return {Void}
 			 */
 			setProductsActive: function() {
-				this.activeSection = "products";
+				this.activeSection = SECTIONS.PRODUCTS;
 			},
 
 			/**
@@ -131,7 +167,7 @@ define([
 			 * @return {Void}
 			 */
 			setOrderPanelActive: function() {
-				this.activeSection = "order-panel";
+				this.activeSection = SECTIONS.ORDER_PANEL;
 			},
 
 			/**
@@ -186,7 +222,7 @@ define([
 			 * @return {Void}
 			 */
 			onSetActiveSection = function ( section ) {
-				if (-1 !== ["consumers", "products", "order-panel"].indexOf(section)) {
+				if (-1 !== SECTIONS_ALL.indexOf(section)) {
 					self.activeSection = section;
 				}
 			};
@@ -198,6 +234,50 @@ define([
 				self.$root.$off("panels/is-panel-active", onPanelActive);
 				self.$root.$off("receipt/set-active-section", onSetActiveSection);
 			});
+
+			// Register global keyboard event listeners
+			this.$registerUnobservable(shortcutsService.on({
+				"left": function sectionsNavigateSectionOnLeft() {
+					var width = document.body.clientWidth;
+
+					switch (self.activeSection) {
+						case SECTIONS.PRODUCTS:
+
+							// On all screens
+							self.setConsumersActive();
+
+							break;
+						case SECTIONS.ORDER_PANEL:
+
+							// On small screens
+							if (width <= BREAKPOINTS.SMALL) {
+								self.setProductsActive();
+							}
+
+							break;
+					}
+				},
+				"right": function sectionsNavigateSectionOnRight() {
+					var width = document.body.clientWidth;
+
+					switch (self.activeSection) {
+						case SECTIONS.CONSUMERS:
+
+							// On all screens
+							self.setProductsActive();
+
+							break;
+						case SECTIONS.PRODUCTS:
+
+							// On small screens
+							if (width <= BREAKPOINTS.SMALL) {
+								self.setOrderPanelActive();
+							}
+
+							break;
+					}
+				}
+			}));
 
 			// Register resize event listener
 			this.$registerUnobservable(
