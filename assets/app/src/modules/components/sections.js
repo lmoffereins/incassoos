@@ -5,6 +5,7 @@
  * @subpackage App/Components
  */
 define([
+	"hammerjs",
 	"services",
 	"./consumers",
 	"./occasion",
@@ -12,7 +13,7 @@ define([
 	"./products",
 	"./receipt",
 	"./../templates/sections.html"
-], function( services, consumers, occasion, orders, products, receipt, tmpl ) {
+], function( Hammer, services, consumers, occasion, orders, products, receipt, tmpl ) {
 	/**
 	 * Holds a reference to the shortcuts service
 	 *
@@ -286,11 +287,91 @@ define([
 		},
 
 		/**
+		 * Register listeners when the component is mounted
+		 *
+		 * @return {Void}
+		 */
+		mounted: function() {
+			var self = this,
+
+			/**
+			 * Return the element's section identifier
+			 *
+			 * @param  {Element} element Target element
+			 * @return {String} Section
+			 */
+			getElementSection = function( element ) {
+				return SECTIONS_ALL.find( function( section ) {
+					return self.$el.querySelector("#".concat(section)).contains(element);
+				});
+			},
+
+			/**
+			 * Act when the sections are swiped
+			 *
+			 * @return {Void}
+			 */
+			onSectionsSwipe = function( event ) {
+				var width = document.body.clientWidth;
+
+				switch (getElementSection(event.target)) {
+					case SECTIONS.CONSUMERS:
+
+						// Swipe rtl on all screens
+						if (event.deltaX < 0) {
+							self.setProductsActive();
+						}
+
+						break;
+					case SECTIONS.PRODUCTS:
+
+						// Swipe ltr on all screens
+						if (event.deltaX > 0) {
+							self.setConsumersActive();
+						}
+
+						// Swipe rtl on small screens
+						if (event.deltaX < 0 && width <= BREAKPOINTS.SMALL) {
+							self.setOrderPanelActive();
+						}
+
+						break;
+					case SECTIONS.ORDER_PANEL:
+
+						// Swipe ltr on small screens
+						if (event.deltaX > 0 && width <= BREAKPOINTS.SMALL) {
+							self.setProductsActive();
+						}
+
+						break;
+				}
+			};
+
+			/**
+			 * Construct element instance for touch events
+			 *
+			 * @type {Hammer}
+			 */
+			this.hammer = new Hammer(this.$el);
+
+			// Register touch event listeners
+			this.hammer.on("swipe", onSectionsSwipe);
+			this.$registerUnobservable( function() {
+				this.hammer.off("swipe", onSectionsSwipe);
+			});
+		},
+
+		/**
 		 * Register listeners when the component is updated
 		 *
 		 * @return {Void}
 		 */
 		updated: function() {
+
+			// Update hammer target element
+			this.hammer.element = this.$el;
+			this.hammer.input.element = this.$el;
+			this.hammer.set({ inputTarget: this.$el });
 
 			// Run resize handler when the component is rendered
 			onResize.apply(this);
