@@ -612,11 +612,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 			<?php if ( incassoos_is_collection_collect_consumer_emails_sent( $post ) ) : ?>
 
 			<span id="collection-consumer-emails-sent" class="value">
-				<?php
-				// Using '0U' as date format to return the correct numeric timestamp of a date.
-				// The '0' functions as an innocent prefix for ignoring the timezone correction in `mysql2date()` which
-				// would otherwise return the date with the timezone offset, potentially resulting in the wrong date.
-				foreach ( incassoos_get_collection_collect_consumer_emails_sent( $post, '0U' ) as $date ) : ?>
+				<?php foreach ( incassoos_get_collection_collect_consumer_emails_sent( $post, 'U' ) as $date ) : ?>
 				<span class="value">
 					<abbr title="<?php echo wp_date( $abbr_date_format, $date ); ?>"><?php echo wp_date( $date_format, $date ); ?></abbr>
 				</span>

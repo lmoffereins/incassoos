@@ -615,10 +615,11 @@ function incassoos_admin_posts_add_columns( $columns, $post_type ) {
 
 			// Insert after title
 			$columns = array_slice( $columns, 0, $title_pos + 1 ) + array(
-				'collected' => esc_html_x( 'Collected', 'Admin column', 'incassoos' ),
-				'assets'    => esc_html_x( 'Assets',    'Admin column', 'incassoos' ),
-				'consumers' => esc_html_x( 'Consumers', 'Admin column', 'incassoos' ),
-				'total'     => esc_html_x( 'Total',     'Admin column', 'incassoos' ),
+				'collected'   => esc_html_x( 'Collected',   'Admin column', 'incassoos' ),
+				'distributed' => esc_html_x( 'Distributed', 'Admin column', 'incassoos' ),
+				'assets'      => esc_html_x( 'Assets',      'Admin column', 'incassoos' ),
+				'consumers'   => esc_html_x( 'Consumers',   'Admin column', 'incassoos' ),
+				'total'       => esc_html_x( 'Total',       'Admin column', 'incassoos' ),
 			) + array_slice( $columns, $title_pos + 1 );
 		}
 	}
@@ -729,6 +730,10 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 	$post_type = get_post_type( $post_id );
 	$posts_url = add_query_arg( 'post_type', $post_type, admin_url( 'edit.php' ) );
 
+	// Formatting
+	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post_id );
+	$date_format      = get_option( 'date_format' );
+
 	switch ( $post_type ) {
 
 		// Collection
@@ -739,9 +744,20 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 						/**
 						 * @see WP_Posts_List_Table::column_date()
 						 */
-						esc_attr( incassoos_get_collection_date( $post_id, __( 'Y/m/d g:i:s a' ) ) ),
+						esc_attr( incassoos_get_collection_date( $post_id, $abbr_date_format ) ),
 						incassoos_get_collection_date( $post_id )
 					);
+					break;
+				case 'distributed' :
+					foreach ( incassoos_get_collection_collect_consumer_emails_sent( $post_id, 'U' ) as $date ) :
+						printf( '<span title="%s">%s</span>',
+							/**
+							 * @see WP_Posts_List_Table::column_date()
+							 */
+							esc_attr( wp_date( $abbr_date_format, $date ) ),
+							wp_date( $date_format, $date )
+						);
+					endforeach;
 					break;
 				case 'assets' :
 					$num_activities = incassoos_get_collection_activity_count( $post_id );
