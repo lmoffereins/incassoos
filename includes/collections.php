@@ -652,12 +652,12 @@ function incassoos_get_collection_hint( $post = 0 ) {
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Collection's consumer emails are sent
  */
-function incassoos_is_collection_consumer_emails_sent( $post = 0 ) {
+function incassoos_is_collection_collect_consumer_emails_sent( $post = 0 ) {
 	$post    = incassoos_get_collection( $post );
-	$dates   = incassoos_get_collection_consumer_emails_sent( $post );
+	$dates   = incassoos_get_collection_collect_consumer_emails_sent( $post );
 	$is_sent = ! empty( $dates );
 
-	return apply_filters( 'incassoos_is_collection_consumer_emails_sent', $is_sent, $post );
+	return apply_filters( 'incassoos_is_collection_collect_consumer_emails_sent', $is_sent, $post );
 }
 
 /**
@@ -665,13 +665,13 @@ function incassoos_is_collection_consumer_emails_sent( $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_get_collection_consumer_emails_sent'
+ * @uses apply_filters() Calls 'incassoos_get_collection_collect_consumer_emails_sent'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return array Collection consumer emails sent dates
  */
-function incassoos_get_collection_consumer_emails_sent( $post = 0, $date_format = '' ) {
+function incassoos_get_collection_collect_consumer_emails_sent( $post = 0, $date_format = '' ) {
 	$post  = incassoos_get_collection( $post );
 	$dates = $post ? get_post_meta( $post->ID, 'consumer_emails_sent', false ) : array();
 
@@ -684,7 +684,7 @@ function incassoos_get_collection_consumer_emails_sent( $post = 0, $date_format 
 		$dates[ $index ] = mysql2date( $date_format, $date );
 	}
 
-	return apply_filters( 'incassoos_get_collection_consumer_emails_sent', $dates, $post, $date_format );
+	return apply_filters( 'incassoos_get_collection_collect_consumer_emails_sent', $dates, $post, $date_format );
 }
 
 /** Assets ********************************************************************/
@@ -1770,9 +1770,6 @@ function incassoos_collect_collection( $post = 0 ) {
 		'post_author' => get_current_user_id()
 	) );
 
-	// TODO: Send emails to associated consumers through the action hook below
-	// incassoos_send_collection_emails( $post );
-
 	// Update collected date
 	update_post_meta( $post->ID, 'collected', date( 'Y-m-d H:i:s' ) );
 
@@ -1825,7 +1822,7 @@ function incassoos_validate_collection( $args = array() ) {
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Was the email sent?
  */
-function incassoos_send_collection_test_email( $post = 0 ) {
+function incassoos_send_collection_collect_test_email( $post = 0 ) {
 	$post = incassoos_get_collection( $post );
 	$args = array();
 	$sent = false;
@@ -1845,7 +1842,7 @@ function incassoos_send_collection_test_email( $post = 0 ) {
 		$args['post']    = $post; // Provide post object to later filters
 		$args['user_id'] = $consumers[ $key_rand ];
 		$args['subject'] = sprintf( $test_prefix_title, incassoos_get_collection_transaction_description( $post ) );
-		$args['message'] = '<p>' . $test_prefix_content . '</p>' . incassoos_get_collection_email_content( $consumers[ $key_rand ], $post );
+		$args['message'] = '<p>' . $test_prefix_content . '</p>' . incassoos_get_collection_collect_email_content( $consumers[ $key_rand ], $post );
 
 		// Send the email
 		$sent = incassoos_send_email( $args );
@@ -1862,7 +1859,7 @@ function incassoos_send_collection_test_email( $post = 0 ) {
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Were the emails sent?
  */
-function incassoos_send_collection_consumer_emails( $post = 0 ) {
+function incassoos_send_collection_collect_consumer_emails( $post = 0 ) {
 	$post = incassoos_get_collection( $post );
 	$args = array();
 	$sent = false;
@@ -1879,7 +1876,7 @@ function incassoos_send_collection_consumer_emails( $post = 0 ) {
 				$args['post']    = $post; // Provide post object to later filters
 				$args['user_id'] = $user->ID;
 				$args['subject'] = incassoos_get_collection_transaction_description( $post );
-				$args['message'] = incassoos_get_collection_email_content( $user->ID, $post );
+				$args['message'] = incassoos_get_collection_collect_email_content( $user->ID, $post );
 
 				// Send the email
 				$sent[ $user->ID ] = $is_sent = incassoos_send_email( $args );
@@ -1941,8 +1938,8 @@ function incassoos_get_collection_transaction_description( $post = 0 ) {
  * @param  WP_User|int $user User object or ID.
  * @param  WP_Post|int $post Optional. Post object or ID. Defaults to the current post.
  */
-function incassoos_the_collection_email_content( $user, $post = 0 ) {
-	echo incassoos_get_collection_email_content( $user, $post );
+function incassoos_the_collection_collect_email_content( $user, $post = 0 ) {
+	echo incassoos_get_collection_collect_email_content( $user, $post );
 }
 
 /**
@@ -1950,20 +1947,20 @@ function incassoos_the_collection_email_content( $user, $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @uses do_action() Calls 'incassoos_collection_email_content'
+ * @uses do_action() Calls 'incassoos_collection_collect_email_content'
  *
  * @param  WP_User|int $user User object or ID.
  * @param  WP_Post|int $post Optional. Post object or ID. Defaults to the current post.
  * @return string Collection email content
  */
-function incassoos_get_collection_email_content( $user, $post = 0 ) {
+function incassoos_get_collection_collect_email_content( $user, $post = 0 ) {
 	$post = incassoos_get_collection( $post );
 	$user = is_a( $user, 'WP_User' ) ? $user->ID : (int) $user;
 
 	ob_start();
 
 	// Enable custom hooking
-	do_action( 'incassoos_collection_email_content', $post, $user );
+	do_action( 'incassoos_collection_collect_email_content', $post, $user );
 
 	$content = ob_get_clean();
 
@@ -1978,7 +1975,7 @@ function incassoos_get_collection_email_content( $user, $post = 0 ) {
  * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
  */
-function incassoos_collection_email_salutation( $post, $user ) {
+function incassoos_collection_collect_email_salutation( $post, $user ) {
 	echo wpautop( incassoos_get_custom_email_salutation( $user ) );
 }
 
@@ -1990,7 +1987,7 @@ function incassoos_collection_email_salutation( $post, $user ) {
  * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
  */
-function incassoos_collection_email_amounts_table( $post, $user ) {
+function incassoos_collection_collect_email_amounts_table( $post, $user ) {
 	$total = incassoos_get_collection_consumer_total( $user, $post );
 
 	// Bail when the user has no stake
@@ -2052,7 +2049,7 @@ function incassoos_collection_email_amounts_table( $post, $user ) {
  * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
  */
-function incassoos_collection_email_withdrawal_mention( $post, $user ) {
+function incassoos_collection_collect_email_withdrawal_mention( $post, $user ) {
 	$total = incassoos_get_collection_consumer_total( $user, $post );
 
 	// Bail when the user has no stake
@@ -2085,6 +2082,6 @@ function incassoos_collection_email_withdrawal_mention( $post, $user ) {
  * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
  */
-function incassoos_collection_email_closing( $post, $user ) {
+function incassoos_collection_collect_email_closing( $post, $user ) {
 	echo wpautop( incassoos_get_custom_email_closing() );
 }

@@ -52,9 +52,9 @@ add_action( 'incassoos_admin_notices',     'incassoos_admin_post_notices',      
 add_action( 'incassoos_admin_notices',     'incassoos_admin_post_action_notices',    10    );
 
 // Actions
-add_action( 'incassoos_admin_collection_send_test_email',      'incassoos_admin_collection_send_test_email',      10, 2 );
-add_action( 'incassoos_admin_collection_send_consumer_emails', 'incassoos_admin_collection_send_consumer_emails', 10, 2 );
-add_action( 'incassoos_admin_post_tool_recalculate_total',     'incassoos_tool_recalculate_post_total',           10, 2 );
+add_action( 'incassoos_admin_collection_send_collect_test_email',      'incassoos_admin_collection_send_collect_test_email',      10, 2 );
+add_action( 'incassoos_admin_collection_send_collect_consumer_emails', 'incassoos_admin_collection_send_collect_consumer_emails', 10, 2 );
+add_action( 'incassoos_admin_post_tool_recalculate_total',             'incassoos_tool_recalculate_post_total',                   10, 2 );
 
 /** Taxonomy ******************************************************************/
 
