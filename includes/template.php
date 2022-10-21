@@ -142,9 +142,25 @@ function incassoos_parse_query_vars( $posts_query ) {
 
 	// Get query details
 	$post_type = (array) $posts_query->get( 'post_type' );
+	$post_type = reset( $post_type );
+
+	// Activity query
+	if ( incassoos_get_activity_post_type() === $post_type ) {
+
+		// Filter (not) empty posts
+		// An Activity is empty when it has no participants
+		if ( null !== $posts_query->get( 'incassoos_empty', null ) ) {
+			$meta_query = (array) $posts_query->get( 'meta_query', array() );
+			$meta_query[] = array(
+				'key'     => 'participant',
+				'compare' => $posts_query->get( 'incassoos_empty' ) ? 'NOT EXISTS' : 'EXISTS'
+			);
+			$posts_query->set( 'meta_query', $meta_query );
+		}
+	}
 
 	// Order query
-	if ( incassoos_get_order_post_type() === reset( $post_type ) ) {
+	if ( incassoos_get_order_post_type() === $post_type ) {
 
 		// Search query
 		if ( $posts_query->get( 's' ) ) {
@@ -189,7 +205,7 @@ function incassoos_parse_query_vars( $posts_query ) {
 	}
 
 	// Product query
-	if ( incassoos_get_product_post_type() === reset( $post_type ) ) {
+	if ( incassoos_get_product_post_type() === $post_type ) {
 
 		// Filter hidden Product Categories
 		if ( null !== $posts_query->get( 'hidden', null ) ) {
@@ -209,17 +225,6 @@ function incassoos_parse_query_vars( $posts_query ) {
 		if ( ! $posts_query->get( 'orderby' ) ) {
 			$posts_query->set( 'orderby', array( 'menu_order' => 'ASC', 'title' => 'ASC' ) );
 		}
-	}
-
-	// Filter (not) empty posts
-	if ( null !== $posts_query->get( 'incassoos_empty', null ) ) {
-		$meta_query = (array) $posts_query->get( 'meta_query', array() );
-		$meta_query[] = array(
-			'key'     => 'total',
-			'value'   => 0,
-			'compare' => $posts_query->get( 'incassoos_empty' ) ? '=' : '>'
-		);
-		$posts_query->set( 'meta_query', $meta_query );
 	}
 }
 
@@ -245,9 +250,10 @@ function incassoos_posts_search( $search, $posts_query ) {
 
 	// Get query details
 	$post_type = (array) $posts_query->get( 'post_type' );
+	$post_type = reset( $post_type );
 
 	// Order query
-	if ( incassoos_get_order_post_type() === reset( $post_type ) ) {
+	if ( incassoos_get_order_post_type() === $post_type ) {
 
 		// Since they have no searchable post columns, stop default
 		// search handling for Order posts. Search is handled in
@@ -259,15 +265,15 @@ function incassoos_posts_search( $search, $posts_query ) {
 }
 
 /**
- * Filter WHERE clause for the posts query
+ * Filter query clauses for the posts query
  *
  * @since 1.0.0
  *
- * @param  string $where
- * @param  WP_Query $posts_query
- * @return string WHERE query clause
+ * @param  array $clauses SQL clauses
+ * @param  WP_Query $posts_query Post query object
+ * @return array SQL clauses
  */
-function incassoos_posts_where_paged( $where, $posts_query ) {
+function incassoos_posts_clauses( $clauses, $posts_query ) {
 	global $wpdb;
 
 	// Bail when filters are suppressed on this query
@@ -276,11 +282,26 @@ function incassoos_posts_where_paged( $where, $posts_query ) {
 
 	// Filter (un)collected posts
 	if ( null !== $posts_query->get( 'incassoos_collected', null ) ) {
-		$op     = $posts_query->get( 'incassoos_collected' ) ? '=' : '<>';
-		$where .= $wpdb->prepare( " AND {$wpdb->posts}.post_status $op %s", incassoos_get_collected_status_id() );
+		$op                = $posts_query->get( 'incassoos_collected' ) ? '=' : '<>';
+		$clauses['where'] .= $wpdb->prepare( " AND {$wpdb->posts}.post_status $op %s", incassoos_get_collected_status_id() );
 	}
 
-	return $where;
+	// Get query details
+	$post_type = (array) $posts_query->get( 'post_type' );
+	$post_type = reset( $post_type );
+
+	// Occasion query
+	if ( incassoos_get_occasion_post_type() === $post_type ) {
+
+		// Filter (not) empty posts
+		// An Occasion is empty when it has no orders
+		if ( null !== $posts_query->get( 'incassoos_empty', null ) ) {
+			$compare           = $posts_query->get( 'incassoos_empty' ) ? 'NOT EXISTS' : 'EXISTS';
+			$clauses['where'] .= $wpdb->prepare( " AND {$compare} (SELECT ID FROM {$wpdb->posts} AS o WHERE o.post_type = %s AND o.post_parent = {$wpdb->posts}.ID)", incassoos_get_order_post_type() );
+		}
+	}
+
+	return $clauses;
 }
 
 /**

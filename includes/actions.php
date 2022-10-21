@@ -43,7 +43,7 @@ add_action( 'parse_request',               'incassoos_parse_request',           
 add_action( 'parse_query',                 'incassoos_parse_query',                 2    ); // Early for overrides
 add_action( 'parse_query',                 'incassoos_parse_query_vars',           10    );
 add_filter( 'posts_search',                'incassoos_posts_search',               10, 2 );
-add_filter( 'posts_where_paged',           'incassoos_posts_where_paged',          10, 2 );
+add_filter( 'posts_clauses',               'incassoos_posts_clauses',              10, 2 );
 add_filter( 'posts_request',               'incassoos_filter_wp_query',            10, 2 );
 add_filter( 'posts_pre_query',             'incassoos_bypass_wp_query',            10, 2 ); // Since WP 4.6
 
