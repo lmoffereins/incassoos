@@ -532,6 +532,7 @@ body.incassoos-post-view #postdivrich .inside {
 .incassoos-item-list .assets .asset .title,
 .incassoos-item-list .users .consumer .title,
 .incassoos-item-list .products .product .title .label {
+	width: 100%;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: pre;
