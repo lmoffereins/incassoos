@@ -83,6 +83,7 @@ body.incassoos #wpbody-content {
 }
 
 .fixed .column-collected,
+.fixed .column-distributed,
 .fixed .column-assets,
 .fixed .column-activity_date,
 .fixed .column-participants,
@@ -97,6 +98,7 @@ body.incassoos #wpbody-content {
 	width: 15%;
 }
 
+.fixed .column-distributed span,
 .fixed .column-assets a {
 	display: table;
 }
@@ -105,7 +107,8 @@ body.incassoos #wpbody-content {
 	display: none;
 }
 
-.fixed .column-collected span[title] {
+.fixed .column-collected span[title],
+.fixed .column-distributed span[title] {
 	-webkit-text-decoration: dotted underline;
 	text-decoration: dotted underline;
 }
