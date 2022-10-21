@@ -167,7 +167,7 @@ final class Incassoos {
 
 		/** Extend ******************************************************/
 
-		// require( $this->includes_dir . 'extend/buddypress/buddypress.php' );
+		require( $this->includes_dir . 'extend/buddypress/buddypress.php' );
 		require( $this->includes_dir . 'extend/members.php'               );
 		require( $this->includes_dir . 'extend/vgsr/vgsr.php'             );
 	}

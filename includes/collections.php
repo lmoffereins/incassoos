@@ -1824,7 +1824,7 @@ function incassoos_validate_collection( $args = array() ) {
  */
 function incassoos_send_collection_collect_test_email( $post = 0 ) {
 	$post = incassoos_get_collection( $post );
-	$args = array();
+	$args = array( 'incassoos_email_type' => 'incassoos-collection-collect-test' );
 	$sent = false;
 
 	if ( $post ) {
@@ -1861,7 +1861,7 @@ function incassoos_send_collection_collect_test_email( $post = 0 ) {
  */
 function incassoos_send_collection_collect_consumer_emails( $post = 0 ) {
 	$post = incassoos_get_collection( $post );
-	$args = array();
+	$args = array( 'incassoos_email_type' => 'incassoos-collection-collect-consumer' );
 	$sent = false;
 
 	if ( $post ) {

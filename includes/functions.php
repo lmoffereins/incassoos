@@ -2669,6 +2669,7 @@ function incassoos_send_email( $args = array() ) {
 		'from_name'   => incassoos_get_account_holder(),
 		'subject'     => '',
 		'message'     => '',
+		'plaintext'   => '',
 		'headers'     => array(),
 		'attachments' => array()
 	) );

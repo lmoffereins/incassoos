@@ -1755,13 +1755,19 @@ function incassoos_send_occasion_email_on_close_or_reopen( $post ) {
 		return;
 	}
 
+	// Is Occasion closed?
 	$is_closed = incassoos_is_occasion_closed( $post );
+
+	// Setup email args
 	$args      = array(
-		'post'    => $post,
-		'subject' => $is_closed
+		'incassoos_email_type' => $is_closed
+			? 'incassoos-occasion-closed'
+			: 'incassoos-occasion-reopened',
+		'post'                 => $post,
+		'subject'              => $is_closed
 			? __( 'An occasion was closed in Incassoos', 'incassoos' )
 			: __( 'An occasion was reopened in Incassoos', 'incassoos' ),
-		'message' => '<p>' . sprintf(
+		'message'              => '<p>' . sprintf(
 				$is_closed
 					? __( 'The occasion %1$s was just closed by %2$s.',   'incassoos' )
 					: __( 'The occasion %1$s was just reopened by %2$s.', 'incassoos' ),
@@ -1780,6 +1786,7 @@ function incassoos_send_occasion_email_on_close_or_reopen( $post ) {
 			'<p><a href="' . esc_url( incassoos_get_occasion_url( $post ) ) . '">' . __( 'View occasion', 'incassoos' ) . '</a></p>'
 	);
 
+	// Walk all supervisors
 	foreach ( incassoos_get_users_for_role( incassoos_get_supervisor_role() ) as $user_id ) {
 		$user = incassoos_get_user( $user_id );
 		if ( $user ) {
