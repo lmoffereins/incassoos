@@ -62,7 +62,7 @@ define([
 
 		if (window.matchMedia) {
 			matches = window.matchMedia("(max-width: ".concat(BREAKPOINTS.SMALL, "px)"));
-			matches.addListener(callback);
+			matches.addEventListener("change", callback);
 		} else {
 			window.addEventListener("resize", callback);
 		}

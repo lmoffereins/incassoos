@@ -145,7 +145,7 @@ define([
 					/**
 					 * When the system preference changes, update the main store's dark mode data
 					 */
-					window.matchMedia("(prefers-color-scheme: dark)").addListener( function() {
+					window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
 						context.commit("setDarkmode");
 					});
 				}
