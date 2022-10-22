@@ -1326,6 +1326,36 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 }
 
 /**
+ * Return whether the Collection has any consumer with a negative total value
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_collection_has_consumer_with_negative_total'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Has Collection any consumer with negative total?
+ */
+function incassoos_collection_has_consumer_with_negative_total( $post = 0 ) {
+	$post                = incassoos_get_collection( $post );
+	$with_negative_value = false;
+
+	if ( $post ) {
+
+		// Walk consumer users
+		foreach ( incassoos_get_collection_consumer_users( $post ) as $user ) {
+
+			// Find the first negative consumer total
+			if ( incassoos_get_collection_consumer_total( $user->ID, $post ) < 0 ) {
+				$with_negative_value = true;
+				break;
+			}
+		}
+	}
+
+	return (bool) apply_filters( 'incassoos_collection_has_consumer_with_negative_total', $with_negative_value, $post );
+}
+
+/**
  * Return the Collection's assets
  *
  * @since 1.0.0
@@ -1653,6 +1683,10 @@ function incassoos_stage_collection( $post = 0 ) {
 
 	// Bail when the Collection is already staged or it is collected
 	if ( incassoos_is_collection_staged( $post ) || incassoos_is_collection_collected( $post ) )
+		return false;
+
+	// Bail when the Collection contains negative totals
+	if ( incassoos_collection_has_consumer_with_negative_total( $post ) )
 		return false;
 
 	// Run action before staging

@@ -241,8 +241,11 @@ function incassoos_map_collection_caps( $caps = array(), $cap = '', $user_id = 0
 			$post = incassoos_get_collection( $args[0] );
 			if ( $post ) {
 
-				// Prevent collecting when there are no assets or it is already locked
-				if ( ! incassoos_collection_has_assets( $post ) || incassoos_is_collection_locked( $post ) ) {
+				// Prevent collecting when there are no assets or it is already locked or it contains negative totals
+				if ( ! incassoos_collection_has_assets( $post )
+					|| incassoos_is_collection_locked( $post )
+					|| incassoos_collection_has_consumer_with_negative_total( $post )
+				) {
 					$caps = array( 'do_not_allow' );
 
 				// Defer to collecting caps
