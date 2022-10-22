@@ -565,6 +565,10 @@ body.incassoos-post-view .incassoos-item-list .occasion-consumer-type {
 	box-sizing: border-box;
 }
 
+.incassoos-item-list .negative-amount .open-details {
+	color: #f06060;
+}
+
 .incassoos-item-list .item-details {
 	display: none;
 	margin-top: 2px;

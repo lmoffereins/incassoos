@@ -908,12 +908,20 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 				<h4 class="sublist-header item-content"><?php echo esc_html( $group->name ); ?></h4>
 
 				<ul class="users">
-					<?php foreach ( $group->users as $user ) : ?>
+					<?php foreach ( $group->users as $user ) :
+						$class = "";
 
-					<li id="user-<?php echo $user->ID; ?>" class="consumer collection-consumer selector">
+						// Check for negative amounts
+						$consumer_total = incassoos_get_collection_consumer_total( $user->ID, $post );
+						if ( $consumer_total < 0 ) {
+							$class .= " negative-amount";
+						}
+					?>
+
+					<li id="user-<?php echo $user->ID; ?>" class="consumer collection-consumer selector <?php echo $class; ?>">
 						<button type="button" class="button-link open-details">
 							<span class="consumer-name title"><?php echo $user->display_name; ?></span>
-							<span class="consumer-total total"><?php incassoos_the_collection_consumer_total( $user->ID, $post, true ); ?></span>
+							<span class="consumer-total total"><?php echo incassoos_parse_currency( $consumer_total, true ); ?></span>
 						</button>
 
 						<ul class="item-details">
