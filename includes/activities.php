@@ -1319,8 +1319,8 @@ function incassoos_validate_activity( $args = array() ) {
 		return $date;
 	}
 
-	// Validate price
-	$price = incassoos_validate_price( $args['price'] );
+	// Validate price. Accept negative values.
+	$price = incassoos_validate_price( $args['price'], true );
 	if ( is_wp_error( $price ) ) {
 		return $price;
 	}

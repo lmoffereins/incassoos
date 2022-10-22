@@ -999,7 +999,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 	$format_args      = incassoos_get_currency_format_args();
-	$min_price_value  = 1 / pow( 10, $format_args['decimals'] );
+	$min_price_step   = 1 / pow( 10, $format_args['decimals'] );
 
 	// Permissions
 	$can_view_collection = current_user_can( 'view_incassoos_collection', incassoos_get_activity_collection_id( $post ) );
@@ -1066,7 +1066,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<label for="price"><?php esc_html_e( 'Price:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="number" name="price" id="price" step="<?php echo $min_price_value; ?>" min="<?php echo $min_price_value; ?>" value="<?php echo esc_attr( number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) ) ); ?>" />
+				<input type="number" name="price" id="price" step="<?php echo $min_price_step; ?>" value="<?php echo esc_attr( number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) ) ); ?>" />
 			<?php else : ?>
 				<span id="price" class="value"><?php incassoos_the_activity_price( $post, true ); ?></span>
 			<?php endif; ?>
@@ -1163,9 +1163,9 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	}
 
 	// Price, without currency
-	$format_args     = incassoos_get_currency_format_args();
-	$min_price_value = 1 / pow( 10, $format_args['decimals'] );
-	$price           = number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) );
+	$format_args    = incassoos_get_currency_format_args();
+	$min_price_step = 1 / pow( 10, $format_args['decimals'] );
+	$price          = number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) );
 
 	// List item class
 	$item_class = array( 'consumer', 'activity-participant' );
@@ -1254,7 +1254,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 							<label for="participant-<?php echo $user->ID; ?>" class="consumer-name title"><?php echo $user->display_name; ?></label>
 
 							<span class="price-input">
-								<input type="number" name="participant-price[<?php echo $user->ID; ?>]" class="custom-price" step="<?php echo $min_price_value; ?>" min="0" value="<?php if ( $has_custom_price ) { echo esc_attr( number_format( $prices[ $user->ID ], absint( $format_args['decimals'] ) ) ); } ?>" placeholder="<?php echo esc_attr( $price ); ?>" <?php if ( ! $has_custom_price ) { echo 'disabled="disabled"'; } ?> />
+								<input type="number" name="participant-price[<?php echo $user->ID; ?>]" class="custom-price" step="<?php echo $min_price_step; ?>" value="<?php if ( $has_custom_price ) { echo esc_attr( number_format( $prices[ $user->ID ], absint( $format_args['decimals'] ) ) ); } ?>" placeholder="<?php echo esc_attr( $price ); ?>" <?php if ( ! $has_custom_price ) { echo 'disabled="disabled"'; } ?> />
 								<button type="button" class="button-link toggle-custom-price cancel-custom-price" title="<?php esc_attr_e( 'Cancel the custom price', 'incassoos' ); ?>">
 									<span class="screen-reader-text"><?php esc_html_e( 'Cancel the custom price', 'incassoos' ); ?></span>
 								</button>
@@ -1904,7 +1904,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
 	$format_args      = incassoos_get_currency_format_args();
-	$min_price_value  = 1 / pow( 10, $format_args['decimals'] );
+	$min_price_step   = 1 / pow( 10, $format_args['decimals'] );
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
@@ -1927,7 +1927,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 		<p>
 			<label for="price"><?php esc_html_e( 'Price:', 'incassoos' ); ?></label>
-			<input type="number" name="price" id="price" step="<?php echo $min_price_value; ?>" min="<?php echo $min_price_value; ?>" value="<?php echo esc_attr( $price ); ?>" />
+			<input type="number" name="price" id="price" step="<?php echo $min_price_step; ?>" min="<?php echo $min_price_step; ?>" value="<?php echo esc_attr( $price ); ?>" />
 		</p>
 
 		<p>
