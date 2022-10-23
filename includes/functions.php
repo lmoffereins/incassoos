@@ -1561,8 +1561,8 @@ function incassoos_admin_bar_menu( $wp_admin_bar ) {
 		$wp_admin_bar->add_node(
 			array(
 				'parent' => 'site-name',
-				'id'     => 'site-name-incassoos-home',
-				'title'  => __( 'Incassoos Home', 'incassoos' ),
+				'id'     => 'site-name-incassoos-admin',
+				'title'  => __( 'Incassoos Administration', 'incassoos' ),
 				'href'   => incassoos_get_admin_url()
 			)
 		);
