@@ -689,6 +689,12 @@ function incassoos_admin_collection_details_metabox( $post ) {
 		<div class="clear"></div>
 	</div>
 
+	<?php elseif ( incassoos_collection_has_consumer_with_negative_total( $post ) ) : ?>
+
+	<div id="major-publishing-actions">
+		<span id="publishing-notice"><?php esc_html_e( 'The collection cannot be staged, because some consumers appear to have negative amounts.', 'incassoos' ); ?></span>
+	</div>
+
 	<?php endif; ?>
 
 	<?php wp_nonce_field( 'collection_details_metabox', 'collection_details_metabox_nonce' ); ?>
