@@ -112,7 +112,8 @@ define([
 		 */
 		fsm.observe([
 			fsm.on.after.TOGGLE_SETTINGS,
-			fsm.on.after.CLOSE_SETTINGS
+			fsm.on.after.CLOSE_SETTINGS,
+			fsm.on.after.OPEN_LOGIN
 		], function( lifecycle ) {
 
 				// Mutate the reactive settings flag
