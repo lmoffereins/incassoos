@@ -71,7 +71,7 @@ define([
 			previousOrderId: function( state, getters ) {
 				var currIx = this.activeOrderIx;
 
-				return -1 !== currIx && currIx > 0 ? this.orders[currIx - 1].id : false;
+				return -1 !== currIx && currIx < this.orders.length - 1 ? this.orders[currIx + 1].id : false;
 			},
 
 			/**
@@ -82,7 +82,7 @@ define([
 			nextOrderId: function( state, getters ) {
 				var currIx = this.activeOrderIx;
 
-				return -1 !== currIx && currIx < this.orders.length - 1 ? this.orders[currIx + 1].id : false;
+				return -1 !== currIx && currIx > 0 ? this.orders[currIx - 1].id : false;
 			},
 
 			/**
