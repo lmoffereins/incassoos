@@ -147,6 +147,8 @@ define([
 			/**
 			 * Return the active consumer
 			 *
+			 * Use `this.consumer.id` to check for an active selected consumer.
+			 *
 			 * @return {Object} Consumer object
 			 */
 			consumer: function( state ) {
@@ -168,13 +170,12 @@ define([
 			 *
 			 * @return {Void}
 			 */
-			setActiveConsumersSection: function( event ) {
+			setActiveConsumersSection: function() {
 
-				// Prevent `v-toggle` on the .item-list-header parent
-				event && event.stopPropagation && event.stopPropagation();
-
-				// Switch active section
-				this.$root.$emit("receipt/set-active-section", "consumers");
+				// Switch active section when there is no active consumer
+				if (! this.consumer.id) {
+					this.$root.$emit("receipt/set-active-section", "consumers");
+				}
 			},
 
 			/**
