@@ -233,7 +233,7 @@ function incassoos_admin_single_post_help_tabs() {
 					'<p>' . __( "<strong>Create</strong> &mdash; Set the collection's attributes when it is created.", 'incassoos' ) . '</p>' .
 					'<p>' . __( '<strong>Update</strong> &mdash; Remember to click Update to save settings entered or changed.', 'incassoos' ) . '</p>' .
 					'<p>' . __( '<strong>Stage</strong> &mdash; Before a collection is ready for processing, click Stage to prepare the item for review. Details of a staged collection cannot be changed, nor can the related items.', 'incassoos' ) . '</p>' .
-					'<p>' . __( '<strong>Unstage</strong> &mdash; When changes need to be made to a staged collectoin, click Unstage.', 'incassoos' ) . '</p>' .
+					'<p>' . __( '<strong>Unstage</strong> &mdash; When changes need to be made to a staged collection, click Unstage.', 'incassoos' ) . '</p>' .
 					'<p>' . __( '<strong>Submit</strong> &mdash; On review of a staged collection, click Submit for definitive processing. Submission is final and cannot be reverted. Related items will be locked and uneditable as well.', 'incassoos' ) . '</p>',
 			),
 		),

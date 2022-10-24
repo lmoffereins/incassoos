@@ -2097,12 +2097,12 @@ function incassoos_get_default_collection_withdrawal_delay( $default = 5 ) {
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_app_get_default_occassion_selector_tab'
+ * @uses apply_filters() Calls 'incassoos_app_get_default_occasion_selector_tab'
  *
- * @return string Occassion Selector tab id
+ * @return string Occasion Selector tab id
  */
-function incassoos_app_get_default_occassion_selector_tab() {
-	return apply_filters( 'incassoos_app_get_default_occassion_selector_tab', 'create' );
+function incassoos_app_get_default_occasion_selector_tab() {
+	return apply_filters( 'incassoos_app_get_default_occasion_selector_tab', 'create' );
 }
 
 /**
@@ -2112,7 +2112,7 @@ function incassoos_app_get_default_occassion_selector_tab() {
  *
  * @uses apply_filters() Calls 'incassoos_app_get_default_occasion_title'
  *
- * @return string Occassion title
+ * @return string Occasion title
  */
 function incassoos_app_get_default_occasion_title() {
 	return apply_filters( 'incassoos_app_get_default_occasion_title', __( 'Drinks', 'incassoos' ) );

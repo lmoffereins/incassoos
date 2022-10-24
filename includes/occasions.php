@@ -722,14 +722,14 @@ function incassoos_is_occasion_locked( $post = 0 ) {
 }
 
 /**
- * Return whether the Occassion is collectable
+ * Return whether the Occasion is collectable
  * 
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_is_occasion_collectable'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @return bool Occassion is collectable
+ * @return bool Occasion is collectable
  */
 function incassoos_is_occasion_collectable( $post = 0 ) {
 	$post        = incassoos_get_occasion( $post );
