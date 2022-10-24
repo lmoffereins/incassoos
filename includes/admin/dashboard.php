@@ -107,51 +107,51 @@ function incassoos_admin_dashboard_status_widget() {
 
 		$statuses['collection-count'] = sprintf( '<a href="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post_type' => $collection, 'post_status' => 'publish' ), admin_url( 'edit.php' ) ) ),
-			sprintf( _n( '%s Collection', '%s Collections', $collections, 'incassoos' ), $collections )
+			sprintf( _n( '%d Collection', '%d Collections', $collections, 'incassoos' ), $collections )
 		);
 	}
 
 	// Activities
 	if ( current_user_can( 'view_incassoos_activities' ) ) {
-		$activity         = incassoos_get_activity_post_type();
-		$activity_count   = wp_count_posts( $activity );
+		$activity       = incassoos_get_activity_post_type();
+		$activity_count = wp_count_posts( $activity );
 
 		$statuses['activity-count'] = sprintf( '<a href="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post_type' => $activity, 'post_status' => 'publish' ), admin_url( 'edit.php' ) ) ),
-			sprintf( _n( '%s Activity', '%s Activities', $activity_count->publish, 'incassoos' ), $activity_count->publish )
+			sprintf( _n( '%d Activity', '%d Activities', $activity_count->publish, 'incassoos' ), $activity_count->publish )
 		);
 	}
 
 	// Occasions
 	if ( current_user_can( 'view_incassoos_occasions' ) ) {
-		$occasion         = incassoos_get_occasion_post_type();
-		$occasion_count   = wp_count_posts( $occasion );
+		$occasion       = incassoos_get_occasion_post_type();
+		$occasion_count = wp_count_posts( $occasion );
 
 		$statuses['occasion-count'] = sprintf( '<a href="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post_type' => $occasion, 'post_status' => 'publish' ), admin_url( 'edit.php' ) ) ),
-			sprintf( _n( '%s Occasion', '%s Occasions', $occasion_count->publish, 'incassoos' ), $occasion_count->publish )
+			sprintf( _n( '%d Occasion', '%d Occasions', $occasion_count->publish, 'incassoos' ), $occasion_count->publish )
 		);
 	}
 
 	// Orders
 	if ( current_user_can( 'view_incassoos_orders' ) ) {
-		$order            = incassoos_get_order_post_type();
-		$order_count      = wp_count_posts( $order );
+		$order       = incassoos_get_order_post_type();
+		$order_count = wp_count_posts( $order );
 
 		$statuses['order-count'] = sprintf( '<a href="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post_type' => $order, 'post_status' => 'publish' ), admin_url( 'edit.php' ) ) ),
-			sprintf( _n( '%s Order', '%s Orders', $order_count->publish, 'incassoos' ), $order_count->publish )
+			sprintf( _n( '%d Order', '%d Orders', $order_count->publish, 'incassoos' ), $order_count->publish )
 		);
 	}
 
 	// Products
 	if ( current_user_can( 'view_incassoos_products' ) ) {
-		$product          = incassoos_get_product_post_type();
-		$product_count    = wp_count_posts( $product );
+		$product       = incassoos_get_product_post_type();
+		$product_count = wp_count_posts( $product );
 
 		$statuses['product-count'] = sprintf( '<a href="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post_type' => $product, 'post_status' => 'publish' ), admin_url( 'edit.php' ) ) ),
-			sprintf( _n( '%s Product', '%s Products', $product_count->publish, 'incassoos' ), $product_count->publish )
+			sprintf( _n( '%d Product', '%d Products', $product_count->publish, 'incassoos' ), $product_count->publish )
 		);
 	}
 
