@@ -67,6 +67,7 @@
 		.item-list-header {
 			position: relative;
 			padding: 35px 70px 15px;
+			opacity: 0;
 			transform: translateY(120px);
 			transition: transform .6s linear;
 			transition-delay: .2s;
@@ -99,6 +100,7 @@
 			transition: max-height $transition-quick;
 
 			.item-list-header {
+				opacity: 1;
 				transform: translateY(0px);
 				transition: transform $transition-quick;
 			}
