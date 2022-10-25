@@ -200,10 +200,10 @@ function incassoos_admin_get_settings_fields() {
 				'args'              => array()
 			),
 
-			// Default withdrawal delay
-			'_incassoos_default_collection_withdrawal_delay' => array(
-				'title'             => esc_html__( 'Default withdrawal delay', 'incassoos' ),
-				'callback'          => 'incassoos_admin_setting_callback_default_collection_withdrawal_delay',
+			// Withdrawal delay
+			'_incassoos_collection_withdrawal_delay' => array(
+				'title'             => esc_html__( 'Withdrawal delay', 'incassoos' ),
+				'callback'          => 'incassoos_admin_setting_callback_collection_withdrawal_delay',
 				'sanitize_callback' => 'absint',
 				'args'              => array()
 			),
@@ -578,9 +578,9 @@ function incassoos_admin_setting_callback_sepa_creditor_id() {
  *
  * @since 1.0.0
  */
-function incassoos_admin_setting_callback_default_collection_withdrawal_delay() { ?>
+function incassoos_admin_setting_callback_collection_withdrawal_delay() { ?>
 
-	<input name="_incassoos_default_collection_withdrawal_delay" id="_incassoos_default_collection_withdrawal_delay" type="number" min="0" class="small-text" value="<?php echo get_option( '_incassoos_default_collection_withdrawal_delay', 5 ); ?>" />
+	<input name="_incassoos_collection_withdrawal_delay" id="_incassoos_collection_withdrawal_delay" type="number" min="0" class="small-text" value="<?php echo get_option( '_incassoos_collection_withdrawal_delay', 5 ); ?>" />
 
 	<p class="description"><?php esc_html_e( 'The amount of days between communicating the collection withdrawal and the actual transaction execution.', 'incassoos' ); ?></p>
 

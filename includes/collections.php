@@ -421,7 +421,7 @@ function incassoos_the_collection_withdrawal_date( $post = 0, $date_format = '' 
  */
 function incassoos_get_collection_withdrawal_date( $post = 0, $date_format = '' ) {
 	$post  = incassoos_get_collection( $post );
-	$delay = incassoos_get_default_collection_withdrawal_delay();
+	$delay = incassoos_get_collection_withdrawal_delay();
 	$date  = incassoos_get_collection_date( $post, $delay ? 'Y-m-d' : $date_format );
 
 	// Default to the registered date format
@@ -2094,7 +2094,7 @@ function incassoos_collection_collect_email_withdrawal_mention( $post, $user ) {
 
 	// Default to now + delay
 	if ( empty( $withdrawal_date ) ) {
-		$delay = incassoos_get_default_collection_withdrawal_delay();
+		$delay = incassoos_get_collection_withdrawal_delay();
 		if ( $delay ) {
 			$withdrawal_date = date( get_option( 'date_format' ), strtotime( "+ {$delay} day" ) );
 		}
