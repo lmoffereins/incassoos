@@ -33,7 +33,7 @@ function incassoos_get_occasion_post_type() {
  */
 function incassoos_get_occasion_post_type_labels() {
 	return apply_filters( 'incassoos_get_occasion_post_type_labels', array(
-		'name'                  => __( 'Incassoos Order Occasions', 'incassoos' ),
+		'name'                  => __( 'Incassoos Occasions',             'incassoos' ),
 		'menu_name'             => __( 'Occasions',                       'incassoos' ),
 		'singular_name'         => __( 'Occasion',                        'incassoos' ),
 		'all_items'             => __( 'All Occasions',                   'incassoos' ),

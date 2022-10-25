@@ -1646,7 +1646,7 @@ function incassoos_admin_post_updated_messages( $messages ) {
 			: __( 'Sorry, the order cannot be edited after initial creation.', 'incassoos' ),
 		'incassoos_order_invalid_parent'    => __( 'Invalid occasion.',                      'incassoos' ),
 		'incassoos_order_locked_occasion'   => __( 'The occasion is closed for new orders.', 'incassoos' ),
-		'incassoos_user_invalid_id_or_type' => __( 'Invalid consumer ID or type.',           'incassoos' ),
+		'incassoos_user_invalid_id_or_type' => __( 'Invalid consumer ID or consumer type.',  'incassoos' ),
 		'incassoos_user_invalid_id'         => __( 'Invalid consumer ID.',                   'incassoos' ),
 		'incassoos_consumer_invalid_type'   => __( 'Invalid consumer type.',                 'incassoos' ),
 		'incassoos_order_invalid_products'  => __( 'Invalid order products.',                'incassoos' ),

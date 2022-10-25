@@ -255,7 +255,7 @@ final class Incassoos {
 			array(
 				'labels'              => incassoos_get_collection_post_type_labels(),
 				'supports'            => incassoos_get_collection_post_type_supports(),
-				'description'         => __( 'Incassoos collections', 'incassoos' ),
+				'description'         => __( 'Incassoos Collections', 'incassoos' ),
 				'capabilities'        => incassoos_get_collection_post_type_caps(),
 				'capability_type'     => array( 'incassoos_collection', 'incassoos_collections' ),
 				'hierarchical'        => false,
@@ -278,7 +278,7 @@ final class Incassoos {
 			array(
 				'labels'              => incassoos_get_activity_post_type_labels(),
 				'supports'            => incassoos_get_activity_post_type_supports(),
-				'description'         => __( 'Incassoos activities', 'incassoos' ),
+				'description'         => __( 'Incassoos Activities', 'incassoos' ),
 				'capabilities'        => incassoos_get_activity_post_type_caps(),
 				'capability_type'     => array( 'incassoos_activity', 'incassoos_activities' ),
 				'hierarchical'        => false,
@@ -301,7 +301,7 @@ final class Incassoos {
 			array(
 				'labels'                => incassoos_get_occasion_post_type_labels(),
 				'supports'              => incassoos_get_occasion_post_type_supports(),
-				'description'           => __( 'Incassoos occasions', 'incassoos' ),
+				'description'           => __( 'Incassoos Occasions', 'incassoos' ),
 				'capabilities'          => incassoos_get_occasion_post_type_caps(),
 				'capability_type'       => array( 'incassoos_occasion', 'incassoos_occasions' ),
 				'hierarchical'          => false,
@@ -324,7 +324,7 @@ final class Incassoos {
 			array(
 				'labels'                => incassoos_get_order_post_type_labels(),
 				'supports'              => incassoos_get_order_post_type_supports(),
-				'description'           => __( 'Incassoos orders', 'incassoos' ),
+				'description'           => __( 'Incassoos Orders', 'incassoos' ),
 				'capabilities'          => incassoos_get_order_post_type_caps(),
 				'capability_type'       => array( 'incassoos_order', 'incassoos_orders' ),
 				'hierarchical'          => false,
@@ -347,7 +347,7 @@ final class Incassoos {
 			array(
 				'labels'                => incassoos_get_product_post_type_labels(),
 				'supports'              => incassoos_get_product_post_type_supports(),
-				'description'           => __( 'Incassoos products', 'incassoos' ),
+				'description'           => __( 'Incassoos Products', 'incassoos' ),
 				'capabilities'          => incassoos_get_product_post_type_caps(),
 				'capability_type'       => array( 'incassoos_product', 'incassoos_products' ),
 				'hierarchical'          => false,
