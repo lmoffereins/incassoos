@@ -33,26 +33,26 @@ function incassoos_get_activity_post_type() {
  */
 function incassoos_get_activity_post_type_labels() {
 	return apply_filters( 'incassoos_get_activity_post_type_labels', array(
-		'name'                  => __( 'Incassoos Activities',         'incassoos' ),
-		'menu_name'             => __( 'Activities',                   'incassoos' ),
-		'singular_name'         => __( 'Activity',                     'incassoos' ),
-		'all_items'             => __( 'All Activities',               'incassoos' ),
-		'add_new'               => __( 'New Activity',                 'incassoos' ),
-		'add_new_item'          => __( 'Create New Activity',          'incassoos' ),
-		'edit'                  => __( 'Edit',                         'incassoos' ),
-		'edit_item'             => __( 'Edit Activity',                'incassoos' ),
-		'new_item'              => __( 'New Activity',                 'incassoos' ),
-		'view'                  => __( 'View Activity',                'incassoos' ),
-		'view_item'             => __( 'View Activity',                'incassoos' ),
-		'view_items'            => __( 'View Activities',              'incassoos' ), // Since WP 4.7
-		'search_items'          => __( 'Search Activities',            'incassoos' ),
-		'not_found'             => __( 'No activities found',          'incassoos' ),
-		'not_found_in_trash'    => __( 'No activities found in Trash', 'incassoos' ),
-		'insert_into_item'      => __( 'Insert into activity',         'incassoos' ),
-		'uploaded_to_this_item' => __( 'Uploaded to this activity',    'incassoos' ),
-		'filter_items_list'     => __( 'Filter activities list',       'incassoos' ),
-		'items_list_navigation' => __( 'Activities list navigation',   'incassoos' ),
-		'items_list'            => __( 'Activities list',              'incassoos' ),
+		'name'                  => __( 'Incassoos Activities',          'incassoos' ),
+		'menu_name'             => __( 'Activities',                    'incassoos' ),
+		'singular_name'         => __( 'Activity',                      'incassoos' ),
+		'all_items'             => __( 'All Activities',                'incassoos' ),
+		'add_new'               => __( 'New Activity',                  'incassoos' ),
+		'add_new_item'          => __( 'Create New Activity',           'incassoos' ),
+		'edit'                  => __( 'Edit',                          'incassoos' ),
+		'edit_item'             => __( 'Edit Activity',                 'incassoos' ),
+		'new_item'              => __( 'New Activity',                  'incassoos' ),
+		'view'                  => __( 'View Activity',                 'incassoos' ),
+		'view_item'             => __( 'View Activity',                 'incassoos' ),
+		'view_items'            => __( 'View Activities',               'incassoos' ), // Since WP 4.7
+		'search_items'          => __( 'Search Activities',             'incassoos' ),
+		'not_found'             => __( 'No activities found.',          'incassoos' ),
+		'not_found_in_trash'    => __( 'No activities found in Trash.', 'incassoos' ),
+		'insert_into_item'      => __( 'Insert into activity',          'incassoos' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this activity',     'incassoos' ),
+		'filter_items_list'     => __( 'Filter activities list',        'incassoos' ),
+		'items_list_navigation' => __( 'Activities list navigation',    'incassoos' ),
+		'items_list'            => __( 'Activities list',               'incassoos' ),
 	) );
 }
 

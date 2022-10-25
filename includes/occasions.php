@@ -33,26 +33,26 @@ function incassoos_get_occasion_post_type() {
  */
 function incassoos_get_occasion_post_type_labels() {
 	return apply_filters( 'incassoos_get_occasion_post_type_labels', array(
-		'name'                  => __( 'Incassoos Occasions',             'incassoos' ),
-		'menu_name'             => __( 'Occasions',                       'incassoos' ),
-		'singular_name'         => __( 'Occasion',                        'incassoos' ),
-		'all_items'             => __( 'All Occasions',                   'incassoos' ),
-		'add_new'               => __( 'New Occasion',                    'incassoos' ),
-		'add_new_item'          => __( 'Create New Occasion',             'incassoos' ),
-		'edit'                  => __( 'Edit',                            'incassoos' ),
-		'edit_item'             => __( 'Edit Occasion',                   'incassoos' ),
-		'new_item'              => __( 'New Occasion',                    'incassoos' ),
-		'view'                  => __( 'View Occasion',                   'incassoos' ),
-		'view_item'             => __( 'View Occasion',                   'incassoos' ),
-		'view_items'            => __( 'View Occasions',                  'incassoos' ), // Since WP 4.7
-		'search_items'          => __( 'Search Occasions',                'incassoos' ),
-		'not_found'             => __( 'No occasions found',              'incassoos' ),
-		'not_found_in_trash'    => __( 'No occasions found in Trash',     'incassoos' ),
-		'insert_into_item'      => __( 'Insert into occasion',            'incassoos' ),
-		'uploaded_to_this_item' => __( 'Uploaded to this occasion',       'incassoos' ),
-		'filter_items_list'     => __( 'Filter occasions list',           'incassoos' ),
-		'items_list_navigation' => __( 'Occasions list navigation',       'incassoos' ),
-		'items_list'            => __( 'Occasions list',                  'incassoos' ),
+		'name'                  => __( 'Incassoos Occasions',          'incassoos' ),
+		'menu_name'             => __( 'Occasions',                    'incassoos' ),
+		'singular_name'         => __( 'Occasion',                     'incassoos' ),
+		'all_items'             => __( 'All Occasions',                'incassoos' ),
+		'add_new'               => __( 'New Occasion',                 'incassoos' ),
+		'add_new_item'          => __( 'Create New Occasion',          'incassoos' ),
+		'edit'                  => __( 'Edit',                         'incassoos' ),
+		'edit_item'             => __( 'Edit Occasion',                'incassoos' ),
+		'new_item'              => __( 'New Occasion',                 'incassoos' ),
+		'view'                  => __( 'View Occasion',                'incassoos' ),
+		'view_item'             => __( 'View Occasion',                'incassoos' ),
+		'view_items'            => __( 'View Occasions',               'incassoos' ), // Since WP 4.7
+		'search_items'          => __( 'Search Occasions',             'incassoos' ),
+		'not_found'             => __( 'No occasions found.',          'incassoos' ),
+		'not_found_in_trash'    => __( 'No occasions found in Trash.', 'incassoos' ),
+		'insert_into_item'      => __( 'Insert into occasion',         'incassoos' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this occasion',    'incassoos' ),
+		'filter_items_list'     => __( 'Filter occasions list',        'incassoos' ),
+		'items_list_navigation' => __( 'Occasions list navigation',    'incassoos' ),
+		'items_list'            => __( 'Occasions list',               'incassoos' ),
 	) );
 }
 

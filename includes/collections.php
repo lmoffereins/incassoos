@@ -33,26 +33,26 @@ function incassoos_get_collection_post_type() {
  */
 function incassoos_get_collection_post_type_labels() {
 	return apply_filters( 'incassoos_get_collection_post_type_labels', array(
-		'name'                  => __( 'Incassoos Collections',         'incassoos' ),
-		'menu_name'             => __( 'Collections',                   'incassoos' ),
-		'singular_name'         => __( 'Collection',                    'incassoos' ),
-		'all_items'             => __( 'All Collections',               'incassoos' ),
-		'add_new'               => __( 'New Collection',                'incassoos' ),
-		'add_new_item'          => __( 'Create New Collection',         'incassoos' ),
-		'edit'                  => __( 'Edit',                          'incassoos' ),
-		'edit_item'             => __( 'Edit Collection',               'incassoos' ),
-		'new_item'              => __( 'New Collection',                'incassoos' ),
-		'view'                  => __( 'View Collection',               'incassoos' ),
-		'view_item'             => __( 'View Collection',               'incassoos' ),
-		'view_items'            => __( 'View Collections',              'incassoos' ), // Since WP 4.7
-		'search_items'          => __( 'Search Collections',            'incassoos' ),
-		'not_found'             => __( 'No collections found',          'incassoos' ),
-		'not_found_in_trash'    => __( 'No collections found in Trash', 'incassoos' ),
-		'insert_into_item'      => __( 'Insert into collection',        'incassoos' ),
-		'uploaded_to_this_item' => __( 'Uploaded to this collection',   'incassoos' ),
-		'filter_items_list'     => __( 'Filter collections list',       'incassoos' ),
-		'items_list_navigation' => __( 'Collections list navigation',   'incassoos' ),
-		'items_list'            => __( 'Collections list',              'incassoos' ),
+		'name'                  => __( 'Incassoos Collections',          'incassoos' ),
+		'menu_name'             => __( 'Collections',                    'incassoos' ),
+		'singular_name'         => __( 'Collection',                     'incassoos' ),
+		'all_items'             => __( 'All Collections',                'incassoos' ),
+		'add_new'               => __( 'New Collection',                 'incassoos' ),
+		'add_new_item'          => __( 'Create New Collection',          'incassoos' ),
+		'edit'                  => __( 'Edit',                           'incassoos' ),
+		'edit_item'             => __( 'Edit Collection',                'incassoos' ),
+		'new_item'              => __( 'New Collection',                 'incassoos' ),
+		'view'                  => __( 'View Collection',                'incassoos' ),
+		'view_item'             => __( 'View Collection',                'incassoos' ),
+		'view_items'            => __( 'View Collections',               'incassoos' ), // Since WP 4.7
+		'search_items'          => __( 'Search Collections',             'incassoos' ),
+		'not_found'             => __( 'No collections found.',          'incassoos' ),
+		'not_found_in_trash'    => __( 'No collections found in Trash.', 'incassoos' ),
+		'insert_into_item'      => __( 'Insert into collection',         'incassoos' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this collection',    'incassoos' ),
+		'filter_items_list'     => __( 'Filter collections list',        'incassoos' ),
+		'items_list_navigation' => __( 'Collections list navigation',    'incassoos' ),
+		'items_list'            => __( 'Collections list',               'incassoos' ),
 	) );
 }
 

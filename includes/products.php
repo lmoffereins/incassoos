@@ -33,26 +33,26 @@ function incassoos_get_product_post_type() {
  */
 function incassoos_get_product_post_type_labels() {
 	return apply_filters( 'incassoos_get_product_post_type_labels', array(
-		'name'                  => __( 'Incassoos Products',         'incassoos' ),
-		'menu_name'             => __( 'Products',                   'incassoos' ),
-		'singular_name'         => __( 'Product',                    'incassoos' ),
-		'all_items'             => __( 'All Products',               'incassoos' ),
-		'add_new'               => __( 'New Product',                'incassoos' ),
-		'add_new_item'          => __( 'Create New Product',         'incassoos' ),
-		'edit'                  => __( 'Edit',                       'incassoos' ),
-		'edit_item'             => __( 'Edit Product',               'incassoos' ),
-		'new_item'              => __( 'New Product',                'incassoos' ),
-		'view'                  => __( 'View Product',               'incassoos' ),
-		'view_item'             => __( 'View Product',               'incassoos' ),
-		'view_items'            => __( 'View Products',              'incassoos' ), // Since WP 4.7
-		'search_items'          => __( 'Search Products',            'incassoos' ),
-		'not_found'             => __( 'No products found',          'incassoos' ),
-		'not_found_in_trash'    => __( 'No products found in Trash', 'incassoos' ),
-		'insert_into_item'      => __( 'Insert into product',        'incassoos' ),
-		'uploaded_to_this_item' => __( 'Uploaded to this product',   'incassoos' ),
-		'filter_items_list'     => __( 'Filter products list',       'incassoos' ),
-		'items_list_navigation' => __( 'Products list navigation',   'incassoos' ),
-		'items_list'            => __( 'Products list',              'incassoos' ),
+		'name'                  => __( 'Incassoos Products',          'incassoos' ),
+		'menu_name'             => __( 'Products',                    'incassoos' ),
+		'singular_name'         => __( 'Product',                     'incassoos' ),
+		'all_items'             => __( 'All Products',                'incassoos' ),
+		'add_new'               => __( 'New Product',                 'incassoos' ),
+		'add_new_item'          => __( 'Create New Product',          'incassoos' ),
+		'edit'                  => __( 'Edit',                        'incassoos' ),
+		'edit_item'             => __( 'Edit Product',                'incassoos' ),
+		'new_item'              => __( 'New Product',                 'incassoos' ),
+		'view'                  => __( 'View Product',                'incassoos' ),
+		'view_item'             => __( 'View Product',                'incassoos' ),
+		'view_items'            => __( 'View Products',               'incassoos' ), // Since WP 4.7
+		'search_items'          => __( 'Search Products',             'incassoos' ),
+		'not_found'             => __( 'No products found.',          'incassoos' ),
+		'not_found_in_trash'    => __( 'No products found in Trash.', 'incassoos' ),
+		'insert_into_item'      => __( 'Insert into product',         'incassoos' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this product',    'incassoos' ),
+		'filter_items_list'     => __( 'Filter products list',        'incassoos' ),
+		'items_list_navigation' => __( 'Products list navigation',    'incassoos' ),
+		'items_list'            => __( 'Products list',               'incassoos' ),
 	) );
 }
 

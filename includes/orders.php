@@ -33,26 +33,26 @@ function incassoos_get_order_post_type() {
  */
 function incassoos_get_order_post_type_labels() {
 	return apply_filters( 'incassoos_get_order_post_type_labels', array(
-		'name'                  => __( 'Incassoos Orders',         'incassoos' ),
-		'menu_name'             => __( 'Orders',                   'incassoos' ),
-		'singular_name'         => __( 'Order',                    'incassoos' ),
-		'all_items'             => __( 'All Orders',               'incassoos' ),
-		'add_new'               => __( 'New Order',                'incassoos' ),
-		'add_new_item'          => __( 'Create New Order',         'incassoos' ),
-		'edit'                  => __( 'Edit',                     'incassoos' ),
-		'edit_item'             => __( 'Edit Order',               'incassoos' ),
-		'new_item'              => __( 'New Order',                'incassoos' ),
-		'view'                  => __( 'View Order',               'incassoos' ),
-		'view_item'             => __( 'View Order',               'incassoos' ),
-		'view_items'            => __( 'View Orders',              'incassoos' ), // Since WP 4.7
-		'search_items'          => __( 'Search Orders',            'incassoos' ),
-		'not_found'             => __( 'No orders found',          'incassoos' ),
-		'not_found_in_trash'    => __( 'No orders found in Trash', 'incassoos' ),
-		'insert_into_item'      => __( 'Insert into order',        'incassoos' ),
-		'uploaded_to_this_item' => __( 'Uploaded to this order',   'incassoos' ),
-		'filter_items_list'     => __( 'Filter orders list',       'incassoos' ),
-		'items_list_navigation' => __( 'Orders list navigation',   'incassoos' ),
-		'items_list'            => __( 'Orders list',              'incassoos' ),
+		'name'                  => __( 'Incassoos Orders',          'incassoos' ),
+		'menu_name'             => __( 'Orders',                    'incassoos' ),
+		'singular_name'         => __( 'Order',                     'incassoos' ),
+		'all_items'             => __( 'All Orders',                'incassoos' ),
+		'add_new'               => __( 'New Order',                 'incassoos' ),
+		'add_new_item'          => __( 'Create New Order',          'incassoos' ),
+		'edit'                  => __( 'Edit',                      'incassoos' ),
+		'edit_item'             => __( 'Edit Order',                'incassoos' ),
+		'new_item'              => __( 'New Order',                 'incassoos' ),
+		'view'                  => __( 'View Order',                'incassoos' ),
+		'view_item'             => __( 'View Order',                'incassoos' ),
+		'view_items'            => __( 'View Orders',               'incassoos' ), // Since WP 4.7
+		'search_items'          => __( 'Search Orders',             'incassoos' ),
+		'not_found'             => __( 'No orders found.',          'incassoos' ),
+		'not_found_in_trash'    => __( 'No orders found in Trash.', 'incassoos' ),
+		'insert_into_item'      => __( 'Insert into order',         'incassoos' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this order',    'incassoos' ),
+		'filter_items_list'     => __( 'Filter orders list',        'incassoos' ),
+		'items_list_navigation' => __( 'Orders list navigation',    'incassoos' ),
+		'items_list'            => __( 'Orders list',               'incassoos' ),
 	) );
 }
 
