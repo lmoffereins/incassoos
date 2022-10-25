@@ -44,7 +44,7 @@ function incassoos_admin_post_type_help_tabs() {
 				'title'   => __( 'Overview' ),
 				'content' =>
 					'<p>' . __( 'This screen provides access to all of the Incassoos collections. You can customize the display of this screen to suit your workflow.', 'incassoos' ) . '</p>' .
-					'<p>' . __( 'Collections are the sets of activities and consumptions that are to be collected from consumers. Collections have a title, body text, and associated metadata. Collections are not categorized or tagged.', 'incassoos' ) . '</p>',
+					'<p>' . __( 'Collections are the sets of activities and consumptions that are to be collected from consumers. Collections are similar to posts in that they have a title, body text, and associated metadata. Collections are not categorized or tagged.', 'incassoos' ) . '</p>',
 			),
 			'screen-content' => $screen_content,
 			'action-links'   => array(
@@ -65,7 +65,7 @@ function incassoos_admin_post_type_help_tabs() {
 				'title'   => __( 'Overview' ),
 				'content' =>
 					'<p>' . __( 'This screen provides access to all of the Incassoos activities. You can customize the display of this screen to suit your workflow.', 'incassoos' ) . '</p>' .
-					'<p>' . __( 'Activities are the individual events for which attendees will be charged a price. Activities have a title and associated metadata, but they do not have a body text. Activities can be categorized by assigning an Activity Category.', 'incassoos' ) . '</p>' .
+					'<p>' . __( 'Activities are the individual events for which participants will be charged a price. Activities are similar to posts in that they have a title and associated metadata, but they do not have a body text. Activities can be categorized by assigning an Activity Category.', 'incassoos' ) . '</p>' .
 					'<p>' . __( 'The button for managing Activity Categories takes you to the admin screen for that taxonomy.', 'incassoos' ) . '</p>',
 			),
 			'screen-content' => $screen_content,
@@ -243,7 +243,7 @@ function incassoos_admin_single_post_help_tabs() {
 			'overview'       => array(
 				'title'   => __( 'Overview' ),
 				'content' =>
-					'<p>' . __( 'Activities are the individual events for which consumers will be charged a price. Activities are similar to posts in that they have a title and associated metadata, but they do not have a body text. Activities can be categorized by assigning an Activity Category.', 'incassoos' ) . '</p>',
+					'<p>' . __( 'Activities are the individual events for which participants will be charged a price. Activities are similar to posts in that they have a title and associated metadata, but they do not have a body text. Activities can be categorized by assigning an Activity Category.', 'incassoos' ) . '</p>',
 			),
 			'customize-display' => array(
 				'title'   => __( 'Customizing This Display' ),
