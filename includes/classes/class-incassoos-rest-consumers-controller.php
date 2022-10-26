@@ -546,11 +546,11 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		$request->set_param( 'context', 'edit' );
 
-		// Only show if we haven't already.
-		if ( incassoos_is_consumer_locked( $item ) ) {
+		// Only show if we have already hidden.
+		if ( ! incassoos_is_consumer_hidden( $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_is_locked',
-				__( 'The consumer is locked.', 'incassoos' ),
+				'incassoos_rest_is_not_hidden',
+				__( 'The consumer is not hidden.', 'incassoos' ),
 				array( 'status' => 410 )
 			);
 		}
@@ -632,11 +632,11 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		$request->set_param( 'context', 'edit' );
 
-		// Only hide if we have already closed.
-		if ( ! incassoos_is_consumer_closed( $item ) ) {
+		// Only hide if we haven't already.
+		if ( incassoos_is_consumer_hidden( $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_is_not_closed',
-				__( 'The consumer is not closed.', 'incassoos' ),
+				'incassoos_rest_is_hidden',
+				__( 'The consumer is hidden.', 'incassoos' ),
 				array( 'status' => 410 )
 			);
 		}
