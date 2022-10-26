@@ -727,7 +727,9 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 		<?php if ( $activities ) : ?>
 
 		<ul class="assets">
-			<?php foreach ( $activities as $item_id ) : ?>
+			<?php foreach ( $activities as $item_id ) :
+				$count = incassoos_get_activity_participant_count( $item_id );
+			?>
 
 			<li id="post-<?php echo $item_id; ?>" class="asset collection-activity">
 				<?php if ( ! $is_post_view ) : ?>
@@ -741,12 +743,11 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 					<?php endif; ?>
 
 					<div class="details">
-						<?php /* translators: number of participants */ ?>
-						<span class="activity-participant-count"><?php printf( __( '%d participants', 'incassoos' ), incassoos_get_activity_participant_count( $item_id ) ); ?></span>
+						<span class="activity-participant-count"><?php printf( _n( '%d Participant', '%d Participants', $count, 'incassoos' ), number_format_i18n( $count ) ); ?></span>
 						<span class="activity-total"><?php incassoos_the_activity_total( $item_id, true ); ?></span>
 						<span class="view-action">
-							<a target="_blank" href="<?php echo esc_url( incassoos_get_activity_url( $item_id ) ); ?>"><?php esc_html_e( 'View' ); ?>
-						</a></span>
+							<a target="_blank" href="<?php echo esc_url( incassoos_get_activity_url( $item_id ) ); ?>"><?php esc_html_e( 'View' ); ?></a>
+						</span>
 					</div>
 				</label>
 
@@ -759,8 +760,7 @@ function incassoos_admin_collection_activities_metabox( $post ) {
 				<?php endif; ?>
 
 				<div class="details">
-					<?php /* translators: number of participants */ ?>
-					<span class="activity-participant-count"><?php printf( __( '%d participants', 'incassoos' ), incassoos_get_activity_participant_count( $item_id ) ); ?></span>
+					<span class="activity-participant-count"><?php printf( _n( '%d Participant', '%d Participants', $count, 'incassoos' ), number_format_i18n( $count ) ); ?></span>
 					<span class="activity-total"><?php incassoos_the_activity_total( $item_id, true ); ?></span>
 				</div>
 
@@ -816,7 +816,9 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 		<?php if ( $occasions ) : ?>
 
 		<ul class="assets">
-			<?php foreach ( $occasions as $item_id ) : ?>
+			<?php foreach ( $occasions as $item_id ) :
+				$count = incassoos_get_occasion_consumer_count( $item_id );
+			?>
 
 			<li id="post-<?php echo $item_id; ?>" class="asset collection-occasion">
 				<?php if ( ! $is_post_view ) : ?>
@@ -830,8 +832,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 					<?php endif; ?>
 
 					<div class="details">
-						<?php /* translators: number of consumers */ ?>
-						<span class="occasion-consumer-count"><?php printf( __( '%d consumers', 'incassoos' ), incassoos_get_occasion_consumer_count( $item_id ) ); ?></span>
+						<span class="occasion-consumer-count"><?php printf( _n( '%d Consumer', '%d Consumers', $count, 'incassoos' ), $count ); ?></span>
 						<span class="occasion-total"><?php incassoos_the_occasion_total( $item_id, true ); ?></span>
 						<span class="view-action">
 							<a target="_blank" href="<?php echo esc_url( incassoos_get_occasion_url( $item_id ) ); ?>"><?php esc_html_e( 'View' ); ?></a>
@@ -848,8 +849,7 @@ function incassoos_admin_collection_occasions_metabox( $post ) {
 				<?php endif; ?>
 
 				<div class="details">
-					<?php /* translators: number of consumers */ ?>
-					<span class="occasion-consumer-count"><?php printf( __( '%d consumers', 'incassoos' ), incassoos_get_occasion_consumer_count( $item_id ) ); ?></span>
+					<span class="occasion-consumer-count"><?php printf( _n( '%d Consumer', '%d Consumers', $count, 'incassoos' ), $count ); ?></span>
 					<span class="occasion-total"><?php incassoos_the_occasion_total( $item_id, true ); ?></span>
 				</div>
 
