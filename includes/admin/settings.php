@@ -254,7 +254,7 @@ function incassoos_admin_get_settings_fields() {
 				'sanitize_callback' => 'incassoos_sanitize_richtext',
 				'args'              => array(
 					'setting'     => '_incassoos_custom_email_salutation',
-					'description' => sprintf( esc_html__( 'Use the %s tag to insert the full name of the user at hand.', 'incassoos' ), '<code>%NAME%</code>' )
+					'description' => sprintf( esc_html__( 'Use the %s tag to insert the display name of the user.', 'incassoos' ), '<code>{{user.displayname}}</code>' )
 				)
 			),
 
@@ -657,7 +657,7 @@ function incassoos_admin_setting_callback_order_time_lock() {
  */
 function incassoos_admin_setting_callback_email_section() { ?>
 
-	<p><?php esc_html_e( "Define modifications for outgoing emails.", 'incassoos' ); ?></p>
+	<p><?php esc_html_e( 'Customize the details of outgoing emails.', 'incassoos' ); ?></p>
 
 	<?php
 }

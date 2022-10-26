@@ -2058,7 +2058,7 @@ function incassoos_get_custom_email_salutation( $user, $default = '' ) {
 
 	// Parse user name
 	if ( $user && $user->exists() ) {
-		$value = str_replace( '{{USERNAME}}', $user->display_name, $value );
+		$value = str_replace( '{{user.displayname}}', $user->display_name, $value );
 	}
 
 	return apply_filters( 'incassoos_get_custom_email_salutation', $value, $user );
