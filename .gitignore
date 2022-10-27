@@ -3,6 +3,9 @@
 # Dependencies
 node_modules/
 
+# Language file backups
+languages/*backup*
+
 # Backup of original app prototype
 assets/prototype/
 templates/prototype/
