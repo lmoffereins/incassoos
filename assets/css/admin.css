@@ -338,6 +338,10 @@ body.incassoos-post-view #postdivrich .inside {
 	max-width: 50%;
 }
 
+#misc-publishing-actions .publishing-notice select {
+	width: 100%;
+}
+
 #misc-publishing-actions .publishing-notice.require-confirmation,
 #misc-publishing-actions .publishing-notice.require-decryption-key {
 	max-width: none;
