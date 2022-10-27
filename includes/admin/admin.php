@@ -396,12 +396,12 @@ class Incassoos_Admin {
 
 		// Collection is staged
 		if ( incassoos_is_collection_staged( $post ) ) {
-			$states['staged'] = _x( 'Staged', 'post status', 'incassoos' );
+			$states['staged'] = _x( 'Staged', 'Post status', 'incassoos' );
 		}
 
 		// Post is collected
 		if ( incassoos_is_post_collected( $post ) ) {
-			$states['collected'] = _x( 'Collected', 'post status', 'incassoos' );
+			$states['collected'] = _x( 'Collected', 'Post status', 'incassoos' );
 		}
 
 		return $states;

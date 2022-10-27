@@ -384,7 +384,7 @@ function incassoos_get_user_list_group( $user = false, $by = 'id' ) {
 	} else {
 		$group = wp_parse_args( (array) $group, array(
 			'id'    => 0,
-			'name'  => esc_html_x( 'Others', 'No list group', 'incassoos' ),
+			'name'  => esc_html_x( 'Other', 'Group name', 'incassoos' ),
 			'order' => null
 		) );
 	}

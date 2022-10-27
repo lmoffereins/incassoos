@@ -41,13 +41,7 @@ function incassoos_translate_user_role( $name ) {
  * @since 1.0.0
  */
 function incassoos_dummy_role_names() {
-
-	/* translators: user role */
-	_x( 'Collector', 'User role', 'incassoos' );
-
-	/* translators: user role */
+	_x( 'Collector',  'User role', 'incassoos' );
 	_x( 'Supervisor', 'User role', 'incassoos' );
-
-	/* translators: user role */
 	_x( 'Registrant', 'User role', 'incassoos' );
 }

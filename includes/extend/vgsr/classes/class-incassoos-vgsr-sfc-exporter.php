@@ -187,6 +187,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 
 			$title = isset( $titles[ $item_id ] )
 				? $titles[ $item_id ]
+				/* translators: 1: Activity title 2: Date */
 				: sprintf( __( 'Activity revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
 
 			// Setup line data
@@ -200,6 +201,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		// Append counter line
 		$counter_total = array_sum( $totals );
 		$retval[] = array(
+			/* translators: %s: Date */
 			'title'  => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
 			'debit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
 			'credit' => $counter_total < 0 ? 0 : $counter_total,
@@ -249,7 +251,9 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 			}
 
 			$title = ( 'all' === $item_id )
+				/* translators: %s: Date */
 				? sprintf( __( 'Order revenue collected per %s', 'incassoos' ), "($date)" )
+				/* translators: 1: Occasion title 2: Date */
 				: sprintf( __( 'Order revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
 
 			// Setup line data
@@ -263,6 +267,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		// Append counter line
 		$counter_total = array_sum( $totals );
 		$retval[] = array(
+			/* translators: %s: Date */
 			'title'  => sprintf( __( 'Order revenue per %s', 'incassoos' ), $date ),
 			'debit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
 			'credit' => $counter_total < 0 ? 0 : $counter_total,

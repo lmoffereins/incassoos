@@ -769,7 +769,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 						printf( 
 							'<a href="%s" aria-label="%s">%s</a>',
 							esc_url( add_query_arg( array( 'post_type' => incassoos_get_activity_post_type(), 'collection' => $post_id ), admin_url( 'edit.php' ) ) ),
-							/* translators: %s: post title */
+							/* translators: %s: Post title */
 							esc_attr( sprintf( __( 'View activities of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post_id ) ) ),
 							sprintf( _n( '%d Activity', '%d Activities', $num_activities, 'incassoos' ), $num_activities )
 						);
@@ -780,7 +780,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 						printf( 
 							'<a href="%s" aria-label="%s">%s</a>',
 							esc_url( add_query_arg( array( 'post_type' => incassoos_get_occasion_post_type(), 'collection' => $post_id ), admin_url( 'edit.php' ) ) ),
-							/* translators: %s: post title */
+							/* translators: %s: Post title */
 							esc_attr( sprintf( __( 'View occasions of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post_id ) ) ),
 							sprintf( _n( '%d Occasion', '%d Occasions', $num_occasions, 'incassoos' ), $num_occasions )
 						);
@@ -851,7 +851,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					printf(
 						'<a class="view" href="%s" aria-label="%s">%s</a>',
 						esc_url( add_query_arg( array( 'post_type' => incassoos_get_order_post_type(), 'occasion' => $post_id ), admin_url( 'edit.php' ) ) ),
-						/* translators: %s: post title */
+						/* translators: %s: Post title */
 						esc_attr( sprintf( __( 'View orders of &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post_id ) ) ),
 						__( 'View' )
 					);
@@ -976,7 +976,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
-				/* translators: %s: post title */
+				/* translators: %s: Post title */
 				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 				__( 'View' )
 			);
@@ -994,7 +994,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
-				/* translators: %s: post title */
+				/* translators: %s: Post title */
 				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 				__( 'View' )
 			);
@@ -1008,7 +1008,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			$actions['inc_duplicate'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_duplicate' ), admin_url( 'post.php' ) ), 'duplicate-activity_' . $post->ID ) ),
-				/* translators: %s: post title */
+				/* translators: %s: Post title */
 				esc_attr( sprintf( __( 'Duplicate &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post ) ) ),
 				__( 'Duplicate', 'incassoos' )
 			);
@@ -1023,7 +1023,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			$actions['view'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
-				/* translators: %s: post title */
+				/* translators: %s: Post title */
 				esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 				__( 'View' )
 			);
@@ -1037,9 +1037,9 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			$actions['inc_close'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_close' ), admin_url( 'post.php' ) ), 'close-occasion_' . $post->ID ) ),
-				/* translators: %s: post title */
+				/* translators: %s: Post title */
 				esc_attr( sprintf( __( 'Close &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post ) ) ),
-				__( 'Close', 'incassoos' )
+				_x( 'Close', 'Opposite of reopen', 'incassoos' )
 			);
 		}
 
@@ -1048,7 +1048,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 			$actions['inc_reopen'] = sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				esc_url( wp_nonce_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'inc_reopen' ), admin_url( 'post.php' ) ), 'reopen-occasion_' . $post->ID ) ),
-				/* translators: %s: post title */
+				/* translators: %s: Post title */
 				esc_attr( sprintf( __( 'Reopen &#8220;%s&#8221;', 'incassoos' ), _draft_or_post_title( $post ) ) ),
 				__( 'Reopen', 'incassoos' )
 			);
@@ -1061,7 +1061,7 @@ function incassoos_admin_post_row_actions( $actions, $post ) {
 		$view_action = sprintf(
 			'<a href="%s" aria-label="%s">%s</a>',
 			esc_url( add_query_arg( array( 'post' => $post->ID, 'action' => 'view' ), admin_url( 'post.php' ) ) ),
-			/* translators: %s: post title */
+			/* translators: %s: Post title */
 			esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), _draft_or_post_title( $post ) ) ),
 			__( 'View' )
 		);
@@ -1940,8 +1940,8 @@ function incassoos_admin_post_action_notices() {
 	if ( $errors ) : ?>
 
 	<div class="notice notice-error is-dismissible incassoos-notice">
-		<?php /* translators: 1. error amount 2. toggle link */ ?>
 		<p><?php printf(
+			/* translators: 1. Error amount 2. Button */
 			_n(
 				'Error: %2$s',
 				'The action could not be executed due to %1$d errors. %2$s',
@@ -2058,7 +2058,7 @@ function incassoos_admin_filter_term_name( $name, $term ) {
 
 		// Default term
 		if ( incassoos_is_default_term( $term ) ) {
-			/* translators: %s: term name */
+			/* translators: %s: Term name */
 			$name = sprintf( __( '%s <span class="status">&mdash; Default</span>', 'incassoos' ), $name );
 		}
 	}
@@ -2068,7 +2068,7 @@ function incassoos_admin_filter_term_name( $name, $term ) {
 
 		// Default term
 		if ( incassoos_is_hidden_product_category( $term->term_id ) ) {
-			/* translators: %s: term name */
+			/* translators: %s: Term name */
 			$name = sprintf( __( '%s <span class="status">&mdash; Hidden</span>', 'incassoos' ), $name );
 		}
 	}
@@ -2238,7 +2238,7 @@ function incassoos_admin_get_post_action_types( $post ) {
 	// Append collected ungrouped action types
 	if ( ! empty( $ungrouped_actions ) ) {
 		$grouped_actions[] = array(
-			'name'    => esc_html__( 'Other', 'incassoos' ),
+			'name'    => esc_html_x( 'Other', 'Group name', 'incassoos' ),
 			'actions' => $ungrouped_actions
 		);
 	}

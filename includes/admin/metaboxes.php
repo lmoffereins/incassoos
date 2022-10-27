@@ -58,7 +58,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		add_meta_box(
 			'incassoos_collection_activities',
 			sprintf(
-				/* translators: counter */
+				/* translators: %s: Counter */
 				esc_html__( 'Collection Activities %s', 'incassoos' ),
 				'<span class="count">(' . incassoos_get_collection_activity_count( $post ) . ')</span>'
 			),
@@ -71,7 +71,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		add_meta_box(
 			'incassoos_collection_occasions',
 			sprintf(
-				/* translators: counter */
+				/* translators: %s: Counter */
 				esc_html__( 'Collection Occasions %s', 'incassoos' ),
 				'<span class="count">(' . incassoos_get_collection_occasion_count( $post ) . ')</span>'
 			),
@@ -86,7 +86,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 			add_meta_box(
 				'incassoos_collection_consumers',
 				sprintf(
-					/* translators: counter */
+					/* translators: %s: Counter */
 					esc_html__( 'Collection Consumers %s', 'incassoos' ),
 					'<span class="count">(' . incassoos_get_collection_consumer_count( $post ) . ')</span>'
 				),
@@ -128,7 +128,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		add_meta_box(
 			'incassoos_activity_participants',
 			sprintf(
-				/* translators: counter */
+				/* translators: %s: Counter */
 				esc_html__( 'Activity Participants %s', 'incassoos' ),
 				'<span class="count">(' . incassoos_get_activity_participant_count( $post ) . ')</span>'
 			),
@@ -171,7 +171,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 			add_meta_box(
 				'incassoos_occasion_consumers',
 				sprintf(
-					/* translators: counter */
+					/* translators: %s: Counter */
 					esc_html__( 'Occasion Consumers %s', 'incassoos' ),
 					'<span class="count">(' . incassoos_get_occasion_consumer_count( $post ) . ')</span>'
 				),
@@ -185,7 +185,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 			add_meta_box(
 				'incassoos_occasion_products',
 				sprintf(
-					/* translators: counter */
+					/* translators: %s: Counter */
 					esc_html__( 'Occasion Products %s', 'incassoos' ),
 					'<span class="count">(' . incassoos_get_occasion_product_count( $post ) . ')</span>'
 				),
@@ -227,7 +227,7 @@ function incassoos_admin_add_meta_boxes( $post_type, $post ) {
 		add_meta_box(
 			'incassoos_order_products',
 			sprintf(
-				/* translators: counter */
+				/* translators: %s: Counter */
 				esc_html__( 'Order Products %s', 'incassoos' ),
 				'<span class="count">(' . incassoos_get_order_product_count( $post ) . ')</span>'
 			),
@@ -499,7 +499,7 @@ function incassoos_admin_filter_content_metabox_title( $widget_title, $post ) {
 
 	// Collection
 	if ( incassoos_get_collection( $post ) ) {
-		$widget_title = __( 'Email body', 'Post metabox title', 'incassoos' );
+		$widget_title = _n( 'Email body', 'Post metabox title', 'incassoos' );
 	}
 
 	return $widget_title;
@@ -1504,7 +1504,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 		<div id="publishing-action">
 			<span class="spinner"></span>
 			<?php if ( $can_close ) : ?>
-				<a class="button button-primary button-large" id="close-occasion" href="<?php echo esc_url( $close_url ); ?>"><?php esc_html_e( 'Close', 'incassoos' ); ?></a>
+				<a class="button button-primary button-large" id="close-occasion" href="<?php echo esc_url( $close_url ); ?>"><?php echo esc_html( _x( 'Close', 'Opposite of reopen', 'incassoos' ) ); ?></a>
 			<?php elseif ( $can_reopen ) : ?>
 				<a class="button button-secondary button-large" id="reopen-occasion" href="<?php echo esc_url( $reopen_url ); ?>"><?php esc_html_e( 'Reopen', 'incassoos' ); ?></a>
 			<?php endif; ?>

@@ -1783,7 +1783,7 @@ function incassoos_send_occasion_email_on_close_or_reopen( $post ) {
 				'<tr><td width="200px">' . __( 'Ordered products count:', 'incassoos' ) . '</td><td>' . incassoos_get_occasion_product_count( $post ) . '</td></tr>' .
 				'<tr><td width="200px">' . __( 'Value of consumptions:',  'incassoos' ) . '</td><td>' . incassoos_get_occasion_total( $post, true ) . '</td></tr>' .
 			'</table>' .
-			'<p><a href="' . esc_url( incassoos_get_occasion_url( $post ) ) . '">' . __( 'View occasion', 'incassoos' ) . '</a></p>'
+			'<p><a href="' . esc_url( incassoos_get_occasion_url( $post ) ) . '">' . __( 'View Occasion', 'incassoos' ) . '</a></p>'
 	);
 
 	// Walk all supervisors

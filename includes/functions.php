@@ -780,7 +780,7 @@ function incassoos_insert_post_data( $data, $postarr ) {
 			// Set post name to its ID
 			$data['post_name'] = 'order-' . $postarr['ID'];
 
-			/* translators: post ID */
+			/* translators: %d: Post ID */
 			$data['post_title'] = sprintf( esc_html__( 'Order %d', 'incassoos' ), $postarr['ID'] );
 		}
 	}
