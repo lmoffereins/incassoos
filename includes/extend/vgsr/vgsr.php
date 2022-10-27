@@ -187,22 +187,17 @@ class Incassoos_VGSR {
 	 * @return array User match options
 	 */
 	public function user_match_options( $matches ) {
-
-		// Dummy --
 		$matches = array_merge( $matches, array(
 
 			// Lid type match
-			'lid'             => __( 'Leden',                      'incassoos' ),
-			'_lid'            => __( 'Leden',                      'incassoos' ),
-			'_!lid'           => __( 'Niet-Leden',                 'incassoos' ),
+			'lid'       => __( 'Leden',      'incassoos' ),
+			'_lid'      => __( 'Leden',      'incassoos' ),
+			'_!lid'     => __( 'Niet-Leden', 'incassoos' ),
 
-			// Starts-with-M match
-			'starts-with-m'   => __( 'Starts with M',              'incassoos' ),
-			'_starts-with-m'  => __( 'Deselect Starts with M',     'incassoos' ),
-
-			// Starts-not-with-M match
-			'!starts-with-m'  => __( 'Starts not with M',          'incassoos' ),
-			'_!starts-with-m' => __( 'Deselect Starts not with M', 'incassoos' ),
+			// Oud-lid type match
+			'oud-lid'   => __( 'Oud-leden',      'incassoos' ),
+			'_oud-lid'  => __( 'Oud-leden',      'incassoos' ),
+			'_!oud-lid' => __( 'Niet-Oud-leden', 'incassoos' ),
 		) );
 
 		return $matches;
