@@ -2006,8 +2006,8 @@ function incassoos_get_collection_collect_email_content( $user, $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
+ * @param  int          $user User ID.
  */
 function incassoos_collection_collect_email_salutation( $post, $user ) {
 	echo wpautop( incassoos_get_custom_email_salutation( $user ) );
@@ -2018,15 +2018,11 @@ function incassoos_collection_collect_email_salutation( $post, $user ) {
  *
  * @since 1.0.0
  *
- * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
+ * @param  int          $user User ID.
  */
 function incassoos_collection_collect_email_amounts_table( $post, $user ) {
 	$total = incassoos_get_collection_consumer_total( $user, $post );
-
-	// Bail when the user has no stake
-	if ( ! $total || ! $post )
-		return;
 
 	// Rearrange filters
 	add_filter(    'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created',  10, 3 );
@@ -2080,16 +2076,11 @@ function incassoos_collection_collect_email_amounts_table( $post, $user ) {
  *
  * @since 1.0.0
  *
- * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
+ * @param  int          $user User ID.
  */
 function incassoos_collection_collect_email_withdrawal_mention( $post, $user ) {
-	$total = incassoos_get_collection_consumer_total( $user, $post );
-
-	// Bail when the user has no stake
-	if ( ! $total || ! $post )
-		return;
-
+	$total           = incassoos_get_collection_consumer_total( $user, $post );
 	$withdrawal_date = incassoos_get_collection_withdrawal_date( $post );
 
 	// Default to now + delay
@@ -2113,8 +2104,8 @@ function incassoos_collection_collect_email_withdrawal_mention( $post, $user ) {
  *
  * @since 1.0.0
  *
- * @param  int          $user User ID.
  * @param  WP_Post|bool $post Post object or False when not found.
+ * @param  int          $user User ID.
  */
 function incassoos_collection_collect_email_closing( $post, $user ) {
 	echo wpautop( incassoos_get_custom_email_closing() );
