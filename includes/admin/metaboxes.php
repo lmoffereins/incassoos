@@ -499,7 +499,7 @@ function incassoos_admin_filter_content_metabox_title( $widget_title, $post ) {
 
 	// Collection
 	if ( incassoos_get_collection( $post ) ) {
-		$widget_title = _n( 'Email body', 'Post metabox title', 'incassoos' );
+		$widget_title = _x( 'Email body', 'Post metabox title', 'incassoos' );
 	}
 
 	return $widget_title;
