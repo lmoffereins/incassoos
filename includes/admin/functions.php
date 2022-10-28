@@ -749,7 +749,7 @@ function incassoos_admin_posts_custom_column( $column, $post_id ) {
 					);
 					break;
 				case 'distributed' :
-					foreach ( incassoos_get_collection_collect_consumer_emails_sent( $post_id, 'U' ) as $date ) :
+					foreach ( incassoos_get_collection_consumer_collect_emails_sent( $post_id, 'U' ) as $date ) :
 						printf( '<span title="%s">%s</span>',
 							/**
 							 * @see WP_Posts_List_Table::column_date()
@@ -1809,7 +1809,7 @@ function incassoos_admin_post_action_doaction( $post_id ) {
  *
  * @param  mixed $post_id Post ID
  */
-function incassoos_admin_collection_send_collect_test_email( $post_id ) {
+function incassoos_admin_collection_send_test_collect_email( $post_id ) {
 	$post = incassoos_get_collection( $post_id );
 
 	// Bail when this is not a Collection
@@ -1827,7 +1827,7 @@ function incassoos_admin_collection_send_collect_test_email( $post_id ) {
 	}
 
 	// Send-it
-	$success = incassoos_send_collection_collect_test_email( $post );
+	$success = incassoos_send_collection_test_collect_email( $post );
 
 	// Something went wrong
 	if ( ! $success ) {
@@ -1846,7 +1846,7 @@ function incassoos_admin_collection_send_collect_test_email( $post_id ) {
  *
  * @param  mixed $post_id Post ID
  */
-function incassoos_admin_collection_send_collect_consumer_emails( $post_id ) {
+function incassoos_admin_collection_send_consumer_collect_emails( $post_id ) {
 	$post = incassoos_get_collection( $post_id, array( 'is_collected' => true ) );
 
 	// Bail when this is not a Collection
@@ -1864,7 +1864,7 @@ function incassoos_admin_collection_send_collect_consumer_emails( $post_id ) {
 	}
 
 	// Send-it
-	$success = incassoos_send_collection_collect_consumer_emails( $post );
+	$success = incassoos_send_collection_consumer_collect_emails( $post );
 
 	// Something went wrong
 	if ( ! $success ) {
@@ -2193,14 +2193,14 @@ function incassoos_admin_get_post_action_types( $post ) {
 
 				// Distribution: send collect test email
 				if ( incassoos_is_collection_staged( $post ) ) {
-					$action_types['distribution']['actions']['send-collect_test_email'] = array( 'label' => esc_html__( 'Send collect test-email', 'incassoos' ) );
+					$action_types['distribution']['actions']['send-test_collect_email'] = array( 'label' => esc_html__( 'Send test-email', 'incassoos' ) );
 				}
 
 				// Distribution: send collect consumer emails
 				if ( incassoos_is_collection_collected( $post ) ) {
-					$is_sent = incassoos_is_collection_collect_consumer_emails_sent( $post );
-					$action_types['distribution']['actions']['send-collect_consumer_emails'] = array(
-						'label'                => $is_sent ? esc_html__( 'Resend consumer emails', 'incassoos' ) : esc_html__( 'Send collect consumer emails', 'incassoos' ),
+					$is_sent = incassoos_is_collection_consumer_collect_emails_sent( $post );
+					$action_types['distribution']['actions']['send-consumer_collect_emails'] = array(
+						'label'                => $is_sent ? esc_html__( 'Resend consumer emails', 'incassoos' ) : esc_html__( 'Send consumer emails', 'incassoos' ),
 						'require_confirmation' => $is_sent
 					);
 				}

@@ -670,12 +670,12 @@ function incassoos_get_collection_hint( $post = 0 ) {
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Collection's consumer emails are sent
  */
-function incassoos_is_collection_collect_consumer_emails_sent( $post = 0 ) {
+function incassoos_is_collection_consumer_collect_emails_sent( $post = 0 ) {
 	$post    = incassoos_get_collection( $post );
-	$dates   = incassoos_get_collection_collect_consumer_emails_sent( $post );
+	$dates   = incassoos_get_collection_consumer_collect_emails_sent( $post );
 	$is_sent = ! empty( $dates );
 
-	return apply_filters( 'incassoos_is_collection_collect_consumer_emails_sent', $is_sent, $post );
+	return apply_filters( 'incassoos_is_collection_consumer_collect_emails_sent', $is_sent, $post );
 }
 
 /**
@@ -683,15 +683,15 @@ function incassoos_is_collection_collect_consumer_emails_sent( $post = 0 ) {
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_get_collection_collect_consumer_emails_sent'
+ * @uses apply_filters() Calls 'incassoos_get_collection_consumer_collect_emails_sent'
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
  * @return array Collection consumer emails sent dates
  */
-function incassoos_get_collection_collect_consumer_emails_sent( $post = 0, $date_format = '' ) {
+function incassoos_get_collection_consumer_collect_emails_sent( $post = 0, $date_format = '' ) {
 	$post  = incassoos_get_collection( $post );
-	$dates = $post ? get_post_meta( $post->ID, 'consumer_emails_sent', false ) : array();
+	$dates = $post ? get_post_meta( $post->ID, 'consumer_collect_emails_sent', false ) : array();
 
 	// Default to the registered date format
 	if ( empty( $date_format ) ) {
@@ -702,7 +702,7 @@ function incassoos_get_collection_collect_consumer_emails_sent( $post = 0, $date
 		$dates[ $index ] = mysql2date( $date_format, $date );
 	}
 
-	return apply_filters( 'incassoos_get_collection_collect_consumer_emails_sent', $dates, $post, $date_format );
+	return apply_filters( 'incassoos_get_collection_consumer_collect_emails_sent', $dates, $post, $date_format );
 }
 
 /** Assets ********************************************************************/
@@ -1874,9 +1874,9 @@ function incassoos_validate_collection( $args = array() ) {
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Was the email sent?
  */
-function incassoos_send_collection_collect_test_email( $post = 0 ) {
+function incassoos_send_collection_test_collect_email( $post = 0 ) {
 	$post = incassoos_get_collection( $post );
-	$args = array( 'incassoos_email_type' => 'incassoos-collection-collect-test' );
+	$args = array( 'incassoos_email_type' => 'incassoos-collection-test-collect' );
 	$sent = false;
 
 	if ( $post ) {
@@ -1886,7 +1886,7 @@ function incassoos_send_collection_collect_test_email( $post = 0 ) {
 		$key_rand  = array_rand( $consumers );
 
 		// Test email prefixes
-		$test_prefix_title   = esc_attr__( '// TEST EMAIL // %s', 'incassoos' );
+		$test_prefix_title   = esc_attr__( 'TEST &mdash; %s', 'incassoos' );
 		$test_prefix_content = sprintf( esc_html__( '&mdash; This is a test email sent from %s &mdash;', 'incassoos' ), site_url() );
 
 		// Define email details
@@ -1911,9 +1911,9 @@ function incassoos_send_collection_collect_test_email( $post = 0 ) {
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return bool Were the emails sent?
  */
-function incassoos_send_collection_collect_consumer_emails( $post = 0 ) {
+function incassoos_send_collection_consumer_collect_emails( $post = 0 ) {
 	$post = incassoos_get_collection( $post );
-	$args = array( 'incassoos_email_type' => 'incassoos-collection-collect-consumer' );
+	$args = array( 'incassoos_email_type' => 'incassoos-collection-consumer-collect' );
 	$sent = false;
 
 	if ( $post ) {
@@ -1944,7 +1944,7 @@ function incassoos_send_collection_collect_consumer_emails( $post = 0 ) {
 
 		// Register emails sent date
 		if ( $sent ) {
-			add_post_meta( $post->ID, 'consumer_emails_sent', date( 'Y-m-d H:i:s' ) );
+			add_post_meta( $post->ID, 'consumer_collect_emails_sent', date( 'Y-m-d H:i:s' ) );
 		}
 	}
 

@@ -609,10 +609,10 @@ function incassoos_admin_collection_details_metabox( $post ) {
 		<p>
 			<label><?php esc_html_e( 'Distributed:', 'incassoos' ); ?></label>
 
-			<?php if ( incassoos_is_collection_collect_consumer_emails_sent( $post ) ) : ?>
+			<?php if ( incassoos_is_collection_consumer_collect_emails_sent( $post ) ) : ?>
 
 			<span id="collection-consumer-emails-sent" class="value">
-				<?php foreach ( incassoos_get_collection_collect_consumer_emails_sent( $post, 'U' ) as $date ) : ?>
+				<?php foreach ( incassoos_get_collection_consumer_collect_emails_sent( $post, 'U' ) as $date ) : ?>
 				<span class="value">
 					<abbr title="<?php echo wp_date( $abbr_date_format, $date ); ?>"><?php echo wp_date( $date_format, $date ); ?></abbr>
 				</span>
