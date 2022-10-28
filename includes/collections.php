@@ -2042,8 +2042,11 @@ function incassoos_collection_collect_email_salutation( $post, $user ) {
 function incassoos_collection_collect_email_amounts_table( $post, $user ) {
 	$total = incassoos_get_collection_consumer_total( $user, $post );
 
+	// Use global flag for whether the created date fallback is used
+	$GLOBALS['incassoos_activity_default_date_applied'] = false;
+
 	// Rearrange filters
-	add_filter(    'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created',  10, 3 );
+	add_filter(    'incassoos_get_activity_date', 'incassoos_filter_activity_date_default_to_date_created',  10, 3 );
 	remove_filter( 'the_title',                   'incassoos_filter_occasion_title', 10, 2 );
 
 	// Get the relevant date
@@ -2080,12 +2083,14 @@ function incassoos_collection_collect_email_amounts_table( $post, $user ) {
 		</tr>
 	</table>
 
+	<?php if ( $GLOBALS['incassoos_activity_default_date_applied'] ) : ?>
+
 	<p><?php esc_html_e( '*) The mentioned date is the one at which the item was registered.', 'incassoos' ); ?></p>
 
-	<?php
+	<?php endif;
 
 	// Rearrange filters
-	remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created',  10, 3 );
+	remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date_default_to_date_created',  10, 3 );
 	add_filter(    'the_title',                   'incassoos_filter_occasion_title', 10, 2 );
 }
 

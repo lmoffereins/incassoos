@@ -1040,11 +1040,14 @@ function incassoos_filter_activity_class( $classes, $class, $post_id ) {
  * @param  string      $date_format Date format
  * @return string Activity date
  */
-function incassoos_filter_default_activity_date_to_date_created( $date, $post = 0, $date_format = '' ) {
+function incassoos_filter_activity_date_default_to_date_created( $date, $post = 0, $date_format = '' ) {
 
 	// Default the activity date to the created date
 	if ( ! $date ) {
 		$date = incassoos_get_activity_created( $post, $date_format ) . '*';
+
+		// Use global flag to indicate default is applied
+		$GLOBALS['incassoos_activity_default_date_applied'] = true;
 	}
 
 	return $date;
