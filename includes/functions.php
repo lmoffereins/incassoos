@@ -436,11 +436,11 @@ function incassoos_get_post_date( $post = 0, $date_format = '' ) {
 
 	// Order
 	} elseif ( $_post = incassoos_get_order( $post ) ) {
-		$date = incassoos_get_order_created( $_post );
+		$date = incassoos_get_order_created( $_post, $date_format );
 
 	// Product
 	} elseif ( $_post = incassoos_get_product( $post ) ) {
-		$date = incassoos_get_product_created( $_post );
+		$date = incassoos_get_product_created( $_post, $date_format );
 
 	// Custom post
 	} else {
