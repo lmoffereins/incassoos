@@ -457,6 +457,39 @@ function incassoos_get_post_date( $post = 0, $date_format = '' ) {
 }
 
 /**
+ * Return whether the post is registered for the same date as it was created
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_post_same_date_created'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Are the post's dates the same?
+ */
+function incassoos_is_post_same_date_created( $post = 0 ) {
+	$same_date = true;
+
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$same_date = incassoos_is_collection_same_date_created( $_post );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$same_date = incassoos_is_activity_same_date_created( $_post );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$same_date = incassoos_is_occasion_same_date_created( $_post );
+
+	// Custom post
+	} else {
+		$same_date = apply_filters( 'incassoos_is_post_same_date_created', $same_date, $post );
+	}
+
+	return $same_date;
+}
+
+/**
  * Output the post's url
  * 
  * @since 1.0.0

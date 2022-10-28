@@ -397,6 +397,24 @@ function incassoos_get_collection_date( $post = 0, $date_format = '' ) {
 }
 
 /**
+ * Return whether the Collection is collected for the same date as it was created
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_collection_same_date_created'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Are the Collection's dates the same?
+ */
+function incassoos_is_collection_same_date_created( $post = 0 ) {
+	$post      = incassoos_get_collection( $post );
+	$same_date = $post && ( incassoos_get_collection_created( $post ) === incassoos_get_collection_date( $post ) );
+
+	return (bool) apply_filters( 'incassoos_is_collection_same_date_created', $same_date, $post );
+}
+
+
+/**
  * Output the Collection's withdrawal date
  *
  * @since 1.0.0
