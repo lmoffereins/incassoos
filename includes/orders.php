@@ -1506,15 +1506,17 @@ function incassoos_is_consumption_within_limit_for_time_window( $products, $user
 	$spending_limit = incassoos_get_user_spending_limit( $user );
 	$within_limit   = true;
 
-	// Default time window to 4 hour
+	// Default time window to 4 hours
 	if ( empty( $time_window ) ) {
 		$time_window = (int) apply_filters( 'incassoos_default_spending_limit_time_window', 4 * HOUR_IN_SECONDS, $user );
 	}
 
 	// Only continue when spending limit applies
 	if ( $spending_limit ) {
+
+        // Find any orders of the user that were created between now and the time window
 		$current_total = 0;
-		$time_start    = strtotime( date_i18n( 'Y-m-d H:i:s' ) . " - {$time_window} seconds" );
+		$time_start    = strtotime( "-{$time_window} seconds" );
 		$posts         = incassoos_get_orders( array(
 			'incassoos_consumer' => incassoos_get_user_id( $user ),
 			'date_query'         => array(
@@ -1522,12 +1524,12 @@ function incassoos_is_consumption_within_limit_for_time_window( $products, $user
 					'column'  => 'post_date',
 					'compare' => '>=',
 					array(
-						'year'   => date_i18n( 'Y', $time_start ),
-						'month'  => date_i18n( 'm', $time_start ),
-						'day'    => date_i18n( 'd', $time_start ),
-						'hour'   => date_i18n( 'H', $time_start ),
-						'minute' => date_i18n( 'i', $time_start ),
-						'second' => date_i18n( 's', $time_start ),
+						'year'   => date( 'Y', $time_start ),
+						'month'  => date( 'm', $time_start ),
+						'day'    => date( 'd', $time_start ),
+						'hour'   => date( 'H', $time_start ),
+						'minute' => date( 'i', $time_start ),
+						'second' => date( 's', $time_start ),
 					)
 				)
 			)

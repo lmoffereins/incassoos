@@ -111,7 +111,7 @@ class Incassoos_VGSR {
 
 		// Collection
 		if ( incassoos_get_collection_post_type() === $post->post_type ) {
-			$default_title = ucfirst( date_i18n( 'F Y' ) );
+			$default_title = ucfirst( wp_date( 'F Y' ) );
 		}
 
 		return $default_title;

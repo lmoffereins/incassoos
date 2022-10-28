@@ -431,7 +431,7 @@ function incassoos_get_collection_withdrawal_date( $post = 0, $date_format = '' 
 
 	if ( $date ) {
 		if ( $delay ) {
-			$date = date( $date_format, strtotime( $date . " + {$delay} day" ) );
+			$date = wp_date( $date_format, strtotime( $date . " + {$delay} day" ) );
 		}
 	} else {
 		$date = '';
@@ -2087,7 +2087,7 @@ function incassoos_collection_collect_email_withdrawal_mention( $post, $user ) {
 	if ( empty( $withdrawal_date ) ) {
 		$delay = incassoos_get_collection_withdrawal_delay();
 		if ( $delay ) {
-			$withdrawal_date = date( get_option( 'date_format' ), strtotime( "+ {$delay} day" ) );
+			$withdrawal_date = wp_date( get_option( 'date_format' ), strtotime( "+{$delay} day" ) );
 		}
 	}
 

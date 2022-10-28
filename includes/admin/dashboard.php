@@ -375,10 +375,10 @@ function incassoos_admin_dashboard_recent_posts( $args ) {
 				$relative = __( 'Tomorrow' );
 			} elseif ( gmdate( 'Y', $time ) !== $year ) {
 				/* translators: Date and time format for recent posts on the dashboard, from a different calendar year, see https://www.php.net/date */
-				$relative = date_i18n( __( 'M jS Y' ), $time );
+				$relative = wp_date( __( 'M jS Y' ), $time );
 			} else {
 				/* translators: Date and time format for recent posts on the dashboard, see https://www.php.net/date */
-				$relative = date_i18n( __( 'M jS' ), $time );
+				$relative = wp_date( __( 'M jS' ), $time );
 			}
 
 			// Use the post edit link for those who can edit, the permalink otherwise.
