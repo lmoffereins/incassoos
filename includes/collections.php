@@ -1391,11 +1391,14 @@ function incassoos_get_collection_assets( $post = 0, $query_args = array() ) {
 	if ( $post ) {
 
 		// Query by post parent
-		$defaults                    = array();
-		$defaults['fields']          = 'ids';
-		$defaults['post_parent__in'] = array( $post->ID );
-		$defaults['post_type']       = array( incassoos_get_activity_post_type(), incassoos_get_occasion_post_type() );
-		$defaults['posts_per_page']  = -1;
+		$defaults = array(
+			'fields'          => 'ids',
+			'post_parent__in' => array( $post->ID ),
+			'post_type'       => array( incassoos_get_activity_post_type(), incassoos_get_occasion_post_type() ),
+			'posts_per_page'  => -1,
+			'orderby'         => 'incassoos_date',
+			'order'           => 'ASC'
+		);
 
 		// Query collected assets when collected
 		if ( incassoos_is_collection_collected( $post ) ) {

@@ -269,6 +269,8 @@ function incassoos_posts_search( $search, $posts_query ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_posts_clauses_orderby_incassoos_date'
+ *
  * @param  array $clauses SQL clauses
  * @param  WP_Query $posts_query Post query object
  * @return array SQL clauses
@@ -282,8 +284,8 @@ function incassoos_posts_clauses( $clauses, $posts_query ) {
 
 	// Filter (un)collected posts
 	if ( null !== $posts_query->get( 'incassoos_collected', null ) ) {
-		$op                = $posts_query->get( 'incassoos_collected' ) ? '=' : '<>';
-		$clauses['where'] .= $wpdb->prepare( " AND {$wpdb->posts}.post_status $op %s", incassoos_get_collected_status_id() );
+		$operator          = $posts_query->get( 'incassoos_collected' ) ? '=' : '<>';
+		$clauses['where'] .= $wpdb->prepare( " AND {$wpdb->posts}.post_status $operator %s", incassoos_get_collected_status_id() );
 	}
 
 	// Get query details
@@ -299,6 +301,96 @@ function incassoos_posts_clauses( $clauses, $posts_query ) {
 			$compare           = $posts_query->get( 'incassoos_empty' ) ? 'NOT EXISTS' : 'EXISTS';
 			$clauses['where'] .= $wpdb->prepare( " AND {$compare} (SELECT ID FROM {$wpdb->posts} AS o WHERE o.post_type = %s AND o.post_parent = {$wpdb->posts}.ID)", incassoos_get_order_post_type() );
 		}
+	}
+
+	// Order by item date
+	if ( 'incassoos_date' === $posts_query->get( 'orderby' ) ) {
+		$orderby = array( 'join' => '', 'fields' => array() );
+
+		// Consider post types are mixed
+		foreach ( (array) $posts_query->get( 'post_type' ) as $post_type ) {
+			switch ( $post_type ) {
+
+				// Collection
+				case incassoos_get_collection_post_type() :
+
+					// Use collected date, default to created date
+					$alias = 'orderby_collection_date';
+					$orderby['join'] .= $wpdb->prepare( " LEFT JOIN {$wpdb->postmeta} AS $alias ON {$wpdb->posts}.ID = $alias.post_id AND $alias.meta_key = %s", 'collected' );
+					$orderby['fields'][ $post_type ] = "COALESCE( $alias.meta_value, {$wpdb->posts}.post_date )";
+					break;
+
+				// Activity
+				case incassoos_get_activity_post_type() :
+
+					// Use activity date, default to created date
+					$alias = 'orderby_activity_date';
+					$orderby['join'] .= $wpdb->prepare( " LEFT JOIN {$wpdb->postmeta} AS $alias ON {$wpdb->posts}.ID = $alias.post_id AND $alias.meta_key = %s", 'activity_date' );
+					$orderby['fields'][ $post_type ] = "COALESCE( $alias.meta_value, {$wpdb->posts}.post_date )";
+					break;
+
+				// Occasion
+				case incassoos_get_occasion_post_type() :
+
+					// Use occasion date, default to created date
+					$alias = 'orderby_occasion_date';
+					$orderby['join'] .= $wpdb->prepare( " LEFT JOIN {$wpdb->postmeta} AS $alias ON {$wpdb->posts}.ID = $alias.post_id AND $alias.meta_key = %s", 'occasion_date' );
+					$orderby['fields'][ $post_type ] = "COALESCE( $alias.meta_value, {$wpdb->posts}.post_date )";
+					break;
+
+				// Default
+				default:
+
+					// Use create date
+					$orderby['fields'][ $post_type ] = "{$wpdb->posts}.post_date";
+					break;
+			}
+		}
+
+		$orderby = apply_filters( 'incassoos_posts_clauses_orderby_incassoos_date', $orderby, $posts_query );
+
+		// Extend join clause
+		if ( ! empty( $orderby['join'] ) ) {
+			$clauses['join'] .= $orderby['join'];
+		}
+
+		// Setup orderby clause
+		if ( ! empty( $orderby['fields'] ) ) {
+			/**
+			 * Setup case-when for ordering by multiple date columns
+			 *
+			 * @link https://stackoverflow.com/a/10568231/3601434
+			 */
+			if ( count( $orderby['fields'] ) > 1 ) {
+				$orderby_clause = " CASE";
+
+				// Walk all post type fields
+				foreach ( $orderby['fields'] as $post_type => $field ) {
+					$orderby_clause .= $wpdb->prepare( " WHEN {$wpdb->posts}.post_type = %s THEN $field", $post_type );
+				}
+
+				// Construct case-when in reverse order
+				$orderby_clause .= " ELSE {$wpdb->posts}.post_date END";
+
+			} else {
+				$orderby_clause = reset( $orderby['fields'] );
+			}
+		} else {
+			$orderby_clause = "{$wpdb->posts}.post_date";
+		}
+
+		// Consider order type
+		if ( ! empty( $orderby_clause ) ) {
+			$orderby_clause .= ' ' . $posts_query->get( 'order', 'ASC' );
+		}
+
+		// Separate multiple order statements
+		if ( ! empty( $orderby_clause) && ! empty( $clauses['orderby'] ) ) {
+			$orderby_clause .= ', ';
+		}
+
+		// Prepend orderby clause
+		$clauses['orderby'] = $orderby_clause . $clauses['orderby'];
 	}
 
 	return $clauses;
