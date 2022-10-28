@@ -1600,7 +1600,7 @@ function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0,
  *
  * @param  array       $classes Post class names
  * @param  string      $class   Added class names
- * @param  int}WP_Post $post_id Post ID
+ * @param  int|WP_Post $post_id Post ID
  * @return array       Post class names
  */
 function incassoos_filter_collection_class( $classes, $class, $post_id ) {

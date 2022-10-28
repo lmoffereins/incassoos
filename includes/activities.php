@@ -1010,7 +1010,7 @@ function incassoos_get_uncollected_activities( $query_args = array() ) {
  *
  * @param  array       $classes Post class names
  * @param  string      $class   Added class names
- * @param  int}WP_Post $post_id Post ID
+ * @param  int|WP_Post $post_id Post ID
  * @return array       Post class names
  */
 function incassoos_filter_activity_class( $classes, $class, $post_id ) {
@@ -1036,7 +1036,7 @@ function incassoos_filter_activity_class( $classes, $class, $post_id ) {
  * @since 1.0.0
  *
  * @param  string      $date        Activity date
- * @param  int}WP_Post $post        Optional. Post object or ID. Defaults to the current post.
+ * @param  int|WP_Post $post        Optional. Post object or ID. Defaults to the current post.
  * @param  string      $date_format Date format
  * @return string Activity date
  */

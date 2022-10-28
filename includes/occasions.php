@@ -1035,7 +1035,7 @@ function incassoos_get_occasion_consumer_types( $post = 0 ) {
  * 
  * @since 1.0.0
  *
- * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
@@ -1053,7 +1053,7 @@ function incassoos_the_occasion_consumer_total( $consumer, $post = 0, $num_forma
  *
  * @uses apply_filters() Calls 'incassoos_get_occasion_consumer_total'
  *
- * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
  *                                     null to skip format parsing. Defaults to false.
@@ -1111,7 +1111,7 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_forma
  *
  * @uses apply_filters() Calls 'incassoos_get_occasion_consumer_orders'
  *
- * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
  * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return array Occasion consumer orders
@@ -1155,7 +1155,7 @@ function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $query_ar
  * 
  * @since 1.0.0
  *
- * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
  * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  */
@@ -1170,7 +1170,7 @@ function incassoos_the_occasion_consumer_order_count( $consumer, $post = 0, $que
  *
  * @uses apply_filters() Calls 'incassoos_get_occasion_consumer_order_count'
  *
- * @param  int}WP_user|string $consumer Consumer user object or ID or consumer type id.
+ * @param  int|WP_user|string $consumer Consumer user object or ID or consumer type id.
  * @param  int|WP_Post $post Optional. Term object or ID post object. Defaults to the current post.
  * @param  array       $query_args Optional. Additional query arguments for {@see WP_Query}.
  * @return int Occasion consumer order count
@@ -1283,7 +1283,7 @@ function incassoos_get_occasion_product_count( $post = 0 ) {
  * @since 1.0.0
  *
  * @param  string      $title Post title
- * @param  int}WP_Post $post  Optional. Post object or ID. Defaults to the current post.
+ * @param  int|WP_Post $post  Optional. Post object or ID. Defaults to the current post.
  * @return string             Post title
  */
 function incassoos_filter_occasion_title( $title, $post = 0 ) {
@@ -1308,7 +1308,7 @@ function incassoos_filter_occasion_title( $title, $post = 0 ) {
  *
  * @param  array       $classes Post class names
  * @param  string      $class   Added class names
- * @param  int}WP_Post $post_id Post ID
+ * @param  int|WP_Post $post_id Post ID
  * @return array       Post class names
  */
 function incassoos_filter_occasion_class( $classes, $class, $post_id ) {

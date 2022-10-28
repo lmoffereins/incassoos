@@ -750,7 +750,7 @@ function incassoos_filter_order_title( $title, $post_id ) {
  *
  * @param  array       $classes Post class names
  * @param  string      $class   Added class names
- * @param  int}WP_Post $post_id Post ID
+ * @param  int|WP_Post $post_id Post ID
  * @return array       Post class names
  */
 function incassoos_filter_order_class( $classes, $class, $post_id ) {
