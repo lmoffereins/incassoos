@@ -754,7 +754,9 @@ function incassoos_get_occasions( $query_args = array() ) {
 	$query_args = wp_parse_args( $query_args, array(
 		'fields'         => 'ids',
 		'post_type'      => incassoos_get_occasion_post_type(),
-		'posts_per_page' => -1
+		'posts_per_page' => -1,
+		'orderby'        => 'incassoos_date',
+		'order'          => 'ASC'
 	) );
 
 	$query = new WP_Query( $query_args );
