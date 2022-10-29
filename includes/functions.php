@@ -397,6 +397,66 @@ function incassoos_get_post_title( $post = 0 ) {
 }
 
 /**
+ * Output the post's created date
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ */
+function incassoos_the_post_created( $post = 0, $date_format = '' ) {
+	echo incassoos_get_post_created( $post, $date_format );
+}
+
+/**
+ * Return the post's created date
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_post_created'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  string      $date_format Optional. Timestamp's date format to return. Defaults to the `date_format` option.
+ * @return string Post created date.
+ */
+function incassoos_get_post_created( $post = 0, $date_format = '' ) {
+	$date = '';
+
+	// Collection
+	if ( $_post = incassoos_get_collection( $post ) ) {
+		$date = incassoos_get_collection_created( $_post, $date_format );
+
+	// Activity
+	} elseif ( $_post = incassoos_get_activity( $post ) ) {
+		$date = incassoos_get_activity_created( $_post, $date_format );
+
+	// Occasion
+	} elseif ( $_post = incassoos_get_occasion( $post ) ) {
+		$date = incassoos_get_occasion_created( $_post, $date_format );
+
+	// Order
+	} elseif ( $_post = incassoos_get_order( $post ) ) {
+		$date = incassoos_get_order_created( $_post, $date_format );
+
+	// Product
+	} elseif ( $_post = incassoos_get_product( $post ) ) {
+		$date = incassoos_get_product_created( $_post, $date_format );
+
+	// Custom post
+	} else {
+
+		// Default to the registered date format
+		if ( empty( $date_format ) ) {
+			$date_format = get_option( 'date_format' );
+		}
+
+		$date = apply_filters( 'incassoos_get_post_created', $date, $post, $date_format );
+	}
+
+	return $date;
+}
+
+/**
  * Output the post's date
  * 
  * @since 1.0.0
