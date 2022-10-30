@@ -70,6 +70,7 @@ class Incassoos_BuddyPress {
 		add_filter( 'posts_pre_query',          array( $this, 'posts_pre_query'   ), 10, 2 );
 		add_filter( 'incassoos_pre_send_email', array( $this, 'send_email'        ), 10, 2 );
 		add_filter( 'bp_get_email_post',        array( $this, 'filter_email_post' ), 10, 3 );
+		add_filter( 'bp_email_get_tokens',      array( $this, 'email_get_tokens'  ),  7, 4 ); // After BP's core filter for defaults
 		add_action( 'bp_send_email',            array( $this, 'send_email_setup'  ), 10, 4 );
 	}
 
@@ -189,7 +190,10 @@ class Incassoos_BuddyPress {
 				// Set generic email tokens
 				$args['tokens'] = wp_parse_args( $args['tokens'], array(
 					'email.content'   => bp_core_replace_tokens_in_text( $args['message'],   $args['tokens'] ),
-					'email.plaintext' => bp_core_replace_tokens_in_text( $args['plaintext'], $args['tokens'] )
+					'email.plaintext' => bp_core_replace_tokens_in_text( $args['plaintext'], $args['tokens'] ),
+
+					// Pass email arguments to downstream
+					'incassoos.args'  => $args
 				) );
 
 				// Use BP to send the email
@@ -264,6 +268,56 @@ class Incassoos_BuddyPress {
 		$post = new WP_Post( (object) $dummy );
 
 		return $post;
+	}
+
+	/**
+	 * Modify the email tokens
+	 *
+	 * @since 1.0.0
+	 *
+	 * @see bp_email_set_default_tokens()
+	 * @see BP_Email::get()
+	 *
+	 * @param array    $tokens        Email tokens
+	 * @param string   $property_name Unused
+	 * @param string   $transform     Unused
+	 * @param BP_Email $email         Email being sent
+	 * @return array
+	 */
+	public function email_get_tokens( $tokens, $property_name, $transform, $email ) {
+
+		// Bail wen this is not a plugin email type
+		if ( ! isset( $tokens['incassoos.args'] ) )
+			return $tokens;
+
+		// Get email arguments passed from upstream
+		$args = $tokens['incassoos.args'];
+
+		// Check email type
+		switch ( $args['incassoos_email_type'] ) {
+
+			// Collection test collect email
+			case 'incassoos-collection-test-collect':
+
+				/**
+				 * Set recipient details
+				 *
+				 * Because this email is sent to a the sender's email address, the recipient
+				 * details are not parsed correctly.
+				 */
+				if ( isset( $args['user_id'] ) ) {
+					$user = incassoos_get_user( $args['user_id'] );
+
+					if ( $user ) {
+						$tokens['recipient.name']     = wp_specialchars_decode( bp_core_get_user_displayname( $user->ID ), ENT_QUOTES );
+						$tokens['recipient.username'] = $user->user_login;
+					}
+				}
+
+				break;
+		}
+
+		return $tokens;
 	}
 
 	/**
