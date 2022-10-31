@@ -220,11 +220,6 @@ class Incassoos_VGSR {
 			if ( $type = vgsr_get_lid_type( $user->ID ) ) {
 				$match_ids[] = $type;
 			}
-
-			// Starts with M
-			if ( 0 === strpos( strtolower( $user->display_name ), 'm' ) ) {
-				$match_ids[] = 'starts-with-m';
-			}
 		}
 
 		return $match_ids;
