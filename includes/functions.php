@@ -346,7 +346,7 @@ function incassoos_validate_post( $postarr, $post_type = '' ) {
 
 /**
  * Output the post's title
- * 
+ *
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
@@ -357,7 +357,7 @@ function incassoos_the_post_title( $post = 0 ) {
 
 /**
  * Return the post's title
- * 
+ *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_title'
@@ -458,7 +458,7 @@ function incassoos_get_post_created( $post = 0, $date_format = '' ) {
 
 /**
  * Output the post's date
- * 
+ *
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
@@ -470,7 +470,7 @@ function incassoos_the_post_date( $post = 0, $date_format = '' ) {
 
 /**
  * Return the post's date
- * 
+ *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_date'
@@ -551,7 +551,7 @@ function incassoos_is_post_same_date_created( $post = 0 ) {
 
 /**
  * Output the post's url
- * 
+ *
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
@@ -562,7 +562,7 @@ function incassoos_the_post_url( $post = 0 ) {
 
 /**
  * Return the post's url
- * 
+ *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_url'
@@ -603,7 +603,7 @@ function incassoos_get_post_url( $post = 0 ) {
 
 /**
  * Output the post's link
- * 
+ *
  * @since 1.0.0
  *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
@@ -614,7 +614,7 @@ function incassoos_the_post_link( $post = 0 ) {
 
 /**
  * Return the post's link
- * 
+ *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_link'
@@ -707,7 +707,7 @@ function incassoos_get_post_total( $post = 0, $num_format = false ) {
 
 /**
  * Output the post's consumer total value
- * 
+ *
  * @since 1.0.0
  *
  * @param  int|WP_User|string $consumer Consumer user object or ID or consumer type id.
@@ -721,7 +721,7 @@ function incassoos_the_post_consumer_total( $consumer, $post = 0, $num_format = 
 
 /**
  * Return the post's consumer total value
- * 
+ *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_post_consumer_total'

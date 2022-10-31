@@ -1890,14 +1890,14 @@ function incassoos_send_collection_test_collect_email( $post = 0 ) {
 
 		// Test email prefixes
 		$test_prefix_title   = esc_attr__( 'TEST &mdash; %s', 'incassoos' );
-		$test_prefix_content = sprintf( esc_html__( '&mdash; This is a test email sent from %s &mdash;', 'incassoos' ), site_url() );
+		$test_prefix_content = '<p>' . sprintf( esc_html__( '&mdash; This is a test email sent from %s &mdash;', 'incassoos' ), site_url() ) . '</p>';
 
 		// Define email details
 		$args['to']      = incassoos_get_sender_email_address(); // Send to self
 		$args['post']    = $post; // Provide post object to later filters
 		$args['user_id'] = $consumers[ $key_rand ];
 		$args['subject'] = sprintf( $test_prefix_title, incassoos_get_collection_transaction_description( $post ) );
-		$args['message'] = '<p>' . $test_prefix_content . '</p>' . incassoos_get_collection_collect_email_content( $consumers[ $key_rand ], $post );
+		$args['message'] = $test_prefix_content . incassoos_get_collection_collect_email_content( $consumers[ $key_rand ], $post );
 
 		// Send the email
 		$sent = incassoos_send_email( $args );
