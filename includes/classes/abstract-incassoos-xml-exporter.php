@@ -210,7 +210,7 @@ abstract class Incassoos_XML_Exporter extends Incassoos_File_Exporter {
 
 			// Parse tag content
 			} elseif ( strlen( trim( $content ) ) ) {
-				$tag->nodeValue = trim( $content );
+				$tag->nodeValue = incassoos_sanitize_iso20022( $content );
 			}
 
 			// Add tag to root
