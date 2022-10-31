@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Incassoos\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-27 13:47+0000\n"
+"POT-Creation-Date: 2022-10-31 17:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -135,18 +135,13 @@ msgstr ""
 msgid "&mdash; Quick select &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:1872
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:1893
 #, php-format
 msgid "&mdash; This is a test email sent from %s &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2069
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2096
 msgid "*) The mentioned date is the one at which the item was registered."
-msgstr ""
-
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:1871
-#, php-format
-msgid "// TEST EMAIL // %s"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:159
@@ -707,18 +702,18 @@ msgstr ""
 msgid "All Products"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2049
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2074
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-post-consumptions-csv-exporter.php:103
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-post-products-csv-exporter.php:101
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-post-products-csv-exporter.php:115
 msgid "Amount"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1768
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1770
 msgid "An occasion was closed in Incassoos"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1769
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1771
 msgid "An occasion was reopened in Incassoos"
 msgstr ""
 
@@ -727,11 +722,11 @@ msgstr ""
 msgid "An unknown error occurred."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/extend/vgsr/vgsr.php:328
+#: ../../../../src/wp-content/plugins/incassoos/includes/extend/vgsr/vgsr.php:323
 msgid "Anciënniteit"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/extend/vgsr/vgsr.php:283
+#: ../../../../src/wp-content/plugins/incassoos/includes/extend/vgsr/vgsr.php:278
 msgid "Anciënniteit sorting value for the object."
 msgstr ""
 
@@ -739,7 +734,7 @@ msgstr ""
 msgid "Angolan kwanza"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/template.php:471
+#: ../../../../src/wp-content/plugins/incassoos/includes/template.php:563
 msgctxt "Application page document title"
 msgid "Application"
 msgstr ""
@@ -774,7 +769,7 @@ msgid ""
 " The keys are the passwords for the encryption and decryption process."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2043
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2068
 #, php-format
 msgid "As registered per %s, you will be charged for the following expenses:"
 msgstr ""
@@ -887,7 +882,7 @@ msgstr ""
 msgid "Brunei dollar"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/extend/buddypress/buddypress.php:107
+#: ../../../../src/wp-content/plugins/incassoos/includes/extend/buddypress/buddypress.php:108
 msgid "BuddyPress email template"
 msgstr ""
 
@@ -1133,12 +1128,12 @@ msgstr ""
 msgid "Closed for new orders."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1781
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1783
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1457
 msgid "Closed:"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:641
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:659
 #, php-format
 msgid "Collected on %s"
 msgstr ""
@@ -1503,7 +1498,7 @@ msgctxt "Dashboard widget"
 msgid "Uncollected Items"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2047
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2072
 msgid "Date"
 msgstr ""
 
@@ -1532,7 +1527,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2048
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2073
 msgid "Description"
 msgstr ""
 
@@ -1652,7 +1647,7 @@ msgstr ""
 msgid "Empty collection message."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:342
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:380
 msgid "Empty date."
 msgstr ""
 
@@ -1660,13 +1655,13 @@ msgstr ""
 msgid "Empty occasion date."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:365
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:403
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1611
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1665
 msgid "Empty price."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:315
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:353
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1596
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1609
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1628
@@ -2053,23 +2048,23 @@ msgstr ""
 msgid "Invalid activity date."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:387
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:425
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1649
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-orders-controller.php:227
 msgid "Invalid consumer ID or consumer type."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:395
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:433
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1650
 msgid "Invalid consumer ID."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:400
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:438
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1651
 msgid "Invalid consumer type."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:346
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:384
 msgid "Invalid date."
 msgstr ""
 
@@ -2095,13 +2090,13 @@ msgstr ""
 msgid "Invalid order products."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:369
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:407
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1612
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1666
 msgid "Invalid price."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:282
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:320
 msgid "Invalid value for Account IBAN."
 msgstr ""
 
@@ -2337,7 +2332,7 @@ msgstr ""
 msgid "Myanma kyat"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/extend/vgsr/vgsr.php:329
+#: ../../../../src/wp-content/plugins/incassoos/includes/extend/vgsr/vgsr.php:324
 msgid "Name"
 msgstr ""
 
@@ -2500,7 +2495,7 @@ msgstr ""
 msgid "Norwegian krone"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:637
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:655
 msgid "Not yet collected"
 msgstr ""
 
@@ -2564,7 +2559,7 @@ msgstr ""
 msgid "Occasion date"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1780
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1782
 msgid "Occasion date:"
 msgstr ""
 
@@ -2601,7 +2596,7 @@ msgstr ""
 msgid "Occasion submitted."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1777
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1779
 msgid "Occasion summary"
 msgstr ""
 
@@ -2705,7 +2700,7 @@ msgstr ""
 msgid "Order count"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1782
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1784
 msgid "Order count:"
 msgstr ""
 
@@ -2772,7 +2767,7 @@ msgstr ""
 msgid "Order updated."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1783
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1785
 msgid "Ordered products count:"
 msgstr ""
 
@@ -2870,6 +2865,11 @@ msgctxt "Post metabox title"
 msgid "Content"
 msgstr ""
 
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:502
+msgctxt "Post metabox title"
+msgid "Email body"
+msgstr ""
+
 #: ../../../../src/wp-content/plugins/incassoos/incassoos.php:558
 msgid "Post products (csv)"
 msgstr ""
@@ -2921,7 +2921,7 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1219
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1221
 #: ../../../../src/wp-content/plugins/incassoos/includes/orders.php:365
 #: ../../../../src/wp-content/plugins/incassoos/includes/orders.php:1289
 msgctxt "Product"
@@ -3210,11 +3210,11 @@ msgid ""
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:2203
-msgid "Send collect consumer emails"
+msgid "Send consumer emails"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:2196
-msgid "Send collect test-email"
+msgid "Send test-email"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/settings.php:244
@@ -3550,6 +3550,11 @@ msgctxt "Term meta"
 msgid "Default"
 msgstr ""
 
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:1892
+#, php-format
+msgid "TEST &mdash; %s"
+msgstr ""
+
 #: ../../../../src/wp-content/plugins/incassoos/includes/currency.php:180
 msgid "Thai baht"
 msgstr ""
@@ -3683,12 +3688,12 @@ msgstr ""
 msgid "The name of the consumer of the order."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1772
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1774
 #, php-format
 msgid "The occasion %1$s was just closed by %2$s."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1773
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1775
 #, php-format
 msgid "The occasion %1$s was just reopened by %2$s."
 msgstr ""
@@ -3779,7 +3784,7 @@ msgid ""
 "or to choose a 1- or 2-column layout for this screen."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2104
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2126
 #, php-format
 msgid ""
 "The total amount of %1$s will be withdrawn from your account (%2$s) on or "
@@ -3908,7 +3913,7 @@ msgstr ""
 msgid "Time Lock"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1779
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1781
 msgid "Title:"
 msgstr ""
 
@@ -3948,7 +3953,7 @@ msgstr ""
 msgid "Tools"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2064
+#: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2089
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:670
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-post-consumers-csv-exporter.php:104
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-post-consumers-csv-exporter.php:129
@@ -4076,7 +4081,7 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/settings.php:257
 #, php-format
-msgid "Use the %s tag to insert the display name of the user."
+msgid "Use the %s tag to insert the name of the recipient."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/settings.php:507
@@ -4132,7 +4137,7 @@ msgstr ""
 msgid "Uzbekistani som"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1784
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1786
 msgid "Value of consumptions:"
 msgstr ""
 
@@ -4179,7 +4184,7 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:45
 #: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:46
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1786
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1788
 msgid "View Occasion"
 msgstr ""
 
