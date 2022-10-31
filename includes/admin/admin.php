@@ -690,7 +690,7 @@ class Incassoos_Admin {
 		if ( ! incassoos_admin_save_metabox_check( $post, incassoos_get_collection_post_type() ) )
 			return;
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['collection_activities_metabox_nonce'] ) && wp_verify_nonce( $_POST['collection_activities_metabox_nonce'], 'collection_activities_metabox' ) ) {
 
 			// Activities
@@ -714,7 +714,7 @@ class Incassoos_Admin {
 			}
 		}
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['collection_occasions_metabox_nonce'] ) && wp_verify_nonce( $_POST['collection_occasions_metabox_nonce'], 'collection_occasions_metabox' ) ) {
 
 			// Occasions
@@ -756,7 +756,7 @@ class Incassoos_Admin {
 		if ( ! incassoos_admin_save_metabox_check( $post, incassoos_get_activity_post_type() ) )
 			return;
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['activity_details_metabox_nonce'] ) && wp_verify_nonce( $_POST['activity_details_metabox_nonce'], 'activity_details_metabox' ) ) {
 
 			/**
@@ -793,7 +793,7 @@ class Incassoos_Admin {
 			}
 		}
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['activity_participants_metabox_nonce'] ) && wp_verify_nonce( $_POST['activity_participants_metabox_nonce'], 'activity_participants_metabox' ) ) {
 
 			/**
@@ -842,7 +842,7 @@ class Incassoos_Admin {
 		if ( ! incassoos_admin_save_metabox_check( $post, incassoos_get_occasion_post_type() ) )
 			return;
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['occasion_details_metabox_nonce'] ) && wp_verify_nonce( $_POST['occasion_details_metabox_nonce'], 'occasion_details_metabox' ) ) {
 
 			/**
@@ -895,7 +895,7 @@ class Incassoos_Admin {
 		if ( ! incassoos_admin_save_metabox_check( $post, incassoos_get_order_post_type() ) )
 			return;
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['order_details_metabox_nonce'] ) && wp_verify_nonce( $_POST['order_details_metabox_nonce'], 'order_details_metabox' ) ) {
 
 			/**
@@ -914,7 +914,7 @@ class Incassoos_Admin {
 			incassoos_update_order_consumer( $consumer, $post_id );
 		}
 
-		// Bail when nonce does not verify
+		// Require nonce to verify
 		if ( isset( $_POST['order_products_metabox_nonce'] ) && wp_verify_nonce( $_POST['order_products_metabox_nonce'], 'order_products_metabox' ) ) {
 
 			/**
