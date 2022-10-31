@@ -2146,15 +2146,17 @@ function incassoos_get_sender_email_address( $default = '' ) {
  * @return string Custom email salutation
  */
 function incassoos_get_custom_email_salutation( $user, $default = '' ) {
-	$value = get_option( '_incassoos_custom_email_salutation', $default );
-	$user  = get_userdata( $user );
+	$salutation = get_option( '_incassoos_custom_email_salutation', $default );
+	$user       = get_userdata( $user );
 
-	// Parse user name
-	if ( $user && $user->exists() ) {
-		$value = str_replace( '{{user.displayname}}', $user->display_name, $value );
-	}
+	// Setup salutation tokens
+	$tokens = array(
+		'recipient.name' => $user && $user->exists() ? $user->display_name : ''
+	);
 
-	return apply_filters( 'incassoos_get_custom_email_salutation', $value, $user );
+	$salutation = incassoos_replace_tokens_in_text( $salutation, $tokens );
+
+	return apply_filters( 'incassoos_get_custom_email_salutation', $salutation, $user );
 }
 
 /**

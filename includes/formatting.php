@@ -55,31 +55,32 @@ function incassoos_sanitize_currency( $currency = '' ) {
 }
 
 /**
- * Sanitize XML content for ISO 20022 format when saving the settings page.
+ * Sanitize XML content for ISO 20022 format before tokens are parsed when saving the settings page.
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_sanitize_transaction_description'
+ * @uses apply_filters() Calls 'incassoos_sanitize_iso20022_before_tokens'
  *
  * @param string $content
  * @return string
  */
-function incassoos_sanitize_transaction_description( $content = '' ) {
+function incassoos_sanitize_iso20022_before_tokens( $content = '' ) {
 
-	// Define parsable title tag
-	$sub = '/-TITLE-/';
+	// Setup tag switchers
+	$replace_tags = array( '{{' => '/+', '}}' => '+/' );
+	$restore_tags = array_combine( array_values( $replace_tags ), array_keys( $replace_tags ) );
 
-	// Substitute parsable title tag
-	$value = str_replace( '{{TITLE}}', $sub, $content );
+	// Substitute parsable tags
+	$value = strtr( $content, $replace_tags );
 
 	// Parse ISO 20022
 	$value = incassoos_sanitize_iso20022( $value );
 
-	// Re-substitute title tag
-	$value = str_replace( $sub, '{{TITLE}}', $value );
+	// Restore parsable tags
+	$value = strtr( $value, $restore_tags );
 
 	// Filter the result and return
-	return apply_filters( 'incassoos_sanitize_transaction_description', $value, $content );
+	return apply_filters( 'incassoos_sanitize_iso20022_before_tokens', $value, $content );
 }
 
 /**
@@ -255,6 +256,43 @@ function incassoos_redact_text( $input, $args = array() ) {
  */
 function incassoos_is_value_redacted( $input, $args = array() ) {
 	return ! empty( $input ) && $input === incassoos_redact_text( $input, $args );
+}
+
+/**
+ * Replace all tokens in the input text with appropriate values
+ *
+ * @since 1.0.0
+ *
+ * @see bp_core_replace_tokens_in_text()
+ *
+ * @uses apply_filters() Calls 'incassoos_replace_tokens_in_text'
+ *
+ * @param string $text   Text to replace tokens in.
+ * @param array  $tokens Token names and replacement values for the $text.
+ * @return string
+ */
+function incassoos_replace_tokens_in_text( $text, $tokens ) {
+	$unescaped = array();
+	$escaped   = array();
+
+	foreach ( $tokens as $token => $value ) {
+		if ( ! is_string( $value ) && is_callable( $value ) ) {
+			$value = call_user_func( $value );
+		}
+
+		// Tokens could be objects or arrays.
+		if ( ! is_scalar( $value ) ) {
+			continue;
+		}
+
+		$unescaped[ '{{{' . $token . '}}}' ] = $value;
+		$escaped[ '{{' . $token . '}}' ]     = esc_html( $value );
+	}
+
+	$text = strtr( $text, $unescaped ); // Do first
+	$text = strtr( $text, $escaped );
+
+	return apply_filters( 'incassoos_replace_tokens_in_text', $text, $tokens );
 }
 
 /** Settings **************************************************************/

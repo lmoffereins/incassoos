@@ -164,7 +164,7 @@ function incassoos_admin_get_settings_fields() {
 			'_incassoos_transaction_description' => array(
 				'title'             => esc_html__( 'Transaction Description', 'incassoos' ),
 				'callback'          => 'incassoos_admin_setting_callback_transaction_description',
-				'sanitize_callback' => 'incassoos_sanitize_transaction_description',
+				'sanitize_callback' => 'incassoos_sanitize_iso20022_before_tokens',
 				'args'              => array()
 			),
 
@@ -254,7 +254,7 @@ function incassoos_admin_get_settings_fields() {
 				'sanitize_callback' => 'incassoos_sanitize_richtext',
 				'args'              => array(
 					'setting'     => '_incassoos_custom_email_salutation',
-					'description' => sprintf( esc_html__( 'Use the %s tag to insert the display name of the user.', 'incassoos' ), '<code>{{user.displayname}}</code>' )
+					'description' => sprintf( esc_html__( 'Use the %s tag to insert the name of the recipient.', 'incassoos' ), '<code>{{recipient.name}}</code>' )
 				)
 			),
 
@@ -504,7 +504,7 @@ function incassoos_admin_setting_callback_transaction_description() { ?>
 
 	<input name="_incassoos_transaction_description" id="_incassoos_transaction_description" type="text" class="regular-text" value="<?php echo get_option( '_incassoos_transaction_description', '' ); ?>" />
 
-	<p class="description"><?php printf( esc_html__( 'Use the %s tag to insert the title of the related collection.', 'incassoos' ), '<code>{{TITLE}}</code>' ); ?></p>
+	<p class="description"><?php printf( esc_html__( 'Use the %s tag to insert the title of the related collection.', 'incassoos' ), '<code>{{collection.title}}</code>' ); ?></p>
 
 	<?php
 }

@@ -1972,14 +1972,19 @@ function incassoos_get_collection_transaction_description( $post = 0 ) {
 	$description = '';
 
 	if ( $post ) {
+		$description = incassoos_get_transaction_description();
 		$title       = incassoos_get_collection_title( $post );
-		$description = str_replace( '{{TITLE}}', $title, incassoos_get_transaction_description() );
+		$tokens      = array(
+			'collection.title' => $title
+		);
 
 		// Fallback to just the title
 		if ( ! $description ) {
 			$organization = incassoos_get_organization_name();
 			$description  = $organization ? sprintf( '%s - %s', $organization, $title ) : $title;
 		}
+
+		$description = incassoos_replace_tokens_in_text( $description, $tokens );
 	}
 	
 	return apply_filters( 'incassoos_get_collection_transaction_description', $description, $post );
