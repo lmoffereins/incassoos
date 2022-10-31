@@ -393,17 +393,26 @@ function incassoos_validate_date( $value, $format = 'Y-m-d' ) {
  * @since 1.0.0
  *
  * @param mixed $value Value to validate
- * @param bool $allow_negative Optional. Whether to allow for negative values. Defaults to false.
+ * @param array $options {
+ *     List of validation options
+ *
+ *     @type bool $allow_negative Optional. Whether to allow for negative values. Defaults to false.
+ *     @type bool $allow_zero     Optional. Whether to allow for zero. Defaults to false.
+ * }
  * @return string|WP_Error Price or error when invalid
  */
-function incassoos_validate_price( $value, $allow_negative = false ) {
-	$value = floatval( $value );
+function incassoos_validate_price( $value, $options = array() ) {
+	$value   = floatval( $value );
+	$options = wp_parse_args( $options, array(
+		'allow_negative' => false,
+		'allow_zero'     => false
+	) );
 
-	if ( empty( $value ) ) {
+	if ( empty( $value ) && ! $options['allow_zero'] ) {
 		return new WP_Error( 'incassoos_empty_price', __( 'Empty price.', 'incassoos' ) );
 	}
 
-	if ( $value <= 0 && ! $allow_negative ) {
+	if ( $value < 0 && ! $options['allow_negative'] ) {
 		return new WP_Error( 'incassoos_invalid_price', __( 'Invalid price.', 'incassoos' ) );
 	}
 
