@@ -166,7 +166,7 @@ define([
 		})),
 		methods: Object.assign({
 			/**
-			 * Signal to set the active section
+			 * Signal to set the active consumers section
 			 *
 			 * @return {Void}
 			 */
@@ -175,6 +175,25 @@ define([
 				// Switch active section when there is no active consumer
 				if (! this.consumer.id) {
 					this.$root.$emit("receipt/set-active-section", "consumers");
+
+					// Collapse receipt
+					this.isExpanded = false;
+				}
+			},
+
+			/**
+			 * Signal to set the active products section
+			 *
+			 * @return {Void}
+			 */
+			setActiveProductsSection: function() {
+
+				// Switch active section when there are no active products
+				if (! this.receipt.length) {
+					this.$root.$emit("receipt/set-active-section", "products");
+
+					// Collapse receipt
+					this.isExpanded = false;
 				}
 			},
 
@@ -417,6 +436,8 @@ define([
 
 				// Reset attributes after any other updates to sections
 				self.$nextTick( function() {
+
+					// Collapse receipt when resizing
 					self.isExpanded = false;
 				});
 			},

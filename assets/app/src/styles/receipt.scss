@@ -66,13 +66,13 @@
 
 		.item-list-header {
 			position: relative;
-			padding: 35px 70px 15px;
+			padding: 25px 70px 5px;
+			grid-gap: 5px;
 			opacity: 0;
 			transform: translateY(120px);
 			transition: transform .6s linear;
 			transition-delay: .2s;
 			text-align: center;
-			cursor: pointer;
 
 			.item-list-header-image {
 				position: absolute;
@@ -90,8 +90,17 @@
 				}
 			}
 
-			.item-subtitle {
-				min-height: 1em;
+			.topic {
+				margin-top: 10px;
+			}
+
+			.item-title-wrapper {
+				width: 100%;
+				padding: 10px 0px;
+
+				.item-subtitle {
+					min-height: 1em;
+				}
 			}
 		}
 
@@ -163,6 +172,15 @@
 
 					.item-action {
 						border-radius: 0px;
+					}
+				}
+
+				&.no-items {
+					.select-products {
+						padding: 10px 0px;
+						font-style: normal;
+						font-weight: 600;
+						cursor: pointer;
 					}
 				}
 			}

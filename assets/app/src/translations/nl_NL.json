@@ -307,7 +307,8 @@
 		"ListHeading": "Bonnetje",
 		"SelectAConsumer": "Selecteer een afnemer",
 		"FeedbackTitle": "Bonfouten",
-		"NoItems": "Het bonnetje is nog leeg."
+		"NoItems": "Het bonnetje is nog leeg.",
+		"SelectProducts": "Selecteer producten"
 	},
 	"Settings": {
 		"OpenSettings": "Open instellingen"
