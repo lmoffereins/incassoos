@@ -240,7 +240,7 @@ body.incassoos-post-view #postdivrich .inside {
 	word-wrap: break-word;
 }
 
-.incassoos-object-details label + * {
+.incassoos-object-details label + *:not(input[type="checkbox"]) {
 	display: inline-block;
 	width: 100%;
 	max-width: 58%;
@@ -811,6 +811,11 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 	padding: 2px;
 	opacity: 0; /* Hide with opacity to enable :focus */
 	pointer-events: none;
+}
+
+.incassoos-item-list.is-partitioned .activity-participant .toggle-custom-price.set-custom-price,
+.incassoos-item-list.is-partitioned .activity-participant .toggle-custom-price.cancel-custom-price {
+	visibility: hidden;
 }
 
 .incassoos-item-list .activity-participant:hover .toggle-custom-price,

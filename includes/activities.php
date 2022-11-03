@@ -357,49 +357,6 @@ function incassoos_get_activity_author( $post = 0 ) {
 }
 
 /**
- * Output the Activity's price
- *
- * @since 1.0.0
- *
- * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                     null to skip format parsing. Defaults to false.
- */
-function incassoos_the_activity_price( $post = 0, $num_format = false ) {
-	echo incassoos_get_activity_price( $post, $num_format );
-}
-
-/**
- * Return the Activity's price
- *
- * @since 1.0.0
- *
- * @uses apply_filters() Calls 'incassoos_get_activity_price'
- *
- * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
- * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
- *                                     null to skip format parsing. Defaults to false.
- * @return string|float Activity price.
- */
-function incassoos_get_activity_price( $post = 0, $num_format = false ) {
-	$post  = incassoos_get_activity( $post );
-	$price = get_post_meta( $post ? $post->ID : 0, 'price', true );
-
-	if ( ! $price ) {
-		$price = 0;
-	}
-
-	$price = (float) apply_filters( 'incassoos_get_activity_price', (float) $price, $post );
-
-	// Apply currency format
-	if ( null !== $num_format ) {
-		$price = incassoos_parse_currency( $price, $num_format );
-	}
-
-	return $price;
-}
-
-/**
  * Output the Activity's created date
  *
  * @since 1.0.0
@@ -494,6 +451,66 @@ function incassoos_is_activity_same_date_created( $post = 0 ) {
 	$same_date = $post && ( incassoos_get_activity_created( $post ) === incassoos_get_activity_date( $post ) );
 
 	return (bool) apply_filters( 'incassoos_is_activity_same_date_created', $same_date, $post );
+}
+
+/**
+ * Output the Activity's price
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
+ */
+function incassoos_the_activity_price( $post = 0, $num_format = false ) {
+	echo incassoos_get_activity_price( $post, $num_format );
+}
+
+/**
+ * Return the Activity's price
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_activity_price'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @param  bool|array|null $num_format Optional. Whether to apply currency format. Pass array as format args. Pass
+ *                                     null to skip format parsing. Defaults to false.
+ * @return string|float Activity price.
+ */
+function incassoos_get_activity_price( $post = 0, $num_format = false ) {
+	$post  = incassoos_get_activity( $post );
+	$price = get_post_meta( $post ? $post->ID : 0, 'price', true );
+
+	if ( ! $price ) {
+		$price = 0;
+	}
+
+	$price = (float) apply_filters( 'incassoos_get_activity_price', (float) $price, $post );
+
+	// Apply currency format
+	if ( null !== $num_format ) {
+		$price = incassoos_parse_currency( $price, $num_format );
+	}
+
+	return $price;
+}
+
+/**
+ * Return whether the Activity's total price is partitioned
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_activity_partitioned'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Is the Activity partitioned?
+ */
+function incassoos_is_activity_partitioned( $post = 0 ) {
+	$post      = incassoos_get_activity( $post );
+	$partition = (bool) get_post_meta( $post ? $post->ID : 0, 'partition', true );
+
+	return (bool) apply_filters( 'incassoos_is_activity_partitioned', $partition, $post );
 }
 
 /**
@@ -1324,7 +1341,7 @@ function incassoos_validate_activity( $args = array() ) {
 		return $date;
 	}
 
-	// Validate price. Accept negative values.
+	// Validate price. Accept zero and negative values
 	$price = incassoos_validate_price( $args['price'], array( 'allow_negative' => true, 'allow_zero' => true ) );
 	if ( is_wp_error( $price ) ) {
 		return $price;

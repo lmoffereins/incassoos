@@ -1078,6 +1078,20 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<?php endif; ?>
 		</p>
 
+		<?php if ( ! $is_post_view || incassoos_is_activity_partitioned( $post ) ) : ?>
+
+		<p>
+			<label for="activity-partition"><?php esc_html_e( 'Partition:', 'incassoos' ); ?></label>
+
+			<?php if ( ! $is_post_view ) : ?>
+				<input type="checkbox" name="partition" id="activity-partition" value="1"<?php checked( get_post_meta( $post->ID, 'partition', true ) ); ?> />
+			<?php else : ?>
+				<span id="activity-partition" class="value"><?php esc_html_e( 'Yes', 'incassoos' ); ?></span>
+			<?php endif; ?>
+		</p>
+
+		<?php endif; ?>
+
 		<p>
 			<label><?php esc_html_e( 'Count:', 'incassoos' ); ?></label>
 			<span id="activity-participant-count">
@@ -1153,6 +1167,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 	// Get details
 	$is_post_view      = incassoos_admin_is_post_view( $post );
+	$is_partitioned    = incassoos_is_activity_partitioned( $post );
 	$participants      = incassoos_get_activity_participants( $post );
 	$participant_types = incassoos_get_activity_participant_types( $post );
 	$users             = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
@@ -1173,6 +1188,12 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	$min_price_step = 1 / pow( 10, $format_args['decimals'] );
 	$price          = number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) );
 
+	// List class
+	$list_class = array( 'incassoos-item-list' );
+	if ( $is_partitioned ) {
+		$list_class[] = 'is-partitioned';
+	}
+
 	// List item class
 	$item_class = array( 'consumer', 'activity-participant' );
 	if ( ! $is_post_view ) {
@@ -1181,7 +1202,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 
 	?>
 
-	<div class="incassoos-item-list">
+	<div class="<?php echo implode( ' ', $list_class ); ?>">
 		<div id="select-matches" class="item-list-header hide-if-no-js">
 			<?php if ( ! $is_post_view ) : ?>
 
@@ -1241,10 +1262,14 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 					<?php foreach ( $group->users as $user ) :
 						$_item_class = $item_class;
 						$has_custom_price = false;
+						$wp_readonly = '';
 
 						if ( incassoos_activity_participant_has_custom_price( $user->ID, $post ) ) {
 							$_item_class[] = 'has-custom-price';
 							$has_custom_price = true;
+							if ( $is_partitioned ) {
+								$wp_readonly = ' readonly="readonly"';
+							}
 						}
 
 						if ( in_array( $user->ID, $hidden_users ) ) {
@@ -1260,7 +1285,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 							<label for="participant-<?php echo $user->ID; ?>" class="consumer-name title"><?php echo $user->display_name; ?></label>
 
 							<span class="price-input">
-								<input type="number" name="participant-price[<?php echo $user->ID; ?>]" class="custom-price" step="<?php echo $min_price_step; ?>" value="<?php if ( $has_custom_price ) { echo esc_attr( number_format( $prices[ $user->ID ], absint( $format_args['decimals'] ) ) ); } ?>" placeholder="<?php echo esc_attr( $price ); ?>" <?php if ( ! $has_custom_price ) { echo 'disabled="disabled"'; } ?> />
+								<input type="number" name="participant-price[<?php echo $user->ID; ?>]" class="custom-price" step="<?php echo $min_price_step; ?>" value="<?php if ( $has_custom_price ) { echo esc_attr( number_format( $prices[ $user->ID ], absint( $format_args['decimals'] ) ) ); } ?>" placeholder="<?php echo esc_attr( $price ); ?>" <?php disabled( ! $has_custom_price ); echo $wp_readonly; ?> />
 								<button type="button" class="button-link toggle-custom-price cancel-custom-price" title="<?php esc_attr_e( 'Cancel the custom price', 'incassoos' ); ?>">
 									<span class="screen-reader-text"><?php esc_html_e( 'Cancel the custom price', 'incassoos' ); ?></span>
 								</button>

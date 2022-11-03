@@ -763,6 +763,7 @@ class Incassoos_Admin {
 			 * Save posted inputs:
 			 * - Activity date
 			 * - Price
+			 * - Partition
 			 * - Activity Category taxonomy
 			 */
 
@@ -772,6 +773,12 @@ class Incassoos_Admin {
 
 			if ( isset( $_POST['price'] ) ) {
 				update_post_meta( $post_id, 'price', $_POST['price'] );
+			}
+
+			if ( isset( $_POST['partition'] ) ) {
+				update_post_meta( $post_id, 'partition', 1 );
+			} else {
+				delete_post_meta( $post_id, 'partition' );
 			}
 
 			foreach ( array(

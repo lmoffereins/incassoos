@@ -122,6 +122,7 @@ jQuery( document ).ready( function( $ ) {
 			// Update count and total
 			updateCount();
 			toggleGroups();
+			updatePartition();
 			updateTotal();
 		})
 
@@ -139,6 +140,7 @@ jQuery( document ).ready( function( $ ) {
 			// Update count and total
 			updateCount();
 			toggleGroups();
+			updatePartition();
 			updateTotal();
 		})
 
@@ -216,13 +218,13 @@ jQuery( document ).ready( function( $ ) {
 		var calculated = 0, $listItem;
 
 		// Calculate total from activities
-		$.each( $colActBox.find( '.select-activity:checked' ), function( i, el ) {
+		$colActBox.find( '.select-activity:checked' ).each( function( i, el ) {
 			$listItem = $(el).parents( '.collection-activity' ).first();
 			calculated += parseFormattedCurrency( $listItem.find( '.activity-total' ).text() || 0 );
 		});
 
 		// Calculate total from occasions
-		$.each( $colOccBox.find( '.select-occasion:checked' ), function( i, el ) {
+		$colOccBox.find( '.select-occasion:checked' ).each( function( i, el ) {
 			$listItem = $(el).parents( '.collection-occasion' ).first();
 			calculated += parseFormattedCurrency( $listItem.find( '.occasion-total' ).text() || 0 );
 		});
@@ -236,6 +238,7 @@ jQuery( document ).ready( function( $ ) {
 	    $actPriceField = $actDtlsBox.find( 'input#price' ),
 	    $actCountField = $actDtlsBox.find( '#activity-participant-count' ).prepend( '<span class="new-value"></span>' ),
 	    $actTotalField = $actDtlsBox.find( '#activity-total' ).prepend( '<span class="new-value"></span>' ),
+	    $actPartitionField = $actDtlsBox.find( '#activity-partition' ),
 	    $actPartBox = $( '#incassoos_activity_participants' ),
 	    $actPtcptList = $actPartBox.find( '.incassoos-item-list' ),
 	    $addParticipant = $actPtcptList.find( '#addparticipant' ),
@@ -248,11 +251,33 @@ jQuery( document ).ready( function( $ ) {
 		this.value = parseFloatFormat( this.value );
 
 		// Update default prices
-		$actPartBox.find( '.activity-participant .custom-price' ).attr( 'placeholder', this.value );
+		$actPtcptList.find( '.activity-participant .custom-price' ).attr( 'placeholder', this.value );
 
 		// Update total
+		updatePartition();
 		updateTotal();
 		toggleGroups();
+	});
+
+	// Partition changes
+	$actPartitionField.on( 'change', function() {
+		$actPtcptList.toggleClass( 'is-partitioned' );
+
+		// Enable custom pricing inputs
+		if ( $actPartitionField.is( ':checked' ) ) {
+			updatePartition();
+			updateTotal();
+
+		} else {
+
+			// Clear previously partitioned
+			$actPtcptList.find( '.activity-participant.has-custom-price .select-user:not(:checked)' ).parents( '.activity-participant' )
+				.removeClass( 'has-custom-price' )
+				.find( '.custom-price' ).val( '' );
+
+			// Enable custom price inputs
+			$actPtcptList.find( '.activity-participant.has-custom-price .custom-price' ).prop( 'disabled', false ).prop( 'readonly', false );
+		}
 	});
 
 	$actPtcptList
@@ -310,12 +335,16 @@ jQuery( document ).ready( function( $ ) {
 
 			// Update count and total
 			updateCount();
+			updatePartition();
 			updateTotal();
 		})
 
 		// Toggle custom price input
 		.on( 'click', '.toggle-custom-price', function() {
 			activityParticipantOpenCustomPrice( this );
+
+			// Update total
+			updateTotal();
 		})
 
 		// Custom price changed
@@ -363,6 +392,8 @@ jQuery( document ).ready( function( $ ) {
 	 * @param  {Boolean}     force Optional. True to force open the price, False to toggle. Defaults to false.
 	 */
 	function activityParticipantOpenCustomPrice( el, force ) {
+		var partition = $actPartitionField.is( ':checked' );
+
 		force = force || false;
 
 		$listItem = $actPtcptList.find( el ).parents( '.activity-participant' ).first();
@@ -374,16 +405,51 @@ jQuery( document ).ready( function( $ ) {
 		if ( ! $listItem.hasClass( 'has-custom-price' ) ) {
 			$customPrice.val( '' ).prop( 'disabled', true );
 		} else {
-			$customPrice.prop( 'disabled', false );
+			$customPrice.prop( 'disabled', false ).prop( 'readonly', partition );
 
-			// Focus. Setting selection range is not supported for number type
-			if ( $customPrice[0] !== el ) {
+			// Set focus. Cannot set the selection range, because no support for number type inputs
+			if ( ! partition && $customPrice[0] !== el ) {
 				$customPrice.focus();
 			}
 		}
+	}
 
-		// Update total
-		updateTotal();
+	/**
+	 * When applied, update partitioning of the total price
+	 *
+	 * @since 1.0.0
+	 */
+	function updatePartition() {
+
+		// Bail when not partitioning
+		if ( ! $actPartitionField.is( ':checked' ) ) {
+			return;
+		}
+
+		var $items = $actPtcptList.find( '.activity-participant .select-user:checked' ),
+		    totalPrice = parseFloat( $actPriceField.val() ),
+		    itemTotal = 0,
+		    prices = [],
+		    i = 0;
+
+		// Setup list of item prices rounded down
+		prices.length = $items.length;
+		prices.fill( Math.floor( totalPrice / $items.length * 100 ) / 100 );
+		itemTotal = Math.round( prices.reduce( function( a, b ) { return a + b; }, 0 ) * 100 ) / 100;
+
+		// Iteratively increment item prices untill total price is matched
+		while ( itemTotal < totalPrice ) {
+			prices[i] = Math.round( ( prices[i] + 0.01 ) * 100 ) / 100;
+			itemTotal = Math.round( prices.reduce( function( a, b ) { return a + b; }, 0 ) * 100 ) / 100;
+			i++;
+		}
+
+		// Set participant custom prices accordingly
+		$items.each( function( i, el ) {
+			activityParticipantOpenCustomPrice( el, true );
+			$actPtcptList.find( el ).parents( '.activity-participant' ).first()
+				.find( '.custom-price' ).val( parseFloatFormat( prices[ i ] ) );
+		});
 	}
 
 	/** Order ***********************************************************/
@@ -430,7 +496,7 @@ jQuery( document ).ready( function( $ ) {
 		var calculated = 0;
 
 		// Calculate total from activities
-		$.each( $ordPrdBox.find( '.order-product' ), function( i, el ) {
+		$ordPrdBox.find( '.order-product' ).each( function( i, el ) {
 			calculated += Math.abs( parseInt( $ordPrdBox.find( el ).find( '.value' ).val() ) );
 		});
 
@@ -448,7 +514,7 @@ jQuery( document ).ready( function( $ ) {
 		var calculated = 0, $listItem;
 
 		// Calculate total from activities
-		$.each( $ordPrdBox.find( '.order-product' ), function( i, el ) {
+		$ordPrdBox.find( '.order-product' ).each( function( i, el ) {
 			$listItem = $ordPrdBox.find( el );
 			calculated += parseFormattedCurrency( $listItem.find( '.price' ).text() || 0 ) * $listItem.find( '.value' ).val();
 		});
@@ -475,8 +541,8 @@ jQuery( document ).ready( function( $ ) {
 			var calculated = 0, $listItem;
 
 			// Calculate total from (custom) prices
-			$.each( $actPtcptList.find( '.activity-participant .select-user:checked' ), function( i, el ) {
-				$listItem = $(el).parents( '.activity-participant' ).first();
+			$actPtcptList.find( '.activity-participant .select-user:checked' ).each( function( i, el ) {
+				$listItem = $( el ).parents( '.activity-participant' ).first();
 
 				calculated += $listItem.hasClass( 'has-custom-price' )
 					? parseFloat( $listItem.find( '.custom-price' ).val() || 0 )

@@ -255,6 +255,7 @@ function incassoos_admin_single_post_help_tabs() {
 					'<p>' . __( '<strong>Date</strong> &mdash; Select the date the activity was scheduled. Leave empty when no particular date applies.', 'incassoos' ) . '</p>' .
 					'<p>' . __( '<strong>Category</strong> &mdash; Select a category for the activity.', 'incassoos' ) . '</p>' .
 					'<p>' . __( '<strong>Price</strong> &mdash; Enter the default price for the activity.', 'incassoos' ) . '</p>' .
+					'<p>' . __( '<strong>Partition</strong> &mdash; Select whether the price of the activity should be partitioned for the participants.', 'incassoos' ) . '</p>' .
 					'<p>' . __( '<strong>Participants</strong> &mdash; Select the participants of the activity.', 'incassoos' ) . '</p>' .
 					'<p>' . __( 'Participants can be selected individually or in bulk. Bulk selection of participants is available through clicking their respective group heading or by selecting an option from the Quick Select menu.', 'incassoos' ) . '</p>' .
 					'<p>' . __( 'When required, the price per participant can be changed to differ from the default price. You can change their price after the participant is selected, then click the pencil icon to open the custom price input field. Click the X to cancel the custom price.', 'incassoos' ) . '</p>',
