@@ -76,6 +76,8 @@ body.incassoos #wpbody-content {
 
 /* List Table */
 
+.fixed .column-participants,
+.fixed .column-consumers,
 .fixed .column-price,
 .fixed .column-products,
 .fixed .column-total {
@@ -86,11 +88,9 @@ body.incassoos #wpbody-content {
 .fixed .column-distributed,
 .fixed .column-assets,
 .fixed .column-activity_date,
-.fixed .column-participants,
 .fixed .column-collection,
 .fixed .column-occasion_date,
-.fixed .column-orders,
-.fixed .column-consumers {
+.fixed .column-orders {
 	width: 10%;
 }
 
