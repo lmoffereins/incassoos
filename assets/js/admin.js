@@ -312,7 +312,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Close add participant
 		.on( 'click', '.add-participant-container.adding-participant #open-add-participant', function() {
-			activityRemoveAddParticipant();
+			activityCloseAddParticipantPanel();
 		})
 
 		// Add participant and apply selection
@@ -361,13 +361,13 @@ jQuery( document ).ready( function( $ ) {
 
 			// Pressed Escape
 			if ( 'keyup' === event.type && 27 === event.keyCode ) {
-				activityRemoveAddParticipant();
+				activityCloseAddParticipantPanel();
 			} else {
 				var $box = $actPtcptList.find( '.add-participant-container.adding-participant .add-participant, .add-participant-container.adding-participant #open-add-participant' );
 
 				// Clicked outside of box
 				if ( 'mouseup' === event.type && ! $box.is( event.target ) && ! $box.has( event.target ).length ) {
-					activityRemoveAddParticipant();
+					activityCloseAddParticipantPanel();
 				}
 			}
 		});
@@ -379,7 +379,7 @@ jQuery( document ).ready( function( $ ) {
 	 *
 	 * @return {void}
 	 */
-	function activityRemoveAddParticipant() {
+	function activityCloseAddParticipantPanel() {
 		$actPtcptList.find( '.add-participant-container' ).removeClass( 'adding-participant' ).find( '.add-participant' ).remove();
 	}
 
