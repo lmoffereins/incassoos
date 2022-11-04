@@ -79,6 +79,7 @@ class Incassoos_VGSR {
 		add_filter( 'incassoos_get_user_match_ids',     array( $this, 'user_match_ids'      ), 10, 2 );
 
 		// Email
+		add_filter( 'incassoos_send_email_args',             array( $this, 'send_email_args'         ), 10, 2 );
 		add_filter( 'incassoos_get_custom_email_salutation', array( $this, 'custom_email_salutation' ), 10, 2 );
 
 		// Settings
@@ -223,6 +224,48 @@ class Incassoos_VGSR {
 		}
 
 		return $match_ids;
+	}
+
+	/**
+	 * Modify the email arguments
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param  array $args Email arguments
+	 * @param  array $original_args Original email arguments
+	 * @return array Email arguments
+	 */
+	public function send_email_args( $args, $original_args ) {
+
+		// Bail when not a plugin email type
+		if ( ! isset( $args['incassoos_email_type'] ) )
+			return $args;
+
+		// Ensure args are present
+		$args    = wp_parse_args( $args,            array( 'bcc' => array() ) );
+		$headers = wp_parse_args( $args['headers'], array( 'bcc' => 'Bcc:' ) );
+
+		// Plugin email type
+		switch ( $args['incassoos_email_type'] ) {
+
+			// Collection consumer collect
+			case 'incassoos-collection-consumer-collect':
+
+				// Get bcc from args
+				list( $name, $content ) = explode( ':', $headers['bcc'], 2 );
+				$bcc = array_filter( array_unique( array_merge( explode( ',', $content ), $args['bcc'] ) ) );
+
+				// Always send bcc to the main sender
+				$bcc[] = incassoos_get_sender_email_address();
+
+				// Set bcc in args and headers
+				$args['bcc'] = $bcc;
+				$args['headers']['bcc'] = 'Bcc:' . implode( ',', $bcc );
+
+				break;
+		}
+
+		return $args;
 	}
 
 	/**

@@ -387,6 +387,16 @@ class Incassoos_BuddyPress {
 
 		// Define email subject
 		$email->set_subject( $args['subject'] );
+
+		// Define email cc
+		if ( ! empty( $args['cc'] ) ) {
+			$email->set_cc( array_unique( array_merge( $email->get_cc(), $args['cc'] ) ) );
+		}
+
+		// Define email bcc
+		if ( ! empty( $args['bcc'] ) ) {
+			$email->set_bcc( array_unique( array_merge( $email->get_bcc(), $args['bcc'] ) ) );
+		}
 	}
 }
 
