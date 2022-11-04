@@ -2777,7 +2777,7 @@ function incassoos_send_email( $args = array() ) {
 
 	// Set email type header
 	if ( isset( $args['incassoos_email_type'] ) ) {
-		$args['headers']['email-type'] = 'X-Incassoos-Type: ' . $args['incassoos_email_type'];
+		$args['headers']['email-type'] = 'X-Incassoos-Type: ' . str_replace( 'incassoos-', '', $args['incassoos_email_type'] );
 	}
 
 	// Filter arguments

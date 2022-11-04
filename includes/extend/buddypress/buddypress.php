@@ -70,6 +70,7 @@ class Incassoos_BuddyPress {
 		add_filter( 'posts_pre_query',          array( $this, 'posts_pre_query'   ), 10, 2 );
 		add_filter( 'incassoos_pre_send_email', array( $this, 'send_email'        ), 10, 2 );
 		add_filter( 'bp_get_email_post',        array( $this, 'filter_email_post' ), 10, 3 );
+		add_filter( 'bp_email_get_headers',     array( $this, 'email_get_headers' ),  7, 4 ); // After BP's core filter for defaults
 		add_filter( 'bp_email_get_tokens',      array( $this, 'email_get_tokens'  ),  7, 4 ); // After BP's core filter for defaults
 		add_action( 'bp_send_email',            array( $this, 'send_email_setup'  ), 10, 4 );
 	}
@@ -268,6 +269,49 @@ class Incassoos_BuddyPress {
 		$post = new WP_Post( (object) $dummy );
 
 		return $post;
+	}
+
+	/**
+	 * Modify the email headers
+	 *
+	 * @since 1.0.0
+	 *
+	 * @see bp_email_set_default_headers()
+	 * @see BP_Email::get()
+	 *
+	 * @param array    $headers        Email headers
+	 * @param string   $property_name Unused
+	 * @param string   $transform     Unused
+	 * @param BP_Email $email         Email being sent
+	 * @return array
+	 */
+	public function email_get_headers( $headers, $property_name, $transform, $email ) {
+
+		// Get tokens
+		$tokens = $email->get_tokens();
+
+		// Bail wen this is not a plugin email type
+		if ( ! isset( $tokens['incassoos.args'] ) )
+			return $headers;
+
+		// Get email arguments passed from upstream
+		$_headers = $tokens['incassoos.args']['headers'];
+
+		// Consider headers
+		if ( ! empty( $_headers ) ) {
+
+			// Walk headers
+			foreach ( $tokens['incassoos.args']['headers'] as $header ) {
+				list( $name, $content ) = explode( ':', $header, 2 );
+
+				// Skip generic headers
+				if ( ! in_array( strtolower( $name ), array( 'from', 'cc', 'bcc', 'content-type' ), true ) ) {
+					$headers[ $name ] = $content;
+				}
+			}
+		}
+
+		return $headers;
 	}
 
 	/**
