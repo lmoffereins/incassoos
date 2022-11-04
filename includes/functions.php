@@ -2775,6 +2775,11 @@ function incassoos_send_email( $args = array() ) {
 	// Assume all mails are in HTML
 	$args['headers']['content-type'] = 'Content-Type: text/html';
 
+	// Set email type header
+	if ( isset( $args['incassoos_email_type'] ) ) {
+		$args['headers']['email-type'] = 'X-Incassoos-Type: ' . $args['incassoos_email_type'];
+	}
+
 	// Filter arguments
 	$args = apply_filters( 'incassoos_send_email_args', $args, $original_args );
 
