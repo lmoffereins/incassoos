@@ -20,7 +20,7 @@ define([
 	/**
 	 * Holds the list of available languages and their translations
 	 *
-	 * en_US is considered the default language.
+	 * en_US is the default language with full localization coverage.
 	 *
 	 * @type {Object}
 	 */
@@ -31,7 +31,8 @@ define([
 			translation: en_US,
 			alias: {
 				dayjs: "en",
-				easepick: "en-US"
+				easepick: "en-US",
+				system: "en-US"
 			}
 		},
 		"nl_NL": {
@@ -39,23 +40,32 @@ define([
 			translation: nl_NL,
 			alias: {
 				dayjs: "nl",
-				easepick: "nl-NL"
+				easepick: "nl-NL",
+				system: "nl"
 			}
 		}
-	};
+	},
 
-	// Reset locale in dayjs after loading locales
-	dayjs.locale("en");
+	/**
+	 * Holds the initial language key
+	 *
+	 * Use the browser's language, or else default to en_US.
+	 *
+	 * @type {String}
+	 */
+	initialLanguage = _.keys(availableLanguages).find( function( i ) {
+		return navigator.language === availableLanguages[i].alias.system;
+	}) || "en_US";
+
+	// Identify the initial language
+	availableLanguages[initialLanguage].initial = true;
+
+	// Set locale in dayjs after loading locales
+	dayjs.locale(availableLanguages[initialLanguage].alias.dayjs);
 
 	// Use UTC date parsing
 	dayjs.extend(dayjs_utc);
 
-	/**
-	 * Load the available translations
-	 *
-	 * @return {Promise} Loaded translations
-	 */
-	return function translationsLoader() {
-		return Q.resolve(availableLanguages);
-	};
+	// Return the available translations
+	return availableLanguages;
 });

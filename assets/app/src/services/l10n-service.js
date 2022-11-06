@@ -14,7 +14,7 @@ define([
 	"./auth-service",
 	"./feedback-service",
 	"./shortcuts-service"
-], function( Q, _, dayjs, util, translationsLoader, storageService, authService, feedbackService, shortcutsService ) {
+], function( Q, _, dayjs, util, translations, storageService, authService, feedbackService, shortcutsService ) {
 	/**
 	 * Holds the list of domains with translated strings
 	 *
@@ -37,21 +37,41 @@ define([
 	 *
 	 * @type {String}
 	 */
-	defaultLanguage = "en_US",
+	defaultLanguage = _.keys(translations).find(key => true === translations[key].default),
 
 	/**
 	 * Holds the currently active language key
 	 *
 	 * @type {String}
 	 */
-	activeLanguage = defaultLanguage,
+	activeLanguage = _.keys(translations).find(key => true === translations[key].initial),
 
 	/**
 	 * Holds the list of available languages and their labels
 	 *
 	 * @type {Object}
 	 */
-	availableLanguages = {},
+	availableLanguages = (function() {
+		var list = {}, i;
+
+		// Define translations collection
+		for (i in translations) {
+
+			// Parse defaults for each non-default translation
+			l10n[i] = _.defaultsDeep(
+				translations[i].translation,
+				translations[defaultLanguage].translation
+			);
+
+			// Define available languages
+			list[i] = {
+				label: translations[i].label || i,
+				alias: translations[i].alias || {}
+			};
+		}
+
+		return list;
+	})(),
 
 	/**
 	 * Initialization of the localization service
@@ -201,34 +221,8 @@ define([
 			}
 		});
 
-		// Setup available translations
-		return translationsLoader().then( function( translations ) {
-			var i;
-
-			// Set the default language
-			defaultLanguage = _.keys(translations).find(key => true === translations[key].default) || "en_US";
-
-			// Define translations collection
-			for (i in translations) {
-
-				// Parse defaults for each non-default translation
-				l10n[i] = _.defaultsDeep(
-					translations[i].translation,
-					translations[defaultLanguage].translation
-				);
-
-				// Define available languages
-				availableLanguages[i] = {
-					label: translations[i].label || i,
-					alias: translations[i].alias || {}
-				};
-			}
-
-		}).then( function() {
-
-			// Define the initial active language from the installation language
-			storageService.get("language").then(setActiveLanguage);
-		});
+		// Define the initial active language from the installation language
+		return storageService.get("language").then(setActiveLanguage);
 	},
 
 	/**
