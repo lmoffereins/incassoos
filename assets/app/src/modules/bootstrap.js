@@ -136,7 +136,7 @@ define([
 			return Q.all([
 
 				// Initialize services (auth, l10n, etc.)
-				services.init(),
+				services.init(context),
 
 				// Setup event/store listeners
 				Q.Promisify(setupListeners(context))

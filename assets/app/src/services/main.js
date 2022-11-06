@@ -100,7 +100,7 @@ define([
 			if (services[i][name] && "function" === typeof services[i][name]) {
 				fns.push({
 					service: i,
-					doMethod: services[i][name]
+					run: services[i][name]
 				});
 			}
 		}
@@ -121,7 +121,7 @@ define([
 
 	// Unfold the service store definitions
 	getServiceMethods("storeDefinition").forEach( function( storeDefinition ) {
-		var methods = storeDefinition.doMethod();
+		var methods = storeDefinition.run();
 
 		// Add state modifier
 		if (methods.defineStoreState && "function" === typeof methods.defineStoreState) {
@@ -146,9 +146,10 @@ define([
 		/**
 		 * Initialize all services
 		 *
+		 * @param {Object} context Store action context
 		 * @return {Promise} Services are initialized
 		 */
-		init: function() {
+		init: function( context ) {
 
 			// Do storage service first
 			return services.storage.init().then( function() {
@@ -159,14 +160,16 @@ define([
 					// Run the `init` method and make sure it returns a Promise
 					// The storage service was run previously
 					if ("storage" !== init.service) {
-						return Q.Promisify(init.doMethod(Vue)).catch(console.error);
+						return Q.Promisify(init.run(Vue)).catch(console.error);
 					}
 				}));
 			}).then( function() {
 				/**
 				 * Trigger event listeners for when all services are initialized
+				 *
+				 * @param {Object} context Store action context
 				 */
-				return listeners.trigger("init");
+				return listeners.trigger("init", context);
 			}).catch( function( error ) {
 
 				// TODO: register in log?
@@ -202,7 +205,7 @@ define([
 					.map( function( reset ) {
 
 						// Run the `reset` method and make sure it returns a Promise
-						return Q.Promisify(reset.doMethod());
+						return Q.Promisify(reset.run());
 					})
 				);
 			}).then( function() {
