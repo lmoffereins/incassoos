@@ -357,7 +357,7 @@ define([
 			// Register touch event listeners
 			this.hammer.on("swipe", onSectionsSwipe);
 			this.$registerUnobservable( function() {
-				this.hammer.off("swipe", onSectionsSwipe);
+				self.hammer.off("swipe", onSectionsSwipe);
 			});
 		},
 
