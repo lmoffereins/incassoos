@@ -10,10 +10,9 @@
 	height: 100%;
 	overflow: hidden;
 	color: var(--text-default);
-	background: var(--background-default);
+	background-color: var(--background-default);
 	-webkit-tap-highlight-color: transparent;
 	user-select: none;
-	opacity: 0;
 	transition:
 		opacity .5s ease-in,
 		var(--transition-background)
@@ -106,7 +105,7 @@
 	}
 
 	&.is-loaded {
-		opacity: 1;
+		background-image: none;
 	}
 }
 

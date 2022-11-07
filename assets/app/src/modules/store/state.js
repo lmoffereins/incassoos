@@ -19,15 +19,26 @@ define([
 	var state = {
 
 		// Application status
+		appLoadingStatus: "Loading.LoadingPage",
 		isBootstrapped: false,
 		isLoaded: false,
 		isReady: false,
 
 		// Global state machine
-		// fsm: fsm, // Used by `v-fsm` directive
 		fsmState: fsm.state,
 		isSettings: false,
 	};
+
+	/**
+	 * Reactive listener for the main store's `appLoadingStatus` state data
+	 *
+	 * @return {String} The application's loading status tagline
+	 */
+	Object.defineProperty(Vue.prototype, "$appLoadingStatus", {
+		get: function() {
+			return this.$store.state.appLoadingStatus;
+		}
+	});
 
 	/**
 	 * Reactive listener for the main store's `isBootstrapped` state data

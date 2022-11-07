@@ -158,6 +158,16 @@
 		"Finish": "Zo gepiept",
 		"FinishDescription": "Start je gebruik van Incassoos."
 	},
+	"Language": {
+		"SelectLanguage": "Kies een taal"
+	},
+	"Loading": {
+		"LoadingPage": "Pagina laden",
+		"LoadingServices": "Services laden",
+		"LoadingSettings": "Instellingen laden",
+		"LoadingAssets": "Gelegenheden, afnemers en producten ophalen",
+		"StartingApp": "Applicatie starten"
+	},
 	"Login": {
 		"NewLoginTitle": "Aanmelden",
 		"PinLoginTitle": "Aanmelden",
@@ -197,9 +207,6 @@
 			"InvalidAccount": "Het account kon niet worden goedgekeurd.",
 			"NotLoggedOut": "Kon niet uitloggen."
 		}
-	},
-	"Language": {
-		"SelectLanguage": "Kies een taal"
 	},
 	"Occasion": {
 		"OpenPanel": "Bekijk gelegenheid",

@@ -163,6 +163,13 @@
 	"Language": {
 		"Select": "Select language"
 	},
+	"Loading": {
+		"LoadingPage": "Loading page",
+		"LoadingServices": "Loading services",
+		"LoadingSettings": "Loading application settings",
+		"LoadingAssets": "Loading Occasions, Consumers, Products",
+		"StartingApp": "Starting application"
+	},
 	"Login": {
 		"NewLoginTitle": "Login",
 		"PinLoginTitle": "Login",

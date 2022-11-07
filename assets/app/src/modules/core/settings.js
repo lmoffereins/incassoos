@@ -136,7 +136,14 @@ define([
 	};
 
 	// When the installation is run, update the settings construct
-	services.on("init", updateSettingsFromStorage);
+	services.on("init", function( context ) {
+
+		// Set loading status
+		context.commit("setAppLoadingStatus", "Loading.LoadingSettings");
+
+		// Update settings
+		updateSettingsFromStorage();
+	});
 
 	// When the installation is run, update the settings construct
 	installService.on("installed", updateSettingsFromStorage);

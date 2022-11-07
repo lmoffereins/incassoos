@@ -5,6 +5,7 @@
  * @subpackage App/Components
  */
 define([
+	"./app-loading-status",
 	"./dialog-container",
 	"./feedback",
 	"./global-cancel-toggle",
@@ -16,6 +17,7 @@ define([
 	"./panels",
 	"./sections"
 ], function(
+	appLoadingStatus,
 	dialogContainer,
 	feedback,
 	globalCancelToggle,
@@ -28,6 +30,7 @@ define([
 	sections
 ) {
 	return {
+		appLoadingStatus: appLoadingStatus,
 		dialogContainer: dialogContainer,
 		feedback: feedback,
 		globalCancelToggle: globalCancelToggle,

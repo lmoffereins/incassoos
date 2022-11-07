@@ -70,6 +70,10 @@ define([
 		 * @return {Promise} Load success
 		 */
 		services.get("auth").on("active", function( lifecycle ) {
+
+			// Set loading status
+			context.commit("setAppLoadingStatus", "Loading.LoadingAssets");
+
 			return Q.all([
 
 				// These require an authenticated user
@@ -133,6 +137,10 @@ define([
 	fsm.observe(
 		fsm.on.before.BOOTSTRAP,
 		function( lifecycle, context ) {
+
+			// Set loading status
+			context.commit("setAppLoadingStatus", "Loading.LoadingServices");
+
 			return Q.all([
 
 				// Initialize services (auth, l10n, etc.)

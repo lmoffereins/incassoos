@@ -1,4 +1,22 @@
-/* Heading */
+/* Page */
+
+.app-container {
+	display: contents;
+}
+
+.app-status {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	transform: translateY(50px);
+	color: rgb( 90, 90, 90); // Match loader color
+
+	.loading-status:not(:empty):after {
+		content: '\2026'; // Ellipsis
+	}
+}
 
 #page-heading {
 	position: relative;

@@ -16,6 +16,15 @@ define([
 	 */
 	var mutations = {
 		/**
+		 * Update reactive property for the application loading status
+		 *
+		 * @return {Void}
+		 */
+		setAppLoadingStatus: function( state, payload ) {
+			state.appLoadingStatus = payload;
+		},
+
+		/**
 		 * Update reactive property for whether the application is bootstrapped
 		 *
 		 * @return {Void}

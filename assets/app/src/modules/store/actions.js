@@ -40,6 +40,9 @@ define([
 		 */
 		return fsm.do(fsm.tr.BOOTSTRAP, context).then( function() {
 
+			// Set loading status
+			context.commit("setAppLoadingStatus", "Loading.StartingApp");
+
 			// After bootstrap, continue initialization
 			return context.dispatch("init");
 		});
