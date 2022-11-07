@@ -5,7 +5,6 @@
  * @subpackage App/Services
  */
 define([
-	"vue",
 	"q",
 	"util",
 	"./auth-service",
@@ -27,7 +26,6 @@ define([
 	"./storage-service",
 	"./visibility-service"
 ], function(
-	Vue,
 	Q,
 	util,
 	authService,
@@ -160,7 +158,7 @@ define([
 					// Run the `init` method and make sure it returns a Promise
 					// The storage service was run previously
 					if ("storage" !== init.service) {
-						return Q.Promisify(init.run(Vue)).catch(console.error);
+						return Q.Promisify(init.run).catch(console.error);
 					}
 				}));
 			}).then( function() {
@@ -205,7 +203,7 @@ define([
 					.map( function( reset ) {
 
 						// Run the `reset` method and make sure it returns a Promise
-						return Q.Promisify(reset.run());
+						return Q.Promisify(reset.run);
 					})
 				);
 			}).then( function() {

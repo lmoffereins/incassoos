@@ -5,9 +5,10 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util"
-], function( Q, util ) {
+], function( Vue, Q, util ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -28,24 +29,12 @@ define([
 	/**
 	 * Initialization of the clock service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
+	init = function() {
 
 		// Start ticking
 		tick();
-
-		/**
-		 * Make the clock available at Vue's root
-		 *
-		 * @return {String} Clock
-		 */
-		Object.defineProperty(Vue.prototype, "$clock", {
-			get: function() {
-				return this.$store.state.clock;
-			}
-		});
 
 		return Q.resolve();
 	},
@@ -136,6 +125,17 @@ define([
 
 		return now.getHours().toString().padStart(2, "0").concat(":", now.getMinutes().toString().padStart(2, "0"));
 	};
+
+	/**
+	 * Make the clock available at Vue's root
+	 *
+	 * @return {String} Clock
+	 */
+	Object.defineProperty(Vue.prototype, "$clock", {
+		get: function() {
+			return this.$store.state.clock;
+		}
+	});
 
 	return {
 		init: init,

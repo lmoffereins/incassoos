@@ -7,10 +7,11 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util",
 	"./visibility-service"
-], function( Q, util, visibilityService ) {
+], function( Vue, Q, util, visibilityService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -39,10 +40,9 @@ define([
 	/**
 	 * Initialization of the focus service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
+	init = function() {
 
 		// Require the document object
 		if (document && document.hasFocus) {
@@ -67,17 +67,6 @@ define([
 				interval || (interval = setInterval(set, 300));
 			});
 		}
-
-		/**
-		 * Reactive listener for the focus status
-		 *
-		 * @return {Boolean} Is the application focussed?
-		 */
-		Object.defineProperty(Vue.prototype, "$focus", {
-			get: function() {
-				return this.$store.state.documentFocus;
-			}
-		});
 
 		return Q.resolve();
 	},
@@ -156,6 +145,17 @@ define([
 		 */
 		listeners.trigger(focus ? "focus" : "blur");
 	};
+
+	/**
+	 * Reactive listener for the focus status
+	 *
+	 * @return {Boolean} Is the application focussed?
+	 */
+	Object.defineProperty(Vue.prototype, "$focus", {
+		get: function() {
+			return this.$store.state.documentFocus;
+		}
+	});
 
 	return {
 		init: init,

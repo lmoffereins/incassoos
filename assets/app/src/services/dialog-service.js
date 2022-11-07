@@ -29,16 +29,6 @@ define([
 	dialogs = [],
 
 	/**
-	 * Initialization of the dialog service
-	 *
-	 * @param {Object} Vue The Vue instance
-	 * @return {Promise} Is the service initialized?
-	 */
-	init = function( Vue ) {
-		return Q.resolve();
-	},
-
-	/**
 	 * Register a dialog
 	 *
 	 * @param  {Object} options Optional. Dialog options.
@@ -156,7 +146,6 @@ define([
 	return {
 		confirm: confirm,
 		dialog: dialog,
-		init: init,
 		on: listeners.on,
 		off: listeners.off,
 		open: open,

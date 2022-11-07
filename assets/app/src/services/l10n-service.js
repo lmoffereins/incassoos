@@ -5,6 +5,7 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"lodash",
 	"dayjs",
@@ -14,7 +15,7 @@ define([
 	"./auth-service",
 	"./feedback-service",
 	"./shortcuts-service"
-], function( Q, _, dayjs, util, translations, storageService, authService, feedbackService, shortcutsService ) {
+], function( Vue, Q, _, dayjs, util, translations, storageService, authService, feedbackService, shortcutsService ) {
 	/**
 	 * Holds the list of domains with translated strings
 	 *
@@ -76,111 +77,9 @@ define([
 	/**
 	 * Initialization of the localization service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
-		/**
-		 * Return the translation for the directive's value
-		 *
-		 * Use either a value or modifiers as the path to the translated text. The
-		 * following examples have the same result:
-		 *
-		 *    <element v-l10n.path.to.nested.text></element>
-		 *    <element v-l10n="'path.to.nested.text'"></element>
-		 *    <element v-l10n="expressionForPathToNestedText"></element>
-		 *
-		 * Optionally you can provide string arguments for parsing with `String.sprintf()`:
-		 *
-		 *    <element v-l10n.path.to.nested.text="expressionForArg1"></element>
-		 *    <element v-l10n.path.to.nested.text="'arg1,arg2'"></element>
-		 *    <element v-l10n.path.to.nested.text="[expressionForArg1, expressionForArg2]"></element>
-		 *    <element v-l10n="['path.to.nested.text', expressionForArg1, expressionForArg2]"></element>
-		 *    <element v-l10n="[expressionForPathToNestedText, expressionForArg1, expressionForArg2]"></element>
-		 *
-		 * The modifier notation takes precedence over the value notation.
-		 *
-		 * @param  {Object} binding Binding data
-		 * @param  {Object} vNode   The element's Vue node data
-		 * @return {String} The parsed translation
-		 */
-		var parseTranslationForDirective = function( binding, vNode ) {
-			var withModifiers = ! _.isEmpty(binding.modifiers),
-
-				// Try using modifiers first, else use the directive's calculated value
-			    path = withModifiers ? _.keys(binding.modifiers) : (Array.isArray(binding.value) ? binding.value[0] : binding.value) || "",
-			    args = withModifiers ? util.makeArray(binding.value) : (Array.isArray(binding.value) ? binding.value.slice(1) : []);
-
-			// Make path an array
-		    Array.isArray(path) || (path = path.split("."));
-
-			// Return the translated text found at the path's location.
-			// If the path is not defined, return the path itself.
-			return (util.path(vNode.context.$l10n, path) || path.join(".")).sprintf(args);
-		};
-
-		/**
-		 * Define `l10n` directive as a shorthand for `v-text="$l10n.path.to.nested.text"`
-		 *
-		 * See description of `parseTranslationForDirective()` for available
-		 * notation options.
-		 *
-		 * The modifier notation takes precedence over the value notation.
-		 */
-		Vue.directive("l10n", function( el, binding, vNode ) {
-			el.innerHTML = parseTranslationForDirective(binding, vNode);
-		});
-
-		/**
-		 * Shorthand for translated title attribute
-		 *
-		 * See description of `parseTranslationForDirective()` for available
-		 * notation options.
-		 */
-		Vue.directive("l10n-title", function( el, binding, vNode ) {
-			el.setAttribute("title", parseTranslationForDirective(binding, vNode));
-		});
-
-		/**
-		 * Shorthand for translated alt text attribute
-		 *
-		 * See description of `parseTranslationForDirective()` for available
-		 * notation options.
-		 */
-		Vue.directive("l10n-alt", function( el, binding, vNode ) {
-			el.setAttribute("alt", parseTranslationForDirective(binding, vNode));
-		});
-
-		/**
-		 * Define `l10n` filter as a shorthand for `$l10n.get()`
-		 *
-		 * @param {Array} args Optional. String parameters to parse.
-		 * @return {String} Localized text
-		 */
-		Vue.filter("l10n", function( value, args ) {
-			return get(value, args);
-		});
-
-		/**
-		 * Alias of the `l10n` filter
-		 *
-		 * @param {Array} args Optional. String parameters to parse.
-		 * @return {String} Localized text
-		 */
-		Vue.filter("translate", function( value, args ) {
-			return Vue.filter("l10n")(value, args);
-		});
-
-		/**
-		 * Make the `l10n` data available at Vue's root
-		 *
-		 * @return {Object} L10n
-		 */
-		Object.defineProperty(Vue.prototype, "$l10n", {
-			get: function() {
-				return l10n[this.$store.state.l10nLanguage] || l10n[defaultLanguage];
-			}
-		});
+	init = function() {
 
 		// When the language is set, define the locale for date formatting
 		listeners.on("set", function( language ) {
@@ -390,7 +289,109 @@ define([
 	 */
 	setDefaultLanguage = function( language ) {
 		return storageService.save("language", language);
+	},
+
+	/**
+	 * Return the translation for the directive's value
+	 *
+	 * Use either a value or modifiers as the path to the translated text. The
+	 * following examples have the same result:
+	 *
+	 *    <element v-l10n.path.to.nested.text></element>
+	 *    <element v-l10n="'path.to.nested.text'"></element>
+	 *    <element v-l10n="expressionForPathToNestedText"></element>
+	 *
+	 * Optionally you can provide string arguments for parsing with `String.sprintf()`:
+	 *
+	 *    <element v-l10n.path.to.nested.text="expressionForArg1"></element>
+	 *    <element v-l10n.path.to.nested.text="'arg1,arg2'"></element>
+	 *    <element v-l10n.path.to.nested.text="[expressionForArg1, expressionForArg2]"></element>
+	 *    <element v-l10n="['path.to.nested.text', expressionForArg1, expressionForArg2]"></element>
+	 *    <element v-l10n="[expressionForPathToNestedText, expressionForArg1, expressionForArg2]"></element>
+	 *
+	 * The modifier notation takes precedence over the value notation.
+	 *
+	 * @param  {Object} binding Binding data
+	 * @param  {Object} vNode   The element's Vue node data
+	 * @return {String} The parsed translation
+	 */
+	parseTranslationForDirective = function( binding, vNode ) {
+		var withModifiers = ! _.isEmpty(binding.modifiers),
+
+			// Try using modifiers first, else use the directive's calculated value
+		    path = withModifiers ? _.keys(binding.modifiers) : (Array.isArray(binding.value) ? binding.value[0] : binding.value) || "",
+		    args = withModifiers ? util.makeArray(binding.value) : (Array.isArray(binding.value) ? binding.value.slice(1) : []);
+
+		// Make path an array
+	    Array.isArray(path) || (path = path.split("."));
+
+		// Return the translated text found at the path's location.
+		// If the path is not defined, return the path itself.
+		return (util.path(vNode.context.$l10n, path) || path.join(".")).sprintf(args);
 	};
+
+	/**
+	 * Define `l10n` directive as a shorthand for `v-text="$l10n.path.to.nested.text"`
+	 *
+	 * See description of `parseTranslationForDirective()` for available
+	 * notation options.
+	 *
+	 * The modifier notation takes precedence over the value notation.
+	 */
+	Vue.directive("l10n", function( el, binding, vNode ) {
+		el.innerHTML = parseTranslationForDirective(binding, vNode);
+	});
+
+	/**
+	 * Shorthand for translated title attribute
+	 *
+	 * See description of `parseTranslationForDirective()` for available
+	 * notation options.
+	 */
+	Vue.directive("l10n-title", function( el, binding, vNode ) {
+		el.setAttribute("title", parseTranslationForDirective(binding, vNode));
+	});
+
+	/**
+	 * Shorthand for translated alt text attribute
+	 *
+	 * See description of `parseTranslationForDirective()` for available
+	 * notation options.
+	 */
+	Vue.directive("l10n-alt", function( el, binding, vNode ) {
+		el.setAttribute("alt", parseTranslationForDirective(binding, vNode));
+	});
+
+	/**
+	 * Define `l10n` filter as a shorthand for `$l10n.get()`
+	 *
+	 * @param {Array} args Optional. String parameters to parse.
+	 * @return {String} Localized text
+	 */
+	Vue.filter("l10n", function( value, args ) {
+		return get(value, args);
+	});
+
+	/**
+	 * Alias of the `l10n` filter
+	 *
+	 * @param {Array} args Optional. String parameters to parse.
+	 * @return {String} Localized text
+	 */
+	Vue.filter("translate", function( value, args ) {
+		return Vue.filter("l10n")(value, args);
+	});
+
+	/**
+	 * Make the `l10n` data available at Vue's root
+	 *
+	 * @return {Object} L10n
+	 */
+	Object.defineProperty(Vue.prototype, "$l10n", {
+		get: function() {
+			return l10n[this.$store.state.l10nLanguage] || l10n[activeLanguage] || l10n[defaultLanguage];
+		}
+	});
 
 	return {
 		init: init,

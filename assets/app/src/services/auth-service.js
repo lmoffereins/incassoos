@@ -5,12 +5,13 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"lodash",
 	"util",
 	"./storage-service",
 	"./install-service"
-], function( Q, _, util, storageService, installService ) {
+], function( Vue, Q, _, util, storageService, installService ) {
 	/**
 	 * Holds the storage for the service
 	 *
@@ -98,11 +99,9 @@ define([
 	/**
 	 * Initialization of the authorization service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
-
+	init = function() {
 		/**
 		 * Update the user reference when adding or updating a user
 		 */
@@ -129,19 +128,6 @@ define([
 			 * @param {Array} users List of users.
 			 */
 			listeners.trigger("users", getUsers());
-		});
-
-		/**
-		 * Reactive listener for whether a user is currently active
-		 *
-		 * @see store/main.js
-		 *
-		 * @return {Boolean} Is currently a user active?
-		 */
-		Object.defineProperty(Vue.prototype, "$isLoggedIn", {
-			get: function() {
-				return this.$store.state.authIsLoggedIn;
-			}
 		});
 
 		return Q.resolve();
@@ -676,6 +662,19 @@ define([
 		// 	return !! (capabilities[cap] && -1 !== capabilities[cap].indexOf(i));
 		// });
 	};
+
+	/**
+	 * Reactive listener for whether a user is currently active
+	 *
+	 * @see store/main.js
+	 *
+	 * @return {Boolean} Is currently a user active?
+	 */
+	Object.defineProperty(Vue.prototype, "$isLoggedIn", {
+		get: function() {
+			return this.$store.state.authIsLoggedIn;
+		}
+	});
 
 	return {
 		init: init,

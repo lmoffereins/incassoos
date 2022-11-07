@@ -5,10 +5,11 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util",
 	"./shortcuts-service"
-], function( Q, util, shortcutsService ) {
+], function( Vue, Q, util, shortcutsService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -41,21 +42,9 @@ define([
 	/**
 	 * Initialization of the debug service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
-
-		/**
-		 * Reactive listener for the debug mode
-		 *
-		 * @return {Number} Debug mode identifier
-		 */
-		Object.defineProperty(Vue.prototype, "$debugmode", {
-			get: function() {
-				return this.$store.state.debugmode;
-			}
-		});
+	init = function() {
 
 		// Register global keyboard event listeners
 		shortcutsService.on({
@@ -163,6 +152,17 @@ define([
 	getAvailableModes = function() {
 		return availableModes;
 	};
+
+	/**
+	 * Reactive listener for the debug mode
+	 *
+	 * @return {Number} Debug mode identifier
+	 */
+	Object.defineProperty(Vue.prototype, "$debugmode", {
+		get: function() {
+			return this.$store.state.debugmode;
+		}
+	});
 
 	return {
 		init: init,

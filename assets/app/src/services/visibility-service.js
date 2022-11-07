@@ -7,9 +7,10 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util"
-], function( Q, util ) {
+], function( Vue, Q, util ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -31,10 +32,9 @@ define([
 	/**
 	 * Initialization of the visibility service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
+	init = function() {
 
 		// Require the document object
 		if (document && document.addEventListener && document.visibilityState) {
@@ -49,17 +49,6 @@ define([
 				listeners.trigger(visible ? "visible" : "hidden");
 			});
 		}
-
-		/**
-		 * Reactive listener for the visibility status
-		 *
-		 * @return {Boolean} Is the application visible?
-		 */
-		Object.defineProperty(Vue.prototype, "$visible", {
-			get: function() {
-				return this.$store.state.documentVisible;
-			}
-		});
 
 		return Q.resolve();
 	},
@@ -118,6 +107,17 @@ define([
 			}
 		};
 	};
+
+	/**
+	 * Reactive listener for the visibility status
+	 *
+	 * @return {Boolean} Is the application visible?
+	 */
+	Object.defineProperty(Vue.prototype, "$visible", {
+		get: function() {
+			return this.$store.state.documentVisible;
+		}
+	});
 
 	return {
 		init: init,

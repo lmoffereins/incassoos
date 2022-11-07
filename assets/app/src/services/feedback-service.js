@@ -5,11 +5,12 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util",
 	"./debug-service",
 	"./delay-service"
-], function( Q, util, debugService, delayService ) {
+], function( Vue, Q, util, debugService, delayService ) {
 	/**
 	 * Holds the global feedback API
 	 *
@@ -35,27 +36,6 @@ define([
 			};
 		}
 	}),
-
-	/**
-	 * Initialization of the feedback service
-	 *
-	 * @param {Object} Vue The Vue instance
-	 * @return {Promise} Is the service initialized?
-	 */
-	init = function( Vue ) {
-		/**
-		 * Reactive listener for the feedback list
-		 *
-		 * @return {Array} The feedback list
-		 */
-		Object.defineProperty(Vue.prototype, "$feedback", {
-			get: function() {
-				return this.$store.state.feedbackGlobalList;
-			}
-		});
-
-		return Q.resolve();
-	},
 
 	/**
 	 * Add an item to the feedback list
@@ -142,6 +122,17 @@ define([
 		};
 	};
 
+	/**
+	 * Reactive listener for the feedback list
+	 *
+	 * @return {Array} The feedback list
+	 */
+	Object.defineProperty(Vue.prototype, "$feedback", {
+		get: function() {
+			return this.$store.state.feedbackGlobalList;
+		}
+	});
+
 	return {
 		add: add,
 		clear: feedback.clear,
@@ -150,7 +141,6 @@ define([
 		errorCount: feedback.errorCount,
 		getList: feedback.getList,
 		hasErrors: feedback.hasErrors,
-		init: init,
 		on: feedback.on,
 		off: feedback.off,
 		remove: feedback.remove,

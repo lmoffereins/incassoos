@@ -5,11 +5,12 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util",
 	"./storage-service",
 	"./shortcuts-service"
-], function( Q, util, storageService, shortcutsService ) {
+], function( Vue, Q, util, storageService, shortcutsService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -43,31 +44,9 @@ define([
 	/**
 	 * Initialization of the dark mode service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
-		/**
-		 * Make the dark mode available at Vue's root
-		 *
-		 * @return {String} Mode id
-		 */
-		Object.defineProperty(Vue.prototype, "$darkmode", {
-			get: function() {
-				return this.$store.state.darkmode;
-			}
-		});
-
-		/**
-		 * Make the dark mode setting available at Vue's root
-		 *
-		 * @return {String} Mode id
-		 */
-		Object.defineProperty(Vue.prototype, "$darkmodeSetting", {
-			get: function() {
-				return this.$store.state.darkmodeSetting;
-			}
-		});
+	init = function() {
 
 		// Register global keyboard event listeners
 		shortcutsService.on({
@@ -207,6 +186,28 @@ define([
 	getSystemScheme = function() {
 		return window.matchMedia && window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light";
 	};
+
+	/**
+	 * Make the dark mode available at Vue's root
+	 *
+	 * @return {Boolean} Is dark mode active?
+	 */
+	Object.defineProperty(Vue.prototype, "$darkmode", {
+		get: function() {
+			return this.$store.state.darkmode;
+		}
+	});
+
+	/**
+	 * Make the dark mode setting available at Vue's root
+	 *
+	 * @return {String} Mode id
+	 */
+	Object.defineProperty(Vue.prototype, "$darkmodeSetting", {
+		get: function() {
+			return this.$store.state.darkmodeSetting;
+		}
+	});
 
 	return {
 		init: init,

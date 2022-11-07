@@ -34,10 +34,9 @@ define([
 	/**
 	 * Initialization of the shortcuts service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
+	init = function() {
 
 		/**
 		 * Register global event listeners

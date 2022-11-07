@@ -5,9 +5,10 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"util",
 	"./storage-service"
-], function( util, storageService ) {
+], function( Vue, util, storageService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -28,10 +29,9 @@ define([
 	/**
 	 * Initialization of the history service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
+	init = function() {
 
 		// Listen for history changes in the `popstate` event
 		window.addEventListener("popstate", function historyServiceOnPopstate( event ) {
@@ -47,17 +47,6 @@ define([
 				 */
 				listeners.trigger("change", historyState);
 			});
-		});
-
-		/**
-		 * Make the history available at Vue's root
-		 *
-		 * @return {String} Mode id
-		 */
-		Object.defineProperty(Vue.prototype, "$history", {
-			get: function() {
-				return this.$store.state.historyState;
-			}
 		});
 
 		// Maybe get the current history state from storage
@@ -167,6 +156,17 @@ define([
 	getState = function() {
 		return historyState;
 	};
+
+	/**
+	 * Make the history available at Vue's root
+	 *
+	 * @return {String} Mode id
+	 */
+	Object.defineProperty(Vue.prototype, "$history", {
+		get: function() {
+			return this.$store.state.historyState;
+		}
+	});
 
 	return {
 		init: init,

@@ -5,9 +5,10 @@
  * @subpackage App/Services
  */
 define([
+	"vue",
 	"q",
 	"util"
-], function( Q, util ) {
+], function( Vue, Q, util ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -29,10 +30,9 @@ define([
 	/**
 	 * Initialization of the offline service
 	 *
-	 * @param {Object} Vue The Vue instance
 	 * @return {Promise} Is the service initialized?
 	 */
-	init = function( Vue ) {
+	init = function() {
 
 		// Setup listener for the `online` event
 		window.addEventListener("online", function offlineServiceOnOnline() {
@@ -52,17 +52,6 @@ define([
 			 * Trigger event listeners for when the application went offline
 			 */
 			listeners.trigger("down");
-		});
-
-		/**
-		 * Reactive listener for the offline status
-		 *
-		 * @return {Boolean} Is the application offline?
-		 */
-		Object.defineProperty(Vue.prototype, "$offline", {
-			get: function() {
-				return this.$store.state.offlineStatus;
-			}
 		});
 
 		return Q.resolve();
@@ -122,6 +111,17 @@ define([
 			}
 		};
 	};
+
+	/**
+	 * Reactive listener for the offline status
+	 *
+	 * @return {Boolean} Is the application offline?
+	 */
+	Object.defineProperty(Vue.prototype, "$offline", {
+		get: function() {
+			return this.$store.state.offlineStatus;
+		}
+	});
 
 	return {
 		init: init,
