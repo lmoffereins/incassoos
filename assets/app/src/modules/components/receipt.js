@@ -342,6 +342,19 @@ define([
 		})),
 		watch: Object.assign({
 			/**
+			 * Act when the consumer is changed
+			 *
+			 * @return {Void}
+			 */
+			consumer: function() {
+
+				// Switch to the products section when selecting a consumer
+				if (this.consumer.id) {
+					this.setActiveProductsSection();
+				}
+			},
+
+			/**
 			 * Act when the receipt is toggled expanded or not
 			 *
 			 * @return {Void}
