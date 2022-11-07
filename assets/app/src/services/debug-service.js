@@ -60,6 +60,11 @@ define([
 			// Emit custom event: "online"
 			"shift+alt+1": function debugServiceEmitOnlineEventOnShiftAlt1() {
 				debugmode && util.emitEvent(window, "online");
+			},
+
+			// Emit custom event: "offline"
+			"shift+alt+2": function debugServiceEmitOfflineEventOnShiftAlt2() {
+				debugmode && util.emitEvent(window, "offline");
 			}
 		});
 
