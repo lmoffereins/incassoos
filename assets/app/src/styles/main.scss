@@ -5,6 +5,7 @@
 
 #incassoos-app {
 	font-family: #{$font-family-default};
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	height: 100%;
