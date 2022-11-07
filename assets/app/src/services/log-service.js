@@ -71,7 +71,7 @@ define([
 			message: "",
 			timestamp: new Date().getTime(),
 			user: authService.getActiveUser(),
-			context: window.navigator.userAgent
+			context: window.navigator ? window.navigator.userAgent : ""
 		});
 
 		// Add log to the log list

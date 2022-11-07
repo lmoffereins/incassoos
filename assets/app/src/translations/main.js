@@ -54,7 +54,7 @@ define([
 	 * @type {String}
 	 */
 	initialLanguage = _.keys(availableLanguages).find( function( i ) {
-		return navigator.language === availableLanguages[i].alias.system;
+		return window.navigator && window.navigator.language === availableLanguages[i].alias.system;
 	}) || "en_US";
 
 	// Identify the initial language
