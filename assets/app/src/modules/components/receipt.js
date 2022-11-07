@@ -512,15 +512,32 @@ define([
 			 */
 			onReceiptSwipe = function( event ) {
 
-				// Swipe rtl
-				if (event.deltaX < 0) {
-					self.selectOrder("next");
+				// Horizontal swipe
+				if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
 
-				// Swipe ltr
+					// Swipe rtl
+					if (event.deltaX < 0) {
+						self.selectOrder("next");
+
+					// Swipe ltr
+					} else {
+						self.selectOrder("previous");
+					}
+
+				// Vertical swipe
 				} else {
-					self.selectOrder("previous");
+
+					// Swipe down
+					if (event.deltaY > 0) {
+						self.isExpanded = false;
+					}
 				}
 			};
+
+			// Detect horizontal and vertical swipes
+			hammer.get("swipe").set({
+				direction: Hammer.DIRECTION_ALL
+			});
 
 			// Register touch event listeners
 			hammer.on("swipe", onReceiptSwipe);
