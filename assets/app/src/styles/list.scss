@@ -19,6 +19,10 @@
 			justify-content: flex-end;
 			width: 100%;
 			grid-gap: 5px;
+
+			.input-search.open {
+				flex: 1;
+			}
 		}
 
 		.item-title-wrapper {
