@@ -298,6 +298,7 @@
 	.input-searchbar {
 		position: relative;
 		display: none;
+		flex: 1;
 		min-width: 120px;
 
 		.search-option {
@@ -325,6 +326,14 @@
 
 		.input-searchbar {
 			display: block;
+		}
+
+		&:has(.search-option:focus),
+		&:hover,
+		&:has(.search-option:active) {
+			.search-open {
+				color: var(--text-default);
+			}
 		}
 	}
 }
