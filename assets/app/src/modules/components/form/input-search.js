@@ -19,13 +19,16 @@ define([
 	return {
 		props: {
 			value: {
-				required: true
+				required: true,
+			},
+			alwaysOpen: {
+				default: false
 			}
 		},
 		template: tmpl,
 		data: function() {
 			return {
-				isOpen: false
+				isOpen: this.alwaysOpen
 			};
 		},
 		methods: {
@@ -37,7 +40,9 @@ define([
 			toggle: function() {
 				var self = this;
 
-				this.isOpen = ! this.isOpen;
+				if (! this.alwaysOpen) {
+					this.isOpen = ! this.isOpen;
+				}
 
 				if (this.isOpen) {
 					delayService(0).then( function() {
@@ -69,7 +74,7 @@ define([
 					event.stopPropagation();
 				}
 
-				this.isOpen = false;
+				this.isOpen = this.alwaysOpen;
 				this.$emit("input", "");
 				this.$emit("cancel");
 			}
@@ -84,7 +89,7 @@ define([
 				// Close only when component does not have focus
 				// NOTE: using document object for web
 				if ("" === this.value && ! this.$el.contains(document.activeElement)) {
-					this.isOpen = false;
+					this.isOpen = this.alwaysOpen;
 				}
 			}
 		},
@@ -101,7 +106,7 @@ define([
 			this.$registerUnobservable(
 				util.onOuterFocus(this.$el, function() {
 					if ("" === self.value) {
-						self.isOpen = false;
+						self.isOpen = self.alwaysOpen;
 					}
 				})
 			);

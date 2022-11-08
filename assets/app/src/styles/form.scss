@@ -306,8 +306,7 @@
 			right: 0px;
 			bottom: 0px;
 			left: 0px;
-			border-top-left-radius: 0px;
-			border-bottom-left-radius: 0px;
+			padding-left: 30px;
 		}
 	}
 
@@ -316,8 +315,12 @@
 		border-radius: 2px;
 
 		.search-open {
+			background: transparent !important;
+			margin-right: -32px;
 			border-top-right-radius: 0px;
 			border-bottom-right-radius: 0px;
+			z-index: 1;
+			pointer-events: none;
 		}
 
 		.input-searchbar {

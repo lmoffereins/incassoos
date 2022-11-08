@@ -1,5 +1,5 @@
 <div class="input-search" :class="{ 'open': isOpen }" @keydown.escape="cancel">
-	<button type="button" class="search-open icon-button" @click="toggle" v-l10n-title.Common.Search>
+	<button type="button" class="search-open icon-button" @click="toggle" :tabindex="alwaysOpen ? -1 : 0" v-l10n-title.Common.Search>
 		<i class="dashicons dashicons-search"></i>
 		<span class="screen-reader-text" v-l10n.Common.Search></span>
 	</button>
