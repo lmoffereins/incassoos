@@ -328,6 +328,18 @@ define([
 
 								// Reset the search query
 								self.q = "";
+							},
+							"enter": function consumersSelectFirstSearchResultOnEnter() {
+
+								// When focusing the search input with any search result
+								if (self.$refs.search.$el.contains(document.activeElement) && self.consumers.length) {
+
+									// Select the first consumer of the first group after sorting
+									self.select(self.groupConsumers(self.groups[0].id)[0].id);
+
+									// Reset the search query
+									self.q = "";
+								}
 							}
 						});
 					}

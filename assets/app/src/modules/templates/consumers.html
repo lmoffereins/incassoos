@@ -5,7 +5,7 @@
 		<h2 class="section-topic" v-l10n.Consumer.ListHeading></h2>
 
 		<div class="item-list-actions">
-			<input-search v-model="q" always-open="true"></input-search>
+			<input-search ref="search" v-model="q" always-open="true"></input-search>
 
 			<button
 				@click="expandAllGroups()"
