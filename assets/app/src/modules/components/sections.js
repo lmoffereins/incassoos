@@ -6,6 +6,7 @@
  */
 define([
 	"hammerjs",
+	"util",
 	"services",
 	"./consumers",
 	"./occasion",
@@ -13,7 +14,7 @@ define([
 	"./products",
 	"./receipt",
 	"./../templates/sections.html"
-], function( Hammer, services, consumers, occasion, orders, products, receipt, tmpl ) {
+], function( Hammer, util, services, consumers, occasion, orders, products, receipt, tmpl ) {
 	/**
 	 * Holds a reference to the shortcuts service
 	 *
@@ -112,7 +113,7 @@ define([
 		data: function() {
 			return {
 				isPanelActive: false,
-				activeSection: SECTIONS.PRODUCTS
+				activeSection: SECTIONS.CONSUMERS
 			};
 		},
 		computed: {
@@ -195,6 +196,20 @@ define([
 				if (this.$refs.orderPanel && ! this.$refs.orderPanel.contains(this.$refs.receipt)) {
 					this.$refs.orderPanel.append(this.$refs.receipt);
 				}
+			},
+
+			/**
+			 * Return the element's section identifier
+			 *
+			 * @param  {Element} element Target element
+			 * @return {String} Section
+			 */
+			getElementSection: function( element ) {
+				var self = this;
+
+				return SECTIONS_ALL.find( function( section ) {
+					return self.$el.querySelector("#".concat(section)).contains(element);
+				});
 			}
 		},
 
@@ -277,6 +292,23 @@ define([
 
 							break;
 					}
+				},
+
+				// Search
+				"ctrl+F": function sectionsFocusSearchOnCtrlF( event ) {
+					// NOTE: using document for web
+					var section = self.getElementSection(document.activeElement) || self.activeSection,
+					    searchInput = self.$el.querySelector("#".concat(section)).querySelector(".search-open");
+
+					// Trigger click on the input search button
+					if (searchInput) {
+
+						// Stop browser search
+						event.preventDefault();
+
+						// Open the search bar
+						util.emitEvent(searchInput, "click");
+					}
 				}
 			}));
 
@@ -295,18 +327,6 @@ define([
 			var self = this,
 
 			/**
-			 * Return the element's section identifier
-			 *
-			 * @param  {Element} element Target element
-			 * @return {String} Section
-			 */
-			getElementSection = function( element ) {
-				return SECTIONS_ALL.find( function( section ) {
-					return self.$el.querySelector("#".concat(section)).contains(element);
-				});
-			},
-
-			/**
 			 * Act when the sections are swiped
 			 *
 			 * @return {Void}
@@ -314,7 +334,7 @@ define([
 			onSectionsSwipe = function( event ) {
 				var width = document.body.clientWidth;
 
-				switch (getElementSection(event.target)) {
+				switch (self.getElementSection(event.target)) {
 					case SECTIONS.CONSUMERS:
 
 						// Swipe rtl on all screens
