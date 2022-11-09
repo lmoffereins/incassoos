@@ -256,6 +256,11 @@ define([
 				"left": function sectionsNavigateSectionOnLeft() {
 					var width = document.body.clientWidth;
 
+					// Bail when focussing an input field
+					if (util.isActiveInputNode(document.activeElement)) {
+						return;
+					}
+
 					switch (self.activeSection) {
 						case SECTIONS.PRODUCTS:
 
@@ -275,6 +280,11 @@ define([
 				},
 				"right": function sectionsNavigateSectionOnRight() {
 					var width = document.body.clientWidth;
+
+					// Bail when focussing an input field
+					if (util.isActiveInputNode(document.activeElement)) {
+						return;
+					}
 
 					switch (self.activeSection) {
 						case SECTIONS.CONSUMERS:
