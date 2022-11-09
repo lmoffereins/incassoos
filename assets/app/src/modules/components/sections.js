@@ -212,6 +212,22 @@ define([
 				});
 			}
 		},
+		watch: {
+			/**
+			 * Act when the active section is changed
+			 *
+			 * @return {Void}
+			 */
+			activeSection: function() {
+				var width = document.body.clientWidth;
+
+				// Focus the section's heading button on small/medium screens
+				// so that the focus flow is reset to the top
+				if (width <= BREAKPOINTS.MEDIUM) {
+					this.$el.querySelector("#".concat(this.activeSection)).querySelector(".set-active-section").focus();
+				}
+			}
+		},
 
 		/**
 		 * Register listeners when the component is created
