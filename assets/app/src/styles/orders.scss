@@ -5,20 +5,23 @@
 		height: 100%; // Not having to use flex - preferred for implemented media queries toggling display-none
 	}
 
-	.select-item {
-		display: flex;
-		flex-direction: row;
-		grid-gap: 15px;
+	.item {
 		animation: active-background-fade 2s ease;
 
-		.item-title {
-			flex: 1;
-			@include text-overflow;
-		}
+		.select-item {
+			display: flex;
+			flex-direction: row;
+			grid-gap: 15px;
 
-		.item-amount {
-			margin-left: 4px;
-			font-size: .8rem;
+			.item-title {
+				flex: 1;
+				@include text-overflow;
+			}
+
+			.item-amount {
+				margin-left: 4px;
+				font-size: .8rem;
+			}
 		}
 	}
 
