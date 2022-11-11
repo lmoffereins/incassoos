@@ -5,6 +5,7 @@
  * @subpackage App/Components
  */
 define([
+	"underscore",
 	"hammerjs",
 	"util",
 	"services",
@@ -14,7 +15,7 @@ define([
 	"./products",
 	"./receipt",
 	"./../templates/sections.html"
-], function( Hammer, util, services, consumers, occasion, orders, products, receipt, tmpl ) {
+], function( _, Hammer, util, services, consumers, occasion, orders, products, receipt, tmpl ) {
 	/**
 	 * Holds a reference to the shortcuts service
 	 *
@@ -29,7 +30,18 @@ define([
 	 */
 	BREAKPOINTS = {
 		SMALL: 580,
-		MEDIUM: 850
+		LARGE: 850
+	},
+
+	/**
+	 * Holds the screen sizes
+	 *
+	 * @type {Object}
+	 */
+	SCREEN_SIZES = {
+		SMALL: "small",
+		MEDIUM: "medium",
+		LARGE: "large"
 	},
 
 	/**
@@ -59,11 +71,13 @@ define([
 	 * @return {Function} Deregistration callback
 	 */
 	addResizeListener = function( callback ) {
-		var matches;
+		var matches = {}, i;
 
 		if (window.matchMedia) {
-			matches = window.matchMedia("(max-width: ".concat(BREAKPOINTS.SMALL, "px)"));
-			matches.addEventListener("change", callback);
+			for (i in BREAKPOINTS) {
+				matches[i] = window.matchMedia("(max-width: ".concat(BREAKPOINTS[i], "px)"));
+				matches[i].addEventListener("change", callback);
+			}
 		} else {
 			window.addEventListener("resize", callback);
 		}
@@ -74,8 +88,10 @@ define([
 		 * @return {Void}
 		 */
 		return function removeResizeListener() {
-			if (matches) {
-				matches.removeListener(callback);
+			if (! _.isEmpty(matches)) {
+				for (i in matches) {
+					matches[i].removeListener(callback);
+				}
 			} else {
 				window.removeEventListener("resize", callback);
 			}
@@ -83,21 +99,20 @@ define([
 	},
 
 	/**
-	 * Reset the active section when the window is resized above the threshold
+	 * Define the screen size when the window is resized
 	 *
+	 * @param {Object} event Event data or MatchQueryListEvent data
 	 * @return {Void}
 	 */
-	onResize = function sectionOnResize() {
+	onResize = function sectionFindScreenSizeOnResize( event ) {
 		var width = document.body.clientWidth;
 
-		// Reset the active section to products
-		if (width > BREAKPOINTS.SMALL) {
-			this.isOrderPanelActive && this.setProductsActive();
-			this.resetFixedReceipt();
-			this.$root.$emit("sections/resize-large");
+		if (width >= BREAKPOINTS.LARGE && ! event.matches) {
+			this.screenSize = SCREEN_SIZES.LARGE;
+		} else if (width > BREAKPOINTS.SMALL) {
+			this.screenSize = SCREEN_SIZES.MEDIUM;
 		} else {
-			this.setFixedReceipt();
-			this.$root.$emit("sections/resize-small");
+			this.screenSize = SCREEN_SIZES.SMALL;
 		}
 	};
 
@@ -112,6 +127,7 @@ define([
 		},
 		data: function() {
 			return {
+				screenSize: "",
 				isPanelActive: false,
 				activeSection: SECTIONS.CONSUMERS
 			};
@@ -142,6 +158,33 @@ define([
 			 */
 			isOrderPanelActive: function() {
 				return this.activeSection === SECTIONS.ORDER_PANEL;
+			},
+
+			/**
+			 * Return whether the screen size is large
+			 *
+			 * @return {Boolean} Is the screen size large?
+			 */
+			isScreenLarge: function() {
+				return this.screenSize === SCREEN_SIZES.LARGE;
+			},
+
+			/**
+			 * Return whether the screen size is medium
+			 *
+			 * @return {Boolean} Is the screen size medium?
+			 */
+			isScreenMedium: function() {
+				return this.screenSize === SCREEN_SIZES.MEDIUM;
+			},
+
+			/**
+			 * Return whether the screen size is small
+			 *
+			 * @return {Boolean} Is the screen size small?
+			 */
+			isScreenSmall: function() {
+				return this.screenSize === SCREEN_SIZES.SMALL;
 			}
 		},
 		methods: {
@@ -219,12 +262,39 @@ define([
 			 * @return {Void}
 			 */
 			activeSection: function() {
-				var width = document.body.clientWidth;
 
 				// Focus the section's heading button on small/medium screens
 				// so that the focus flow is reset to the top
-				if (width <= BREAKPOINTS.MEDIUM) {
+				if (! this.isScreenLarge) {
 					this.$el.querySelector("#".concat(this.activeSection)).querySelector(".set-active-section").focus();
+				}
+			},
+
+			/**
+			 * Act when the screen size is changed
+			 *
+			 * @return {Void}
+			 */
+			screenSize: function() {
+
+				// Consider the screen size
+				switch (this.screenSize) {
+					case SCREEN_SIZES.LARGE:
+
+						// Reset the active section to consumers
+						this.isOrderPanelActive && this.setConsumersActive();
+						this.resetFixedReceipt();
+
+						// Emit screen resize
+						this.$root.$emit("sections/resize-large");
+						break;
+
+					case SCREEN_SIZES.SMALL:
+						this.setFixedReceiptSmall();
+
+						// Emit screen resize
+						this.$root.$emit("sections/resize-small");
+						break;
 				}
 			}
 		},
@@ -270,13 +340,13 @@ define([
 			// Register global keyboard event listeners
 			this.$registerUnobservable(shortcutsService.on({
 				"left": function sectionsNavigateSectionOnLeft() {
-					var width = document.body.clientWidth;
 
 					// Bail when focussing an input field
 					if (util.isActiveInputNode(document.activeElement)) {
 						return;
 					}
 
+					// Consider the section
 					switch (self.activeSection) {
 						case SECTIONS.PRODUCTS:
 
@@ -287,7 +357,7 @@ define([
 						case SECTIONS.ORDER_PANEL:
 
 							// On small screens
-							if (width <= BREAKPOINTS.SMALL) {
+							if (self.isScreenSmall) {
 								self.setProductsActive();
 							}
 
@@ -295,13 +365,13 @@ define([
 					}
 				},
 				"right": function sectionsNavigateSectionOnRight() {
-					var width = document.body.clientWidth;
 
 					// Bail when focussing an input field
 					if (util.isActiveInputNode(document.activeElement)) {
 						return;
 					}
 
+					// Consider the section
 					switch (self.activeSection) {
 						case SECTIONS.CONSUMERS:
 
@@ -312,7 +382,7 @@ define([
 						case SECTIONS.PRODUCTS:
 
 							// On small screens
-							if (width <= BREAKPOINTS.SMALL) {
+							if (self.isScreenSmall) {
 								self.setOrderPanelActive();
 							}
 
@@ -358,8 +428,8 @@ define([
 			 * @return {Void}
 			 */
 			onSectionsSwipe = function( event ) {
-				var width = document.body.clientWidth;
 
+				// Consider the section
 				switch (self.getElementSection(event.target)) {
 					case SECTIONS.CONSUMERS:
 
@@ -377,7 +447,7 @@ define([
 						}
 
 						// Swipe rtl on small screens
-						if (event.deltaX < 0 && width <= BREAKPOINTS.SMALL) {
+						if (event.deltaX < 0 && self.isScreenSmall) {
 							self.setOrderPanelActive();
 						}
 
@@ -385,7 +455,7 @@ define([
 					case SECTIONS.ORDER_PANEL:
 
 						// Swipe ltr on small screens
-						if (event.deltaX > 0 && width <= BREAKPOINTS.SMALL) {
+						if (event.deltaX > 0 && self.isScreenSmall) {
 							self.setProductsActive();
 						}
 
