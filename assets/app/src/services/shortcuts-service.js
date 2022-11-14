@@ -187,6 +187,9 @@ define([
 			options = { callback: options };
 		}
 
+		// Throttle the callback
+		options.callback = _.throttle(options.callback, 100);
+
 		// Set `exact` property. Require exact match when combining keys.
 		if ("undefined" === typeof options.exact) {
 			options.exact = -1 !== keys.indexOf("+");
