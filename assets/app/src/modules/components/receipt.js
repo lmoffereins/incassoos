@@ -544,6 +544,25 @@ define([
 			this.$registerUnobservable( function() {
 				hammer.off("swipe", onReceiptSwipe);
 			});
+
+			// Collapse receipt on outside click
+			this.$registerUnobservable(
+				util.onOuterClick(this.$el, function( event ) {
+
+					// Not when clicked inside a list body which
+					// might cause the receipt to (stay) open
+					if (! event.target.closest(".item-list-body")) {
+						self.isExpanded = false;
+					}
+				})
+			);
+
+			// Collapse receipt on outside focus
+			this.$registerUnobservable(
+				util.onOuterFocus(this.$el, function() {
+					self.isExpanded = false;
+				})
+			);
 		}
 	};
 });

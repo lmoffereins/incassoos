@@ -69,6 +69,7 @@ select {
 	&[disabled]:active {
 		color: var(--button-color-disabled);
 		background: var(--button-background-disabled);
+		pointer-events: none;
 	}
 }
 

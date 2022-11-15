@@ -873,6 +873,39 @@ define([
 	},
 
 	/**
+	 * Register listeners for clicking outside of an element
+	 *
+	 * @param  {Element}  element  HTML element
+	 * @param  {Function} callback Callback on event trigger
+	 * @return {Function} Unregister callback
+	 */
+	onOuterClick = function( element, callback ) {
+		/**
+		 * Run callback when the clicked target is outside of the element
+		 *
+		 * @param  {Object} event Event data
+		 * @return {Void}
+		 */
+		var onClick = function onOuterClickCallback( event ) {
+			if (! element.contains(event.target)) {
+				callback(event);
+			}
+		};
+
+		// Register listener
+		document.body.addEventListener("click", onClick);
+
+		/**
+		 * Deregister the registered listener
+		 *
+		 * @return {Void}
+		 */
+		return function offOuterClick() {
+			document.body.removeEventListener("click", onClick);
+		};
+	},
+
+	/**
 	 * Register listeners for focussing outside of an element
 	 *
 	 * @link https://stackoverflow.com/a/38317768/3601434
@@ -893,7 +926,7 @@ define([
 		 *
 		 * @return {Void}
 		 */
-		callbackImmediate = function() {
+		callbackImmediate = function onOuterFocusCallbackImmediate() {
 			timeout = setTimeout(callback, 0);
 		},
 
@@ -902,7 +935,7 @@ define([
 		 *
 		 * @return {Void}
 		 */
-		undoTimer = function() {
+		undoTimer = function onOuterFocusUndoTimer() {
 			clearTimeout(timeout);
 		};
 
@@ -1140,6 +1173,7 @@ define([
 		matchSearchQuery: matchSearchQuery,
 		maybeReject: maybeReject,
 		numberFormat: numberFormat,
+		onOuterClick: onOuterClick,
 		onOuterFocus: onOuterFocus,
 		path: path,
 		removeAccents: removeAccents,
