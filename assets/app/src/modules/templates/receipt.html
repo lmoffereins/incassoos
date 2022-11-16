@@ -5,8 +5,8 @@
 		<span class="total-value">{{totalPrice | money}}</span>
 	</div>
 
-	<div class="item-list-header">
-		<div v-toggle="isExpanded" class="item-list-header-image">
+	<div v-toggle="isExpanded" class="item-list-header">
+		<div class="item-list-header-image">
 			<object class="avatar-image" :data="consumer.avatarUrl" type="image/png" v-l10n-alt.Consumer.AvatarOf="consumer.name"></object>
 		</div>
 
@@ -56,7 +56,7 @@
 
 			<li v-if="!receipt.length" class="item no-items">
 				<span class="no-items-found" v-l10n.Receipt.NoItems></span>
-				<span @click="setActiveProductsSection" class="select-products" v-l10n.Receipt.SelectProducts></span>
+				<span v-toggle="isExpanded" @click="setActiveProductsSection" class="select-products" v-l10n.Receipt.SelectProducts></span>
 			</li>
 		</ul>
 	</div>

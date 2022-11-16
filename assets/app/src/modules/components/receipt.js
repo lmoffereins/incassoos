@@ -168,15 +168,19 @@ define([
 			/**
 			 * Signal to set the active consumers section
 			 *
+			 * @param {Object} $event Event data
 			 * @return {Void}
 			 */
-			setActiveConsumersSection: function() {
+			setActiveConsumersSection: function( $event ) {
 
 				// Switch active section when there is no active consumer
 				if (! this.consumer.id) {
 					this.$root.$emit("receipt/set-active-section", "consumers");
 
-					// Collapse receipt
+					// Prevent triggering subsequent click listeners
+					$event.stopPropagation();
+
+					// Collapse the receipt - when already in the right section
 					this.isExpanded = false;
 				}
 			},
@@ -192,7 +196,7 @@ define([
 				if (! this.receipt.length) {
 					this.$root.$emit("receipt/set-active-section", "products");
 
-					// Collapse receipt
+					// Collapse the receipt - when already in the right section
 					this.isExpanded = false;
 				}
 			},
