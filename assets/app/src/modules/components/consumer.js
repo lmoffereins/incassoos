@@ -6,6 +6,7 @@
  */
 define([
 	"vuex",
+	"hammerjs",
 	"lodash",
 	"fsm",
 	"services",
@@ -14,7 +15,7 @@ define([
 	"./form/input-toggle",
 	"./util/close-button",
 	"./../templates/consumer.html"
-], function( Vuex, _, fsm, services, feedback, inputPrice, inputToggle, closeButton, tmpl ) {
+], function( Vuex, Hammer, _, fsm, services, feedback, inputPrice, inputToggle, closeButton, tmpl ) {
 
 	/**
 	 * Holds a reference to the shortcuts service
@@ -134,7 +135,20 @@ define([
 				return getters.isWithinSpendingLimit();
 			}
 		})),
-		methods: Vuex.mapActions("consumers", {
+		methods: Object.assign({
+			/**
+			 * Signal to select another active order
+			 *
+			 * @param  {String} direction Selection direction
+			 * @return {Void}
+			 */
+			selectConsumer: function( direction ) {
+				direction = direction || "next";
+
+				// Communicate to select the order
+				this.$root.$emit("consumer/select-".concat(direction, "-consumer"));
+			}
+		}, Vuex.mapActions("consumers", {
 			/**
 			 * Edit the active item
 			 *
@@ -182,7 +196,7 @@ define([
 			close: function( dispatch ) {
 				dispatch("close");
 			}
-		}),
+		})),
 
 		watch: Vuex.mapActions("consumers", {
 			consumerShow:  watchPatch("show"),
@@ -219,6 +233,12 @@ define([
 				shortcutsService.on({
 					"escape": function consumerTransitionCancelOnEscape() {
 						self.cancel();
+					},
+					"left": function consumerTransitionSelectConsumerOnLeft() {
+						self.selectConsumer("previous");
+					},
+					"right": function consumerTransitionSelectConsumerOnRight() {
+						self.selectConsumer("next");
 					}
 				})
 			);
@@ -230,6 +250,37 @@ define([
 		 * @return {Void}
 		 */
 		mounted: function() {
+			var self = this,
+
+			/**
+			 * Construct element instance for touch events
+			 *
+			 * @type {Hammer}
+			 */
+			hammer = new Hammer(this.$el),
+
+			/**
+			 * Act when the consumer is swiped
+			 *
+			 * @return {Void}
+			 */
+			onConsumerSwipe = function( event ) {
+
+				// Swipe rtl
+				if (event.deltaX < 0) {
+					self.selectConsumer("next");
+
+				// Swipe ltr
+				} else {
+					self.selectConsumer("previous");
+				}
+			};
+
+			// Register touch event listeners
+			hammer.on("swipe", onConsumerSwipe);
+			this.$registerUnobservable( function() {
+				hammer.off("swipe", onConsumerSwipe);
+			});
 
 			// On initial creation, this observer is not triggered yet
 			onEnterViewConsumer.call(this);

@@ -189,6 +189,39 @@ define([
 					return util.matchSearchQuery(i.name, state.searchQuery)
 						|| util.matchSearchQuery(i.group.name, state.searchQuery);
 				});
+			},
+
+			/**
+			 * Return the index of the active consumer
+			 *
+			 * @return {Number} Active consumer index
+			 */
+			activeConsumerIx: function( state ) {
+				return this.consumers.findIndex( function( i ) {
+					return state.active && i.id === state.active.id;
+				});
+			},
+
+			/**
+			 * Return the previous consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			previousConsumerId: function( state, getters ) {
+				var currIx = this.activeConsumerIx;
+
+				return -1 !== currIx && currIx < this.consumers.length - 1 ? this.consumers[currIx + 1].id : false;
+			},
+
+			/**
+			 * Return the next consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			nextConsumerId: function( state, getters ) {
+				var currIx = this.activeConsumerIx;
+
+				return -1 !== currIx && currIx > 0 ? this.consumers[currIx - 1].id : false;
 			}
 		}), Vuex.mapGetters("consumers", {
 			"isSelected": "isActiveItem",
@@ -364,6 +397,24 @@ define([
 			var self = this, i,
 
 			/**
+			 * Set the active consumer from the previous consumer
+			 *
+			 * @return {Void}
+			 */
+			onSelectPreviousConsumer = function () {
+				self.previousConsumerId && self.select(self.previousConsumerId);
+			},
+
+			/**
+			 * Set the active consumer from the next consumer
+			 *
+			 * @return {Void}
+			 */
+			onSelectNextConsumer = function () {
+				self.nextConsumerId && self.select(self.nextConsumerId);
+			},
+
+			/**
 			 * Collection of fsm observers
 			 *
 			 * @type {Object}
@@ -396,6 +447,14 @@ define([
 					}
 				})
 			);
+
+			// Subscribe to external events
+			this.$root.$on("consumer/select-previous-consumer", onSelectPreviousConsumer);
+			this.$root.$on("consumer/select-next-consumer", onSelectNextConsumer);
+			this.$registerUnobservable( function() {
+				self.$root.$off("consumer/select-previous-consumer", onSelectPreviousConsumer);
+				self.$root.$off("consumer/select-next-consumer", onSelectNextConsumer);
+			});
 		}
 	};
 });
