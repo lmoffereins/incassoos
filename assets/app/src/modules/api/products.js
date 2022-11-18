@@ -5,9 +5,10 @@
  * @subpackage App/API
  */
 define([
+	"he",
 	"services",
 	"settings"
-], function( services, settings ) {
+], function( he, services, settings ) {
 	/**
 	 * Holds a reference to the cache service
 	 *
@@ -26,7 +27,7 @@ define([
 
 		return {
 			id: resp.id,
-			title: resp.title.rendered,
+			title: he.decode(resp.title.rendered),
 			date: new Date(resp.date),
 			modified: new Date(resp.modified),
 			price: parseFloat(resp.price),

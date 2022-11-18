@@ -5,9 +5,10 @@
  * @subpackage App/API
  */
 define([
+	"he",
 	"lodash",
 	"settings"
-], function( _, settings ) {
+], function( he, _, settings ) {
 	/**
 	 * Get the consumer type from the request item
 	 *
@@ -17,7 +18,7 @@ define([
 	var getConsumerTypeFromResponse = function( resp ) {
 		return {
 			id: resp.id,
-			name: resp.name,
+			name: he.decode(resp.name),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
 			show: true,
 			isConsumerType: true,

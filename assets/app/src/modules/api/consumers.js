@@ -5,11 +5,12 @@
  * @subpackage App/API
  */
 define([
+	"he",
 	"lodash",
 	"services",
 	"settings",
 	"util"
-], function( _, services, settings, util ) {
+], function( he, _, services, settings, util ) {
 	/**
 	 * Holds a reference to the cache service
 	 *
@@ -28,14 +29,14 @@ define([
 
 		return {
 			id: resp.id,
-			name: resp.name,
+			name: he.decode(resp.name),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
 			spendingLimit: util.sanitizePrice(resp.spendingLimit) || 0,
 			show: !! resp.show,
 			customSort: parseInt(resp.customSort),
 			group: {
 				id: resp.group.id,
-				name: resp.group.name,
+				name: he.decode(resp.group.name),
 				order: resp.group.order
 			}
 		};

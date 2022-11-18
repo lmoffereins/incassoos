@@ -6,8 +6,9 @@
  */
 define([
 	"dayjs",
+	"he",
 	"settings"
-], function( dayjs, settings ) {
+], function( dayjs, he, settings ) {
 	/**
 	 * Get the occasion from the request item
 	 *
@@ -19,7 +20,7 @@ define([
 
 		return {
 			id: resp.id,
-			title: resp.title.rendered,
+			title: he.decode(resp.title.rendered),
 			titleRaw: resp.title.raw,
 			date: new Date(resp.date),
 			modified: new Date(resp.modified),

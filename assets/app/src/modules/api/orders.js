@@ -5,8 +5,9 @@
  * @subpackage App/API
  */
 define([
+	"he",
 	"util"
-], function( util ) {
+], function( he, util ) {
 	/**
 	 * Get the order from the request item
 	 *
@@ -23,13 +24,13 @@ define([
 			consumer: resp.consumer,
 			consumerData: {
 				id: resp.consumer,
-				name: resp.consumer_name
+				name: he.decode(resp.consumer_name)
 			},
 			occasion: resp.parent,
 			items: resp.products.map( function( prod ) {
 				return {
 					id: prod.id,
-					title: prod.name,
+					title: he.decode(prod.name),
 					price: util.sanitizePrice(prod.price),
 					quantity: parseInt(prod.amount)
 				};
