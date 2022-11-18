@@ -18,7 +18,7 @@ define([
 		return {
 			id: resp.id,
 			name: resp.name,
-			avatarUrl: settings.consumer.defaultAvatarUrl,
+			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
 			show: true,
 			isConsumerType: true,
 			group: {

@@ -75,6 +75,13 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'avatarUrl'          => array(
+					'description' => __( "Path to the object's avatar image", 'incassoos' ),
+					'type'        => 'string',
+					'format'      => 'uri',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true
+				),
 			),
 		);
 
@@ -197,6 +204,11 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			$data['name'] = incassoos_get_consumer_type_title( $item->id );
 		}
 
+		if ( ! empty( $schema['properties']['avatarUrl'] ) ) {
+			$size = $request->get_param( 'avatar_size' );
+			$data['avatarUrl'] = incassoos_get_consumer_type_avatar_url( $item->id, $size ? array( 'size' => $size ) : array() );
+		}
+
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
 		$data    = $this->filter_response_by_context( $data, $context );
@@ -242,12 +254,17 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			'enum'        => array( 'id', 'name' ),
 		);
 
+		$query_params['avatar_size'] = array(
+			'description' => __( 'Size of the avatar image in the avatar url.' ),
+			'type'        => 'integer',
+		);
+
 		/**
-		 * Filter collection parameters for the posts controller.
+		 * Filter collection parameters for the consumer types controller.
 		 *
 		 * This filter registers the collection parameter, but does not map the
-		 * collection parameter to an internal WP_User_Query parameter. Use the
-		 * `incassoos_rest_consumer_types_query` filter to set WP_User_Query parameters.
+		 * collection parameter to an internal query parameter. Use the
+		 * `incassoos_rest_consumer_types_query` filter to set query parameters.
 		 *
 		 * @since 1.0.0
 		 *

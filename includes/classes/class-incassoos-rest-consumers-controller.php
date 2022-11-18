@@ -409,7 +409,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		);
 
 		/**
-		 * Filter collection parameters for the posts controller.
+		 * Filter collection parameters for the consumers controller.
 		 *
 		 * This filter registers the collection parameter, but does not map the
 		 * collection parameter to an internal WP_User_Query parameter. Use the

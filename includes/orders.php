@@ -1647,9 +1647,11 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 	// Parse defaults
 	$args['id'] = $type_id;
 	$args = wp_parse_args( $args, array(
-		'label'       => ucfirst( $type_id ),
-		'label_count' => ucfirst( $type_id ) . ' <span class="count">(%s)</span>',
-		'_hidden'     => false
+		'label'               => ucfirst( $type_id ),
+		'label_count'         => ucfirst( $type_id ) . ' <span class="count">(%s)</span>',
+		'avatar_url_callback' => '',
+		'avatar_url'          => '',
+		'_hidden'             => false,
 	) );
 
 	// Allow filtering
@@ -1842,4 +1844,44 @@ function incassoos_get_consumer_type_title( $type ) {
 	}
 
 	return apply_filters( 'incassoos_get_consumer_type_title', $title, $consumer_type );
+}
+
+/**
+ * Return the consumer type avatar url
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type Consumer type id
+ * @param  array $args {
+ *     Optional. Arguments to return instead of the default arguments.
+ *
+ *     @type int $size Height and width of the avatar in pixels. Default 96.
+ * }
+ * @return string Consumer type avatar url
+ */
+function incassoos_get_consumer_type_avatar_url( $type, $args = array() ) {
+	$consumer_type = incassoos_get_consumer_type( $type );
+	$avatar_url    = '';
+	$args          = wp_parse_args( $args, array(
+		'size' => 96
+	) );
+
+	if ( is_numeric( $args['size'] ) ) {
+		$args['size'] = absint( $args['size'] );
+		if ( ! $args['size'] ) {
+			$args['size'] = 96;
+		}
+	} else {
+		$args['size'] = 96;
+	}
+
+	if ( $consumer_type ) {
+		if ( is_callable( $consumer_type->avatar_url_callback ) ) {
+			$avatar_url = call_user_func_array( $consumer_type->avatar_url_callback, array( $consumer_type, $args ) );
+		} else {
+			$avatar_url = $consumer_type->avatar_url;
+		}
+	}
+
+	return apply_filters( 'incassoos_get_consumer_type_avatar_url', $avatar_url, $consumer_type, $args );
 }
