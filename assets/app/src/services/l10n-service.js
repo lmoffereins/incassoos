@@ -339,7 +339,7 @@ define([
 	 * The modifier notation takes precedence over the value notation.
 	 */
 	Vue.directive("l10n", function( el, binding, vNode ) {
-		el.innerHTML = parseTranslationForDirective(binding, vNode);
+		el.textContent = parseTranslationForDirective(binding, vNode);
 	});
 
 	/**
