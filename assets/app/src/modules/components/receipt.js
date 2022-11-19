@@ -16,11 +16,18 @@ define([
 	"./../templates/receipt.html"
 ], function( Vuex, Hammer, fsm, services, settings, util, feedback, closeButton, tmpl ) {
 	/**
+	 * Holds a reference to the resize service
+	 *
+	 * @type {Object}
+	 */
+	var resizeService = services.get("resize"),
+
+	/**
 	 * Holds a reference to the shortcuts service
 	 *
 	 * @type {Object}
 	 */
-	var shortcutsService = services.get("shortcuts"),
+	shortcutsService = services.get("shortcuts"),
 
 	/**
 	 * Reset attributes when closing a receipt
@@ -445,11 +452,11 @@ define([
 			var self = this,
 
 			/**
-			 * Act when the screen is resized to small
+			 * Act when the sections are updated
 			 *
 			 * @return {Void}
 			 */
-			onSectionsResizeSmall = function() {
+			onSectionsUpdate = function() {
 
 				// Reset attributes after any other updates to sections
 				self.$nextTick( function() {
@@ -475,11 +482,14 @@ define([
 				);
 			}
 
-			// Subscribe to the 'sections/resize-small' event
-			this.$root.$on("sections/resize-small", onSectionsResizeSmall);
+			// Subscribe to the 'sections/active-section' event
+			this.$root.$on("sections/active-section", onSectionsUpdate);
 			this.$registerUnobservable( function() {
-				self.$root.$off("sections/resize-small", onSectionsResizeSmall);
+				self.$root.$off("sections/active-section", onSectionsUpdate);
 			});
+
+			// Register resize event listener
+			this.$registerUnobservable(resizeService.on("change", onSectionsUpdate));
 
 			// Unregister global keyboard event listeners
 			this.$registerUnobservable( function() {

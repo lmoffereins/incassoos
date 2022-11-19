@@ -22,6 +22,7 @@ define([
 	"./l10n-service",
 	"./log-service",
 	"./offline-service",
+	"./resize-service",
 	"./shortcuts-service",
 	"./storage-service",
 	"./visibility-service"
@@ -43,6 +44,7 @@ define([
 	l10nService,
 	logService,
 	offlineService,
+	resizeService,
 	shortcutsService,
 	storageService,
 	visibilityService
@@ -68,6 +70,7 @@ define([
 		l10n: l10nService,
 		log: logService,
 		offline: offlineService,
+		resize: resizeService,
 		shortcuts: shortcutsService,
 		storage: storageService,
 		visibility: visibilityService

@@ -1,12 +1,14 @@
 <main id="sections" ref="sections" v-if="$isReady" :inert="isPanelActive">
 	<section
 		id="consumers"
+		ref="consumers"
 		:class="{ 'is-active': isConsumersActive, 'is-not-active': ! isConsumersActive }">
 		<consumers @activeSection="setConsumersActive"></consumers>
 	</section>
 
 	<section
 		id="products"
+		ref="products"
 		:class="{ 'is-active': isProductsActive, 'is-not-active': ! isProductsActive }">
 		<products @activeSection="setProductsActive"></products>
 	</section>

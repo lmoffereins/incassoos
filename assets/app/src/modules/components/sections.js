@@ -5,7 +5,6 @@
  * @subpackage App/Components
  */
 define([
-	"underscore",
 	"hammerjs",
 	"util",
 	"services",
@@ -15,23 +14,20 @@ define([
 	"./products",
 	"./receipt",
 	"./../templates/sections.html"
-], function( _, Hammer, util, services, consumers, occasion, orders, products, receipt, tmpl ) {
+], function( Hammer, util, services, consumers, occasion, orders, products, receipt, tmpl ) {
+	/**
+	 * Holds a reference to the resize service
+	 *
+	 * @type {Object}
+	 */
+	var resizeService = services.get("resize"),
+
 	/**
 	 * Holds a reference to the shortcuts service
 	 *
 	 * @type {Object}
 	 */
-	var shortcutsService = services.get("shortcuts"),
-
-	/**
-	 * Holds the screen breakpoint values
-	 *
-	 * @type {Object}
-	 */
-	BREAKPOINTS = {
-		SMALL: 580,
-		LARGE: 850
-	},
+	shortcutsService = services.get("shortcuts"),
 
 	/**
 	 * Holds the screen sizes
@@ -63,58 +59,23 @@ define([
 	SECTIONS_ALL = [SECTIONS.CONSUMERS, SECTIONS.PRODUCTS, SECTIONS.ORDER_PANEL],
 
 	/**
-	 * Register the callback to listen for the resize event
+	 * Holds the primary section identifier
 	 *
-	 * Prefer to use `window.matchMedia()` as it only triggers on passing the threshold.
-	 *
-	 * @param {Function} callback Listener callback
-	 * @return {Function} Deregistration callback
+	 * @type {String}
 	 */
-	addResizeListener = function( callback ) {
-		var matches = {}, i;
+	primarySection = SECTIONS.CONSUMERS;
 
-		if (window.matchMedia) {
-			for (i in BREAKPOINTS) {
-				matches[i] = window.matchMedia("(max-width: ".concat(BREAKPOINTS[i], "px)"));
-				matches[i].addEventListener("change", callback);
-			}
-		} else {
-			window.addEventListener("resize", callback);
-		}
-
-		/**
-		 * Deregister the registered listener
-		 *
-		 * @return {Void}
-		 */
-		return function removeResizeListener() {
-			if (! _.isEmpty(matches)) {
-				for (i in matches) {
-					matches[i].removeListener(callback);
-				}
-			} else {
-				window.removeEventListener("resize", callback);
-			}
-		}
-	},
-
-	/**
-	 * Define the screen size when the window is resized
-	 *
-	 * @param {Object} event Event data or MatchQueryListEvent data
-	 * @return {Void}
-	 */
-	onResize = function sectionFindScreenSizeOnResize( event ) {
-		var width = document.body.clientWidth;
-
-		if (width >= BREAKPOINTS.LARGE && ! event.matches) {
-			this.screenSize = SCREEN_SIZES.LARGE;
-		} else if (width > BREAKPOINTS.SMALL) {
-			this.screenSize = SCREEN_SIZES.MEDIUM;
-		} else {
-			this.screenSize = SCREEN_SIZES.SMALL;
-		}
-	};
+	// Register screen sizes
+	resizeService.set([{
+		name: SCREEN_SIZES.SMALL,
+		size: 0
+	},{
+		name: SCREEN_SIZES.MEDIUM,
+		size: 580
+	},{
+		name: SCREEN_SIZES.LARGE,
+		size: 850
+	}])
 
 	return {
 		template: tmpl,
@@ -127,8 +88,8 @@ define([
 		},
 		data: function() {
 			return {
-				screenSize: "",
 				isPanelActive: false,
+				primarySection: "",
 				activeSection: SECTIONS.CONSUMERS
 			};
 		},
@@ -139,7 +100,7 @@ define([
 			 * @return {Boolean} Is the consumers section active?
 			 */
 			isConsumersActive: function() {
-				return this.activeSection === SECTIONS.CONSUMERS;
+				return -1 !== [this.activeSection, this.primarySection].indexOf(SECTIONS.CONSUMERS);
 			},
 
 			/**
@@ -148,7 +109,7 @@ define([
 			 * @return {Boolean} Is the products section active?
 			 */
 			isProductsActive: function() {
-				return this.activeSection === SECTIONS.PRODUCTS;
+				return -1 !== [this.activeSection, this.primarySection].indexOf(SECTIONS.PRODUCTS);
 			},
 
 			/**
@@ -157,7 +118,7 @@ define([
 			 * @return {Boolean} Is the order panel section active?
 			 */
 			isOrderPanelActive: function() {
-				return this.activeSection === SECTIONS.ORDER_PANEL;
+				return -1 !== [this.activeSection, this.primarySection].indexOf(SECTIONS.ORDER_PANEL);
 			},
 
 			/**
@@ -166,7 +127,7 @@ define([
 			 * @return {Boolean} Is the screen size large?
 			 */
 			isScreenLarge: function() {
-				return this.screenSize === SCREEN_SIZES.LARGE;
+				return this.$screenSize === SCREEN_SIZES.LARGE;
 			},
 
 			/**
@@ -175,7 +136,7 @@ define([
 			 * @return {Boolean} Is the screen size medium?
 			 */
 			isScreenMedium: function() {
-				return this.screenSize === SCREEN_SIZES.MEDIUM;
+				return this.$screenSize === SCREEN_SIZES.MEDIUM;
 			},
 
 			/**
@@ -184,7 +145,7 @@ define([
 			 * @return {Boolean} Is the screen size small?
 			 */
 			isScreenSmall: function() {
-				return this.screenSize === SCREEN_SIZES.SMALL;
+				return this.$screenSize === SCREEN_SIZES.SMALL;
 			}
 		},
 		methods: {
@@ -216,14 +177,31 @@ define([
 			},
 
 			/**
-			 * Set the receipt in the fixed position
+			 * Set the receipt in the fixed position for medium screens
 			 *
 			 * @return {Void}
 			 */
-			setFixedReceipt: function() {
+			setFixedReceiptMedium: function() {
+				if (this.isOrderPanelActive) {
+					this.resetFixedReceipt();
+				} else {
+
+					// Check if elements are rendered
+					if (this.$refs.products && ! this.$refs.products.contains(this.$refs.receipt)) {
+						this.$refs.products.append(this.$refs.receipt);
+					}
+				}
+			},
+
+			/**
+			 * Set the receipt in the fixed position for small screens
+			 *
+			 * @return {Void}
+			 */
+			setFixedReceiptSmall: function() {
 
 				// Check if elements are rendered
-				if (this.$refs.sections && this.$refs.orderPanel.contains(this.$refs.receipt)) {
+				if (this.$refs.sections && (this.$refs.products.contains(this.$refs.receipt) || this.$refs.orderPanel.contains(this.$refs.receipt))) {
 					this.$refs.sections.append(this.$refs.receipt);
 				}
 			},
@@ -253,6 +231,46 @@ define([
 				return SECTIONS_ALL.find( function( section ) {
 					return self.$el.querySelector("#".concat(section)).contains(element);
 				});
+			},
+
+			/**
+			 * Restructure sections and reposition the receipt
+			 *
+			 * @param  {String} size Optional. Screen size when called from the resize event handler.
+			 * @return {Void}
+			 */
+			resetSections: function( size ) {
+
+				// Large screen
+				if (this.isScreenLarge) {
+					this.resetFixedReceipt();
+
+					// Enable additional active primary section
+					this.primarySection = primarySection;
+
+					// Reset the active section to products
+					this.isOrderPanelActive && this.setProductsActive();
+
+				// Medium screen
+				} else if (this.isScreenMedium) {
+					this.setFixedReceiptMedium();
+
+					// Enable additional active primary section
+					this.primarySection = primarySection;
+
+					// Reset the active section to products
+					! this.isOrderPanelActive && this.setProductsActive();
+
+				// Small screen
+				} else if (this.isScreenSmall) {
+					this.setFixedReceiptSmall();
+
+					// Disable additional active primary section
+					this.primarySection = "";
+
+					// When resized, reset the active section to the primary section
+					size && (this.activeSection = primarySection);
+				}
 			}
 		},
 		watch: {
@@ -265,37 +283,12 @@ define([
 
 				// Focus the section's heading button on small/medium screens
 				// so that the focus flow is reset to the top
-				if (! this.isScreenLarge) {
-					this.$el.querySelector("#".concat(this.activeSection)).querySelector(".set-active-section").focus();
+				if (! this.isScreenLarge && this.$el.querySelector) {
+					this.$el.querySelector("#".concat(this.activeSection, " .set-active-section")).focus();
 				}
-			},
 
-			/**
-			 * Act when the screen size is changed
-			 *
-			 * @return {Void}
-			 */
-			screenSize: function() {
-
-				// Consider the screen size
-				switch (this.screenSize) {
-					case SCREEN_SIZES.LARGE:
-
-						// Reset the active section to consumers
-						this.isOrderPanelActive && this.setConsumersActive();
-						this.resetFixedReceipt();
-
-						// Emit screen resize
-						this.$root.$emit("sections/resize-large");
-						break;
-
-					case SCREEN_SIZES.SMALL:
-						this.setFixedReceiptSmall();
-
-						// Emit screen resize
-						this.$root.$emit("sections/resize-small");
-						break;
-				}
+				// Communicate new active section
+				this.$root.$emit("sections/active-section", this.activeSection);
 			}
 		},
 
@@ -350,16 +343,16 @@ define([
 					switch (self.activeSection) {
 						case SECTIONS.PRODUCTS:
 
-							// On all screens
-							self.setConsumersActive();
+							// On small screens
+							if (self.isScreenSmall) {
+								self.setConsumersActive();
+							}
 
 							break;
 						case SECTIONS.ORDER_PANEL:
 
-							// On small screens
-							if (self.isScreenSmall) {
-								self.setProductsActive();
-							}
+							// On all screens
+							self.setProductsActive();
 
 							break;
 					}
@@ -375,16 +368,16 @@ define([
 					switch (self.activeSection) {
 						case SECTIONS.CONSUMERS:
 
-							// On all screens
-							self.setProductsActive();
+							// On small screens
+							if (self.isScreenSmall) {
+								self.setProductsActive();
+							}
 
 							break;
 						case SECTIONS.PRODUCTS:
 
-							// On small screens
-							if (self.isScreenSmall) {
-								self.setOrderPanelActive();
-							}
+							// On all screens
+							self.setOrderPanelActive();
 
 							break;
 					}
@@ -393,7 +386,7 @@ define([
 				// Search
 				"ctrl+F": function sectionsFocusSearchOnCtrlF( event ) {
 					// NOTE: using document for web
-					var section = self.getElementSection(document.activeElement) || self.activeSection,
+					var section = self.getElementSection(document.activeElement) || self.isScreenSmall ? self.activeSection : primarySection,
 					    searchInput = self.$el.querySelector("#".concat(section)).querySelector(".search-open");
 
 					// Trigger click on the input search button
@@ -409,9 +402,7 @@ define([
 			}));
 
 			// Register resize event listener
-			this.$registerUnobservable(
-				addResizeListener(onResize.bind(this))
-			);
+			this.$registerUnobservable(resizeService.on("change", this.resetSections));
 		},
 
 		/**
@@ -475,6 +466,9 @@ define([
 			this.$registerUnobservable( function() {
 				self.hammer.off("swipe", onSectionsSwipe);
 			});
+
+			// Setup sections
+			this.resetSections();
 		},
 
 		/**
@@ -489,8 +483,8 @@ define([
 			this.hammer.input.element = this.$el;
 			this.hammer.set({ inputTarget: this.$el });
 
-			// Run resize handler when the component is rendered
-			onResize.apply(this);
+			// Setup sections
+			this.resetSections();
 		}
 	};
 });

@@ -7,7 +7,7 @@
 	.receipt {
 		position: relative;
 		// height: 45vh;
-		height: min( 480px, calc( 100vh - 235px ) );
+		height: min( 480px, calc( 100vh - 235px + 46px ) ); // 46px = small screen section headings
 		max-height: 0px;
 		transition:
 			max-height $transition-quick
@@ -105,7 +105,7 @@
 		}
 
 		&.is-active {
-			max-height: min( 480px, calc( 100vh - 235px ) ); // 100vh; High enough ceiling
+			max-height: min( 480px, calc( 100vh - 235px + 46px ) ); // 100vh; High enough ceiling // 46px = small screen section headings
 			transition: max-height $transition-quick;
 
 			.item-list-header {
