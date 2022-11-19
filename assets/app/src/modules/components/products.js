@@ -318,11 +318,10 @@ define([
 			/**
 			 * Close the trash can when there are no products trashed
 			 *
-			 * @param  {Boolean} have Do we have trashed products?
 			 * @return {Void}
 			 */
-			haveTrashedProducts: function( have ) {
-				if (! have) {
+			haveTrashedProducts: function() {
+				if (! this.haveTrashedProducts) {
 					this.showTrashedProducts = false;
 				}
 			},
