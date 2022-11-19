@@ -6,7 +6,10 @@
 	}
 
 	.item {
-		animation: active-background-fade 2s ease;
+
+		&:has(.select-item) {
+			animation: active-background-fade 2s ease;
+		}
 
 		.select-item {
 			display: flex;
