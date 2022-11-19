@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Incassoos\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-31 17:52+0000\n"
+"POT-Creation-Date: 2022-11-03 20:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Loco-Version: 2.6.2; wp-5.9-alpha-20220826.162129\n"
 "X-Domain: incassoos"
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/admin.php:1050
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/admin.php:1057
 #, php-format
 msgid "%1$s - %2$s"
 msgstr ""
@@ -40,7 +40,7 @@ msgstr[1] ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:835
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:852
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1424
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1449
 #, php-format
 msgid "%d Consumer"
 msgid_plural "%d Consumers"
@@ -64,7 +64,7 @@ msgid_plural "%d Orders"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1435
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1460
 #, php-format
 msgid "%d Orders"
 msgid_plural "%d Orders"
@@ -114,20 +114,20 @@ msgstr ""
 msgid "&mdash; Actions &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1708
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1733
 msgid "&mdash; Consumer Type &mdash;"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1059
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1949
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1974
 msgid "&mdash; No Category &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1404
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1429
 msgid "&mdash; No Type &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1714
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1739
 msgid "&mdash; or &mdash;"
 msgstr ""
 
@@ -145,12 +145,12 @@ msgid "*) The mentioned date is the one at which the item was registered."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:159
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:348
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:428
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:473
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:495
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:529
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:557
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:349
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:429
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:474
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:496
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:530
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:558
 msgid "<a href=\"https://github.com/lmoffereins/incassoos\">Development</a>"
 msgstr ""
 
@@ -160,13 +160,13 @@ msgid ""
 "collection."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:464
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:465
 msgid ""
 "<strong>At a Glance</strong> &mdash; Displays a summary of the content on "
 "your site and identifies whether encryption is enabled."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:521
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:522
 msgid ""
 "<strong>Bulk Edit</strong> &mdash; For editing multiple consumers at once, "
 "click Open bulk edit mode. Consumers can be selected individually or in bulk."
@@ -178,11 +178,11 @@ msgstr ""
 msgid "<strong>Category</strong> &mdash; Select a category for the activity."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:334
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:335
 msgid "<strong>Category</strong> &mdash; Select a category for the product."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:292
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:293
 msgid ""
 "<strong>Close</strong> &mdash; To prevent further orders being created for "
 "the occasion, click Close. Only closed occasions can be collected by the "
@@ -196,7 +196,7 @@ msgid ""
 "Which link is available depends on your item&#8217;s status."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:314
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:315
 msgid ""
 "<strong>Consumer</strong> &mdash; Enter the username of the consumer or "
 "select a consumer type when no single consumer should be specified."
@@ -208,7 +208,7 @@ msgid ""
 "respective consumptions for this collection."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:285
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:286
 msgid ""
 "<strong>Consumers</strong> &mdash; The list of consumers with their "
 "respective orders for this occasion."
@@ -220,7 +220,7 @@ msgid ""
 "created."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:291
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:292
 msgid ""
 "<strong>Create</strong> &mdash; Set the occasion's attributes when it is "
 "created."
@@ -232,7 +232,7 @@ msgid ""
 "Leave empty when no particular date applies."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:278
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:279
 msgid ""
 "<strong>Date</strong> &mdash; Select the date the occasion was scheduled."
 msgstr ""
@@ -259,7 +259,7 @@ msgid ""
 "available depends on your item&#8217;s status."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:523
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:524
 msgid ""
 "<strong>Export</strong> &mdash; Exporting consumers provides the option to "
 "download consumers with their attributes in a CSV formatted file."
@@ -273,7 +273,7 @@ msgid ""
 "future self about the rationale behind some decisions."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:315
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:316
 msgid ""
 "<strong>Occasion</strong> &mdash; Select the occasion for which the order is "
 "consumed."
@@ -285,17 +285,23 @@ msgid ""
 "collection."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:335
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:336
 msgid ""
 "<strong>Order</strong> &mdash; Products are usually ordered alphabetically, "
 "but you can choose your own order by entering a number (1 for first, etc.) "
 "in this field."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:258
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:259
 msgid ""
 "<strong>Participants</strong> &mdash; Select the participants of the "
 "activity."
+msgstr ""
+
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:258
+msgid ""
+"<strong>Partition</strong> &mdash; Select whether the price of the activity "
+"should be partitioned for the participants."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:191
@@ -305,7 +311,7 @@ msgid ""
 "appropriate tab."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:333
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:334
 msgid "<strong>Price</strong> &mdash; Enter a price for the product."
 msgstr ""
 
@@ -314,38 +320,38 @@ msgid ""
 "<strong>Price</strong> &mdash; Enter the default price for the activity."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:313
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:314
 msgid ""
 "<strong>Products</strong> &mdash; Indicate the number of products that "
 "comprise the order."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:286
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:287
 msgid ""
 "<strong>Products</strong> &mdash; The list of products that are consumed in "
 "the orders for this occasion."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:467
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:468
 msgid ""
 "<strong>Quick Actions</strong> &mdash; Provides quick access to frequently "
 "used actions, if any are available for you."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:520
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:521
 msgid ""
 "<strong>Quick Edit</strong> &mdash; For editing a single consumer's "
 "attributes, click the row of the consumer to open the Quick Edit menu. This "
 "gives access to all relevant consumer details."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:465
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:466
 msgid ""
 "<strong>Recent Activity</strong> &mdash; Shows the recently collected items, "
 "and the most recently created items."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:293
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:294
 msgid ""
 "<strong>Reopen</strong> &mdash; To undo closing the occasion for new orders, "
 "click Reopen."
@@ -369,7 +375,7 @@ msgstr ""
 msgid "<strong>Title</strong> &mdash; The title for the item."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:312
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:313
 msgid ""
 "<strong>Title</strong> &mdash; The title is automatically derived from the "
 "order's consumer name."
@@ -385,11 +391,11 @@ msgid ""
 "Trash, from which you can permanently delete it."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:279
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:280
 msgid "<strong>Type</strong> &mdash; Select a type for the occasion."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:466
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:467
 msgid ""
 "<strong>Uncollected Items</strong> &mdash; Shows the items that have not "
 "been collected yet."
@@ -437,7 +443,7 @@ msgstr ""
 msgid "Account IBAN"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:522
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:523
 msgid ""
 "Actions available for bulk editing are to set the default visibility to hide "
 "or show."
@@ -557,7 +563,7 @@ msgstr ""
 msgid "Add or remove types"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:400
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:401
 msgid "Adding Types"
 msgstr ""
 
@@ -795,9 +801,9 @@ msgid "Authentication token is invalid."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:599
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1100
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1448
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1762
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1114
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1473
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1787
 msgid "Author:"
 msgstr ""
 
@@ -902,8 +908,8 @@ msgstr ""
 msgid "Canadian dollar"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1264
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1265
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1289
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1290
 msgid "Cancel the custom price"
 msgstr ""
 
@@ -1062,7 +1068,7 @@ msgid "Categories"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1049
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1940
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1965
 msgid "Category:"
 msgstr ""
 
@@ -1078,7 +1084,7 @@ msgstr ""
 msgid "CFP franc"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:303
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:304
 #, php-format
 msgid ""
 "Changes to the order can only be made within the given timeframe of %s "
@@ -1124,12 +1130,12 @@ msgstr ""
 msgid "Close wizard"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1499
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1524
 msgid "Closed for new orders."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1783
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1457
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1482
 msgid "Closed:"
 msgstr ""
 
@@ -1232,9 +1238,9 @@ msgstr ""
 msgid "Collection Workflow"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1109
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1462
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1771
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1123
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1487
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1796
 msgid "Collection:"
 msgstr ""
 
@@ -1344,11 +1350,11 @@ msgid "Unknown users"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:954
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1627
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1652
 msgid "Consumer Types"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1702
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1727
 msgid "Consumer:"
 msgstr ""
 
@@ -1367,7 +1373,7 @@ msgstr ""
 msgid "Consumptions"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1419
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1444
 msgid "Content:"
 msgstr ""
 
@@ -1403,7 +1409,7 @@ msgstr ""
 msgid "Could not update the products of the order."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1082
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1096
 msgid "Count:"
 msgstr ""
 
@@ -1429,9 +1435,9 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:551
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1024
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1366
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1695
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1926
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1391
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1720
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1951
 msgid "Created:"
 msgstr ""
 
@@ -1503,7 +1509,7 @@ msgid "Date"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1035
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1375
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1400
 msgid "Date:"
 msgstr ""
 
@@ -1655,7 +1661,7 @@ msgstr ""
 msgid "Empty occasion date."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:403
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:412
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1611
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1665
 msgid "Empty price."
@@ -2048,18 +2054,18 @@ msgstr ""
 msgid "Invalid activity date."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:425
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:434
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1649
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-orders-controller.php:227
 msgid "Invalid consumer ID or consumer type."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:433
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:442
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1650
 msgid "Invalid consumer ID."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:438
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:447
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1651
 msgid "Invalid consumer type."
 msgstr ""
@@ -2090,7 +2096,7 @@ msgstr ""
 msgid "Invalid order products."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:407
+#: ../../../../src/wp-content/plugins/incassoos/includes/formatting.php:416
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1612
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1666
 msgid "Invalid price."
@@ -2530,7 +2536,7 @@ msgstr ""
 msgid "Occasion"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:282
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:283
 msgid "Occasion Attributes"
 msgstr ""
 
@@ -2587,7 +2593,7 @@ msgstr ""
 msgid "Occasion saved."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:276
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:277
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/settings.php:96
 msgid "Occasion Settings"
 msgstr ""
@@ -2622,11 +2628,11 @@ msgstr ""
 msgid "Occasion updated."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:289
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:290
 msgid "Occasion Workflow"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1727
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1752
 msgid "Occasion:"
 msgstr ""
 
@@ -2640,7 +2646,7 @@ msgid "Occasions"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:91
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:269
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:270
 msgid ""
 "Occasions are events at which specific products are consumed. Occasions are "
 "similar to posts in that they have a title and associated metadata, but they "
@@ -2660,14 +2666,14 @@ msgstr ""
 msgid "Omani rial"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:540
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:541
 msgid ""
 "Only users with the appropriate capabilities are allowed to enable or "
 "disable encryption."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1212
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1213
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1233
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1234
 msgid "Open add participant"
 msgstr ""
 
@@ -2681,7 +2687,7 @@ msgid "Open bulk edit mode"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1042
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1507
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1532
 msgctxt "Opposite of reopen"
 msgid "Close"
 msgstr ""
@@ -2753,7 +2759,7 @@ msgstr ""
 msgid "Order saved."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:310
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:311
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/settings.php:103
 msgid "Order Settings"
 msgstr ""
@@ -2776,7 +2782,7 @@ msgid "Orders"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:114
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:302
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:303
 msgid ""
 "Orders are the individual consumptions at an Occasion. Unlike posts, orders "
 "are not assigned an individual title or body text, but they contain a list "
@@ -2816,7 +2822,7 @@ msgstr ""
 msgid "Paraguayan guaraní"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1292
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1317
 msgid "Participant Types"
 msgstr ""
 
@@ -2824,11 +2830,15 @@ msgstr ""
 msgid "Participants"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:259
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:260
 msgid ""
 "Participants can be selected individually or in bulk. Bulk selection of "
 "participants is available through clicking their respective group heading or "
 "by selecting an option from the Quick Select menu."
+msgstr ""
+
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1084
+msgid "Partition:"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-consumers-controller.php:125
@@ -2910,7 +2920,7 @@ msgid "Price"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1072
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1935
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1960
 msgid "Price:"
 msgstr ""
 
@@ -2968,7 +2978,7 @@ msgstr ""
 msgid "Product saved."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:331
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:332
 msgid "Product Settings"
 msgstr ""
 
@@ -2988,7 +2998,7 @@ msgid "Products"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:135
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:324
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:325
 msgid ""
 "Products are the items that are available for consumption at Occasions. "
 "Products are similar to posts in that they have a title and associated "
@@ -3029,7 +3039,7 @@ msgstr ""
 msgid "Quick select consumers"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1188
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1209
 msgid "Quick select participants"
 msgstr ""
 
@@ -3050,7 +3060,7 @@ msgid "Register, manage and collect consumptions"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1053
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1509
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1534
 msgid "Reopen"
 msgstr ""
 
@@ -3076,10 +3086,10 @@ msgstr ""
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/consumers.php:470
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:902
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:903
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1202
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1203
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1584
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1585
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1223
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1224
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1609
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1610
 msgid "Reverse group order"
 msgstr ""
 
@@ -3089,14 +3099,14 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:656
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:657
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1132
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1133
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1485
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1486
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1794
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1795
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1967
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1968
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1146
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1147
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1510
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1511
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1819
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1820
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1992
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1993
 msgid "Run action"
 msgstr ""
 
@@ -3136,21 +3146,21 @@ msgstr ""
 msgid "Search Collections"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1716
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1741
 msgid "Search consumer&hellip;"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/consumers.php:465
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:899
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1312
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1581
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1337
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1606
 msgid "Search consumers"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/consumers.php:466
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:900
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1313
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1582
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1338
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1607
 msgid "Search consumers&hellip;"
 msgstr ""
 
@@ -3166,11 +3176,11 @@ msgstr ""
 msgid "Search Orders"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1193
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1214
 msgid "Search participants"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1194
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1215
 msgid "Search participants&hellip;"
 msgstr ""
 
@@ -3187,7 +3197,7 @@ msgid "Select all"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/consumers.php:479
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1232
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1253
 msgid "Select or deselect all users in the group"
 msgstr ""
 
@@ -3242,8 +3252,8 @@ msgstr ""
 msgid "Serbian dinar"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1267
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1268
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1292
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1293
 msgid "Set a custom price"
 msgstr ""
 
@@ -3302,7 +3312,7 @@ msgid "Show errors"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/admin.php:317
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1198
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1219
 msgid "Show selected"
 msgstr ""
 
@@ -3719,7 +3729,7 @@ msgstr ""
 msgid "The occasion is not closed."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1499
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1524
 #, php-format
 msgid "The occasion was closed on %1$s at %2$s."
 msgstr ""
@@ -3817,7 +3827,7 @@ msgstr ""
 msgid "There are no collectable occasions found."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1556
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1581
 msgid "There are no consumed products found."
 msgstr ""
 
@@ -3830,7 +3840,7 @@ msgstr ""
 msgid "There is currently nothing to display here."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1882
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1907
 msgid "There were no products found."
 msgstr ""
 
@@ -3858,13 +3868,13 @@ msgid ""
 "data in Incassoos on %s."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:510
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:511
 msgid ""
 "This screen gives an overview of the available consumers for Incassoos and a "
 "way of managing their relevant attributes."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:539
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:540
 msgid ""
 "This screen gives insight in the process and status of encryption in "
 "Incassoos."
@@ -3900,7 +3910,7 @@ msgid ""
 "customize the display of this screen to suit your workflow."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:488
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:489
 msgid "This screen provides options for managing and configuring Incassoos."
 msgstr ""
 
@@ -3934,10 +3944,10 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:905
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:906
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1205
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1206
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1587
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1588
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1226
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1227
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1612
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1613
 msgid "Toggle list columns"
 msgstr ""
 
@@ -3964,9 +3974,9 @@ msgid "Total"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:583
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1089
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1443
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1751
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1103
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1468
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1776
 msgid "Total:"
 msgstr ""
 
@@ -3998,7 +4008,7 @@ msgstr ""
 msgid "Turkmenistani manat"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1394
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1419
 msgid "Type:"
 msgstr ""
 
@@ -4239,7 +4249,7 @@ msgstr ""
 msgid "Visual mode gives you an editor that is similar to a word processor."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:443
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:444
 msgid ""
 "Welcome to your Incassoos dashboard! This is the screen you will see when "
 "you start with Incassoos, and gives you access to all the management "
@@ -4252,7 +4262,7 @@ msgstr ""
 msgid "West African CFA franc"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:367
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:368
 msgid ""
 "When adding a new term on this screen, you&#8217;ll fill in the following "
 "fields:"
@@ -4264,25 +4274,25 @@ msgid ""
 "details are added on this screen, including:"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:284
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:285
 msgid ""
 "When any orders are registered for this item, additional details are shown "
 "on this screen, including:"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:544
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:545
 msgid ""
 "When encryption is enabled, you can start a wizard that will guide you "
 "through the steps for disabling encryption."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:543
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:544
 msgid ""
 "When encryption is not enabled, you can start a wizard that will guide you "
 "through the steps for doing so."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:260
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:261
 msgid ""
 "When required, the price per participant can be changed to differ from the "
 "default price. You can change their price after the participant is selected, "
@@ -4319,6 +4329,10 @@ msgstr ""
 msgid "Yemeni rial"
 msgstr ""
 
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1089
+msgid "Yes"
+msgstr ""
+
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:2375
 msgid "You are not allowed to export data from this post."
 msgstr ""
@@ -4328,46 +4342,46 @@ msgstr ""
 msgid "You can close the wizard."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:382
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:383
 msgid ""
 "You can create groups of activities by using Activity Categories. Activity "
 "Category names must be unique and Activity Categories are separate from the "
 "categories you use for posts."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:396
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:397
 msgid ""
 "You can create groups of occasions by using Occasion Types. Occasion Type "
 "names must be unique and Occasion Types are separate from the categories you "
 "use for posts."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:410
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:411
 msgid ""
 "You can create groups of products by using Product Categories. Product "
 "Category names must be unique and Product Categories are separate from the "
 "categories you use for posts."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:383
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:384
 msgid ""
 "You can delete Activity Categories in the Bulk Action pull-down, but that "
 "action does not delete the activities within the category."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:397
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:398
 msgid ""
 "You can delete Occasion Types in the Bulk Action pull-down, but that action "
 "does not delete the occasions within the type."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:411
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:412
 msgid ""
 "You can delete Product Categories in the Bulk Action pull-down, but that "
 "action does not delete the products within the category."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:511
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:512
 msgid ""
 "You can filter the list of consumers by searching for them by name. Click "
 "Show default to show only consumers that have the default visibility set to "
@@ -4394,7 +4408,7 @@ msgid ""
 "Filter button after making your selection."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:452
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/help.php:453
 msgid ""
 "You can use the following controls to arrange your Dashboard screen to suit "
 "your workflow."
