@@ -169,6 +169,10 @@
 							display: none;
 						}
 
+						.item-title {
+							@include text-overflow;
+						}
+
 						.item-subtitle {
 							visibility: hidden;
 						}
