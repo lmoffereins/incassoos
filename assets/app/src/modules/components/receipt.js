@@ -359,8 +359,9 @@ define([
 			 */
 			consumer: function() {
 
-				// Switch to the products section when selecting a consumer
-				if (this.consumer.id) {
+				// Switch to the products section when selecting a consumer,
+				// but not when in settings mode
+				if (this.consumer.id && ! this.$isSettings) {
 					this.setActiveProductsSection();
 				}
 			},
