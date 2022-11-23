@@ -30,7 +30,7 @@
 
 			<feedback name="consumer" :items="feedback"></feedback>
 
-			<div class="detail-list consumer-statistics">
+			<div v-if="occasion" class="detail-list consumer-statistics">
 				<div class="detail-item">
 					<span class="detail-label" v-l10n.Consumer.OrderCount></span>
 					<span class="detail-value">{{orderCount}}</span>

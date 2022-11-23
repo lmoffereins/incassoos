@@ -308,6 +308,8 @@ define([
 					return i.length;
 				}) : [];
 			}
+		}), Vuex.mapState("occasions", {
+			"occasion": "active"
 		})),
 		methods: Object.assign({
 			/**

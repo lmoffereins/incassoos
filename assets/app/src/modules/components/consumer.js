@@ -134,6 +134,8 @@ define([
 			isWithinSpendingLimit: function( state, getters ) {
 				return getters.isWithinSpendingLimit();
 			}
+		}), Vuex.mapState("occasions", {
+			"occasion": "active"
 		})),
 		methods: Object.assign({
 			/**
