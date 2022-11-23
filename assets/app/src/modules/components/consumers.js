@@ -203,6 +203,15 @@ define([
 			},
 
 			/**
+			 * Return the first consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			firstConsumerId: function( state, getters ) {
+				return this.consumers[0].id;
+			},
+
+			/**
 			 * Return the previous consumer id
 			 *
 			 * @return {Number} Consumer id
@@ -222,6 +231,15 @@ define([
 				var currIx = this.activeConsumerIx;
 
 				return -1 !== currIx && currIx > 0 ? this.consumers[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the last consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			lastConsumerId: function( state, getters ) {
+				return this.consumers[this.consumers.length - 1].id ;
 			}
 		}), Vuex.mapGetters("consumers", {
 			"isSelected": "isActiveItem",
@@ -397,6 +415,15 @@ define([
 			var self = this, i,
 
 			/**
+			 * Set the active consumer from the first consumer
+			 *
+			 * @return {Void}
+			 */
+			onSelectFirstConsumer = function () {
+				self.nextConsumerId && self.select(self.firstConsumerId);
+			},
+
+			/**
 			 * Set the active consumer from the previous consumer
 			 *
 			 * @return {Void}
@@ -412,6 +439,15 @@ define([
 			 */
 			onSelectNextConsumer = function () {
 				self.nextConsumerId && self.select(self.nextConsumerId);
+			},
+
+			/**
+			 * Set the active consumer from the last consumer
+			 *
+			 * @return {Void}
+			 */
+			onSelectLastConsumer = function () {
+				self.previousConsumerId && self.select(self.lastConsumerId);
 			},
 
 			/**
@@ -449,11 +485,15 @@ define([
 			);
 
 			// Subscribe to external events
+			this.$root.$on("consumer/select-first-consumer", onSelectFirstConsumer);
 			this.$root.$on("consumer/select-previous-consumer", onSelectPreviousConsumer);
 			this.$root.$on("consumer/select-next-consumer", onSelectNextConsumer);
+			this.$root.$on("consumer/select-last-consumer", onSelectLastConsumer);
 			this.$registerUnobservable( function() {
+				self.$root.$off("consumer/select-first-consumer", onSelectFirstConsumer);
 				self.$root.$off("consumer/select-previous-consumer", onSelectPreviousConsumer);
 				self.$root.$off("consumer/select-next-consumer", onSelectNextConsumer);
+				self.$root.$off("consumer/select-last-consumer", onSelectLastConsumer);
 			});
 		}
 	};

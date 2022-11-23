@@ -137,15 +137,15 @@ define([
 		})),
 		methods: Object.assign({
 			/**
-			 * Signal to select another active order
+			 * Signal to select an item
 			 *
-			 * @param  {String} direction Selection direction
+			 * @param  {String} direction Optional. Selection direction. Defaults to the next item.
 			 * @return {Void}
 			 */
-			selectConsumer: function( direction ) {
+			selectItem: function( direction ) {
 				direction = direction || "next";
 
-				// Communicate to select the order
+				// Communicate to select the consumer
 				this.$root.$emit("consumer/select-".concat(direction, "-consumer"));
 			}
 		}, Vuex.mapActions("consumers", {
@@ -234,11 +234,17 @@ define([
 					"escape": function consumerTransitionCancelOnEscape() {
 						self.cancel();
 					},
+					"home": function consumerTransitionSelectConsumerOnHome() {
+						self.selectItem("first");
+					},
 					"left": function consumerTransitionSelectConsumerOnLeft() {
-						self.selectConsumer("previous");
+						self.selectItem("previous");
 					},
 					"right": function consumerTransitionSelectConsumerOnRight() {
-						self.selectConsumer("next");
+						self.selectItem("next");
+					},
+					"end": function consumerTransitionSelectConsumerOnEnd() {
+						self.selectItem("last");
 					}
 				})
 			);
@@ -268,11 +274,11 @@ define([
 
 				// Swipe rtl
 				if (event.deltaX < 0) {
-					self.selectConsumer("next");
+					self.selectItem("next");
 
 				// Swipe ltr
 				} else {
-					self.selectConsumer("previous");
+					self.selectItem("previous");
 				}
 			};
 
