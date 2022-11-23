@@ -17,6 +17,7 @@
 			flex-direction: row;
 			align-items: center;
 			grid-gap: 12px;
+			min-width: 0; // Support text-overflow
 			padding-left: 49px;
 
 			.avatar-image {
