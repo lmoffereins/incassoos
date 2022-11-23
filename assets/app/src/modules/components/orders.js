@@ -64,6 +64,15 @@ define([
 			},
 
 			/**
+			 * Return the first order id
+			 *
+			 * @return {Number} Order id
+			 */
+			firstOrderId: function( state, getters ) {
+				return this.orders[0].id;
+			},
+
+			/**
 			 * Return the previous order id
 			 *
 			 * @return {Number} Order id
@@ -83,6 +92,15 @@ define([
 				var currIx = this.activeOrderIx;
 
 				return -1 !== currIx && currIx > 0 ? this.orders[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the last order id
+			 *
+			 * @return {Number} Order id
+			 */
+			lastOrderId: function( state, getters ) {
+				return this.orders[this.orders.length - 1].id;
 			},
 
 			/**
@@ -188,6 +206,15 @@ define([
 			 *
 			 * @return {Void}
 			 */
+			onSelectFirstOrder = function () {
+				self.nextOrderId && self.select(self.firstOrderId);
+			},
+
+			/**
+			 * Set the active order from the previous order
+			 *
+			 * @return {Void}
+			 */
 			onSelectPreviousOrder = function () {
 				self.previousOrderId && self.select(self.previousOrderId);
 			},
@@ -199,14 +226,27 @@ define([
 			 */
 			onSelectNextOrder = function () {
 				self.nextOrderId && self.select(self.nextOrderId);
+			},
+
+			/**
+			 * Set the active order from the last order
+			 *
+			 * @return {Void}
+			 */
+			onSelectLastOrder = function () {
+				self.previousOrderId && self.select(self.lastOrderId);
 			};
 
 			// Subscribe to external events
+			this.$root.$on("receipt/select-first-order", onSelectFirstOrder);
 			this.$root.$on("receipt/select-previous-order", onSelectPreviousOrder);
 			this.$root.$on("receipt/select-next-order", onSelectNextOrder);
+			this.$root.$on("receipt/select-last-order", onSelectLastOrder);
 			this.$registerUnobservable( function() {
+				self.$root.$off("receipt/select-first-order", onSelectFirstOrder);
 				self.$root.$off("receipt/select-previous-order", onSelectPreviousOrder);
 				self.$root.$off("receipt/select-next-order", onSelectNextOrder);
+				self.$root.$off("receipt/select-last-order", onSelectLastOrder);
 			});
 		}
 	};

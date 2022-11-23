@@ -209,12 +209,12 @@ define([
 			},
 
 			/**
-			 * Signal to select another active order
+			 * Signal to select an item
 			 *
-			 * @param  {String} direction Selection direction
+			 * @param  {String} direction Optional. Selection direction. Defaults to the next item.
 			 * @return {Void}
 			 */
-			selectOrder: function( direction ) {
+			selectItem: function( direction ) {
 				direction = direction || "next";
 
 				// Communicate to select the order
@@ -407,11 +407,17 @@ define([
 							"escape": function receiptTransitionCancelOnEscape() {
 								self.cancel();
 							},
+							"home": function receiptTransitionSelectOrderOnHome() {
+								self.selectItem("first");
+							},
 							"left": function receiptTransitionSelectOrderOnLeft() {
-								self.selectOrder("previous");
+								self.selectItem("previous");
 							},
 							"right": function receiptTransitionSelectOrderOnRight() {
-								self.selectOrder("next");
+								self.selectItem("next");
+							},
+							"end": function receiptTransitionSelectOrderOnEnd() {
+								self.selectItem("last");
 							}
 						});
 					}
@@ -532,11 +538,11 @@ define([
 
 					// Swipe rtl
 					if (event.deltaX < 0) {
-						self.selectOrder("next");
+						self.selectItem("next");
 
 					// Swipe ltr
 					} else {
-						self.selectOrder("previous");
+						self.selectItem("previous");
 					}
 
 				// Vertical swipe
