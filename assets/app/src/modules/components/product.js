@@ -309,7 +309,20 @@ define([
 				}) : [];
 			}
 		})),
-		methods: Vuex.mapActions("products", {
+		methods: Object.assign({
+			/**
+			 * Signal to select an item
+			 *
+			 * @param  {String} direction Optional. Selection direction. Defaults to the next item.
+			 * @return {Void}
+			 */
+			selectItem: function( direction ) {
+				direction = direction || "next";
+
+				// Communicate to select the product
+				this.$root.$emit("product/select-".concat(direction, "-product"));
+			}
+		}, Vuex.mapActions("products", {
 			/**
 			 * Edit the active item
 			 *
@@ -383,7 +396,7 @@ define([
 			close: function( dispatch ) {
 				dispatch("close");
 			}
-		}),
+		})),
 
 		watch: Vuex.mapActions("products", {
 			title:           watchPatch("title"),
@@ -422,6 +435,18 @@ define([
 				shortcutsService.on({
 					"escape": function productTransitionCancelOnEscape() {
 						self.cancel();
+					},
+					"home": function productTransitionSelectProductOnHome() {
+						self.selectItem("first");
+					},
+					"left": function productTransitionSelectProductOnLeft() {
+						self.selectItem("previous");
+					},
+					"right": function productTransitionSelectProductOnRight() {
+						self.selectItem("next");
+					},
+					"end": function productTransitionSelectProductOnEnd() {
+						self.selectItem("last");
 					}
 				})
 			);
@@ -440,6 +465,37 @@ define([
 		 * @return {Void}
 		 */
 		mounted: function() {
+			var self = this,
+
+			/**
+			 * Construct element instance for touch events
+			 *
+			 * @type {Hammer}
+			 */
+			hammer = new Hammer(this.$el),
+
+			/**
+			 * Act when the product is swiped
+			 *
+			 * @return {Void}
+			 */
+			onProductSwipe = function( event ) {
+
+				// Swipe rtl
+				if (event.deltaX < 0) {
+					self.selectItem("next");
+
+				// Swipe ltr
+				} else {
+					self.selectItem("previous");
+				}
+			};
+
+			// Register touch event listeners
+			hammer.on("swipe", onProductSwipe);
+			this.$registerUnobservable( function() {
+				hammer.off("swipe", onProductSwipe);
+			});
 
 			// On initial creation, this observer is not triggered yet
 			onEnterViewProduct.call(this);

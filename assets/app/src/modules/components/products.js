@@ -222,6 +222,57 @@ define([
 			},
 
 			/**
+			 * Return the index of the active product
+			 *
+			 * @return {Number} Active product index
+			 */
+			activeProductIx: function( state ) {
+				return this.products.findIndex( function( i ) {
+					return state.active && i.id === state.active.id;
+				});
+			},
+
+			/**
+			 * Return the first product id
+			 *
+			 * @return {Number} Product id
+			 */
+			firstProductId: function( state, getters ) {
+				return this.products[0].id;
+			},
+
+			/**
+			 * Return the previous product id
+			 *
+			 * @return {Number} Product id
+			 */
+			previousProductId: function( state, getters ) {
+				var currIx = this.activeProductIx;
+
+				return -1 !== currIx && currIx < this.products.length - 1 ? this.products[currIx + 1].id : false;
+			},
+
+			/**
+			 * Return the next product id
+			 *
+			 * @return {Number} Product id
+			 */
+			nextProductId: function( state, getters ) {
+				var currIx = this.activeProductIx;
+
+				return -1 !== currIx && currIx > 0 ? this.products[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the last product id
+			 *
+			 * @return {Number} Product id
+			 */
+			lastProductId: function( state, getters ) {
+				return this.products[this.products.length - 1].id ;
+			},
+
+			/**
 			 * Return whether we have trashed products
 			 *
 			 * @return {Boolean} Do we have trashed products?
@@ -376,6 +427,42 @@ define([
 			var self = this, i,
 
 			/**
+			 * Set the active product from the first product
+			 *
+			 * @return {Void}
+			 */
+			onSelectFirstProduct = function () {
+				self.nextProductId && self.select(self.firstProductId);
+			},
+
+			/**
+			 * Set the active product from the previous product
+			 *
+			 * @return {Void}
+			 */
+			onSelectPreviousProduct = function () {
+				self.previousProductId && self.select(self.previousProductId);
+			},
+
+			/**
+			 * Set the active product from the next product
+			 *
+			 * @return {Void}
+			 */
+			onSelectNextProduct = function () {
+				self.nextProductId && self.select(self.nextProductId);
+			},
+
+			/**
+			 * Set the active product from the last product
+			 *
+			 * @return {Void}
+			 */
+			onSelectLastProduct = function () {
+				self.previousProductId && self.select(self.lastProductId);
+			},
+
+			/**
 			 * Collection of fsm observers
 			 *
 			 * @type {Object}
@@ -411,6 +498,18 @@ define([
 					}
 				})
 			);
+
+			// Subscribe to external events
+			this.$root.$on("product/select-first-product", onSelectFirstProduct);
+			this.$root.$on("product/select-previous-product", onSelectPreviousProduct);
+			this.$root.$on("product/select-next-product", onSelectNextProduct);
+			this.$root.$on("product/select-last-product", onSelectLastProduct);
+			this.$registerUnobservable( function() {
+				self.$root.$off("product/select-first-product", onSelectFirstProduct);
+				self.$root.$off("product/select-previous-product", onSelectPreviousProduct);
+				self.$root.$off("product/select-next-product", onSelectNextProduct);
+				self.$root.$off("product/select-last-product", onSelectLastProduct);
+			});
 		}
 	};
 });
