@@ -47,7 +47,8 @@
 		"ToggleDebugModeLabel": "Debugmodus wijzigen",
 		"ToggleEditModeLabel": "Open instellingen- of bewerkmodus",
 		"ClearCacheAndReloadLabel": "Cache wissen en de applicatie herstarten",
-		"OpenShortcutsHelp": "Sneltoetshulp openen"
+		"OpenShortcutsHelp": "Sneltoetshulp openen",
+		"Version": "Versie"
 	},
 	"Common": {
 		"Account": "Account",

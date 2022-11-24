@@ -152,7 +152,8 @@ define([
 		data: function() {
 			return {
 				darkmodeOptions: darkmodeService.getAvailableModes(),
-				debugmodeOptions: debugService.getAvailableModes()
+				debugmodeOptions: debugService.getAvailableModes(),
+				pluginVersion: settings.main.pluginVersion
 			};
 		},
 		computed: {

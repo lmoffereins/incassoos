@@ -47,7 +47,8 @@
 		"ToggleDebugModeLabel": "Toggle debug mode",
 		"ToggleEditModeLabel": "Open settings or edit mode",
 		"ClearCacheAndReloadLabel": "Clear cache and reload the application",
-		"OpenShortcutsHelp": "Open shortcuts help"
+		"OpenShortcutsHelp": "Open shortcuts help",
+		"Version": "Version"
 	},
 	"Common": {
 		"Account": "Account",

@@ -190,6 +190,7 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['main'] ) ) {
 			$data['main'] = array(
+				'pluginVersion'      => incassoos_get_version(),
 				'currencyFormatArgs' => incassoos_get_currency_format_args()
 			);
 		}
