@@ -82,6 +82,11 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true
 				),
+				'_applicationFields' => array(
+					'description' => __( 'List of additional field names in this endpoint to make known to the application.', 'incassoos' ),
+					'type'        => 'array',
+					'context'     => array( 'view', 'edit' )
+				)
 			),
 		);
 
@@ -207,6 +212,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		if ( ! empty( $schema['properties']['avatarUrl'] ) ) {
 			$size = $request->get_param( 'avatar_size' );
 			$data['avatarUrl'] = incassoos_get_consumer_type_avatar_url( $item->id, $size ? array( 'size' => $size ) : array() );
+		}
+
+		if ( ! empty( $schema['properties']['_applicationFields'] ) ) {
+			$data['_applicationFields'] = array_keys( $this->get_additional_fields() );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

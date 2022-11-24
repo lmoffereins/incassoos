@@ -130,6 +130,11 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 				'description' => __( 'The order of the object in relation to other object of its type.', 'incassoos' ),
 				'type'        => 'integer',
 				'context'     => array( 'view', 'edit' )
+			),
+			'_applicationFields' => array(
+				'description' => __( 'List of additional field names in this endpoint to make known to the application.', 'incassoos' ),
+				'type'        => 'array',
+				'context'     => array( 'view', 'edit' )
 			)
 		) );
 
@@ -175,8 +180,19 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 	public function add_additional_fields_to_object( $object, $request ) {
 		global $post;
 
-		$object['price']      = incassoos_get_product_price( $post );
-		$object['menu_order'] = incassoos_get_product_menu_order( $post );
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['price'] ) ) {
+			$object['price'] = incassoos_get_product_price( $post );
+		}
+
+		if ( ! empty( $schema['properties']['menu_order'] ) ) {
+			$object['menu_order'] = incassoos_get_product_menu_order( $post );
+		}
+
+		if ( ! empty( $schema['properties']['_applicationFields'] ) ) {
+			$object['_applicationFields'] = array_keys( $this->get_additional_fields() );
+		}
 
 		/**
 		 * Support additional fields defined for the post type

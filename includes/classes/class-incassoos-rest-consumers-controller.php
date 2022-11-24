@@ -163,6 +163,11 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 							'readonly'    => true
 						),
 					)
+				),
+				'_applicationFields' => array(
+					'description' => __( 'List of additional field names in this endpoint to make known to the application.', 'incassoos' ),
+					'type'        => 'array',
+					'context'     => array( 'view', 'edit' )
 				)
 			),
 		);
@@ -356,6 +361,10 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['group'] ) ) {
 			$data['group'] = incassoos_get_user_list_group( $item );
+		}
+
+		if ( ! empty( $schema['properties']['_applicationFields'] ) ) {
+			$data['_applicationFields'] = array_keys( $this->get_additional_fields() );
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

@@ -131,6 +131,11 @@ class Incassoos_REST_Orders_Controller extends WP_REST_Posts_Controller {
 				'arg_options' => array(
 					'validate_callback' => 'incassoos_validate_order_products',
 				)
+			),
+			'_applicationFields' => array(
+				'description' => __( 'List of additional field names in this endpoint to make known to the application.', 'incassoos' ),
+				'type'        => 'array',
+				'context'     => array( 'view', 'edit' )
 			)
 		) );
 
@@ -169,9 +174,23 @@ class Incassoos_REST_Orders_Controller extends WP_REST_Posts_Controller {
 	public function add_additional_fields_to_object( $object, $request ) {
 		global $post;
 
-		$object['consumer'] = incassoos_get_order_consumer( $post );
-		$object['consumer_name'] = incassoos_get_order_consumer_title( $post );
-		$object['products'] = array_values( incassoos_get_order_products( $post ) );
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['consumer'] ) ) {
+			$object['consumer'] = incassoos_get_order_consumer( $post );
+		}
+
+		if ( ! empty( $schema['properties']['consumer_name'] ) ) {
+			$object['consumer_name'] = incassoos_get_order_consumer_title( $post );
+		}
+
+		if ( ! empty( $schema['properties']['products'] ) ) {
+			$object['products'] = array_values( incassoos_get_order_products( $post ) );
+		}
+
+		if ( ! empty( $schema['properties']['_applicationFields'] ) ) {
+			$object['_applicationFields'] = array_keys( $this->get_additional_fields() );
+		}
 
 		/**
 		 * Support additional fields defined for the post type

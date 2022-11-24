@@ -16,7 +16,7 @@ define([
 	 * @return {Object} Single consumer type
 	 */
 	var getConsumerTypeFromResponse = function( resp ) {
-		return {
+		var item = {
 			id: resp.id,
 			name: he.decode(resp.name),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
@@ -27,7 +27,23 @@ define([
 				name: "Consumer.TypesGroupName",
 				order: 0
 			}
-		};
+		}, i;
+
+		/**
+		 * Add custom application fields to item
+		 *
+		 * We cannot assume all additional fields in the response object
+		 * are relevant for the item. Adding all fields would create
+		 * unnecessary large objects in the application. Only add fields
+		 * that are listed in the `_applicationFields` array.
+		 */
+		if (resp._applicationFields) {
+			for (i = 0; i < resp._applicationFields.length; i++) {
+				item[resp._applicationFields[i]] = resp[resp._applicationFields[i]];
+			}
+		}
+
+		return item;
 	},
 
 	/**

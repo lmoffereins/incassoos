@@ -159,6 +159,11 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 				'format'      => 'date-time',
 				'context'     => array( 'view', 'edit' ),
 				'readonly'    => true
+			),
+			'_applicationFields' => array(
+				'description' => __( 'List of additional field names in this endpoint to make known to the application.', 'incassoos' ),
+				'type'        => 'array',
+				'context'     => array( 'view', 'edit' )
 			)
 		) );
 
@@ -204,9 +209,23 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 	public function add_additional_fields_to_object( $object, $request ) {
 		global $post;
 
-		$object['occasion_date'] = $this->prepare_date_response( incassoos_get_occasion_date( $post, 'Y-m-d H:i:s' ) );
-		$object['consumers'] = incassoos_get_occasion_consumers( $post );
-		$object['closed'] = $this->prepare_date_response( incassoos_get_occasion_closed_date_gmt( $post, 'Y-m-d H:i:s' ) );
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['occasion_date'] ) ) {
+			$object['occasion_date'] = $this->prepare_date_response( incassoos_get_occasion_date( $post, 'Y-m-d H:i:s' ) );
+		}
+
+		if ( ! empty( $schema['properties']['consumers'] ) ) {
+			$object['consumers'] = incassoos_get_occasion_consumers( $post );
+		}
+
+		if ( ! empty( $schema['properties']['closed'] ) ) {
+			$object['closed'] = $this->prepare_date_response( incassoos_get_occasion_closed_date_gmt( $post, 'Y-m-d H:i:s' ) );
+		}
+
+		if ( ! empty( $schema['properties']['_applicationFields'] ) ) {
+			$object['_applicationFields'] = array_keys( $this->get_additional_fields() );
+		}
 
 		/**
 		 * Support additional fields defined for the post type

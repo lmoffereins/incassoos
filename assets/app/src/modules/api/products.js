@@ -25,7 +25,7 @@ define([
 	getProductFromResponse = function( resp ) {
 		resp = resp || { title: {} };
 
-		return {
+		var item = {
 			id: resp.id,
 			title: he.decode(resp.title.rendered),
 			date: new Date(resp.date),
@@ -34,7 +34,23 @@ define([
 			status: resp.status || "publish",
 			productCategory: resp[settings.product.productCategory.taxonomyId][0] || 0,
 			menuOrder: parseInt(resp.menu_order)
-		};
+		}, i;
+
+		/**
+		 * Add custom application fields to item
+		 *
+		 * We cannot assume all additional fields in the response object
+		 * are relevant for the item. Adding all fields would create
+		 * unnecessary large objects in the application. Only add fields
+		 * that are listed in the `_applicationFields` array.
+		 */
+		if (resp._applicationFields) {
+			for (i = 0; i < resp._applicationFields.length; i++) {
+				item[resp._applicationFields[i]] = resp[resp._applicationFields[i]];
+			}
+		}
+
+		return item;
 	},
 
 	/**

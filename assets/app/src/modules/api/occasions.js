@@ -18,7 +18,7 @@ define([
 	var getOccasionFromResponse = function( resp ) {
 		resp = resp || { title: {} };
 
-		return {
+		var item = {
 			id: resp.id,
 			title: he.decode(resp.title.rendered),
 			titleRaw: resp.title.raw,
@@ -28,7 +28,23 @@ define([
 			occasionType: resp[settings.occasion.occasionType.taxonomyId][0] || 0,
 			closed: resp.closed || false,
 			consumers: resp.consumers || []
-		};
+		}, i;
+
+		/**
+		 * Add custom application fields to item
+		 *
+		 * We cannot assume all additional fields in the response object
+		 * are relevant for the item. Adding all fields would create
+		 * unnecessary large objects in the application. Only add fields
+		 * that are listed in the `_applicationFields` array.
+		 */
+		if (resp._applicationFields) {
+			for (i = 0; i < resp._applicationFields.length; i++) {
+				item[resp._applicationFields[i]] = resp[resp._applicationFields[i]];
+			}
+		}
+
+		return item;
 	},
 
 	/**

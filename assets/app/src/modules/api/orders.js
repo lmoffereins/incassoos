@@ -17,7 +17,7 @@ define([
 	var getOrderFromResponse = function( resp ) {
 		resp = resp || { products: [] };
 
-		return {
+		var item = {
 			id: resp.id,
 			date: new Date(resp.date_gmt),
 			modified: new Date(resp.modified_gmt),
@@ -35,7 +35,23 @@ define([
 					quantity: parseInt(prod.amount)
 				};
 			})
-		};
+		}, i;
+
+		/**
+		 * Add custom application fields to item
+		 *
+		 * We cannot assume all additional fields in the response object
+		 * are relevant for the item. Adding all fields would create
+		 * unnecessary large objects in the application. Only add fields
+		 * that are listed in the `_applicationFields` array.
+		 */
+		if (resp._applicationFields) {
+			for (i = 0; i < resp._applicationFields.length; i++) {
+				item[resp._applicationFields[i]] = resp[resp._applicationFields[i]];
+			}
+		}
+
+		return item;
 	},
 
 	/**
