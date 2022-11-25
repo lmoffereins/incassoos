@@ -56,7 +56,7 @@
 
 			<li v-if="!receipt.length" class="item no-items">
 				<span class="no-items-found" v-l10n.Receipt.NoItems></span>
-				<span v-toggle="isExpanded" @click="setActiveProductsSection" class="select-products" v-l10n.Receipt.SelectProducts></span>
+				<button type="button" @click="setActiveProductsSection" class="inline-button select-products" v-l10n.Receipt.SelectProducts></button>
 			</li>
 		</ul>
 	</div>

@@ -106,6 +106,18 @@ button.submit-button:not([disabled]) {
 	}
 }
 
+button.inline-button {
+	background: inherit;
+	color: inherit;
+
+	&:focus,
+	&:hover,
+	&:active {
+		color: inherit;
+		background: inherit;
+	}
+}
+
 .dashicons,
 .dashicons-before:before {
 	margin-bottom: -1px;
