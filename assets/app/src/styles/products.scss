@@ -76,7 +76,7 @@
 			}
 		}
 
-		.no-results .item-list {
+		&.no-results .item-list {
 			grid-template-columns: 1fr;
 		}
 	}
