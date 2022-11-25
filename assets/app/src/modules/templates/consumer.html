@@ -31,6 +31,8 @@
 			<feedback name="consumer" :items="feedback"></feedback>
 
 			<div v-if="occasion" class="detail-list consumer-statistics">
+				<h4 class="detail-title">{{occasion.title}}</h4>
+
 				<div class="detail-item">
 					<span class="detail-label" v-l10n.Consumer.OrderCount></span>
 					<span class="detail-value">{{orderCount}}</span>
