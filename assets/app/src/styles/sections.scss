@@ -141,6 +141,12 @@
 			#orders .item-list-header {
 				padding: 0px;
 			}
+
+			#receipt {
+				.item-list .select-products {
+					display: block;
+				}
+			}
 		}
 
 		#order-panel.is-not-active {
@@ -271,6 +277,13 @@
 		#products.is-not-active {
 			left: 50%;
 			transform: translateX(-50%);
+		}
+
+		#consumers.is-active ~ #receipt,
+		#order-panel.is-active ~ #receipt {
+			.item-list .select-products {
+				display: block;
+			}
 		}
 
 		#consumers.is-active {
