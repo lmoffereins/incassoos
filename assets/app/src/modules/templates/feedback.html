@@ -6,6 +6,13 @@
 			<span class="feedback-message" v-l10n="[f.message, ...f.data.args]"></span>
 			<button
 				type="button"
+				v-if="f.action"
+				@click="f.action.do"
+				class="feedback-action"
+				v-l10n="f.action.label">
+			</button>
+			<button
+				type="button"
 				v-if="removable"
 				@click="remove(f.$id)"
 				class="feedback-action feedback-close dashicons-before dashicons-no-alt"

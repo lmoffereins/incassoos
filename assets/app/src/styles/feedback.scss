@@ -51,9 +51,13 @@
 			}
 
 			.feedback-action {
-				padding: 0px 4px;
+				padding: 10px 15px;
+				color: var(--feedback-color);
+				background: none;
 				border-left: 1px solid var(--feedback-border-color);
 				border-radius: 0px;
+				font-size: .8rem;
+				white-space: inherit;
 
 				&:last-child {
 					border-top-right-radius: 2px;
@@ -61,6 +65,7 @@
 				}
 
 				&.feedback-close {
+					padding: 0px 4px;
 					margin: 0px;
 				}
 

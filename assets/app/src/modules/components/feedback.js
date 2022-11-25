@@ -116,6 +116,18 @@ define([
 					item.data = item.data || {};
 					item.data.args = item.data.args || [];
 
+					// Wrap action callback
+					if (item.action) {
+						item.action.do = function() {
+
+							// Run action callback
+							item.action.callback();
+
+							// Remove the item
+							self.remove(item.$id);
+						}
+					}
+
 					return item;
 				});
 			}

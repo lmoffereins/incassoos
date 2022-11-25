@@ -14,11 +14,6 @@ define([
 	/**
 	 * Holds the global feedback API
 	 *
-	 * Provides listeners. Events triggered in this domain are:
-	 *  - add (item)
-	 *  - clear
-	 *  - remove (item)
-	 *
 	 * @type {Object}
 	 */
 	var feedback = util.createFeedback({

@@ -301,7 +301,16 @@ define([
 
 						// Reject transition when no occasion is selected
 						if (! context.rootState.occasions.active) {
-							return Q.reject("Occasion.Error.NoOccasion");
+							return Q.reject({
+								isError: true,
+								message: "Occasion.Error.NoOccasion",
+								action: {
+									label: "Occasion.OpenOccasion",
+									callback: function() {
+										fsm.do(fsm.tr.START_OCCASION);
+									}
+								}
+							});
 						}
 
 						// Reject transition when the occasion is closed
