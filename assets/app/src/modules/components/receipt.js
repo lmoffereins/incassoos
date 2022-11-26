@@ -394,32 +394,39 @@ define([
 			 * @return {Void}
 			 */
 			isActive: function() {
-				var self = this;
+				var self = this, shortcuts;
 
 				if (this.isActive) {
 					if (! this.shortcutsOff) {
 
-						// Register global keyboard event listeners
-						this.shortcutsOff = shortcutsService.on({
+						// Basic shortcuts
+						shortcuts = {
 							"enter": function receiptSubmitOnEnter() {
 								self.submit();
 							},
 							"escape": function receiptTransitionCancelOnEscape() {
 								self.cancel();
-							},
-							"home": function receiptTransitionSelectOrderOnHome() {
-								self.selectItem("first");
-							},
-							"left": function receiptTransitionSelectOrderOnLeft() {
-								self.selectItem("previous");
-							},
-							"right": function receiptTransitionSelectOrderOnRight() {
-								self.selectItem("next");
-							},
-							"end": function receiptTransitionSelectOrderOnEnd() {
-								self.selectItem("last");
 							}
-						});
+						};
+
+						// Shortcuts for viewing a single order
+						if (this.isViewing) {
+							shortcuts["home"] = function receiptTransitionSelectOrderOnHome() {
+								self.selectItem("first");
+							};
+							shortcuts["left"] = function receiptTransitionSelectOrderOnLeft() {
+								self.selectItem("previous");
+							};
+							shortcuts["right"] = function receiptTransitionSelectOrderOnRight() {
+								self.selectItem("next");
+							};
+							shortcuts["end"] = function receiptTransitionSelectOrderOnEnd() {
+								self.selectItem("last");
+							};
+						}
+
+						// Register global keyboard event listeners
+						this.shortcutsOff = shortcutsService.on(shortcuts);
 					}
 				} else {
 					this.unregisterShortcuts();
