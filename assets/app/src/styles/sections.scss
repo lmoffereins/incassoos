@@ -182,6 +182,11 @@
 						.item-subtitle {
 							visibility: hidden;
 						}
+
+						// Disable all below the list header
+						& ~ * {
+							display: none;
+						}
 					}
 				}
 
