@@ -111,3 +111,78 @@ function incassoos_vgsr_register_export_types() {
 function incassoos_is_user_vgsr( $user_id = 0 ) {
 	return ( function_exists( 'vgsr' ) && is_user_vgsr( $user_id ) );
 }
+
+/** Admin ***************************************************************/
+
+/**
+ * Register and modify the admin post's metaboxes
+ *
+ * @since 1.0.0
+ *
+ * @param string $post_type Post type name
+ * @param WP_Post $post Current post object
+ */
+function incassoos_vgsr_admin_add_meta_boxes( $post_type, $post ) {
+
+	// Bail when not doing post metaboxes
+	if ( ! is_a( $post, 'WP_Post' ) )
+		return;
+
+	// Collection
+	if ( incassoos_get_collection_post_type() === $post_type ) {
+
+		// Display SFC content
+		if ( incassoos_collection_has_assets( $post ) && current_user_can( 'export_incassoos_collection', $post->ID, incassoos_vgsr_get_sfc_export_type_id() ) ) {
+			add_meta_box(
+				'incassoos_vgsr_collection_sfc',
+				esc_html__( 'Collection SFC preview', 'incassoos' ),
+				'incassoos_vgsr_admin_collection_sfc_metabox',
+				null,
+				'normal',
+				'low'
+			);
+		}
+	}
+}
+
+/**
+ * Output the contents of the VGSR Collection SFC metabox
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Post $post Current post object
+ */
+function incassoos_vgsr_admin_collection_sfc_metabox( $post ) {
+
+	// Export type
+	$export_type = incassoos_get_export_type( incassoos_vgsr_get_sfc_export_type_id() );
+
+	// Get export class
+	$class = $export_type->class_name;
+	if ( ! class_exists( $class ) && ! empty( $export_type->class_file ) ) {
+		require_once( $export_type->class_file );
+	}
+
+	// Construct file
+	$file = new $class( $post );
+
+	?>
+
+	<div class="incassoos-file-content">
+		<?php if ( $file->has_errors() ) : ?>
+
+		<div class="notice notice-error">
+			<?php foreach ( $file->get_errors() as $message ) : ?>
+			<p><?php echo $message; ?></p>
+			<?php endforeach; ?>
+		</div>
+
+		<?php else : ?>
+
+		<pre><?php echo $file->get_file(); ?></pre>
+
+		<?php endif; ?>
+	</div>
+
+	<?php
+}
