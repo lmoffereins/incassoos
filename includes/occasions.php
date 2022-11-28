@@ -1079,19 +1079,23 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_forma
 			$_consumer = incassoos_get_occasion_unknown_consumers( $post );
 		}
 
-		// Query orders
-		$query_type = is_numeric( $_consumer ) || is_array( $_consumer ) ? 'incassoos_consumer' : 'incassoos_consumer_type';
-		$orders     = incassoos_get_occasion_orders( $post, array( $query_type => $_consumer ) );
+		// When the consumer (type) is queryable
+		if ( $_consumer ) {
 
-		if ( $orders ) {
+			// Query orders
+			$query_type = is_numeric( $_consumer ) || is_array( $_consumer ) ? 'incassoos_consumer' : 'incassoos_consumer_type';
+			$orders     = incassoos_get_occasion_orders( $post, array( $query_type => $_consumer ) );
 
-			// Define post meta query
-			$post_ids = implode( ',', $orders );
-			$sql      = $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id IN ($post_ids) AND meta_key = %s", 'total' );
+			if ( $orders ) {
 
-			// Query all totals
-			if ( $values = $wpdb->get_col( $sql ) ) {
-				$total = array_sum( array_map( 'floatval', $values ) );
+				// Define post meta query
+				$post_ids = implode( ',', $orders );
+				$sql      = $wpdb->prepare( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id IN ($post_ids) AND meta_key = %s", 'total' );
+
+				// Query all totals
+				if ( $values = $wpdb->get_col( $sql ) ) {
+					$total = array_sum( array_map( 'floatval', $values ) );
+				}
 			}
 		}
 	}
@@ -1134,19 +1138,23 @@ function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $query_ar
 			$_consumer = incassoos_get_occasion_unknown_consumers( $post );
 		}
 
-		// Define post meta query
-		$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
-		$meta_query[] = array(
-			array(
-				'key'     => is_numeric( $_consumer ) || is_array( $_consumer ) ? 'consumer' : 'consumer_type',
-				'value'   => (array) $_consumer,
-				'compare' => 'IN'
-			)
-		);
-		$query_args['meta_query'] = $meta_query;
+		// When the consumer (type) is queryable
+		if ( $_consumer ) {
 
-		// Query posts
-		$posts = incassoos_get_occasion_orders( $post, $query_args );
+			// Define post meta query
+			$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
+			$meta_query[] = array(
+				array(
+					'key'     => is_numeric( $_consumer ) || is_array( $_consumer ) ? 'consumer' : 'consumer_type',
+					'value'   => (array) $_consumer,
+					'compare' => 'IN'
+				)
+			);
+			$query_args['meta_query'] = $meta_query;
+
+			// Query posts
+			$posts = incassoos_get_occasion_orders( $post, $query_args );
+		}
 	}
 
 	return (array) apply_filters( 'incassoos_get_occasion_consumer_orders', $posts, $consumer, $post, $query_args );
