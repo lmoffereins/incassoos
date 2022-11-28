@@ -93,7 +93,7 @@ function incassoos_parse_query( $posts_query ) {
 		}
 
 		// 404 and bail when the user has no access.
-		if ( ! current_user_can( 'edit_incassoos_orders' ) ) {
+		if ( ! current_user_can( 'view_incassoos_application' ) ) {
 
 			// Direct to plugin admin when having a plugin role
 			if ( incassoos_get_roles_for_user() ) {

@@ -785,8 +785,8 @@ function incassoos_map_generic_caps( $caps = array(), $cap = '', $user_id = 0, $
 
 		case 'view_incassoos_application' :
 
-			// Defer to basic rest caps
-			$caps = array( 'access_incassoos_rest_api' );
+			// Defer to editing caps
+			$caps = array( 'edit_incassoos_orders' );
 
 			break;
 
