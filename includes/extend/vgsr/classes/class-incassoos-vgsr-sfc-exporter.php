@@ -150,7 +150,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		$totals         = array_flip( $activities ) + array_combine( $consumer_types, array_fill( 0, count( $consumer_types ), 0 ) );
 
 		// Provide default activity date
-		add_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
+		add_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date_default_to_date_created', 10, 3 );
 
 		// Walk Activities
 		foreach ( $activities as $post_id ) {
@@ -175,7 +175,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		}
 
 		// Remove filter
-		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_default_activity_date_to_date_created', 10, 3 );
+		remove_filter( 'incassoos_get_activity_date', 'incassoos_filter_activity_date_default_to_date_created', 10, 3 );
 
 		// Walk defined totals
 		foreach ( $totals as $item_id => $total ) {
