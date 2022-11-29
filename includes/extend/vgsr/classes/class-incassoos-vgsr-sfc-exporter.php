@@ -204,11 +204,12 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		// Append counter line
 		$counter_total = array_sum( $totals );
 		$retval[] = array(
-			'item_id' => 'activities-counter',
+			'item_id'   => 'activities-counter',
+			'ledger_id' => 10, // Nog te ontvangen incasso's
 			/* translators: %s: Date */
-			'title'   => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
-			'debit'   => $counter_total < 0 ? abs( $counter_total ) : 0,
-			'credit'  => $counter_total < 0 ? 0 : $counter_total,
+			'title'     => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
+			'debit'     => $counter_total < 0 ? abs( $counter_total ) : 0,
+			'credit'    => $counter_total < 0 ? 0 : $counter_total,
 		);
 
 		return apply_filters( 'incassoos_vgsr_sfc_activity_lines', $retval, $totals );
@@ -259,30 +260,34 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 			}
 
 			if ( 'all' === $item_id ) {
+				$ledger_id = 10; // Nog te ontvangen incasso's
 				/* translators: %s: Date */
 				$title = sprintf( __( 'Order revenue collected per %s', 'incassoos' ), "($date)" );
 			} else {
+				$ledger_id = -1;
 				/* translators: 1: Occasion title 2: Date */
 				$title = sprintf( __( 'Order revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
 			}
 
 			// Setup line data
 			$retval[] = array(
-				'item_id' => $item_id,
-				'title'   => $title,
-				'debit'   => $total > 0 ? 0 : abs( $total ),
-				'credit'  => $total > 0 ? $total : 0,
+				'item_id'   => $item_id,
+				'ledger_id' => $ledger_id,
+				'title'     => $title,
+				'debit'     => $total > 0 ? 0 : abs( $total ),
+				'credit'    => $total > 0 ? $total : 0,
 			);
 		}
 
 		// Append counter line
 		$counter_total = array_sum( $totals );
 		$retval[] = array(
-			'item_id' => 'occasions-counter',
+			'item_id'   => 'occasions-counter',
+			'ledger_id' => 6, // Resultaat sociëteitscommissie
 			/* translators: %s: Date */
-			'title'   => sprintf( __( 'Order revenue per %s', 'incassoos' ), $date ),
-			'debit'   => $counter_total < 0 ? 0 : $counter_total,
-			'credit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
+			'title'     => sprintf( __( 'Order revenue per %s', 'incassoos' ), $date ),
+			'debit'     => $counter_total < 0 ? 0 : $counter_total,
+			'credit'    => $counter_total < 0 ? abs( $counter_total ) : 0,
 		);
 
 		return apply_filters( 'incassoos_vgsr_sfc_occasion_lines', $retval, $totals );
