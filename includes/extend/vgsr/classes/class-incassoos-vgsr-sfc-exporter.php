@@ -137,6 +137,8 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 * 
 	 * @since 1.0.0
 	 *
+	 * @uses apply_filters() Calls 'incassoos_vgsr_sfc_activity_lines'
+	 *
 	 * @return array Collection Activity line data
 	 */
 	public function get_activity_lines() {
@@ -192,28 +194,34 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 
 			// Setup line data
 			$retval[] = array(
-				'title'  => $title,
-				'debit'  => $total > 0 ? $total : 0,
-				'credit' => $total > 0 ? 0 : abs( $total ),
+				'item_id' => $item_id,
+				'title'   => $title,
+				'debit'   => $total > 0 ? $total : 0,
+				'credit'  => $total > 0 ? 0 : abs( $total ),
 			);
 		}
 
 		// Append counter line
 		$counter_total = array_sum( $totals );
 		$retval[] = array(
+			'item_id' => 'activities-counter',
 			/* translators: %s: Date */
-			'title'  => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
-			'debit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
-			'credit' => $counter_total < 0 ? 0 : $counter_total,
+			'title'   => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
+			'debit'   => $counter_total < 0 ? abs( $counter_total ) : 0,
+			'credit'  => $counter_total < 0 ? 0 : $counter_total,
 		);
 
-		return $retval;
+		return apply_filters( 'incassoos_vgsr_sfc_activity_lines', $retval, $totals );
 	}
 
 	/**
 	 * Get the Collection's Occasion line data
+	 *
+	 * NOTE: debit/credit amounts are reversed for consumptions
 	 * 
 	 * @since 1.0.0
+	 *
+	 * @uses apply_filters() Calls 'incassoos_vgsr_sfc_occasion_lines'
 	 *
 	 * @return array Collection Occasion line data
 	 */
@@ -228,7 +236,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 
 		// Walk Occasions
 		foreach ( $occasions as $post_id ) {
-			$totals['all'] = incassoos_get_occasion_total( $post_id, null );
+			$totals['all'] += incassoos_get_occasion_total( $post_id, null );
 
 			// Distinguish totals per consumer type
 			foreach ( $consumer_types as $type_id ) {
@@ -250,30 +258,34 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 				continue;
 			}
 
-			$title = ( 'all' === $item_id )
+			if ( 'all' === $item_id ) {
 				/* translators: %s: Date */
-				? sprintf( __( 'Order revenue collected per %s', 'incassoos' ), "($date)" )
+				$title = sprintf( __( 'Order revenue collected per %s', 'incassoos' ), "($date)" );
+			} else {
 				/* translators: 1: Occasion title 2: Date */
-				: sprintf( __( 'Order revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
+				$title = sprintf( __( 'Order revenue for %1$s per %2$s', 'incassoos' ), incassoos_get_consumer_type_title( $item_id ), "($date)" );
+			}
 
 			// Setup line data
 			$retval[] = array(
-				'title'  => $title,
-				'debit'  => $total > 0 ? $total : 0,
-				'credit' => $total > 0 ? 0 : abs( $total ),
+				'item_id' => $item_id,
+				'title'   => $title,
+				'debit'   => $total > 0 ? 0 : abs( $total ),
+				'credit'  => $total > 0 ? $total : 0,
 			);
 		}
 
 		// Append counter line
 		$counter_total = array_sum( $totals );
 		$retval[] = array(
+			'item_id' => 'occasions-counter',
 			/* translators: %s: Date */
-			'title'  => sprintf( __( 'Order revenue per %s', 'incassoos' ), $date ),
-			'debit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
-			'credit' => $counter_total < 0 ? 0 : $counter_total,
+			'title'   => sprintf( __( 'Order revenue per %s', 'incassoos' ), $date ),
+			'debit'   => $counter_total < 0 ? 0 : $counter_total,
+			'credit'  => $counter_total < 0 ? abs( $counter_total ) : 0,
 		);
 
-		return $retval;
+		return apply_filters( 'incassoos_vgsr_sfc_occasion_lines', $retval, $totals );
 	}
 
 	/**
