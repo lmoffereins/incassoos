@@ -45,6 +45,7 @@ class Incassoos_VGSR {
 
 		// Consumer type
 		$this->cash_consumer_type         = apply_filters( 'incassoos_vgsr_cash_consumer_type',         'cash'         );
+		$this->pin_consumer_type          = apply_filters( 'incassoos_vgsr_pin_consumer_type',          'pin'          );
 		$this->on_the_house_consumer_type = apply_filters( 'incassoos_vgsr_on_the_house_consumer_type', 'on_the_house' );
 
 		// Export type

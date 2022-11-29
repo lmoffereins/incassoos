@@ -24,6 +24,17 @@ function incassoos_vgsr_get_cash_consumer_type_id() {
 }
 
 /**
+ * Return the PIN consumer type id
+ *
+ * @since 1.0.0
+ *
+ * @return string PIN consumer type id
+ */
+function incassoos_vgsr_get_pin_consumer_type_id() {
+	return incassoos()->extend->vgsr->pin_consumer_type;
+}
+
+/**
  * Return the On the House consumer type id
  *
  * @since 1.0.0
@@ -49,7 +60,16 @@ function incassoos_vgsr_register_consumer_types() {
 		incassoos_vgsr_get_cash_consumer_type_id(),
 		array(
 			'label'       => _x( 'Cash', 'Consumer type', 'incassoos' ),
-			'label_count' => _nx_noop( 'Cash <span class="count">(%s)</span>', 'Cash <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
+			'label_count' => _nx_noop( 'Cash <span class="count">(%s)</span>', 'Cash <span class="count">(%s)</span>', 'Consumer type', 'incassoos' )
+		)
+	);
+
+	// PIN
+	incassoos_register_consumer_type(
+		incassoos_vgsr_get_pin_consumer_type_id(),
+		array(
+			'label'       => _x( 'PIN', 'Consumer type', 'incassoos' ),
+			'label_count' => _nx_noop( 'PIN <span class="count">(%s)</span>', 'PIN <span class="count">(%s)</span>', 'Consumer type', 'incassoos' )
 		)
 	);
 
