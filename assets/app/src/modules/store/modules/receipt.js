@@ -436,7 +436,7 @@ define([
 			return fsm.do([
 				fsm.tr.SAVE_ORDER,
 				fsm.tr.SUBMIT_RECEIPT
-			], context.getters["getReceipt"]);
+			], context.getters.getReceipt);
 		},
 
 		/**

@@ -258,12 +258,12 @@ define([
 			return function( id, nextOrderValue ) {
 
 				// Accept payload as consumer object, default to the active consumer
-				var consumer = (id && id.id) ? id : (id ? getters["getItemById"](id) : state.active),
+				var consumer = (id && id.id) ? id : (id ? getters.getItemById(id) : state.active),
 				    isWithinLimit = true;
 
 				// When available check limit against total and expected consumed values
 				if (consumer && consumer.spendingLimit) {
-					isWithinLimit = (getters["getTotalConsumedValue"](consumer) + Number(nextOrderValue || 0)) <= consumer.spendingLimit;
+					isWithinLimit = (getters.getTotalConsumedValue(consumer) + Number(nextOrderValue || 0)) <= consumer.spendingLimit;
 				}
 
 				return isWithinLimit;

@@ -86,7 +86,7 @@ define([
 				}
 
 				// Get the original active item or a sample of a new item
-				item = getters["getItemById"](state.active.id) || getters["getNewItem"];
+				item = getters.getItemById(state.active.id) || getters.getNewItem;
 
 				for (i in options.validators) {
 
