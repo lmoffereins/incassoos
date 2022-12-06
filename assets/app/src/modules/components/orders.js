@@ -41,6 +41,46 @@ define([
 			 */
 			isViewOrder: function() {
 				return fsm.is(fsm.st.VIEW_ORDER);
+			},
+
+			/**
+			 * Return the first order id
+			 *
+			 * @return {Number} Order id
+			 */
+			firstOrderId: function() {
+				return this.orders[0].id;
+			},
+
+			/**
+			 * Return the previous order id
+			 *
+			 * @return {Number} Order id
+			 */
+			previousOrderId: function() {
+				var currIx = this.activeOrderIx;
+
+				return -1 !== currIx && currIx < this.orders.length - 1 ? this.orders[currIx + 1].id : false;
+			},
+
+			/**
+			 * Return the next order id
+			 *
+			 * @return {Number} Order id
+			 */
+			nextOrderId: function() {
+				var currIx = this.activeOrderIx;
+
+				return -1 !== currIx && currIx > 0 ? this.orders[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the last order id
+			 *
+			 * @return {Number} Order id
+			 */
+			lastOrderId: function() {
+				return this.orders[this.orders.length - 1].id;
 			}
 		}, Vuex.mapState("orders", {
 			/**
@@ -61,46 +101,6 @@ define([
 				return this.orders.findIndex( function( i ) {
 					return state.active && i.id === state.active.id;
 				});
-			},
-
-			/**
-			 * Return the first order id
-			 *
-			 * @return {Number} Order id
-			 */
-			firstOrderId: function( state, getters ) {
-				return this.orders[0].id;
-			},
-
-			/**
-			 * Return the previous order id
-			 *
-			 * @return {Number} Order id
-			 */
-			previousOrderId: function( state, getters ) {
-				var currIx = this.activeOrderIx;
-
-				return -1 !== currIx && currIx < this.orders.length - 1 ? this.orders[currIx + 1].id : false;
-			},
-
-			/**
-			 * Return the next order id
-			 *
-			 * @return {Number} Order id
-			 */
-			nextOrderId: function( state, getters ) {
-				var currIx = this.activeOrderIx;
-
-				return -1 !== currIx && currIx > 0 ? this.orders[currIx - 1].id : false;
-			},
-
-			/**
-			 * Return the last order id
-			 *
-			 * @return {Number} Order id
-			 */
-			lastOrderId: function( state, getters ) {
-				return this.orders[this.orders.length - 1].id;
 			},
 
 			/**

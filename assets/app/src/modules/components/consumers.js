@@ -168,6 +168,46 @@ define([
 				return function( item ) {
 					return item.avatarUrl || settings.consumer.defaultAvatarUrl;
 				}
+			},
+
+			/**
+			 * Return the first consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			firstConsumerId: function() {
+				return this.consumers[0].id;
+			},
+
+			/**
+			 * Return the previous consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			previousConsumerId: function() {
+				var currIx = this.activeConsumerIx;
+
+				return -1 !== currIx && currIx < this.consumers.length - 1 ? this.consumers[currIx + 1].id : false;
+			},
+
+			/**
+			 * Return the next consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			nextConsumerId: function() {
+				var currIx = this.activeConsumerIx;
+
+				return -1 !== currIx && currIx > 0 ? this.consumers[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the last consumer id
+			 *
+			 * @return {Number} Consumer id
+			 */
+			lastConsumerId: function() {
+				return this.consumers[this.consumers.length - 1].id ;
 			}
 		}, Vuex.mapState("consumers", {
 			"active": "active",
@@ -181,14 +221,17 @@ define([
 				var self = this;
 
 				// Get items. Filter for hidden consumers
-				return getters.getConsumers.filter( function( i ) {
-					return i.show || getters.isActiveItem(i.id) || self.isSettings;
+				return _.orderBy(
+					getters.getConsumers.filter( function( i ) {
+						return i.show || getters.isActiveItem(i.id) || self.isSettings;
 
-				// Filter for searched items by name or group name
-				}).filter( function( i ) {
-					return util.matchSearchQuery(i.name, state.searchQuery)
-						|| util.matchSearchQuery(i.group.name, state.searchQuery);
-				});
+					// Filter for searched items by name or group name
+					}).filter( function( i ) {
+						return util.matchSearchQuery(i.name, state.searchQuery)
+							|| util.matchSearchQuery(i.group.name, state.searchQuery);
+					}),
+					["group.order", orderBySanitized(this.orderBy)]
+				);
 			},
 
 			/**
@@ -200,46 +243,6 @@ define([
 				return this.consumers.findIndex( function( i ) {
 					return state.active && i.id === state.active.id;
 				});
-			},
-
-			/**
-			 * Return the first consumer id
-			 *
-			 * @return {Number} Consumer id
-			 */
-			firstConsumerId: function( state, getters ) {
-				return this.consumers[0].id;
-			},
-
-			/**
-			 * Return the previous consumer id
-			 *
-			 * @return {Number} Consumer id
-			 */
-			previousConsumerId: function( state, getters ) {
-				var currIx = this.activeConsumerIx;
-
-				return -1 !== currIx && currIx < this.consumers.length - 1 ? this.consumers[currIx + 1].id : false;
-			},
-
-			/**
-			 * Return the next consumer id
-			 *
-			 * @return {Number} Consumer id
-			 */
-			nextConsumerId: function( state, getters ) {
-				var currIx = this.activeConsumerIx;
-
-				return -1 !== currIx && currIx > 0 ? this.consumers[currIx - 1].id : false;
-			},
-
-			/**
-			 * Return the last consumer id
-			 *
-			 * @return {Number} Consumer id
-			 */
-			lastConsumerId: function( state, getters ) {
-				return this.consumers[this.consumers.length - 1].id ;
 			}
 		}), Vuex.mapGetters("consumers", {
 			"isSelected": "isActiveItem",

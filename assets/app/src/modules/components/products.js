@@ -179,6 +179,46 @@ define([
 				return function( productCategory ) {
 					return -1 !== settings.product.productCategory.hiddenItems.indexOf(productCategory);
 				};
+			},
+
+			/**
+			 * Return the first product id
+			 *
+			 * @return {Number} Product id
+			 */
+			firstProductId: function() {
+				return this.products[0].id;
+			},
+
+			/**
+			 * Return the previous product id
+			 *
+			 * @return {Number} Product id
+			 */
+			previousProductId: function() {
+				var currIx = this.activeProductIx;
+
+				return -1 !== currIx && currIx < this.products.length - 1 ? this.products[currIx + 1].id : false;
+			},
+
+			/**
+			 * Return the next product id
+			 *
+			 * @return {Number} Product id
+			 */
+			nextProductId: function() {
+				var currIx = this.activeProductIx;
+
+				return -1 !== currIx && currIx > 0 ? this.products[currIx - 1].id : false;
+			},
+
+			/**
+			 * Return the last product id
+			 *
+			 * @return {Number} Product id
+			 */
+			lastProductId: function() {
+				return this.products[this.products.length - 1].id ;
 			}
 		}, Vuex.mapState("products", {
 			/**
@@ -230,46 +270,6 @@ define([
 				return this.products.findIndex( function( i ) {
 					return state.active && i.id === state.active.id;
 				});
-			},
-
-			/**
-			 * Return the first product id
-			 *
-			 * @return {Number} Product id
-			 */
-			firstProductId: function( state, getters ) {
-				return this.products[0].id;
-			},
-
-			/**
-			 * Return the previous product id
-			 *
-			 * @return {Number} Product id
-			 */
-			previousProductId: function( state, getters ) {
-				var currIx = this.activeProductIx;
-
-				return -1 !== currIx && currIx < this.products.length - 1 ? this.products[currIx + 1].id : false;
-			},
-
-			/**
-			 * Return the next product id
-			 *
-			 * @return {Number} Product id
-			 */
-			nextProductId: function( state, getters ) {
-				var currIx = this.activeProductIx;
-
-				return -1 !== currIx && currIx > 0 ? this.products[currIx - 1].id : false;
-			},
-
-			/**
-			 * Return the last product id
-			 *
-			 * @return {Number} Product id
-			 */
-			lastProductId: function( state, getters ) {
-				return this.products[this.products.length - 1].id ;
 			},
 
 			/**
