@@ -75,7 +75,7 @@ define([
 			/**
 			 * Return the patches on the active item
 			 *
-			 * @type {Object} Active patches
+			 * @return {Object} Active patches
 			 */
 			getActivePatches: function( state, getters ) {
 				var patches = {}, item, i;
@@ -103,6 +103,15 @@ define([
 				}
 
 				return patches;
+			},
+
+			/**
+			 * Return whether the list has active patches
+			 *
+			 * @return {Boolean} List has patches
+			 */
+			hasPatches: function( state, getters ) {
+				return !! _.keys(getters.getActivePatches).length;
 			},
 
 			/**
@@ -381,7 +390,8 @@ define([
 	/**
 	 * Return getter function for checking if the item is submittable
 	 *
-	 * Checks for input validation errors and whether the item has any patches.
+	 * Checks for input validation errors, whether the item has any patches, and
+	 * any FSM states.
 	 *
 	 * TODO: apply auth check here?
 	 *
@@ -390,11 +400,7 @@ define([
 	 */
 	isSubmittable = function( submittableStates ) {
 		return function( state, getters ) {
-			var hasNoErrors = ! getters["hasFeedbackErrors"],
-			    patches = getters["getActivePatches"];
-
-			// Checks pass and FSM states match
-			return hasNoErrors && _.keys(patches).length && fsm.is(submittableStates);
+			return ! getters.hasFeedbackErrors && getters.hasPatches && fsm.is(submittableStates);
 		};
 	},
 

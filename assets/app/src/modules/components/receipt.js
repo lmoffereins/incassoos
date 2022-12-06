@@ -121,15 +121,6 @@ define([
 			 */
 			labelSubmit: function() {
 				return this.$fsmIs(fsm.st.EDIT_ORDER) ? 'Common.Update' : 'Common.Checkout';
-			},
-
-			/**
-			 * Return whether the edited order has patches
-			 *
-			 * @return {Boolean} Has the order patches?
-			 */
-			hasPatches: function() {
-				return false;
 			}
 		}, Vuex.mapGetters("receipt", {
 			"feedback": "getFeedback",
