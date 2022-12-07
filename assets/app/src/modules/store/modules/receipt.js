@@ -337,6 +337,9 @@ define([
 
 					// Register new set of list items
 					context.commit("setListItems", { items: order.items });
+
+					// Clear the list feedback
+					context.commit("clearFeedback");
 				}
 			);
 
