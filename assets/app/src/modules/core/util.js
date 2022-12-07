@@ -924,10 +924,13 @@ define([
 		 * effectively be still inside the element's container.
 		 * The 'focusin' event triggers just after 'focusout'.
 		 *
+		 * @param {Object} event Event data
 		 * @return {Void}
 		 */
-		callbackImmediate = function onOuterFocusCallbackImmediate() {
-			timeout = setTimeout(callback, 0);
+		callbackImmediate = function onOuterFocusCallbackImmediate( event ) {
+			timeout = setTimeout(function() {
+				callback(event);
+			}, 0);
 		},
 
 		/**
