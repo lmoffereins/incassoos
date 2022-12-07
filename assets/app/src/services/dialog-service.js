@@ -7,8 +7,9 @@
 define([
 	"q",
 	"lodash",
-	"util"
-], function( Q, _, util ) {
+	"util",
+	"./debug-service"
+], function( Q, _, util, debugService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -19,7 +20,11 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	var listeners = util.createListeners("service/dialog"),
+	var listeners = util.createListeners("service/dialog", {
+		log: function( context, domain, args ) {
+			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
+		}
+	}),
 
 	/**
 	 * List of identifiers of registered dialog

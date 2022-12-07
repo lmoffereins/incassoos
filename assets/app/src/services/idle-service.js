@@ -8,8 +8,9 @@
  */
 define([
 	"q",
-	"util"
-], function( Q, util ) {
+	"util",
+	"./debug-service"
+], function( Q, util, debugService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -18,7 +19,11 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	var listeners = util.createListeners("service/idle"),
+	var listeners = util.createListeners("service/idle", {
+		log: function( context, domain, args ) {
+			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
+		}
+	}),
 
 	/**
 	 * Holds the idle state timer

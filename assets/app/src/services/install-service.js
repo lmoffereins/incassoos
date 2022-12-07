@@ -7,8 +7,9 @@
 define([
 	"q",
 	"util",
+	"./debug-service",
 	"./storage-service"
-], function( Q, util, storageService ) {
+], function( Q, util, debugService, storageService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -17,7 +18,11 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	var listeners = util.createListeners("service/install"),
+	var listeners = util.createListeners("service/install", {
+		log: function( context, domain, args ) {
+			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
+		}
+	}),
 
 	/**
 	 * Holds the storage key for the API root

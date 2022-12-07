@@ -399,9 +399,12 @@ define([
 	 * Create listener functions for the domain's events
 	 *
 	 * @param  {String} domain Domain name
+	 * @param  {Object} options Optional. Additional arguments
 	 * @return {Object} Listeners API
 	 */
-	createListeners = function( domain ) {
+	createListeners = function( domain, options ) {
+		options = options || {};
+		options.log = options.log || _.noop;
 
 		// Define list of domain listeners
 		if (! customListeners[domain]) {
@@ -417,7 +420,9 @@ define([
 		 * @return {Promise} Was the trigger successfull?
 		 */
 		function trigger( event ) {
-			console.log("trigger > " + domain + ":" + event);
+
+			// When logging is enabled
+			options.log("trigger", domain, Array.prototype.slice.call(arguments));
 
 			// Wrap callbacks in try-catch block to account for possible errors
 			try {
@@ -461,6 +466,9 @@ define([
 		 * @return {Mixed} Return value
 		 */
 		function filter( event, retval ) {
+
+			// When logging is enabled
+			options.log("filter", domain, Array.prototype.slice.call(arguments));
 
 			// Wrap callbacks in try-catch block to account for possible errors
 			try {

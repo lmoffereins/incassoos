@@ -8,8 +8,9 @@ define([
 	"vue",
 	"q",
 	"lodash",
-	"util"
-], function( Vue, Q, _, util ) {
+	"util",
+	"./debug-service"
+], function( Vue, Q, _, util, debugService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -19,7 +20,11 @@ define([
 	 *
 	 * @type {Object}
 	 */
-	var listeners = util.createListeners("service/resize"),
+	var listeners = util.createListeners("service/resize", {
+		log: function( context, domain, args ) {
+			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
+		}
+	}),
 
 	/**
 	 * Holds the active screen size
