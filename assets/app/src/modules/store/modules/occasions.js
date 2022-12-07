@@ -199,7 +199,7 @@ define([
 		 * @return {Boolean} Can occasion be edited?
 		 */
 		isEditable: function( state ) {
-			return state.active;
+			return !! state.active;
 		},
 
 		/**
@@ -223,7 +223,7 @@ define([
 		 * @return {Boolean} Can occasion be deleted?
 		 */
 		isDeletable: function( state, getters, rootState ) {
-			return state.active
+			return !! state.active
 				&& ! state.active.closed
 				&& ! rootState.orders.all.length;
 		},
@@ -234,7 +234,7 @@ define([
 		 * @return {Boolean} Can occasion be closed?
 		 */
 		isClosable: function( state, getters, rootState ) {
-			return state.active
+			return !! state.active
 				&& ! state.active.closed
 				&& !! rootState.orders.all.length;
 		},
@@ -245,7 +245,7 @@ define([
 		 * @return {Boolean} Can occasion be reopened?
 		 */
 		isReopenable: function( state ) {
-			return state.active && !! state.active.closed;
+			return !! state.active && !! state.active.closed;
 		}
 	}, {
 		validators: validators,

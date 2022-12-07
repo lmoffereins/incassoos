@@ -57,7 +57,7 @@ define([
 			 */
 			isActiveItem: function( state, getters ) {
 				return function( id ) {
-					return state.active && state.active.id === id;
+					return !! state.active && state.active.id === id;
 				}
 			},
 
@@ -140,7 +140,7 @@ define([
 			 * @return {Boolean} Feedback list has errors
 			 */
 			hasFeedbackErrors: function( state ) {
-				return state.__feedback && options.feedback.hasErrors();
+				return !! state.__feedback && !! state.__feedback.length && options.feedback.hasErrors();
 			}
 		}, getters || {});
 	},

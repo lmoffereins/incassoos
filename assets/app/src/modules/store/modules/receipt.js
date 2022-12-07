@@ -103,12 +103,12 @@ define([
 		isEditable: function( state, getters, rootState, rootGetters ) {
 
 			// Require items, selected consumer, selected occasion is not closed, order is not locked and no errors
-			return state.all.length
+			return !! state.all.length
 				&& !! rootState.consumers.active
 				&& !! rootState.occasions.active
 				&& ! rootState.occasions.active.closed
 				&& ! rootGetters["orders/isActiveItemLocked"]
-				&& ! feedback.hasErrors();
+				&& ! getters.hasFeedbackErrors;
 		},
 
 		/**
@@ -119,10 +119,10 @@ define([
 		isSubmittable: function( state, getters, rootState ) {
 
 			// Require items, selected consumer, selected occasion, valid patches and no errors
-			return state.all.length
+			return !! state.all.length
 				&& !! rootState.consumers.active
 				&& !! rootState.occasions.active
-				&& ! feedback.hasErrors();
+				&& ! getters.hasFeedbackErrors;
 		},
 
 		/**
@@ -133,7 +133,7 @@ define([
 		isCancelable: function( state, getters, rootState ) {
 
 			// Require item or selected consumer
-			return state.all.length || !! rootState.consumers.active;
+			return !! state.all.length || !! rootState.consumers.active;
 		}
 	}, {
 		feedback: feedback

@@ -175,7 +175,7 @@ define([
 		 * @return {Boolean} Is active item locked?
 		 */
 		isActiveItemLocked: function( state, getters ) {
-			return state.active && getters.isItemLocked(state.active);
+			return !! state.active && getters.isItemLocked(state.active);
 		}
 	}),
 
