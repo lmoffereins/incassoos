@@ -10,13 +10,13 @@
 /**
  * Plugin Name:       Incassoos
  * Description:       Register, manage and collect consumptions
- * Plugin URI:        https://github.com/vgsr/incassoos/
- * Version:           1.0.0-beta.9
+ * Plugin URI:        https://github.com/lmoffereins/incassoos/
+ * Version:           1.0.0-beta.10
  * Author:            Laurens Offereins
- * Author URI:        https://github.com/vgsr/
+ * Author URI:        https://github.com/lmoffereins/
  * Text Domain:       incassoos
  * Domain Path:       /languages/
- * GitHub Plugin URI: vgsr/incassoos
+ * GitHub Plugin URI: lmoffereins/incassoos
  */
 
 // Exit if accessed directly
@@ -70,7 +70,7 @@ final class Incassoos {
 
 		/** Versions ****************************************************/
 
-		$this->version              = '1.0.0-beta.9';
+		$this->version              = '1.0.0-beta.10';
 		$this->db_version           = 10000;
 
 		/** Paths *******************************************************/
