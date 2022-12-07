@@ -60,6 +60,43 @@ define([
 		},
 
 		/**
+		 * Return the patches on the active item
+		 *
+		 * @return {Object} Active patches
+		 */
+		getActivePatches: function( state, getters, rootState, rootGetters ) {
+			var patches = {}, item, i, product;
+
+			// Get the original active item or a sample of a new item
+			item = rootState.orders.active && rootGetters["orders/getItemById"](rootState.orders.active.id) || rootGetters["orders/getNewItem"];
+
+			// Consumer changed
+			if (rootState.consumers.active && item.consumer.id !== rootState.consumers.active.id) {
+				patches.consumer = rootState.consumers.active.id;
+			}
+
+			// Items changed
+			if (item.items.length !== state.all.length) {
+				patches.items = state.all.slice();
+			} else {
+				for (i = 0; i < state.all.length; i++) {
+					product = item.items.find(a => a.id === state.all[i].id);
+
+					// Item was not in the list or item value or amount is changed
+					if (! product
+						|| product.price !== state.all[i].price
+						|| product.quantity !== state.all[i].quantity
+					) {
+						patches.items = state.all.slice();
+						break;
+					}
+				}
+			}
+
+			return patches;
+		},
+
+		/**
 		 * Return the total price of the list
 		 *
 		 * @return {Float} Total price
@@ -116,12 +153,13 @@ define([
 		 *
 		 * @return {Boolean} Is the receipt submittable?
 		 */
-		isSubmittable: function( state, getters, rootState ) {
+		isSubmittable: function( state, getters, rootState, rootGetters ) {
 
 			// Require items, selected consumer, selected occasion, valid patches and no errors
 			return !! state.all.length
 				&& !! rootState.consumers.active
 				&& !! rootState.occasions.active
+				&& getters.hasPatches
 				&& ! getters.hasFeedbackErrors;
 		},
 
@@ -336,7 +374,7 @@ define([
 					var order = context.rootState.orders.active;
 
 					// Register new set of list items
-					context.commit("setListItems", { items: order.items });
+					context.commit("setListItems", { items: order.items.slice() });
 
 					// Clear the list feedback
 					context.commit("clearFeedback");

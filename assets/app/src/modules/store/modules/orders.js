@@ -83,6 +83,20 @@ define([
 		},
 
 		/**
+		 * Return a new active order
+		 *
+		 * @return {Void}
+		 */
+		getNewItem: function() {
+			return {
+				consumer: {
+					id: 0
+				},
+				items: []
+			};
+		},
+
+		/**
 		 * Return all items of the consumer
 		 *
 		 * @return {Function} Getter method
