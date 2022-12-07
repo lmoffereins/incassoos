@@ -32,6 +32,18 @@ define([
 
 		// Reset the search query
 		this.q = "";
+	},
+
+	/**
+	 * Return callback to sort sanitized values for the given property
+	 *
+	 * @param  {String} prop Sorting property name
+	 * @return {Function} Order callback
+	 */
+	orderBySanitized = function( prop ) {
+		return function( i ) {
+			return "string" === typeof i[prop] ? util.removeAccents(i[prop]).toLowerCase() : i[prop];
+		};
 	};
 
 	return {
@@ -93,9 +105,7 @@ define([
 						self.consumers.filter( function( i ) {
 							return i.group.id === groupId;
 						}),
-						function( i ) {
-							return "string" === typeof i[self.orderBy] ? util.removeAccents(i[self.orderBy]).toLowerCase() : i[self.orderBy];
-						}
+						["group.order", orderBySanitized(self.orderBy)] // TODO: order with/without groups?
 					);
 				};
 			},
@@ -230,7 +240,7 @@ define([
 						return util.matchSearchQuery(i.name, state.searchQuery)
 							|| util.matchSearchQuery(i.group.name, state.searchQuery);
 					}),
-					["group.order", orderBySanitized(this.orderBy)]
+					["group.order", orderBySanitized(this.orderBy)] // TODO: order with/without groups?
 				);
 			},
 
