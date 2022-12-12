@@ -218,6 +218,7 @@
 		"TitlePlaceholder": "Mijn borrel",
 		"OccasionTypeLabel": "Type",
 		"OccasionDateLabel": "Datum",
+		"DefaultProductCategoryLabel": "Standaard productcategorie",
 		"OccasionDatepickerLabel": "Selecteer gelegenheidsdatum",
 		"ActiveOccasionLabel": "Actief",
 		"SelectExistingLabel": "Lijst",

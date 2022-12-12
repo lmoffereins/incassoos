@@ -221,6 +221,7 @@
 		"OccasionTypeLabel": "Type",
 		"OccasionDateLabel": "Date",
 		"OccasionDatepickerLabel": "Select occasion date",
+		"DefaultProductCategoryLabel": "Default product category",
 		"ActiveOccasionLabel": "Current",
 		"SelectExistingLabel": "List",
 		"SelectExistingDescription": "Select to load an existing occasion.",

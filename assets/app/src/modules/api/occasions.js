@@ -27,7 +27,8 @@ define([
 			occasionDate: new Date(resp.occasion_date),
 			occasionType: resp[settings.occasion.occasionType.taxonomyId][0] || 0,
 			closed: resp.closed || false,
-			consumers: resp.consumers || []
+			consumers: resp.consumers || [],
+			defaultProductCategory: resp.defaultProductCategory || 0
 		}, i;
 
 		/**
@@ -74,6 +75,11 @@ define([
 		// Define occasion type at the properly named taxonomy parameter
 		if (payload.occasionType) {
 			request.data[settings.occasion.occasionType.taxonomyId] = payload.occasionType;
+		}
+
+		// Set the default product category
+		if (payload.hasOwnProperty("defaultProductCategory")) {
+			request.data.defaultProductCategory = payload.defaultProductCategory;
 		}
 
 		// Instantly publish the occasion

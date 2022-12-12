@@ -79,6 +79,12 @@
 						<span v-if="activeMode" class="detail-value">{{occasionDate | date}}</span>
 						<input-datepicker v-if="!activeMode" class="detail-value-input" v-model="occasionDate" :title="'Occasion.OccasionDatepickerLabel'"></input-datepicker>
 					</div>
+
+					<div class="detail-item default-product-category" v-if="haveProductCategories && (! activeMode || defaultProductCategory)">
+						<span class="detail-label" v-l10n.Occasion.DefaultProductCategoryLabel></span>
+						<span v-if="activeMode" class="detail-value">{{defaultProductCategoryLabel}}</span>
+						<input-dropdown v-if="!activeMode" :options="productCategories" class="detail-value-input" v-model="defaultProductCategory"></input-dropdown>
+					</div>
 				</form>
 
 				<feedback name="occasion" :items="feedback"></feedback>

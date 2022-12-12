@@ -73,7 +73,17 @@ define([
 		 * @return {Float} Sanitized value
 		 */
 		occasionType: function( input ) {
-			return isNaN(input) ? 0 : parseInt(input);
+			return isNaN(input) ? 0 : Math.abs(parseInt(input));
+		},
+
+		/**
+		 * Sanitization of the `defaultProductCategory` item property
+		 *
+		 * @param  {Number|String} input Input value
+		 * @return {Float} Sanitized value
+		 */
+		defaultProductCategory: function( input ) {
+			return isNaN(input) ? 0 : Math.abs(parseInt(input));
 		}
 	}),
 
@@ -136,6 +146,27 @@ define([
 				// Value should be an available term id
 				} else if (! settings.occasion.occasionType.items.hasOwnProperty(input)) {
 					validated = "Occasion.Error.InvalidOccasionType";
+				}
+			}
+
+			return validated;
+		},
+
+		/**
+		 * Validation of the `defaultProductCategory` item property
+		 *
+		 * @param  {String} input Sanitized input value
+		 * @return {Boolean|String} Validation success or error code
+		 */
+		defaultProductCategory: function( input ) {
+			var validated = true;
+
+			// Only required when product categories are defined
+			if (input > 0 && _.keys(settings.product.productCategory.items).length) {
+
+				// Value should be an available term id
+				if (! settings.product.productCategory.items.hasOwnProperty(input)) {
+					validated = "Product.Error.InvalidProductCategory";
 				}
 			}
 

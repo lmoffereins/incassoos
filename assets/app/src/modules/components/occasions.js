@@ -12,11 +12,12 @@ define([
 	"settings",
 	"./feedback",
 	"./form/input-datepicker",
+	"./form/input-dropdown",
 	"./form/input-radio-buttons",
 	"./util/close-button",
 	"./../templates/occasions.html",
 	"./../../images/loader.svg"
-], function( Vuex, dayjs, fsm, services, settings, feedback, inputDatepicker, inputRadioButtons, closeButton, tmpl, loaderSvg ) {
+], function( Vuex, dayjs, fsm, services, settings, feedback, inputDatepicker, inputDropdown, inputRadioButtons, closeButton, tmpl, loaderSvg ) {
 	/**
 	 * Holds a reference to the dialog service
 	 *
@@ -42,6 +43,16 @@ define([
 	},
 
 	/**
+	 * Return the product category's label
+	 *
+	 * @param  {Number|String} catId Category id
+	 * @return {String} Product category label
+	 */
+	getProductCategoryLabel = function( catId ) {
+		return settings.product.productCategory.items && settings.product.productCategory.items[catId];
+	},
+
+	/**
 	 * Set form fields for the occasion view
 	 *
 	 * @return {Void}
@@ -55,6 +66,8 @@ define([
 			this.occasionDate = new Date(payload.occasionDate);
 			this.occasionType = payload.occasionType;
 			this.occasionTypeLabel = getOccasionTypeLabel(payload.occasionType);
+			this.defaultProductCategory = payload.defaultProductCategory;
+			this.defaultProductCategoryLabel = getProductCategoryLabel(payload.defaultProductCategory);
 		}
 	},
 
@@ -77,6 +90,8 @@ define([
 		this.occasionDate = new Date();
 		this.occasionType = settings.occasion.occasionType.defaultValue;
 		this.occasionTypeLabel = getOccasionTypeLabel(settings.occasion.occasionType.defaultValue);
+		this.defaultProductCategory = "0";
+		this.defaultProductCategoryLabel = "";
 
 		if (this.activeMode || this.editMode) {
 			this.mode = "get";
@@ -140,6 +155,7 @@ define([
 			closeButton: closeButton,
 			feedback: feedback,
 			inputDatepicker: inputDatepicker,
+			inputDropdown: inputDropdown,
 			inputRadioButtons: inputRadioButtons
 		},
 		data: function() {
@@ -156,7 +172,9 @@ define([
 				title: "",
 				occasionDate: new Date(),
 				occasionType: settings.occasion.occasionType.defaultValue,
-				occasionTypeLabel: getOccasionTypeLabel(settings.occasion.occasionType.defaultValue)
+				occasionTypeLabel: getOccasionTypeLabel(settings.occasion.occasionType.defaultValue),
+				defaultProductCategory: "0",
+				defaultProductCategoryLabel: ""
 			};
 		},
 		computed: Object.assign({
@@ -199,6 +217,43 @@ define([
 			 */
 			haveOccasionTypes: function() {
 				return !! _.keys(this.availableOccasionTypes).length;
+			},
+
+			/**
+			 * Return the available product categories
+			 *
+			 * @return {Object} Product categories
+			 */
+			productCategories: function() {
+				var cats = {}, i;
+
+				// When categories are used, get cats from settings and prepend all-option
+				if (_.keys(settings.product.productCategory.items).length) {
+					cats = Object.assign({ "0": "Product.AllCategoriesOption" }, settings.product.productCategory.items);
+				}
+
+				for (i in cats) {
+					if (cats.hasOwnProperty(i)) {
+						cats[i] = { label: cats[i] };
+
+						// Identify hidden categories
+						if (-1 !== settings.product.productCategory.hiddenItems.indexOf(parseInt(i))) {
+							cats[i].icon      = "hidden";
+							cats[i].iconTitle = "Product.HiddenProductCategory";
+						}
+					}
+				}
+
+				return cats;
+			},
+
+			/**
+			 * Return whether we have any product categories
+			 *
+			 * @return {Boolean} Do we have product categories?
+			 */
+			haveProductCategories: function() {
+				return _.keys(this.productCategories).length > 1;
 			}
 		}, Vuex.mapState("occasions", {
 			"active": "active",
@@ -252,7 +307,8 @@ define([
 					payload = {
 						title: this.title,
 						occasionDate: this.occasionDate,
-						occasionType: this.occasionType
+						occasionType: this.occasionType,
+						defaultProductCategory: this.defaultProductCategory
 					};
 				}
 
@@ -385,7 +441,8 @@ define([
 		}, Vuex.mapActions("occasions", {
 			title: watchPatch("titleRaw"),
 			occasionDate: watchPatch("occasionDate"),
-			occasionType: watchPatch("occasionType")
+			occasionType: watchPatch("occasionType"),
+			defaultProductCategory: watchPatch("defaultProductCategory")
 		})),
 
 		/**

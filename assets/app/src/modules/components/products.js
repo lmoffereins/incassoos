@@ -30,10 +30,24 @@ define([
 	onEnterIdle = function() {
 
 		// Reset the category filter
-		this.filterProductCategory = "0";
+		this.filterProductCategory = this.defaultProductCategory.toString();
 
 		// Reset the search query
 		this.q = "";
+	},
+
+	/**
+	 * When loading a new Occasion
+	 *
+	 * @return {Void}
+	 */
+	onNewOccasion = function() {
+
+		// Reset the default category
+		this.defaultProductCategory = this.$store.state.occasions.active && this.$store.state.occasions.active.defaultProductCategory || 0;
+
+		// Run `onEnterIdle()` again afterwards
+		onEnterIdle.apply(this);
 	},
 
 	/**
@@ -73,6 +87,7 @@ define([
 				shortcutsOff: false,
 				orderBy: _.keys(options)[0], // TODO: store in/get from user preferences?
 				orderByOptions: options,
+				defaultProductCategory: 0,
 				filterProductCategory: "0",
 				showTrashedProducts: false
 			};
@@ -143,7 +158,7 @@ define([
 
 				// Remove hidden categories outside of settings
 				if (! this.$isSettings) {
-					cats = _.omit(cats, settings.product.productCategory.hiddenItems);
+					cats = _.omit(cats, _.without(settings.product.productCategory.hiddenItems, this.defaultProductCategory));
 				}
 
 				for (i in cats) {
@@ -242,7 +257,8 @@ define([
 
 				// Filter for hidden product categories
 				}).filter( function( i ) {
-					return self.$isSettings || -1 === settings.product.productCategory.hiddenItems.indexOf(i.productCategory);
+					return self.$isSettings
+						|| -1 === _.without(settings.product.productCategory.hiddenItems, self.defaultProductCategory).indexOf(i.productCategory);
 
 				// Filter for searched items by title
 				}).filter( function( i ) {
@@ -469,6 +485,8 @@ define([
 			 */
 			fsmObservers = {};
 			fsmObservers[fsm.on.enter.IDLE] = onEnterIdle;
+			fsmObservers[fsm.on.after.GET_OCCASION] = onNewOccasion;
+			fsmObservers[fsm.on.after.SAVE_OCCASION] = onNewOccasion;
 			fsmObservers[fsm.on.before.TOGGLE_SETTINGS] = onBeforeToggleSettings;
 
 			// Register observers, bind the component's context
@@ -477,6 +495,9 @@ define([
 					fsm.observe(i, fsmObservers[i].bind(this))
 				);
 			}
+
+			// Before component creation, the occasion may already have been loaded
+			onNewOccasion.apply(this);
 
 			// Unregister global keyboard event listeners
 			this.$registerUnobservable( function() {
