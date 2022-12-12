@@ -509,6 +509,82 @@ function incassoos_get_occasion_type( $post = 0, $object = false ) {
 }
 
 /**
+ * Return whether the Occasion has a default Product Category
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Occasion has a default Product Category
+ */
+function incassoos_occasion_has_default_product_category( $post = 0, $term = 0 ) {
+	$cat_id = incassoos_get_occasion_default_product_category( $post );
+
+	// Return if a category is set
+	if ( empty( $term ) ) {
+		return (bool) $cat_id;
+	}
+
+	// Compare term ids from WP_Term object
+	if ( is_a( $term, 'WP_Term' ) ) {
+		$term = $term->term_id;
+
+	// Compare term ids
+	} elseif ( is_numeric( $term ) ) {
+		$term = (int) $term;
+
+	// Compare slugs
+	} else {
+		$cat_id = get_term( $cat_id, incassoos_get_product_cat_tax_id() );
+		if ( $cat_id ) {
+			$cat_id = $cat_id->slug;
+		}
+	}
+
+	return $cat_id === $term;
+}
+
+/**
+ * Output the Occasion's default Product Category
+ *
+ * @see get_the_term_list()
+ *
+ * @since 1.0.0
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ */
+function incassoos_the_occasion_default_product_category( $post = 0 ) {
+	$cat_id = incassoos_get_occasion_default_product_category( $post );
+
+	if ( $cat_id ) {
+		$taxonomy = incassoos_get_product_cat_tax_id();
+		$term     = get_term( $cat_id, $taxonomy );
+		$link     = get_term_link( $term, $taxonomy );
+
+		if ( ! is_wp_error( $link ) ) {
+			$links = array( '<a href="' . esc_url( $link ) . '" rel="tag">' . $term->name . '</a>' );
+			echo implode( '', apply_filters( "term_links-{$taxonomy}", $links ) );
+		}
+	}
+}
+
+/**
+ * Return the Occasion's default Product Category
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_occasion_default_product_category'
+ *
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return int Occasion default Product Category id or 0 when not found.
+ */
+function incassoos_get_occasion_default_product_category( $post = 0 ) {
+	$post   = incassoos_get_occasion( $post );
+	$cat_id = get_post_meta( $post ? $post->ID : 0, 'default_product_category', true );
+
+	return (int) apply_filters( 'incassoos_get_occasion_default_product_category', $cat_id, $post );
+}
+
+/**
  * Output the Occasion's total value
  *
  * @since 1.0.0
@@ -1573,6 +1649,40 @@ function incassoos_update_occasion_date( $date, $post = 0 ) {
 			}
 
 			$success = update_post_meta( $post->ID, 'occasion_date', $date );
+		}
+	}
+
+	return $success;
+}
+
+/**
+ * Update the Occasion's default Product Category
+ *
+ * @since 1.0.0
+ *
+ * @param  int         $cat_id Product Category term id
+ * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
+ * @return bool Update success.
+ */
+function incassoos_update_occasion_default_product_category( $cat_id, $post = 0 ) {
+	$post    = incassoos_get_occasion( $post );
+	$success = false;
+
+	if ( $post ) {
+		$cat_id = absint( $cat_id );
+
+		// When empty, delete the metadata
+		if ( empty( $cat_id ) ) {
+			$success = delete_post_meta( $post->ID, 'default_product_category' );
+		} else {
+			$prev_value = (int) get_post_meta( $post->ID, 'default_product_category', true );
+
+			// Bail when the stored value is identical to avoid update_metadata() returning false.
+			if ( $cat_id === $prev_value ) {
+				return true;
+			}
+
+			$success = update_post_meta( $post->ID, 'default_product_category', $cat_id );
 		}
 	}
 

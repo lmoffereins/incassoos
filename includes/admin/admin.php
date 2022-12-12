@@ -856,6 +856,7 @@ class Incassoos_Admin {
 			 * Save posted inputs:
 			 * - Occasion Date
 			 * - Occasion Type taxonomy
+			 * - Occasion default Product Category
 			 */
 
 			if ( isset( $_POST['occasion_date'] ) ) {
@@ -880,6 +881,18 @@ class Incassoos_Admin {
 				// Remove taxonomy term
 				} elseif ( $terms = wp_get_object_terms( $post_id ) ) {
 					wp_remove_object_terms( $post_id, $terms, $taxonomy );
+				}
+			}
+
+			if ( isset( $_POST['default-product-category'] ) ) {
+
+				// Update occasion default product category
+				if ( (int) $_POST['default-product-category'] > 0 ) {
+					update_post_meta( $post_id, 'default_product_category', $_POST['default-product-category'] );
+
+				// Remove occasion default product category
+				} else {
+					delete_post_meta( $post_id, 'default_product_category' );
 				}
 			}
 		}

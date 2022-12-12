@@ -144,6 +144,11 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 					'validate_callback' => 'incassoos_validate_date'
 				)
 			),
+			'defaultProductCategory' => array(
+				'description' => __( 'The default product category for the object.', 'incassoos' ),
+				'type'        => 'integer',
+				'context'     => array( 'view', 'edit' )
+			),
 			'consumers'     => array(
 				'description' => __( 'List of identifiers for consumers that are registered for the occasion.', 'incassoos' ),
 				'type'        => 'array',
@@ -215,6 +220,10 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 			$object['occasion_date'] = $this->prepare_date_response( incassoos_get_occasion_date( $post, 'Y-m-d H:i:s' ) );
 		}
 
+		if ( ! empty( $schema['properties']['defaultProductCategory'] ) ) {
+			$object['defaultProductCategory'] = incassoos_get_occasion_default_product_category( $post );
+		}
+
 		if ( ! empty( $schema['properties']['consumers'] ) ) {
 			$object['consumers'] = incassoos_get_occasion_consumers( $post );
 		}
@@ -254,6 +263,19 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 				return new WP_Error(
 					'incassoos_rest_invalid_date_field',
 					__( 'Could not update the date of the occasion.', 'incassoos' ),
+					array( 'status' => 400 )
+				);
+			}
+		}
+
+		// Default product category
+		if ( isset( $request['defaultProductCategory'] ) ) {
+			$result = incassoos_update_occasion_default_product_category( $request['defaultProductCategory'], $object );
+
+			if ( ! $result ) {
+				return new WP_Error(
+					'incassoos_rest_invalid_default_product_category',
+					__( 'Could not update the default product category of the occasion.', 'incassoos' ),
 					array( 'status' => 400 )
 				);
 			}

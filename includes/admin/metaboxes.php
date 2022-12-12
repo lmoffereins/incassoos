@@ -1363,6 +1363,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 	$is_post_view      = incassoos_admin_is_post_view( $post );
 	$is_published      = incassoos_is_post_published( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
+	$product_cat_tax   = incassoos_get_product_cat_tax_id();
 
 	// Formatting
 	$abbr_date_format = incassoos_admin_get_abbr_date_format( $post );
@@ -1432,6 +1433,29 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			else : ?>
 
 			<span id="taxonomy-<?php echo $occasion_type_tax; ?>" class="value"><?php incassoos_the_occasion_type( $post ); ?></span>
+
+			<?php endif; ?>
+		</p>
+
+		<?php endif; ?>
+
+		<?php if ( ! $is_post_view || incassoos_occasion_has_default_product_category( $post ) ) : ?>
+
+		<p>
+			<label for="default-product-category"><?php esc_html_e( 'Default Product Category:', 'incassoos' ); ?></label>
+
+			<?php if ( ! $is_post_view ) :
+				wp_dropdown_categories( array(
+					'name'             => 'default-product-category',
+					'taxonomy'         => $product_cat_tax,
+					'hide_empty'       => false,
+					'selected'         => get_post_meta( $post->ID, 'default_product_category', true ),
+					'show_option_none' => esc_html__( '&mdash; No Category &mdash;', 'incassoos' ),
+				) );
+
+			else : ?>
+
+			<span id="taxonomy-<?php echo $product_cat_tax; ?>" class="value"><?php incassoos_the_occasion_default_product_category( $post ); ?></span>
 
 			<?php endif; ?>
 		</p>
