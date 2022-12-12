@@ -21,7 +21,7 @@ define([
 		var item = {
 			id: resp.id,
 			title: he.decode(resp.title.rendered),
-			titleRaw: resp.title.raw,
+			titleRaw: he.decode(resp.title.raw),
 			date: new Date(resp.date),
 			modified: new Date(resp.modified),
 			occasionDate: new Date(resp.occasion_date),
@@ -59,6 +59,11 @@ define([
 		// Set the title
 		if (payload.title) {
 			request.data.title = payload.title;
+		}
+
+		// Set the title from raw title
+		if (payload.titleRaw) {
+			request.data.title = payload.titleRaw;
 		}
 
 		// Parse occasion date into the proper format

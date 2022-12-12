@@ -383,7 +383,7 @@ define([
 				}
 			}
 		}, Vuex.mapActions("occasions", {
-			title:        watchPatch("title"),
+			title: watchPatch("titleRaw"),
 			occasionDate: watchPatch("occasionDate"),
 			occasionType: watchPatch("occasionType")
 		})),

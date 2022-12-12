@@ -57,12 +57,12 @@ define([
 	 */
 	sanitize = util.sanitization({
 		/**
-		 * Sanitization of the `title` item property
+		 * Sanitization of the `titleRaw` item property
 		 *
 		 * @param  {String} input Input value
 		 * @return {String} Sanitized value
 		 */
-		title: function( input ) {
+		titleRaw: function( input ) {
 			return input.trim();
 		},
 
@@ -84,12 +84,12 @@ define([
 	 */
 	validators = {
 		/**
-		 * Validation of the `title` item property
+		 * Validation of the `titleRaw` item property
 		 *
 		 * @param  {String} input Sanitized input value
 		 * @return {Boolean|String} Validation success or error code
 		 */
-		title: function( input ) {
+		titleRaw: function( input ) {
 			var validated = true;
 
 			// Value should contain characters
@@ -150,13 +150,13 @@ define([
 	 */
 	comparators = {
 		/**
-		 * Comparison of the `title` item property
+		 * Comparison of the `titleRaw` item property
 		 *
 		 * @param  {Mixed} input Value to compare
 		 * @param  {Object} item Original list item
 		 * @return {Boolean} Change is detected
 		 */
-		title: function( input, item ) {
+		titleRaw: function( input, item ) {
 			return input !== item.titleRaw && input !== item.title;
 		},
 
