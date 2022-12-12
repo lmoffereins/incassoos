@@ -64,12 +64,12 @@ define([
 	 */
 	sanitize = util.sanitization({
 		/**
-		 * Sanitization of the `title` item property
+		 * Sanitization of the `titleRaw` item property
 		 *
 		 * @param  {String} input Input value
 		 * @return {String} Sanitized value
 		 */
-		title: function( input ) {
+		titleRaw: function( input ) {
 			return input.trim();
 		},
 
@@ -99,19 +99,19 @@ define([
 	 */
 	validators = {
 		/**
-		 * Validation of the `title` item property
+		 * Validation of the `titleRaw` item property
 		 *
 		 * @param  {String} input Sanitized input value
 		 * @return {Boolean|String} Validation success or error code
 		 */
-		title: function( input ) {
+		titleRaw: function( input ) {
 			var id = this.id, all, validated = true;
 
 			// Get all existing titles
 			all = state.all.filter( function( product ) {
 				return product.id !== id;
 			}).map( function( product ) {
-				return util.removeAccents(product.title.toLowerCase());
+				return util.removeAccents(product.titleRaw.toLowerCase());
 			});
 
 			// Value should not already be in use. Compare lowercase, without accents
@@ -176,6 +176,24 @@ define([
 	},
 
 	/**
+	 * Holds patch comparison functions for editable properties
+	 *
+	 * @type {Object} Item property patch comparators
+	 */
+	comparators = {
+		/**
+		 * Comparison of the `titleRaw` item property
+		 *
+		 * @param  {Mixed} input Value to compare
+		 * @param  {Object} item Original list item
+		 * @return {Boolean} Change is detected
+		 */
+		titleRaw: function( input, item ) {
+			return input !== item.titleRaw && input !== item.title;
+		}
+	},
+
+	/**
 	 * Define validation function for products
 	 *
 	 * @type {Function} Product validation
@@ -218,6 +236,7 @@ define([
 		])
 	}, {
 		validators: validators,
+		comparators: comparators,
 		feedback: feedback
 	}),
 

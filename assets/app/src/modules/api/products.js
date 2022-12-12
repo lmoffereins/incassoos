@@ -28,6 +28,7 @@ define([
 		var item = {
 			id: resp.id,
 			title: he.decode(resp.title.rendered),
+			titleRaw: he.decode(resp.title.raw),
 			date: new Date(resp.date),
 			modified: new Date(resp.modified),
 			price: parseFloat(resp.price),
@@ -65,6 +66,11 @@ define([
 		// Define the product's name
 		if (payload.title) {
 			request.data.title = payload.title;
+		}
+
+		// Set the title from raw title
+		if (payload.titleRaw) {
+			request.data.title = payload.titleRaw;
 		}
 
 		// Define the product's price

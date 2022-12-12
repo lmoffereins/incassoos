@@ -401,8 +401,8 @@ define([
 		})),
 
 		watch: Vuex.mapActions("products", {
-			title:           watchPatch("title"),
-			price:           watchPatch("price"),
+			title: watchPatch("titleRaw"),
+			price: watchPatch("price"),
 			productCategory: watchPatch("productCategory")
 		}),
 
