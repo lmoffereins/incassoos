@@ -405,9 +405,10 @@ define([
 			 *
 			 * @return {Void}
 			 */
-			fsm.observe(
+			fsm.observe([
 				fsm.on.before.CANCEL_EDIT,
-				function( lifecycle ) {
+				fsm.on.before.CLOSE_ITEM
+			], function( lifecycle ) {
 					if (fsm.st.EDIT_CONSUMER === lifecycle.from) {
 
 						// Reset active consumer, removing applied edits
