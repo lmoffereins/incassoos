@@ -163,6 +163,9 @@ define([
 					fsm.observe(key, fsmObservers[key].bind(this))
 				);
 			}
+
+			// Before component creation, the panel state may already have been loaded
+			onEnterState.apply(this);
 		}
 	};
 });

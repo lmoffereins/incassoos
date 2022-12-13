@@ -203,6 +203,17 @@ define([
 
 				// Require the application to be online
 				if (offlineService.isDown()) {
+
+					// Remember to retry the transition when we're online again
+					var off = offlineService.on("up", function() {
+
+						// Retry the transition
+						fsm.do(lifecycle.transition);
+
+						// Retry once, so remove the listener afterwards
+						off();
+					});
+
 					return Q.reject("Generic.Error.ApplicationIsOffline");
 				}
 			}
