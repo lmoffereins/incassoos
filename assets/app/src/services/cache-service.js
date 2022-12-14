@@ -125,26 +125,6 @@ define([
 	 * @return {Promise} Is service initialized?
 	 */
 	init = function() {
-		var dfd = Q.defer();
-
-		// Make sure the checksums list is present
-		storage.get(_checksums.key).then( function( value ) {
-			if ("undefined" === typeof value) {
-				storage.save(_checksums.key, {});
-			}
-		});
-
-		// Clear the cache on a schedule
-		storageService.get(cacheClearKey).then( function( value ) {
-			var now = new Date().getTime() + cacheClearTimeframe;
-
-			// When this is the first 
-			if ("undefined" === typeof value || now > value) {
-				clear().then(dfd.resolve);
-			} else {
-				dfd.resolve();
-			}
-		});
 
 		// Register shortcuts
 		shortcutsService.on({
@@ -158,7 +138,25 @@ define([
 			}
 		});
 
-		return dfd.promise;
+		// Check if the checksums list is present
+		return storage.get(_checksums.key).then( function( value ) {
+
+			// Create checksums list
+			if ("undefined" === typeof value) {
+				return storage.save(_checksums.key, {});
+			}
+		}).then( function() {
+
+			// Clear the cache on a schedule
+			storageService.get(cacheClearKey).then( function( value ) {
+				var now = new Date().getTime() - cacheClearTimeframe;
+
+				// Trigger cache clearing checks
+				if ("undefined" === typeof value || now > value) {
+					return clear();
+				}
+			});
+		});
 	},
 
 	/**
