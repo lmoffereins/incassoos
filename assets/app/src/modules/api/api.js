@@ -115,6 +115,16 @@ define([
 	},
 
 	/**
+	 * Default callback for removing a request's value in cache
+	 *
+	 * @param {Object} request Request details
+	 * @return {Promise} Cache was removed
+	 */
+	defaultCacheRemove = function( request ) {
+		return Q.resolve();
+	},
+
+	/**
 	 * Default callback for saving a request's return value in cache
 	 *
 	 * @param {Object} request Request details
@@ -149,6 +159,18 @@ define([
 		},
 
 		/**
+		 * Remove the cached endpoint value
+		 *
+		 * @param {Object} request Request details
+		 * @return {Promise} Cache was removed
+		 */
+		remove = function( request ) {
+			var key = cacheService.getCacheKeyForRequest(request);
+
+			return enabled ? cacheService.remove(key) : defaultCacheRemove(request);
+		},
+
+		/**
 		 * Save the cached endpoint value
 		 *
 		 * @param {Object} request Request details
@@ -163,6 +185,7 @@ define([
 
 		return {
 			get: get,
+			remove: remove,
 			save: save
 		}
 	},
@@ -184,6 +207,7 @@ define([
 		} else {
 			return Object.assign({
 				get: defaultCacheGet,
+				remove: defaultCacheRemove,
 				save: defaultCacheSave
 			}, enabledOrCacheMethods);
 		}
