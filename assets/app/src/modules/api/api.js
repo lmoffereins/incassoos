@@ -155,7 +155,7 @@ define([
 		get = function( request ) {
 			var key = cacheService.getCacheKeyForRequest(request);
 
-			return enabled ? cacheService.get(key) : defaultCacheGet(request);
+			return enabled && ! request.clearCache ? cacheService.get(key) : defaultCacheGet(request);
 		},
 
 		/**
@@ -391,6 +391,7 @@ define([
 			request.headers = {};
 			request.params = {};
 			request.data = {};
+			request.clearCache = !! payload.clearCache;
 
 			// Setup request. Maybe apply authorization
 			options.auth.setHeaders(request).then( function() {
@@ -455,6 +456,7 @@ define([
 			request.headers = {};
 			request.params = {};
 			request.data = {};
+			request.clearCache = !! payload.clearCache;
 
 			// Maybe apply authorization
 			return options.auth.setHeaders(request).then( function() {
