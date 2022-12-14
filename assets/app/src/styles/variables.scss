@@ -154,6 +154,11 @@ $transition-swift:         .15s ease;
 	100% { background: transparent;          }
 }
 
+@keyframes rotate {
+	0%   { transform: rotate(0deg);   }
+	100% { transform: rotate(360deg); }
+}
+
 @keyframes slide-from-right {
 	0%   { transform: translateX(100px); }
 	100% { transform: translateX(0px);   }

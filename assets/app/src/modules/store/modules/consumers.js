@@ -485,18 +485,20 @@ define([
 		/**
 		 * Load the list of the consumer collection
 		 *
+		 * @param {Object} payload Optional. Request payload
 		 * @return {Promise} Was the data loaded?
 		 */
-		load: function( context ) {
+		load: function( context, payload ) {
+			payload = payload || {};
 
 			// Request consumer types and consumers, list the items
 			return Q.all([
-				api.consumerTypes.get( function( resp ) {
+				api.consumerTypes.get(payload, function( resp ) {
 
 					// Continuously update set of types on stream
 					context.commit("setTypes", { types: resp });
 				}),
-				api.consumers.get( function( resp ) {
+				api.consumers.get(payload, function( resp ) {
 
 					// Continuously update set of list items on stream
 					context.commit("setListItems", { items: resp });
@@ -514,6 +516,15 @@ define([
 				// Register full set of list items
 				context.commit("setListItems", { items: data[1] });
 			});
+		},
+
+		/**
+		 * Reload the list of the consumer collection
+		 *
+		 * @return {Promise} Was the data reloaded?
+		 */
+		reload: function( context ) {
+			return context.dispatch("load", { clearCache: true, backgroundProcess: false });
 		},
 
 		/**

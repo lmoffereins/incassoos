@@ -67,6 +67,7 @@ define([
 			}
 
 			return {
+				isLoading: false,
 				focusGroupKey: 0,
 				q: "",
 				shortcutsOff: false,
@@ -339,6 +340,28 @@ define([
 				} else {
 					dispatch("select", payload);
 				}
+			},
+
+			/**
+			 * Reload the list of the consumer collection
+			 *
+			 * Dispatch the action without returning the promise.
+			 *
+			 * @return {Void}
+			 */
+			reload: function( dispatch ) {
+				var self = this;
+
+				// Bail when already reloading
+				if (this.isLoading) {
+					return;
+				}
+
+				// Indicate loading status and start reload
+				this.isLoading = true;
+				dispatch("reload").finally( function() {
+					self.isLoading = false;
+				});
 			}
 		})),
 		watch: Object.assign({

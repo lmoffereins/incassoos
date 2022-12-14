@@ -53,6 +53,12 @@
 			}
 		}
 
+		&.is-loading {
+			.list-reload .dashicons {
+				animation: rotate 2s linear infinite;
+			}
+		}
+
 		&.is-settings {
 			.consumer-types {
 				display: none;

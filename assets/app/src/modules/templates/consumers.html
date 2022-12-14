@@ -1,4 +1,9 @@
-<div class="consumers item-list-wrapper" :class="{ 'is-settings': isSettings, 'is-searching': isSearching, 'no-results': noSearchResults }">
+<div class="consumers item-list-wrapper" :class="{
+	'is-loading': isLoading,
+	'is-settings': isSettings,
+	'is-searching': isSearching,
+	'no-results': noSearchResults
+}">
 	<div class="item-list-header">
 		<button type="button" @click="setActiveSection" class="set-active-section" v-l10n.Consumer.ListHeading></button>
 
@@ -8,13 +13,21 @@
 			<input-search ref="search" v-model="q" always-open="true"></input-search>
 
 			<button
-				@click="expandAllGroups()"
+				@click="expandAllGroups"
 				class="expanded-groups-toggle icon-button"
 				v-l10n-title="allGroupsExpanded ? 'Consumer.CollapseGroups' : 'Consumer.ExpandGroups'">
 				<i class="dashicons" :class="{ 'dashicons-excerpt-view': ! allGroupsExpanded, 'dashicons-list-view': allGroupsExpanded }"></i>
 				<span class="screen-reader-text" v-l10n="allGroupsExpanded ? 'Consumer.CollapseGroups' : 'Consumer.ExpandGroups'"></span>
 			</button>
 			<input-dropdown class="order-by-dropdown" v-model="orderBy" :options="orderByOptions" :title="'Consumer.OrderBy'"></input-dropdown>
+			<button
+				v-if="$isSettings"
+				@click="reload"
+				class="list-reload icon-button"
+				v-l10n-title.Consumer.ReloadList>
+				<i class="dashicons dashicons-update"></i>
+				<span class="screen-reader-text" v-l10n.Consumer.ReloadList></span>
+			</button>
 		</div>
 	</div>
 
