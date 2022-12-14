@@ -386,6 +386,7 @@ define([
 
 			// Parse subscription callbacks
 			subscription = _.defaults(subscription || {}, defaultSubscription);
+			"boolean" === typeof payload.backgroundProcess && (subscription.backgroundProcess = payload.backgroundProcess);
 
 			// Reset request attributes
 			request.headers = {};
