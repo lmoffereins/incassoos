@@ -76,6 +76,12 @@
 			}
 		}
 
+		&.is-loading {
+			.list-reload .dashicons {
+				animation: rotate 2s linear infinite;
+			}
+		}
+
 		&.no-results .item-list {
 			grid-template-columns: 1fr;
 		}

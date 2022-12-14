@@ -484,12 +484,13 @@ define([
 		/**
 		 * Load the list of products
 		 *
+		 * @param {Object} payload Optional. Request payload
 		 * @return {Promise} Was the data loaded?
 		 */
-		load: function( context ) {
+		load: function( context, payload ) {
 
 			// Request products, list the items
-			return api.products.get().then( function( resp ) {
+			return api.products.get(payload).then( function( resp ) {
 
 				// Bail when payload is not an array
 				if (! _.isArray(resp)) {
@@ -499,6 +500,15 @@ define([
 				// Register new set of list items
 				context.commit("setListItems", { items: resp });
 			});
+		},
+
+		/**
+		 * Reload the list of the consumer collection
+		 *
+		 * @return {Promise} Was the data reloaded?
+		 */
+		reload: function( context ) {
+			return context.dispatch("load", { clearCache: true, backgroundProcess: false });
 		},
 
 		/**

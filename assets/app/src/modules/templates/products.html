@@ -1,4 +1,8 @@
-<div class="products item-list-wrapper" :class="{ 'is-searching': isSearching, 'no-results': noSearchResults || ! products.length }">
+<div class="products item-list-wrapper" :class="{
+	'is-loading': isLoading,
+	'is-searching': isSearching,
+	'no-results': noSearchResults || ! products.length
+}">
 	<div class="item-list-header">
 		<button type="button" @click="setActiveSection" class="set-active-section" v-l10n.Product.ListHeading></button>
 
@@ -19,6 +23,14 @@
 				v-model="orderBy"
 				:options="orderByOptions"
 				:title="'Product.OrderBy'"></input-dropdown>
+			<button
+				v-if="$isSettings"
+				@click="reload"
+				class="list-reload icon-button"
+				v-l10n-title.Product.ReloadList>
+				<i class="dashicons dashicons-update"></i>
+				<span class="screen-reader-text" v-l10n.Product.ReloadList></span>
+			</button>
 		</div>
 	</div>
 
