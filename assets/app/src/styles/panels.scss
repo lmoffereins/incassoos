@@ -129,6 +129,7 @@
 @media screen and (max-width: 400px) {
 	#panels {
 		padding: 0px;
+		background: var(--background-primary);
 
 		.panel-wrapper {
 			width: 100%;
