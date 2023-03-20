@@ -5,7 +5,6 @@
  * @subpackage App/Translations
  */
 define([
-	"q",
 	"dayjs",
 	"dayjs/plugin/utc",
 
@@ -16,7 +15,7 @@ define([
 	// Dayjs locales
 	"dayjs/locale/en",
 	"dayjs/locale/nl"
-], function( Q, dayjs, dayjs_utc, en_US, nl_NL ) {
+], function( dayjs, dayjs_utc, en_US, nl_NL ) {
 	/**
 	 * Holds the list of available languages and their translations
 	 *
