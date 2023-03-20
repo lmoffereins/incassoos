@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Incassoos\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-07 21:51+0000\n"
+"POT-Creation-Date: 2023-03-20 19:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Loco-Version: 2.6.2; wp-5.9-alpha-20220826.162129\n"
 "X-Domain: incassoos"
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/admin.php:1057
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/admin.php:1070
 #, php-format
 msgid "%1$s - %2$s"
 msgstr ""
@@ -40,7 +40,7 @@ msgstr[1] ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:835
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:852
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1449
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1473
 #, php-format
 msgid "%d Consumer"
 msgid_plural "%d Consumers"
@@ -64,7 +64,7 @@ msgid_plural "%d Orders"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1460
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1484
 #, php-format
 msgid "%d Orders"
 msgid_plural "%d Orders"
@@ -114,20 +114,21 @@ msgstr ""
 msgid "&mdash; Actions &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1733
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1757
 msgid "&mdash; Consumer Type &mdash;"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1059
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1974
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1453
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1998
 msgid "&mdash; No Category &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1429
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1430
 msgid "&mdash; No Type &mdash;"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1739
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1763
 msgid "&mdash; or &mdash;"
 msgstr ""
 
@@ -715,11 +716,11 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1778
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1888
 msgid "An occasion was closed in Incassoos"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1779
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1889
 msgid "An occasion was reopened in Incassoos"
 msgstr ""
 
@@ -802,8 +803,8 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:599
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1114
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1473
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1787
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1497
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1811
 msgid "Author:"
 msgstr ""
 
@@ -1068,7 +1069,7 @@ msgid "Categories"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1049
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1965
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1989
 msgid "Category:"
 msgstr ""
 
@@ -1130,12 +1131,12 @@ msgstr ""
 msgid "Close wizard"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1524
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1548
 msgid "Closed for new orders."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1791
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1482
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1901
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1506
 msgid "Closed:"
 msgstr ""
 
@@ -1243,8 +1244,8 @@ msgid "Collection Workflow"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1123
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1487
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1796
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1511
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1820
 msgid "Collection:"
 msgstr ""
 
@@ -1367,11 +1368,11 @@ msgid "Unknown users"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:954
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1652
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1676
 msgid "Consumer Types"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1727
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1751
 msgid "Consumer:"
 msgstr ""
 
@@ -1390,7 +1391,7 @@ msgstr ""
 msgid "Consumptions"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1444
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1468
 msgid "Content:"
 msgstr ""
 
@@ -1414,8 +1415,12 @@ msgstr ""
 msgid "Could not find the encrypted option."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:256
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:265
 msgid "Could not update the date of the occasion."
+msgstr ""
+
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:278
+msgid "Could not update the default product category of the occasion."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-products-controller.php:223
@@ -1452,9 +1457,9 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:551
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1024
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1391
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1720
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1951
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1392
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1744
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1975
 msgid "Created:"
 msgstr ""
 
@@ -1526,7 +1531,7 @@ msgid "Date"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1035
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1400
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1401
 msgid "Date:"
 msgstr ""
 
@@ -1548,6 +1553,10 @@ msgstr ""
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:2092
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:2128
 msgid "Default"
+msgstr ""
+
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1445
+msgid "Default Product Category:"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/collections.php:2073
@@ -1958,11 +1967,11 @@ msgid ""
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://github.com/vgsr/"
+msgid "https://github.com/lmoffereins/"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://github.com/vgsr/incassoos/"
+msgid "https://github.com/lmoffereins/incassoos/"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/currency.php:102
@@ -2223,7 +2232,7 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-consumer-types-controller.php:86
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-consumers-controller.php:168
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:164
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:169
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-orders-controller.php:136
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-products-controller.php:135
 msgid ""
@@ -2235,7 +2244,7 @@ msgstr ""
 msgid "List of consumed products for the order."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:148
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:153
 msgid "List of identifiers for consumers that are registered for the occasion."
 msgstr ""
 
@@ -2592,7 +2601,7 @@ msgstr ""
 msgid "Occasion date"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1790
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1900
 msgid "Occasion date:"
 msgstr ""
 
@@ -2629,7 +2638,7 @@ msgstr ""
 msgid "Occasion submitted."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1787
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1897
 msgid "Occasion summary"
 msgstr ""
 
@@ -2659,7 +2668,7 @@ msgstr ""
 msgid "Occasion Workflow"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1752
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1776
 msgid "Occasion:"
 msgstr ""
 
@@ -2714,7 +2723,7 @@ msgid "Open bulk edit mode"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1042
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1532
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1556
 msgctxt "Opposite of reopen"
 msgid "Close"
 msgstr ""
@@ -2733,7 +2742,7 @@ msgstr ""
 msgid "Order count"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1792
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1902
 msgid "Order count:"
 msgstr ""
 
@@ -2800,7 +2809,7 @@ msgstr ""
 msgid "Order updated."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1793
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1903
 msgid "Ordered products count:"
 msgstr ""
 
@@ -2948,7 +2957,7 @@ msgid "Price"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1072
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1960
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1984
 msgid "Price:"
 msgstr ""
 
@@ -2959,7 +2968,7 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1229
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1305
 #: ../../../../src/wp-content/plugins/incassoos/includes/orders.php:365
 #: ../../../../src/wp-content/plugins/incassoos/includes/orders.php:1289
 msgctxt "Product"
@@ -3088,7 +3097,7 @@ msgid "Register, manage and collect consumptions"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/functions.php:1053
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1534
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1558
 msgid "Reopen"
 msgstr ""
 
@@ -3116,8 +3125,8 @@ msgstr ""
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:903
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1223
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1224
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1609
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1610
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1633
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1634
 msgid "Reverse group order"
 msgstr ""
 
@@ -3129,12 +3138,12 @@ msgstr ""
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:657
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1146
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1147
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1510
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1511
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1819
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1820
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1992
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1993
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1534
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1535
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1843
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1844
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:2016
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:2017
 msgid "Run action"
 msgstr ""
 
@@ -3174,21 +3183,21 @@ msgstr ""
 msgid "Search Collections"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1741
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1765
 msgid "Search consumer&hellip;"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/consumers.php:465
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:899
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1337
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1606
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1630
 msgid "Search consumers"
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/consumers.php:466
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:900
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1338
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1607
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1631
 msgid "Search consumers&hellip;"
 msgstr ""
 
@@ -3422,8 +3431,8 @@ msgstr ""
 msgid "Sorry, you are not allowed to close this item."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:286
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:313
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:308
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:335
 msgid "Sorry, you are not allowed to close this occasion."
 msgstr ""
 
@@ -3450,8 +3459,8 @@ msgstr ""
 msgid "Sorry, you are not allowed to reopen this item."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:372
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:399
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:394
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:421
 msgid "Sorry, you are not allowed to reopen this occasion."
 msgstr ""
 
@@ -3477,7 +3486,7 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-consumer-types-controller.php:108
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-consumers-controller.php:190
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:192
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:197
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-orders-controller.php:157
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-products-controller.php:163
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-settings-controller.php:156
@@ -3665,12 +3674,16 @@ msgid ""
 "the system."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:157
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:162
 msgid "The date the occasion was closed."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:138
 msgid "The date the occasion was scheduled, in no particular timezone."
+msgstr ""
+
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:148
+msgid "The default product category for the object."
 msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/encryption.php:306
@@ -3726,21 +3739,21 @@ msgstr ""
 msgid "The name of the consumer of the order."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1782
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1892
 #, php-format
 msgid "The occasion %1$s was just closed by %2$s."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1783
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1893
 #, php-format
 msgid "The occasion %1$s was just reopened by %2$s."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:336
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:358
 msgid "The occasion cannot be closed."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:422
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:444
 msgid "The occasion cannot be reopened."
 msgstr ""
 
@@ -3749,15 +3762,15 @@ msgstr ""
 msgid "The occasion is closed for new orders."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:324
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:346
 msgid "The occasion is locked."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:410
+#: ../../../../src/wp-content/plugins/incassoos/includes/classes/class-incassoos-rest-occasions-controller.php:432
 msgid "The occasion is not closed."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1524
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1548
 #, php-format
 msgid "The occasion was closed on %1$s at %2$s."
 msgstr ""
@@ -3855,7 +3868,7 @@ msgstr ""
 msgid "There are no collectable occasions found."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1581
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1605
 msgid "There are no consumed products found."
 msgstr ""
 
@@ -3868,7 +3881,7 @@ msgstr ""
 msgid "There is currently nothing to display here."
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1907
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1931
 msgid "There were no products found."
 msgstr ""
 
@@ -3951,7 +3964,7 @@ msgstr ""
 msgid "Time Lock"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1789
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1899
 msgid "Title:"
 msgstr ""
 
@@ -3974,8 +3987,8 @@ msgstr ""
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:906
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1226
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1227
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1612
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1613
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1636
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1637
 msgid "Toggle list columns"
 msgstr ""
 
@@ -4003,8 +4016,8 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:583
 #: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1103
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1468
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1776
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1492
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1800
 msgid "Total:"
 msgstr ""
 
@@ -4036,7 +4049,7 @@ msgstr ""
 msgid "Turkmenistani manat"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1419
+#: ../../../../src/wp-content/plugins/incassoos/includes/admin/metaboxes.php:1420
 msgid "Type:"
 msgstr ""
 
@@ -4175,7 +4188,7 @@ msgstr ""
 msgid "Uzbekistani som"
 msgstr ""
 
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1794
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1904
 msgid "Value of consumptions:"
 msgstr ""
 
@@ -4222,7 +4235,7 @@ msgstr ""
 
 #: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:45
 #: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:46
-#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1796
+#: ../../../../src/wp-content/plugins/incassoos/includes/occasions.php:1906
 msgid "View Occasion"
 msgstr ""
 
