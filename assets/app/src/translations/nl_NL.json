@@ -2,9 +2,9 @@
 	"API": {
 		"Error": {
 			"InvalidTokenHeader": "De autorisatie voor het verzoek is niet juist.",
-			"AccessNotAllowed": "Je hebt niet de rechten om dat te doen.",
-			"EditNotAllowed": "Je hebt niet de rechten om dit item te wijzigen.",
-			"DeleteNotAllowed": "Je hebt niet de rechten om dit item te verwijderen.",
+			"AccessNotAllowed": "Je hebt geen rechten om de items te bekijken.",
+			"EditNotAllowed": "Je hebt geen rechten om dit item te wijzigen.",
+			"DeleteNotAllowed": "Je hebt geen rechten om dit item te verwijderen.",
 			"InvalidPageNumber": "Het opgevraagde paginanummer geeft geen items terug.",
 			"InvalidConsumerField": "Kon de klant van het item niet wijzigen.",
 			"InvalidProductsField": "Kon de producten van het item niet wijzigen.",
@@ -76,6 +76,7 @@
 		"On": "Aan",
 		"Open": "Openen",
 		"Previous": "Vorige",
+		"Refresh": "Vernieuwen",
 		"Remove": "Verwijder",
 		"Reset": "Herstellen",
 		"Save": "Opslaan",
@@ -142,7 +143,7 @@
 			"HelpShortcutsTitle": "Beschikbare sneltoetsen"
 		},
 		"Error": {
-			"NotAllowed": "Je hebt niet de rechten om dat te doen.",
+			"NotAllowed": "Je hebt geen rechten om dat te doen.",
 			"InvalidInputValue": "Voor het veld %s is een onjuiste waarde opgegeven.",
 			"ApplicationIsOffline": "Je actie is geblokkeerd omdat de applicatie offline is."
 		}
