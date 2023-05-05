@@ -46,7 +46,7 @@ define([
 	 * @param {Object} event Event data or MatchQueryListEvent data
 	 * @return {Void}
 	 */
-	setScreenSize = function setScreenSizeOnResize( event ) {
+	setScreenSize = function resizeServiceOnResize( event ) {
 		var width = document.body.clientWidth,
 		    event = event || { matches: true }, i;
 
@@ -200,7 +200,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on("change", function() {
+				listeners.on("change", function resizeServiceOnChangeScreenSize() {
 
 					// Mutate the reactive `screenSize` data
 					context.commit("setScreenSize");

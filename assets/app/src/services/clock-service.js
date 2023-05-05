@@ -85,7 +85,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on("tick", function() {
+				listeners.on("tick", function clockServiceOnTickClock() {
 
 					// Mutate the reactive clock
 					context.commit("setClock");

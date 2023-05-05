@@ -105,14 +105,14 @@ define([
 		/**
 		 * Update the user reference when adding or updating a user
 		 */
-		listeners.on(["add", "update"], function( id, data ) {
+		listeners.on(["add", "update"], function authServiceOnAddUpdateUser( id, data ) {
 			registeredUsers[id] = data;
 		});
 
 		/**
 		 * Update the user reference when removing a user
 		 */
-		listeners.on("remove", function( id ) {
+		listeners.on("remove", function authServiceOnRemoveUser( id ) {
 			registeredUsers = registeredUsers.filter( function( i ) {
 				return i.id !== id;
 			});
@@ -121,7 +121,7 @@ define([
 		/**
 		 * Trigger user list updates when any change in the user list was made
 		 */
-		listeners.on(["add", "update", "remove", "active", "inactive"], function() {
+		listeners.on(["add", "update", "remove", "active", "inactive"], function authServiceOnChangeUserlist() {
 			/**
 			 * Trigger event listeners for any change in the users list.
 			 *
@@ -180,7 +180,7 @@ define([
 				 *
 				 * @return {Void}
 				 */
-				listeners.on("active", function() {
+				listeners.on("active", function authServiceOnActiveUser() {
 
 					// Mutate the reactive `isLoggedIn` flag
 					context.commit("authSetIsLoggedIn", true);
@@ -191,7 +191,7 @@ define([
 				 *
 				 * @return {Void}
 				 */
-				listeners.on("inactive", function() {
+				listeners.on("inactive", function authServiceOnInactiveUser() {
 
 					// Mutate the reactive `isLoggedIn` flag
 					context.commit("authSetIsLoggedIn", false);
@@ -272,7 +272,7 @@ define([
 					 * @param {Object} data User data
 					 */
 					listeners.trigger(!! users[id] ? "update" : "add", id, data)
-						.then(function() { dfd.resolve(id); })
+						.then(dfd.resolve.bind(dfd, id))
 						.catch(dfd.reject);
 				});
 			});

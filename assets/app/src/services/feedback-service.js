@@ -108,7 +108,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				feedback.on(["add", "clear", "remove"], function() {
+				feedback.on(["add", "clear", "remove"], function feedbackServiceOnChangeFeedbacklist() {
 
 					// Mutate the reactive `feedback` data
 					context.commit("feedbackUpdateGlobalList");

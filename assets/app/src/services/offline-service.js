@@ -108,7 +108,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on(["up", "down"], function() {
+				listeners.on(["up", "down"], function onChangeOfflineStatus() {
 
 					// Mutate the reactive `offline` data
 					context.commit("offlineSetStatus");

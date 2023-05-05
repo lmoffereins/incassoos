@@ -119,7 +119,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on("set", function() {
+				listeners.on("set", function darkmodeServiceOnSetDarkmode() {
 
 					// Mutate the reactive dark mode data
 					context.commit("setDarkmode");
@@ -129,7 +129,7 @@ define([
 					/**
 					 * When the system preference changes, update the main store's dark mode data
 					 */
-					window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function() {
+					window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function darkmodeServiceOnChangeSystemDarkmode() {
 						context.commit("setDarkmode");
 					});
 				}

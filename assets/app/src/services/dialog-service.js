@@ -55,7 +55,7 @@ define([
 			 *
 			 * @return {String} Dialog identifier
 			 */
-			return function() {
+			return function openDialog() {
 				show(options.id);
 				return options.id;
 			};

@@ -117,7 +117,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on("set", function() {
+				listeners.on("set", function debugServiceOnSetDebugmode() {
 
 					// Mutate the reactive `debug` data
 					context.commit("debugSetState");

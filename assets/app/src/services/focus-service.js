@@ -51,7 +51,7 @@ define([
 			interval = setInterval(set, 300);
 
 			// Consider a hidden page as blurred
-			visibilityService.on("hidden", function() {
+			visibilityService.on("hidden", function focusServiceOnVisibilityHidden() {
 				set();
 
 				// Pause the interval ping
@@ -60,7 +60,7 @@ define([
 			});
 
 			// Consider a visible page as focussed
-			visibilityService.on("visible", function() {
+			visibilityService.on("visible", function focusServiceOnVisibilityVisible() {
 				set();
 
 				// Restart the interval ping
@@ -117,7 +117,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on(["focus", "blur"], function() {
+				listeners.on(["focus", "blur"], function focusServiceOnChangeFocus() {
 
 					// Mutate the reactive `focus` data
 					context.commit("focusSetState");

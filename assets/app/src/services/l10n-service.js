@@ -87,7 +87,7 @@ define([
 	init = function() {
 
 		// When the language is set, define the locale for date formatting
-		listeners.on("set", function( language ) {
+		listeners.on("set", function l10nServiceOnSetLanguage( language ) {
 
 			// Dayjs does its own locale interpretation of the `language` format
 			var alias = availableLanguages[language] && availableLanguages[language].alias.dayjs;
@@ -95,7 +95,7 @@ define([
 		});
 
 		// When the active user is defined, make their language the active language
-		authService.on("active", function( id ) {
+		authService.on("active", function l10nServiceOnActiveUser( id ) {
 
 			// Fetch the user's data
 			authService.getUser(id).then( function( data ) {
@@ -175,7 +175,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on("set", function() {
+				listeners.on("set", function l10nServiceOnSetLanguage() {
 
 					// Mutate the reactive `l10n` data
 					context.commit("l10nSetLanguage");

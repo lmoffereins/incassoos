@@ -40,7 +40,7 @@ define([
 		if (document && document.addEventListener && document.visibilityState) {
 
 			// Setup listener for the `visibilitychange` event
-			document.addEventListener("visibilitychange", function() {
+			document.addEventListener("visibilitychange", function visibilityServiceOnVisibilityChange() {
 				visible = "visible" === document.visibilityState;
 
 				/**
@@ -99,7 +99,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on(["visible", "hidden"], function() {
+				listeners.on(["visible", "hidden"], function visibilityServiceOnChangeVisibility() {
 
 					// Mutate the reactive `visibility` data
 					context.commit("visibilitySetState");

@@ -106,7 +106,7 @@ define([
 				 *
 				 * @return {Function} Deregistration method
 				 */
-				listeners.on("state", function() {
+				listeners.on("state", function historyServiceOnSetHistoryState() {
 
 					// Mutate the reactive history data
 					context.commit("historySetState");
@@ -150,7 +150,7 @@ define([
 	 * @return {Void}
 	 */
 	forward = function() {
-		window.history.fowrard();
+		window.history.forward();
 	},
 
 	/**
