@@ -51,6 +51,9 @@ add_filter( 'post_updated_messages',       'incassoos_admin_post_updated_message
 add_action( 'incassoos_admin_notices',     'incassoos_admin_post_notices',           10    );
 add_action( 'incassoos_admin_notices',     'incassoos_admin_post_action_notices',    10    );
 
+// Multiple
+add_action( 'incassoos_admin_notices',     'incassoos_admin_bulk_notices',           10    );
+
 // Actions
 add_action( 'incassoos_admin_collection_send_test_collect_email',      'incassoos_admin_collection_send_test_collect_email',      10, 2 );
 add_action( 'incassoos_admin_collection_send_consumer_collect_emails', 'incassoos_admin_collection_send_consumer_collect_emails', 10, 2 );

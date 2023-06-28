@@ -85,15 +85,16 @@ class Incassoos_Admin {
 		$order_screen      = "edit-{$order}";
 		$product           = incassoos_get_product_post_type();
 
-		add_filter( "views_{$activity_screen}",          array( $this, 'list_table_views'          ), 10    );
-		add_filter( "views_{$occasion_screen}",          array( $this, 'list_table_views'          ), 10    );
-		add_filter( "views_{$order_screen}",             array( $this, 'list_table_views'          ), 10    );
-		add_filter( "bulk_actions-{$collection_screen}", array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( "bulk_actions-{$activity_screen}",   array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( "bulk_actions-{$occasion_screen}",   array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( "bulk_actions-{$order_screen}",      array( $this, 'list_table_bulk_actions'   ), 10    );
-		add_filter( 'list_table_primary_column',         array( $this, 'list_table_primary_column' ), 10, 2 );
-		add_filter( 'parse_query',                       array( $this, 'list_table_filter_posts'   ),  5    );
+		add_filter( "views_{$activity_screen}",               array( $this, 'list_table_views'           ), 10    );
+		add_filter( "views_{$occasion_screen}",               array( $this, 'list_table_views'           ), 10    );
+		add_filter( "views_{$order_screen}",                  array( $this, 'list_table_views'           ), 10    );
+		add_filter( "bulk_actions-{$collection_screen}",      array( $this, 'list_table_bulk_actions'    ), 10    );
+		add_filter( "bulk_actions-{$activity_screen}",        array( $this, 'list_table_bulk_actions'    ), 10    );
+		add_filter( "bulk_actions-{$occasion_screen}",        array( $this, 'list_table_bulk_actions'    ), 10    );
+		add_filter( "bulk_actions-{$order_screen}",           array( $this, 'list_table_bulk_actions'    ), 10    );
+		add_filter( "handle_bulk_actions-{$activity_screen}", array( $this, 'handle_bulk_actions'        ), 10, 3 );
+		add_filter( 'list_table_primary_column',              array( $this, 'list_table_primary_column'  ), 10, 2 );
+		add_filter( 'parse_query',                            array( $this, 'list_table_filter_posts'    ),  5    );
 
 		/** Single Post *******************************************************/
 
@@ -545,8 +546,10 @@ class Incassoos_Admin {
 	 * @return array Bulk actions
 	 */
 	public function list_table_bulk_actions( $actions ) {
+		$post_type        = get_current_screen()->post_type;
+		$post_type_object = get_post_type_object( $post_type );
 
-		switch ( get_current_screen()->post_type ) {
+		switch ( $post_type ) {
 			case incassoos_get_collection_post_type() :
 			case incassoos_get_activity_post_type() :
 			case incassoos_get_occasion_post_type() :
@@ -557,7 +560,69 @@ class Incassoos_Admin {
 				break;
 		}
 
+		// Activity
+		if ( incassoos_get_activity_post_type() === $post_type ) {
+
+			// Duplicate
+			if ( current_user_can( $post_type_object->cap->create_posts ) ) {
+				$actions['inc_duplicate'] = __( 'Duplicate', 'incassoos' );
+			}
+		}
+
 		return $actions;
+	}
+
+	/**
+	 * Process the list table's bulk actions
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param  string $sendback Redirect url
+	 * @param  string $doaction Action name
+	 * @param  array  $post_ids Post ids
+	 * @return string Redirect url
+	 */
+	public function handle_bulk_actions( $sendback, $doaction, $post_ids ) {
+
+		switch ( $doaction ) {
+
+			// Duplicate
+			case 'inc_duplicate' :
+				$duplicated = 0;
+				foreach ( $post_ids as $post_id ) {
+					$post = incassoos_get_activity( $post_id );
+
+					// Bail when the post is not an Activity
+					if ( ! $post )
+						continue;
+
+					$post_type_object = get_post_type_object( $post->post_type );
+
+					// Bail when the user cannot create Activities
+					if ( ! current_user_can( $post_type_object->cap->create_posts ) ) {
+						wp_die(
+							'<h1>' . __( 'Cheatin&#8217; uh?' ) . '</h1>' .
+							'<p>' . __( 'Sorry, you are not allowed to create posts as this user.' ) . '</p>',
+							403
+						);
+					}
+
+					// Duplicate-it
+					$success = incassoos_duplicate_post( $post );
+
+					// Something went wrong
+					if ( ! $success ) {
+						wp_die( __( 'Sorry, something went wrong. The requested action could not be executed.', 'incassoos' ) );
+					}
+
+					$duplicated++;
+				}
+
+				// Define redirect url
+				$sendback = add_query_arg( 'duplicated', $duplicated, $sendback );
+		}
+
+		return $sendback;
 	}
 
 	/**

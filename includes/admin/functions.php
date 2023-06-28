@@ -1746,6 +1746,58 @@ function incassoos_admin_post_notices() {
 }
 
 /**
+ * Display admin notices on a post's bulk edit page
+ *
+ * @since 1.0.0
+ *
+ * @see wp-admin/edit.php
+ *
+ * @uses apply_filters() Calls 'incassoos_admin_bulk_counts'
+ * @uses apply_filters() Calls 'incassoos_admin_bulk_messages'
+ */
+function incassoos_admin_bulk_notices() {
+
+	// Get the screen context
+	$screen    = get_current_screen();
+	$post_type = $screen->post_type;
+
+	// Bail when this is not a plugin's bulk edit page
+	if ( 'edit' !== $screen->base || empty( $post_type ) || ! incassoos_is_plugin_post_type( $post_type ) )
+		return;
+
+	// Fetch counts
+	$bulk_counts = apply_filters( 'incassoos_admin_bulk_counts', array(
+		'duplicated' => isset( $_REQUEST['duplicated'] ) ? $_REQUEST['duplicated'] : 0
+	) );
+
+	// Fetch messages
+	$bulk_messages = apply_filters( 'incassoos_admin_bulk_messages', array(
+		'post'                             => array(
+			'duplicated' => _n( '%s post duplicated.', '%s posts duplicated.', $bulk_counts['duplicated'] )
+		),
+		incassoos_get_activity_post_type() => array(
+			'duplicated' => _n( '%s activity duplicated.', '%s activities duplicated.', $bulk_counts['duplicated'] )
+		)
+	), $bulk_counts );
+
+	$messages = array();
+	foreach ( array_filter( $bulk_counts ) as $message => $count ) {
+		if ( isset( $bulk_messages[ $post_type ][ $message ] ) ) {
+			$messages[] = sprintf( $bulk_messages[ $post_type ][ $message ], number_format_i18n( $count ) );
+		} elseif ( isset( $bulk_messages['post'][ $message ] ) ) {
+			$messages[] = sprintf( $bulk_messages['post'][ $message ], number_format_i18n( $count ) );
+		}
+	}
+
+	if ( $messages ) {
+		echo '<div id="message" class="updated notice is-dismissible"><p>' . implode( ' ', $messages ) . '</p></div>';
+	}
+	unset( $messages );
+
+	$_SERVER['REQUEST_URI'] = remove_query_arg( array_keys( $bulk_counts ), $_SERVER['REQUEST_URI'] );
+}
+
+/**
  * Run dedicated hook for the 'inc_doaction' post action on wp-admin/post.php
  *
  * @since 1.0.0
