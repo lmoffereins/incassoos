@@ -973,6 +973,10 @@ function incassoos_get_dropdown_posts( $args = array() ) {
  *
  * @global WPDB $wpdb
  *
+ * @uses do_action()     Calls 'incassoos_duplicate_post'
+ * @uses apply_filters() Calls 'incassoos_duplicate_post_args'
+ * @uses do_action()     Calls 'incassoos_duplicated_post'
+ *
  * @param  int|WP_Post $post Optional. Post object or ID. Defaults to the current post.
  * @return int|bool New post ID or False when unsuccessful.
  */
@@ -1005,7 +1009,7 @@ function incassoos_duplicate_post( $post = 0 ) {
 		}
 
 		// Setup duplicate post details
-		$args = apply_filters( 'incassoos_duplicate_post_args', array(
+		$args = array(
 			'post_title'     => incassoos_increment_post_title( $post ),
 			'post_content'   => $post->post_content,
 			'post_excerpt'   => $post->post_excerpt,
@@ -1020,9 +1024,9 @@ function incassoos_duplicate_post( $post = 0 ) {
 			'ping_status'    => $post->ping_status,
 			'to_ping'        => $post->to_ping,
 			'tax_input'      => $tax_input
-			// Do not provide meta_input to `wp_insert_post()` because it uses `update_post_meta()`
+			// Do not provide 'meta_input' to `wp_insert_post()` because it uses `update_post_meta()`
 			// when `add_post_meta()` is preferred. This is done below after the post is created.
-		), $post );
+		);
 
 		// Add meta input to the root args for use in custom plugin validation
 		foreach ( $meta_input as $meta_key => $meta_values ) {
@@ -1032,7 +1036,7 @@ function incassoos_duplicate_post( $post = 0 ) {
 		}
 
 		// Insert the new post
-		$new_post_id = wp_insert_post( $args, true );
+		$new_post_id = wp_insert_post( apply_filters( 'incassoos_duplicate_post_args', $args, $post, $meta_input ), true );
 
 		if ( $new_post_id && ! is_wp_error( $new_post_id ) ) {
 

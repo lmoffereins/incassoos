@@ -1072,6 +1072,32 @@ function incassoos_filter_activity_date_default_to_date_created( $date, $post = 
 	return $date;
 }
 
+/**
+ * Modify the Activity's post args for duplication
+ *
+ * @since 1.0.0
+ *
+ * @param  array   $args       Post args
+ * @param  WP_Post $post       Post object
+ * @param  array   $meta_input List of meta values
+ * @return array Post args for duplication
+ */
+function incassoos_filter_activity_duplicate_post_args( $args, $post, $meta_input ) {
+	$post = incassoos_get_activity( $post );
+
+	// When this is an Activity
+	if ( $post ) {
+
+		// Correct format of activity date
+		if ( ! empty( $args['activity_date'] ) ) {
+			$date = strtotime( trim( $args['activity_date'] ) );
+			$args['activity_date'] = $date ? date( 'd-m-Y', $date ) : '';
+		}
+	}
+
+	return $args;
+}
+
 /** Collection ****************************************************************/
 
 /**
@@ -1335,7 +1361,7 @@ function incassoos_validate_activity( $args = array() ) {
 		return $title;
 	}
 
-	// Validate date. May be empty
+	// Validate date. Allowed to be empty
 	$date = incassoos_validate_date( $args['activity_date'], 'd-m-Y' );
 	if ( ! empty( $args['activity_date'] ) && is_wp_error( $date ) ) {
 		return $date;
