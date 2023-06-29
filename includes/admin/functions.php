@@ -1746,6 +1746,30 @@ function incassoos_admin_post_notices() {
 }
 
 /**
+ * Modify whether to show the checkbox column in the post list table
+ *
+ * @since 1.0.0
+ *
+ * @param  bool    $show Whether to show the checkbox
+ * @param  WP_Post $post Post object
+ * @return bool Whether to show the checkbox
+ */
+function incassoos_admin_list_table_show_post_cb( $show, $post ) {
+
+	// Activity
+	if ( incassoos_get_activity( $post ) ) {
+		$post_type_object = get_post_type_object( $post->post_type );
+
+		// Enable bulk edit for duplication
+		if ( current_user_can( $post_type_object->cap->create_posts ) ) {
+			$show = true;
+		}
+	}
+
+	return $show;
+}
+
+/**
  * Display admin notices on a post's bulk edit page
  *
  * @since 1.0.0

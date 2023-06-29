@@ -52,7 +52,8 @@ add_action( 'incassoos_admin_notices',     'incassoos_admin_post_notices',      
 add_action( 'incassoos_admin_notices',     'incassoos_admin_post_action_notices',    10    );
 
 // Multiple
-add_action( 'incassoos_admin_notices',     'incassoos_admin_bulk_notices',           10    );
+add_filter( 'wp_list_table_show_post_checkbox', 'incassoos_admin_list_table_show_post_cb', 10, 2 ); // Since WP 5.7
+add_action( 'incassoos_admin_notices',          'incassoos_admin_bulk_notices',            10    );
 
 // Actions
 add_action( 'incassoos_admin_collection_send_test_collect_email',      'incassoos_admin_collection_send_test_collect_email',      10, 2 );
