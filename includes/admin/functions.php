@@ -126,26 +126,16 @@ function incassoos_admin_menu_highlight() {
 		$parent_file  = 'incassoos';
 		$submenu_file = "edit.php?post_type={$screen->post_type}";
 
-	// Activity specific taxonomies
-	} elseif ( in_array( $screen->taxonomy, array(
-		incassoos_get_activity_cat_tax_id(),
-	) ) ) {
+	// Plugin taxonomies
+	} elseif ( incassoos_is_plugin_taxonomy( $screen->taxonomy ) ) {
 		$parent_file  = 'incassoos';
-		$submenu_file = "edit.php?post_type=" . incassoos_get_activity_post_type();
+		$post_types   = incassoos_get_plugin_taxonomy_post_types();
 
-	// Occasion specific taxonomies
-	} elseif ( in_array( $screen->taxonomy, array(
-		incassoos_get_occasion_type_tax_id(),
-	) ) ) {
-		$parent_file  = 'incassoos';
-		$submenu_file = "edit.php?post_type=" . incassoos_get_occasion_post_type();
-
-	// Product specific taxonomies
-	} elseif ( in_array( $screen->taxonomy, array(
-		incassoos_get_product_cat_tax_id(),
-	) ) ) {
-		$parent_file  = 'incassoos';
-		$submenu_file = "edit.php?post_type=" . incassoos_get_product_post_type();
+		if ( isset( $post_types[ $screen->taxonomy ] ) ) {
+			$submenu_file = "edit.php?post_type=" . $post_types[ $screen->taxonomy ];
+		} else {
+			$submenu_file = 'incassoos';
+		}
 
 	// Default plugin home
 	} elseif ( 'incassoos' === $parent_file && null === $submenu_file ) {
