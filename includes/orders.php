@@ -1555,8 +1555,8 @@ function incassoos_is_consumption_within_limit_for_time_window( $products, $user
  *
  * @return string Consumer type id
  */
-function incassoos_get_unknown_user_consumer_type_id_base() {
-	return incassoos()->unknown_user_consumer_type;
+function incassoos_get_unknown_consumer_type_id_base() {
+	return incassoos()->unknown_consumer_type;
 }
 
 /**
@@ -1567,8 +1567,8 @@ function incassoos_get_unknown_user_consumer_type_id_base() {
  * @param int $user_id User ID of the unknown user.
  * @return string Consumer type id
  */
-function incassoos_get_unknown_user_consumer_type_id( $user_id ) {
-	$consumer_type = incassoos_get_unknown_user_consumer_type_id_base();
+function incassoos_get_unknown_consumer_type_id( $user_id ) {
+	$consumer_type = incassoos_get_unknown_consumer_type_id_base();
 	$user_id       = is_numeric( $user_id ) ? $user_id : 0;
 
 	// Add user id suffix to type
@@ -1585,8 +1585,8 @@ function incassoos_get_unknown_user_consumer_type_id( $user_id ) {
  * @param string $type_id Consumer type id
  * @return int Unknown user ID
  */
-function incassoos_get_user_id_from_unknown_user_consumer_type( $type_id ) {
-	$consumer_type = incassoos_get_unknown_user_consumer_type_id_base();
+function incassoos_get_user_id_from_unknown_consumer_type( $type_id ) {
+	$consumer_type = incassoos_get_unknown_consumer_type_id_base();
 	$parts         = is_string( $type_id ) ? explode( ':', $type_id ) : array();
 	$user_id       = 0;
 
@@ -1606,8 +1606,8 @@ function incassoos_get_user_id_from_unknown_user_consumer_type( $type_id ) {
  * @param string $type_id Consumer type id
  * @return bool Consumer type is a unknown user
  */
-function incassoos_is_unknown_user_consumer_type_id( $type_id ) {
-	return (bool) incassoos_get_user_id_from_unknown_user_consumer_type( $type_id );
+function incassoos_is_unknown_consumer_type_id( $type_id ) {
+	return (bool) incassoos_get_user_id_from_unknown_consumer_type( $type_id );
 }
 
 /**
@@ -1703,9 +1703,9 @@ function incassoos_get_consumer_type( $type_id ) {
 	}
 
 	// Special case: Unknown user type
-	if ( incassoos_is_unknown_user_consumer_type_id( $type_id ) ) {
-		$unknown_user_id = incassoos_get_user_id_from_unknown_user_consumer_type( $type_id );
-		$type_id         = incassoos_get_unknown_user_consumer_type_id_base();
+	if ( incassoos_is_unknown_consumer_type_id( $type_id ) ) {
+		$unknown_user_id = incassoos_get_user_id_from_unknown_consumer_type( $type_id );
+		$type_id         = incassoos_get_unknown_consumer_type_id_base();
 	} else {
 		$unknown_user_id = false;
 	}
@@ -1721,7 +1721,7 @@ function incassoos_get_consumer_type( $type_id ) {
 
 	// When handling Unknown user type
 	if ( $unknown_user_id ) {
-		$type_object->id              = incassoos_get_unknown_user_consumer_type_id( $unknown_user_id );
+		$type_object->id              = incassoos_get_unknown_consumer_type_id( $unknown_user_id );
 		$type_object->label           = sprintf( $type_object->label_user, $unknown_user_id );
 		$type_object->unknown_user_id = $unknown_user_id;
 	}

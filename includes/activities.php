@@ -644,7 +644,7 @@ function incassoos_get_activity_participant_types( $post = 0, $query_args = arra
 
 		// Consider unknown users
 		foreach ( incassoos_get_activity_unknown_participants( $post ) as $user_id ) {
-			$types[] = incassoos_get_unknown_user_consumer_type_id( $user_id );
+			$types[] = incassoos_get_unknown_consumer_type_id( $user_id );
 		}
 	}
 
@@ -699,11 +699,11 @@ function incassoos_activity_has_participant( $participant, $post = 0 ) {
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $participant ) ) {
-			$_participant = incassoos_get_user_id_from_unknown_user_consumer_type( $participant );
+		if ( incassoos_is_unknown_consumer_type_id( $participant ) ) {
+			$_participant = incassoos_get_user_id_from_unknown_consumer_type( $participant );
 
 		// Consider all unknown users
-		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $participant ) {
+		} elseif ( incassoos_get_unknown_consumer_type_id_base() === $participant ) {
 			$retval = incassoos_activity_has_unknown_participants( $post );
 		}
 
@@ -801,8 +801,8 @@ function incassoos_get_activity_participant_price( $participant, $post = 0, $num
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $participant ) ) {
-			$_participant = incassoos_get_user_id_from_unknown_user_consumer_type( $participant );
+		if ( incassoos_is_unknown_consumer_type_id( $participant ) ) {
+			$_participant = incassoos_get_user_id_from_unknown_consumer_type( $participant );
 		}
 
 		$prices = incassoos_get_activity_participant_prices( $post );
@@ -811,7 +811,7 @@ function incassoos_get_activity_participant_price( $participant, $post = 0, $num
 		}
 
 		// Consider all unknown users
-		if ( incassoos_get_unknown_user_consumer_type_id_base() === $participant ) {
+		if ( incassoos_get_unknown_consumer_type_id_base() === $participant ) {
 			foreach ( incassoos_get_activity_unknown_participants( $post ) as $user_id ) {
 				if ( isset( $prices[ $user_id ] ) ) {
 					$price += $prices[ $user_id ];
@@ -849,15 +849,15 @@ function incassoos_activity_participant_has_custom_price( $participant, $post = 
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $participant ) ) {
-			$_participant = incassoos_get_user_id_from_unknown_user_consumer_type( $participant );
+		if ( incassoos_is_unknown_consumer_type_id( $participant ) ) {
+			$_participant = incassoos_get_user_id_from_unknown_consumer_type( $participant );
 		}
 
 		$prices = incassoos_get_activity_prices_raw( $post );
 		$retval = isset( $prices[ $_participant ] ) && $prices[ $_participant ] !== incassoos_get_activity_price( $post );
 
 		// Consider all unknown users
-		if ( incassoos_get_unknown_user_consumer_type_id_base() === $participant ) {
+		if ( incassoos_get_unknown_consumer_type_id_base() === $participant ) {
 			foreach ( incassoos_get_activity_unknown_participants( $post ) as $user_id ) {
 				if ( isset( $prices[ $user_id ] ) && $prices[ $_participant ] !== incassoos_get_activity_price( $post ) ) {
 					$retval = true;

@@ -1184,7 +1184,7 @@ function incassoos_get_collection_consumer_types( $post = 0 ) {
 
 		// Consider unknown users
 		foreach ( incassoos_get_collection_unknown_consumers( $post ) as $user_id ) {
-			$types[] = incassoos_get_unknown_user_consumer_type_id( $user_id );
+			$types[] = incassoos_get_unknown_consumer_type_id( $user_id );
 		}
 	}
 
@@ -1229,15 +1229,15 @@ function incassoos_get_collection_consumer_total( $consumer, $post = 0, $num_for
 		if ( incassoos_is_collection_collected( $post ) ) {
 
 			// Consider unknown users
-			if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
-				$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+			if ( incassoos_is_unknown_consumer_type_id( $consumer ) ) {
+				$_consumer = incassoos_get_user_id_from_unknown_consumer_type( $consumer );
 			}
 
 			$totals = get_post_meta( $post->ID, 'totals', true );
 			$total  = isset( $totals[ $_consumer ] ) ? (float) $totals[ $_consumer ] : 0;
 
 			// Consider all unknown users
-			if ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+			if ( incassoos_get_unknown_consumer_type_id_base() === $consumer ) {
 				foreach ( incassoos_get_collection_unknown_consumers( $post ) as $user_id ) {
 					if ( isset( $totals[ $user_id ] ) ) {
 						$total += $totals[ $user_id ];
@@ -1287,11 +1287,11 @@ function incassoos_get_collection_consumer_total_raw( $consumer, $post = 0 ) {
 	if ( $post && $assets ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
-			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+		if ( incassoos_is_unknown_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_consumer_type( $consumer );
 
 		// Consider all unknown users
-		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+		} elseif ( incassoos_get_unknown_consumer_type_id_base() === $consumer ) {
 			$_consumer = incassoos_get_collection_unknown_consumers( $post );
 		}
 
@@ -1524,11 +1524,11 @@ function incassoos_get_collection_consumer_raw_assets( $consumer, $post = 0, $qu
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
-			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+		if ( incassoos_is_unknown_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_consumer_type( $consumer );
 
 		// Consider all unknown users
-		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+		} elseif ( incassoos_get_unknown_consumer_type_id_base() === $consumer ) {
 			$_consumer = incassoos_get_collection_unknown_consumers( $post );
 		}
 
@@ -1577,11 +1577,11 @@ function incassoos_get_collection_consumer_total_by_asset( $consumer, $post = 0,
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
-			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+		if ( incassoos_is_unknown_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_consumer_type( $consumer );
 
 		// Consider all unknown users
-		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+		} elseif ( incassoos_get_unknown_consumer_type_id_base() === $consumer ) {
 			$_consumer = incassoos_get_collection_unknown_consumers( $post );
 		}
 

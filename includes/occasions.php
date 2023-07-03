@@ -1101,7 +1101,7 @@ function incassoos_get_occasion_consumer_types( $post = 0 ) {
 
 		// Consider unknown users
 		foreach ( incassoos_get_occasion_unknown_consumers( $post ) as $user_id ) {
-			$types[] = incassoos_get_unknown_user_consumer_type_id( $user_id );
+			$types[] = incassoos_get_unknown_consumer_type_id( $user_id );
 		}
 	}
 
@@ -1147,11 +1147,11 @@ function incassoos_get_occasion_consumer_total( $consumer, $post = 0, $num_forma
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
-			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+		if ( incassoos_is_unknown_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_consumer_type( $consumer );
 
 		// Consider all unknown users
-		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+		} elseif ( incassoos_get_unknown_consumer_type_id_base() === $consumer ) {
 			$_consumer = incassoos_get_occasion_unknown_consumers( $post );
 		}
 
@@ -1206,11 +1206,11 @@ function incassoos_get_occasion_consumer_orders( $consumer, $post = 0, $query_ar
 	if ( $post ) {
 
 		// Consider unknown users
-		if ( incassoos_is_unknown_user_consumer_type_id( $consumer ) ) {
-			$_consumer = incassoos_get_user_id_from_unknown_user_consumer_type( $consumer );
+		if ( incassoos_is_unknown_consumer_type_id( $consumer ) ) {
+			$_consumer = incassoos_get_user_id_from_unknown_consumer_type( $consumer );
 
 		// Consider all unknown users
-		} elseif ( incassoos_get_unknown_user_consumer_type_id_base() === $consumer ) {
+		} elseif ( incassoos_get_unknown_consumer_type_id_base() === $consumer ) {
 			$_consumer = incassoos_get_occasion_unknown_consumers( $post );
 		}
 

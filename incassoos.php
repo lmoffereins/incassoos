@@ -115,8 +115,8 @@ final class Incassoos {
 		$this->collected_status_id  = apply_filters( 'incassoos_collected_post_status', 'collected' );
 
 		// Consumer type
-		$this->unknown_user_consumer_type = apply_filters( 'incassoos_unknown_user_consumer_type', 'unknown_user' );
-		$this->guest_consumer_type        = apply_filters( 'incassoos_guest_consumer_type',        'guest'        );
+		$this->unknown_consumer_type = apply_filters( 'incassoos_unknown_consumer_type', 'unknown' );
+		$this->guest_consumer_type   = apply_filters( 'incassoos_guest_consumer_type',   'guest'   );
 
 		// Export type
 		$this->sepa_export_type              = apply_filters( 'incassoos_sepa_export_type',              'inc_sepa'              );
@@ -484,7 +484,7 @@ final class Incassoos {
 
 		// Unknown user
 		incassoos_register_consumer_type(
-			incassoos_get_unknown_user_consumer_type_id_base(),
+			incassoos_get_unknown_consumer_type_id_base(),
 			array(
 				'label'       => _x( 'Unknown users', 'Consumer type', 'incassoos' ),
 				'label_user'  => _x( 'Unknown user [%s]', 'Consumer type', 'incassoos' ),
