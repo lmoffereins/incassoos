@@ -1668,6 +1668,8 @@ function incassoos_admin_post_updated_messages( $messages ) {
 /**
  * Modify the redirect post location
  *
+ * @since 1.0.0
+ *
  * @param  string $location The destination url
  * @param  int    $post_id  Post ID
  * @return string The destination url
@@ -1695,6 +1697,8 @@ function incassoos_admin_redirect_post_location( $location, $post_id ) {
  * Display admin notices on a post's page
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'post_updated_messages'
  */
 function incassoos_admin_post_notices() {
 
@@ -1823,6 +1827,7 @@ function incassoos_admin_bulk_notices() {
  * @since 1.0.0
  *
  * @uses do_action() Calls 'incassoos_admin_{object_type}_{action_type}_{action_id}'
+ * @uses do_action() Calls 'incassoos_admin_post_{action_type}_{action_id}'
  *
  * @param int $post_id Post ID
  */
