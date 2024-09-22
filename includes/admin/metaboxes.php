@@ -322,7 +322,7 @@ function incassoos_admin_save_metabox_check( $post = 0, $post_type = '' ) {
 /** General *************************************************************/
 
 /**
- * Output the contents of the Order post submit metabox
+ * Output the contents of the generic post submit metabox
  *
  * @see post_submit_meta_box()
  *
@@ -333,6 +333,7 @@ function incassoos_admin_save_metabox_check( $post = 0, $post_type = '' ) {
 function incassoos_admin_post_submit_metabox( $post ) {
 
 	// Get details
+	$post_id          = (int) $post->ID;
 	$post_type_object = get_post_type_object( $post->post_type );
 	$is_post_view     = incassoos_admin_is_post_view( $post );
 
@@ -345,25 +346,37 @@ function incassoos_admin_post_submit_metabox( $post ) {
 				<?php submit_button( __( 'Save' ), '', 'save' ); ?>
 			</div>
 
+			<?php
+			/**
+			 * Fires at the beginning of the publishing actions section of the Publish meta box.
+			 *
+			 * @since 2.7.0
+			 * @since 4.9.0 Added the `$post` parameter.
+			 *
+			 * @param WP_Post|null $post WP_Post object for the current post on Edit Post screen,
+			 *                           null on Edit Link screen.
+			 */
+			do_action( 'post_submitbox_start', $post );
+			?>
 			<div id="delete-action">
 				<?php
-				if ( current_user_can( $post_type_object->cap->delete_post, $post->ID ) ) {
+				if ( current_user_can( $post_type_object->cap->delete_post, $post_id ) ) {
 					if ( ! EMPTY_TRASH_DAYS ) {
-						$delete_text = __( 'Delete Permanently' );
+						$delete_text = __( 'Delete permanently' );
 					} else {
 						$delete_text = __( 'Move to Trash' );
 					}
 					?>
-				<a class="submitdelete deletion" href="<?php echo get_delete_post_link( $post->ID ); ?>"><?php echo $delete_text; ?></a><?php
+				<a class="submitdelete deletion" href="<?php echo get_delete_post_link( $post_id ); ?>"><?php echo $delete_text; ?></a><?php
 				} ?>
 			</div>
 
 			<div id="publishing-action">
 				<span class="spinner"></span>
 				<?php
-				if ( ! in_array( $post->post_status, array( 'publish', 'future', 'private' ) ) || 0 == $post->ID ) {
+				if ( ! in_array( $post->post_status, array( 'publish', 'future', 'private' ), true ) || 0 === $post_id ) {
 					if ( current_user_can( $post_type_object->cap->publish_posts ) ) : ?>
-						<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e( 'Publish' ); ?>" />
+						<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e( 'Save' ); ?>" />
 						<?php submit_button( __( 'Save' ), 'primary large', 'publish', false ); ?>
 					<?php endif;
 				} elseif ( ! $is_post_view ) { ?>
@@ -458,7 +471,7 @@ function incassoos_admin_view_form_after_editor( $post ) {
  *
  * @param string $actions_dropdown Post action types dropdown
  */
-function incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ) {
+function incassoos_admin_post_postaction_publishing_notice( $actions_dropdown ) {
 
 	// Bail when there are no actions
 	if ( empty( $actions_dropdown ) )
@@ -466,22 +479,22 @@ function incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ) {
 
 	?>
 
-		<div class="publishing-notice">
-			<label class="screen-reader-text" for="post-action-type"><?php esc_html_e( 'Select post action type', 'incassoos' ); ?></label>
-			<?php echo $actions_dropdown; ?>
+	<div class="publishing-notice">
+		<label class="screen-reader-text" for="post-action-type"><?php esc_html_e( 'Select post action type', 'incassoos' ); ?></label>
+		<?php echo $actions_dropdown; ?>
 
-			<div class="action-confirmation">
-				<label>
-					<input type="checkbox" name="action-confirmation" value="1" />
-					<span><?php esc_html_e( 'Confirm action', 'incassoos' ); ?></span>
-				</label>
-			</div>
-
-			<div class="action-decryption-key">
-				<label for="action-decryption-key"><?php esc_html_e( 'Provide the decryption key', 'incassoos' ); ?></label>
-				<input type="password" name="action-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
-			</div>
+		<div class="action-confirmation">
+			<label>
+				<input type="checkbox" name="action-confirmation" value="1" />
+				<span><?php esc_html_e( 'Confirm action', 'incassoos' ); ?></span>
+			</label>
 		</div>
+
+		<div class="action-decryption-key">
+			<label for="action-decryption-key"><?php esc_html_e( 'Provide the decryption key', 'incassoos' ); ?></label>
+			<input type="password" name="action-decryption-key" placeholder="<?php esc_attr_e( 'Decryption key&hellip;', 'incassoos' ); ?>" />
+		</div>
+	</div>
 
 	<?php
 }
@@ -519,6 +532,7 @@ function incassoos_admin_filter_content_metabox_title( $widget_title, $post ) {
 function incassoos_admin_collection_details_metabox( $post ) {
 
 	// Get details
+	$post_id          = (int) $post->ID;
 	$is_published     = incassoos_is_post_published( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
@@ -527,19 +541,19 @@ function incassoos_admin_collection_details_metabox( $post ) {
 	$date_format      = get_option( 'date_format' );
 
 	// Permissions
-	$can_stage   = current_user_can( 'stage_incassoos_collection',   $post->ID );
-	$can_unstage = current_user_can( 'unstage_incassoos_collection', $post->ID );
-	$can_collect = current_user_can( 'collect_incassoos_collection', $post->ID );
+	$can_stage   = current_user_can( 'stage_incassoos_collection',   $post_id );
+	$can_unstage = current_user_can( 'unstage_incassoos_collection', $post_id );
+	$can_collect = current_user_can( 'collect_incassoos_collection', $post_id );
 
 	// Collecting action urls
-	$base_url    = add_query_arg( array( 'post' => $post->ID ), admin_url( 'post.php' ) );
-	$stage_url   = wp_nonce_url( add_query_arg( array( 'action' => 'inc_stage'   ), $base_url ), 'stage-collection_'   . $post->ID );
-	$unstage_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_unstage' ), $base_url ), 'unstage-collection_' . $post->ID );
-	$collect_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect' ), $base_url ), 'collect-collection_' . $post->ID );
+	$base_url    = add_query_arg( array( 'post' => $post_id ), admin_url( 'post.php' ) );
+	$stage_url   = wp_nonce_url( add_query_arg( array( 'action' => 'inc_stage'   ), $base_url ), 'stage-collection_'   . $post_id );
+	$unstage_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_unstage' ), $base_url ), 'unstage-collection_' . $post_id );
+	$collect_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_collect' ), $base_url ), 'collect-collection_' . $post_id );
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
-	$can_doaction     = ! empty( $actions_dropdown );
+	$can_postaction   = ! empty( $actions_dropdown );
 
 	?>
 
@@ -644,17 +658,17 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_doaction ) : ?>
+	<?php if ( $can_postaction ) : ?>
 
 	<div id="misc-publishing-actions">
-		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+		<?php incassoos_admin_post_postaction_publishing_notice( $actions_dropdown ); ?>
 
 		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php wp_nonce_field( 'doaction_collection-' . $post->ID, 'collection_doaction_nonce' ); ?>
-			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-collection"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-collection" name="doaction-collection" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
+			<?php wp_nonce_field( 'postaction_collection-' . $post_id, 'collection_postaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_postaction" />
+			<label class="screen-reader-text" for="postaction-collection"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="postaction-collection" name="postaction-collection" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -998,6 +1012,7 @@ function incassoos_admin_collection_consumers_metabox( $post ) {
 function incassoos_admin_activity_details_metabox( $post ) {
 
 	// Get details
+	$post_id          = (int) $post->ID;
 	$is_post_view     = incassoos_admin_is_post_view( $post );
 	$is_published     = incassoos_is_post_published( $post );
 	$activity_cat_tax = incassoos_get_activity_cat_tax_id();
@@ -1012,7 +1027,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
-	$can_doaction     = ! empty( $actions_dropdown );
+	$can_postaction   = ! empty( $actions_dropdown );
 
 	?>
 
@@ -1035,7 +1050,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<label for="activity-date"><?php esc_html_e( 'Date:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="text" id="activity-date" name="activity_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post->ID, 'activity_date', true ) ) ); ?>" class="datepicker" />
+				<input type="text" id="activity-date" name="activity_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post_id, 'activity_date', true ) ) ); ?>" class="datepicker" />
 			<?php else : ?>
 				<span id="activity-date" class="value"><?php incassoos_the_activity_date( $post ); ?></span>
 			<?php endif; ?>
@@ -1049,7 +1064,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<label for="taxonomy-<?php echo $activity_cat_tax; ?>"><?php esc_html_e( 'Category:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) :
-				$cat_terms = wp_get_object_terms( $post->ID, $activity_cat_tax, array( 'fields' => 'ids' ) );
+				$cat_terms = wp_get_object_terms( $post_id, $activity_cat_tax, array( 'fields' => 'ids' ) );
 
 				wp_dropdown_categories( array(
 					'name'             => "taxonomy-{$activity_cat_tax}",
@@ -1072,7 +1087,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<label for="price"><?php esc_html_e( 'Price:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="number" name="price" id="price" step="<?php echo $min_price_step; ?>" value="<?php echo esc_attr( number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) ) ); ?>" />
+				<input type="number" name="price" id="price" step="<?php echo $min_price_step; ?>" value="<?php echo esc_attr( number_format( (float) get_post_meta( $post_id, 'price', true ), absint( $format_args['decimals'] ) ) ); ?>" />
 			<?php else : ?>
 				<span id="price" class="value"><?php incassoos_the_activity_price( $post, true ); ?></span>
 			<?php endif; ?>
@@ -1084,7 +1099,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			<label for="activity-partition"><?php esc_html_e( 'Partition:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="checkbox" name="partition" id="activity-partition" value="1"<?php checked( get_post_meta( $post->ID, 'partition', true ) ); ?> />
+				<input type="checkbox" name="partition" id="activity-partition" value="1"<?php checked( get_post_meta( $post_id, 'partition', true ) ); ?> />
 			<?php else : ?>
 				<span id="activity-partition" class="value"><?php esc_html_e( 'Yes', 'incassoos' ); ?></span>
 			<?php endif; ?>
@@ -1134,17 +1149,17 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_doaction ) : ?>
+	<?php if ( $can_postaction ) : ?>
 
 	<div id="misc-publishing-actions">
-		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+		<?php incassoos_admin_post_postaction_publishing_notice( $actions_dropdown ); ?>
 
 		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php wp_nonce_field( 'doaction_activity-' . $post->ID, 'activity_doaction_nonce' ); ?>
-			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-activity"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-activity" name="doaction-activity" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
+			<?php wp_nonce_field( 'postaction_activity-' . $post_id, 'activity_postaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_postaction" />
+			<label class="screen-reader-text" for="postaction-activity"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="postaction-activity" name="postaction-activity" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1166,13 +1181,14 @@ function incassoos_admin_activity_details_metabox( $post ) {
 function incassoos_admin_activity_participants_metabox( $post ) {
 
 	// Get details
+	$post_id           = (int) $post->ID;
 	$is_post_view      = incassoos_admin_is_post_view( $post );
 	$is_partitioned    = incassoos_is_activity_partitioned( $post );
 	$participants      = incassoos_get_activity_participants( $post );
 	$participant_types = incassoos_get_activity_participant_types( $post );
 	$users             = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
 	$hidden_users      = array();
-	$prices            = get_post_meta( $post->ID, 'prices', true ) ?: array();
+	$prices            = get_post_meta( $post_id, 'prices', true ) ?: array();
 
 	// Collect hidden users
 	if ( ! $is_post_view ) {
@@ -1186,7 +1202,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	// Price, without currency
 	$format_args    = incassoos_get_currency_format_args();
 	$min_price_step = 1 / pow( 10, $format_args['decimals'] );
-	$price          = number_format( (float) get_post_meta( $post->ID, 'price', true ), absint( $format_args['decimals'] ) );
+	$price          = number_format( (float) get_post_meta( $post_id, 'price', true ), absint( $format_args['decimals'] ) );
 
 	// List class
 	$list_class = array( 'incassoos-item-list' );
@@ -1360,6 +1376,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 function incassoos_admin_occasion_details_metabox( $post ) {
 
 	// Get details
+	$post_id           = (int) $post->ID;
 	$is_post_view      = incassoos_admin_is_post_view( $post );
 	$is_published      = incassoos_is_post_published( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
@@ -1370,17 +1387,17 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 	// Permissions
 	$can_view_collection = current_user_can( 'view_incassoos_collection', incassoos_get_occasion_collection_id( $post ) );
-	$can_close           = current_user_can( 'close_incassoos_occasion',  $post->ID );
-	$can_reopen          = current_user_can( 'reopen_incassoos_occasion', $post->ID );
+	$can_close           = current_user_can( 'close_incassoos_occasion',  $post_id );
+	$can_reopen          = current_user_can( 'reopen_incassoos_occasion', $post_id );
 
 	// Closing action urls
-	$base_url   = add_query_arg( array( 'post' => $post->ID ), admin_url( 'post.php' ) );
-	$close_url  = wp_nonce_url( add_query_arg( array( 'action' => 'inc_close'  ), $base_url ), 'close-occasion_'  . $post->ID );
-	$reopen_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_reopen' ), $base_url ), 'reopen-occasion_' . $post->ID );
+	$base_url   = add_query_arg( array( 'post' => $post_id ), admin_url( 'post.php' ) );
+	$close_url  = wp_nonce_url( add_query_arg( array( 'action' => 'inc_close'  ), $base_url ), 'close-occasion_'  . $post_id );
+	$reopen_url = wp_nonce_url( add_query_arg( array( 'action' => 'inc_reopen' ), $base_url ), 'reopen-occasion_' . $post_id );
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
-	$can_doaction     = ! empty( $actions_dropdown );
+	$can_postaction   = ! empty( $actions_dropdown );
 
 	?>
 
@@ -1401,7 +1418,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			<label for="occasion-date"><?php esc_html_e( 'Date:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) : ?>
-				<input type="text" id="occasion-date" name="occasion_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post->ID, 'occasion_date', true ) ) ); ?>" class="datepicker" />
+				<input type="text" id="occasion-date" name="occasion_date" value="<?php echo esc_attr( mysql2date( 'd-m-Y', get_post_meta( $post_id, 'occasion_date', true ) ) ); ?>" class="datepicker" />
 				<input type="hidden" id="occasion-date-format" name="occasion_date_format" value="d-m-Y" />
 			<?php else : ?>
 				<span id="occasion-date" class="value">
@@ -1420,7 +1437,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 			<label for="taxonomy-<?php echo $occasion_type_tax; ?>"><?php esc_html_e( 'Type:', 'incassoos' ); ?></label>
 
 			<?php if ( ! $is_post_view ) :
-				$type_terms = wp_get_object_terms( $post->ID, $occasion_type_tax, array( 'fields' => 'ids' ) );
+				$type_terms = wp_get_object_terms( $post_id, $occasion_type_tax, array( 'fields' => 'ids' ) );
 
 				wp_dropdown_categories( array(
 					'name'             => "taxonomy-{$occasion_type_tax}",
@@ -1449,7 +1466,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 					'name'             => 'default-product-category',
 					'taxonomy'         => $product_cat_tax,
 					'hide_empty'       => false,
-					'selected'         => get_post_meta( $post->ID, 'default_product_category', true ),
+					'selected'         => get_post_meta( $post_id, 'default_product_category', true ),
 					'show_option_none' => esc_html__( '&mdash; No Category &mdash;', 'incassoos' ),
 				) );
 
@@ -1479,7 +1496,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 						printf( '<a href="%s">%s</a>',
 							esc_url( add_query_arg( array(
 								'post_type' => incassoos_get_order_post_type(),
-								'occasion'   => $post->ID
+								'occasion'   => $post_id
 							), admin_url( 'edit.php' ) ) ),
 							sprintf( _n( '%d Orders', '%d Orders', $count, 'incassoos' ), $count )
 						);
@@ -1522,17 +1539,17 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_doaction ) : ?>
+	<?php if ( $can_postaction ) : ?>
 
 	<div id="misc-publishing-actions">
-		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+		<?php incassoos_admin_post_postaction_publishing_notice( $actions_dropdown ); ?>
 
 		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php wp_nonce_field( 'doaction_occasion-' . $post->ID, 'occasion_doaction_nonce' ); ?>
-			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-occasion"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-occasion" name="doaction-occasion" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
+			<?php wp_nonce_field( 'postaction_occasion-' . $post_id, 'occasion_postaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_postaction" />
+			<label class="screen-reader-text" for="postaction-occasion"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="postaction-occasion" name="postaction-occasion" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1732,7 +1749,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
-	$can_doaction     = ! empty( $actions_dropdown );
+	$can_postaction   = ! empty( $actions_dropdown );
 
 	?>
 
@@ -1831,17 +1848,17 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_doaction ) : ?>
+	<?php if ( $can_postaction ) : ?>
 
 	<div id="misc-publishing-actions">
-		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+		<?php incassoos_admin_post_postaction_publishing_notice( $actions_dropdown ); ?>
 
 		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php wp_nonce_field( 'doaction_order-' . $post->ID, 'order_doaction_nonce' ); ?>
-			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-order"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-order" name="doaction-order" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
+			<?php wp_nonce_field( 'postaction_order-' . $post->ID, 'order_postaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_postaction" />
+			<label class="screen-reader-text" for="postaction-order"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="postaction-order" name="postaction-order" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -1951,6 +1968,9 @@ function incassoos_admin_order_products_metabox( $post ) {
  */
 function incassoos_admin_product_details_metabox( $post ) {
 
+	// Get details
+	$post_id = (int) $post->ID;
+
 	// Get taxonomies
 	$product_cat_tax = incassoos_get_product_cat_tax_id( $post );
 	$is_published    = incassoos_is_post_published( $post );
@@ -1963,7 +1983,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 	// Action options
 	$actions_dropdown = incassoos_admin_dropdown_post_action_types( $post, array( 'echo' => false ) );
-	$can_doaction     = ! empty( $actions_dropdown );
+	$can_postaction   = ! empty( $actions_dropdown );
 
 	?>
 
@@ -1988,7 +2008,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 		<p>
 			<label for="taxonomy-<?php echo $product_cat_tax; ?>"><?php esc_html_e( 'Category:', 'incassoos' ); ?></label>
 			<?php
-				$cat_terms = wp_get_object_terms( $post->ID, $product_cat_tax, array( 'fields' => 'ids' ) );
+				$cat_terms = wp_get_object_terms( $post_id, $product_cat_tax, array( 'fields' => 'ids' ) );
 
 				wp_dropdown_categories( array(
 					'name'             => "taxonomy-{$product_cat_tax}",
@@ -2004,17 +2024,17 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 	</div>
 
-	<?php if ( $can_doaction ) : ?>
+	<?php if ( $can_postaction ) : ?>
 
 	<div id="misc-publishing-actions">
-		<?php incassoos_admin_post_doaction_publishing_notice( $actions_dropdown ); ?>
+		<?php incassoos_admin_post_postaction_publishing_notice( $actions_dropdown ); ?>
 
 		<div class="publishing-action">
 			<span class="spinner"></span>
-			<?php wp_nonce_field( 'doaction_product-' . $post->ID, 'product_doaction_nonce' ); ?>
-			<input type="hidden" name="action" value="inc_doaction" />
-			<label class="screen-reader-text" for="doaction-product"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
-			<input type="submit" class="button button-secondary button-large" id="doaction-product" name="doaction-product" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
+			<?php wp_nonce_field( 'postaction_product-' . $post_id, 'product_postaction_nonce' ); ?>
+			<input type="hidden" name="action" value="inc_postaction" />
+			<label class="screen-reader-text" for="postaction-product"><?php esc_html_e( 'Run action', 'incassoos' ); ?></label>
+			<input type="submit" class="button button-secondary button-large" id="postaction-product" name="postaction-product" value="<?php esc_attr_e( 'Run action', 'incassoos' ); ?>" />
 		</div>
 		<div class="clear"></div>
 	</div>

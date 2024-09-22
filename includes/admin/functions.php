@@ -1241,6 +1241,11 @@ function incassoos_admin_load_post_view() {
 /**
  * Reset the post action parameter when unintentionally overwritten
  *
+ * In the post edit form the 'action' parameter may be defined twice, because of the plugin's
+ * custom postaction logic. This may result in overwriting WP's default 'action' parameter for
+ * updating the post. In this function we check when an actual update is intended, so the
+ * original action is used.
+ *
  * @since 1.0.0
  */
 function incassoos_admin_handle_post_action() {
@@ -1249,9 +1254,10 @@ function incassoos_admin_handle_post_action() {
 	if ( 'POST' != strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
 
-	// Reset action from 'inc_doaction' to the original 'postedit' for saves
-	if ( isset( $_POST['save'] ) && isset( $_POST['action'] ) && 'inc_doaction' === $_POST['action'] ) {
-		$_POST['action'] = $_POST['originalaction'];
+	// Detect when an actual update is intended while the 'action' parameter is overwritten with 'inc_postaction'.
+	// Reset the 'action' parameter to the original action.
+	if ( isset( $_POST['save'] ) && isset( $_POST['action'] ) && 'inc_postaction' === $_POST['action'] ) {
+		$_REQUEST['action'] = $_POST['action'] = $_POST['originalaction'];
 	}
 }
 
@@ -1812,7 +1818,7 @@ function incassoos_admin_bulk_notices() {
 }
 
 /**
- * Run dedicated hook for the 'inc_doaction' post action on wp-admin/post.php
+ * Run dedicated hook for the 'inc_postaction' post action on wp-admin/post.php
  *
  * @since 1.0.0
  *
@@ -1820,7 +1826,7 @@ function incassoos_admin_bulk_notices() {
  *
  * @param int $post_id Post ID
  */
-function incassoos_admin_post_action_doaction( $post_id ) {
+function incassoos_admin_post_action_postaction( $post_id ) {
 	$post = get_post( $post_id );
 
 	// Bail when the post is not found
@@ -1836,7 +1842,7 @@ function incassoos_admin_post_action_doaction( $post_id ) {
 	}
 
 	// Dynamic nonce check
-	check_admin_referer( "doaction_{$object_type}-{$post->ID}", "{$object_type}_doaction_nonce" );
+	check_admin_referer( "postaction_{$object_type}-{$post->ID}", "{$object_type}_postaction_nonce" );
 
 	// Get and dissect action type
 	$action       = isset( $_POST['post-action-type'] ) ? $_POST['post-action-type'] : '';

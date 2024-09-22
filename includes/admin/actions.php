@@ -43,7 +43,7 @@ add_action( 'post_action_inc_stage',       'incassoos_admin_post_action_stage', 
 add_action( 'post_action_inc_unstage',     'incassoos_admin_post_action_unstage',    10    );
 add_action( 'post_action_inc_collect',     'incassoos_admin_post_action_collect',    10    );
 add_action( 'post_action_inc_duplicate',   'incassoos_admin_post_action_duplicate',  10    );
-add_action( 'post_action_inc_doaction',    'incassoos_admin_post_action_doaction',   10    );
+add_action( 'post_action_inc_postaction',  'incassoos_admin_post_action_postaction', 10    );
 add_action( 'admin_post_inc_download',     'incassoos_admin_post_action_download',   10    ); // Using admin-post.php
 add_filter( 'redirect_post_location',      'incassoos_admin_redirect_post_location', 10, 2 );
 add_action( 'add_meta_boxes',              'incassoos_admin_add_meta_boxes',         10, 2 );
