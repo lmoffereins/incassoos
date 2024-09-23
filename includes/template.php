@@ -662,6 +662,9 @@ function incassoos_enqueue_scripts() {
 				'roles'     => incassoos_get_roles_for_user()
 			)
 		) ) );
+
+		// Unhooks print_emoji_styles from 'wp_print_styles'
+		wp_enqueue_emoji_styles();
 	}
 
 	do_action( 'incassoos_enqueue_scripts' );

@@ -65,7 +65,9 @@ add_filter( 'template_include',            'incassoos_template_include_theme_sup
 add_action( 'incassoos_app_head',          'incassoos_render_title_tag',            1    );
 add_action( 'incassoos_app_head',          'incassoos_enqueue_scripts',             1    );
 add_action( 'incassoos_app_head',          'wp_resource_hints',                     2    );
+add_action( 'incassoos_app_head',          'wp_preload_resources',                  1    );
 add_action( 'incassoos_app_head',          'incassoos_wp_robots',                   1    );
+add_action( 'incassoos_app_head',          'print_emoji_detection_script',          7    );
 add_action( 'incassoos_app_head',          'incassoos_render_theme_color_tag',      5    );
 add_action( 'incassoos_app_head',          'wp_print_styles',                       8    );
 add_action( 'incassoos_app_head',          'wp_print_head_scripts',                 9    );
