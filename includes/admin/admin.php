@@ -200,7 +200,7 @@ class Incassoos_Admin {
 
 				break;
 
-			// Occsion Type admin
+			// Occasion Type admin
 			case 'incassoos_occasion_type_admin' :
 
 				// Defer to managing caps

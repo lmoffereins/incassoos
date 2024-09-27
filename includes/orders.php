@@ -1514,7 +1514,7 @@ function incassoos_is_consumption_within_limit_for_time_window( $products, $user
 	// Only continue when spending limit applies
 	if ( $spending_limit ) {
 
-        // Find any orders of the user that were created between now and the time window
+		// Find any orders of the user that were created between now and the time window
 		$current_total = 0;
 		$time_start    = strtotime( "-{$time_window} seconds" );
 		$posts         = incassoos_get_orders( array(
@@ -1733,7 +1733,7 @@ function incassoos_unregister_consumer_type( $type_id ) {
  * @since 1.0.0
  *
  * @param  string $type Consumer type id or label.
- * @return object|bool Consumer type object or False when not found.
+ * @return Incassoos_Consumer_Type|bool Consumer type object or False when not found.
  */
 function incassoos_get_consumer_type( $type ) {
 	return Incassoos_Consumer_Type::get_instance( $type );

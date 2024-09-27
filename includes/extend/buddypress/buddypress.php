@@ -279,7 +279,7 @@ class Incassoos_BuddyPress {
 	 * @see bp_email_set_default_headers()
 	 * @see BP_Email::get()
 	 *
-	 * @param array    $headers        Email headers
+	 * @param array    $headers       Email headers
 	 * @param string   $property_name Unused
 	 * @param string   $transform     Unused
 	 * @param BP_Email $email         Email being sent
