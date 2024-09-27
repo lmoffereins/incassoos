@@ -1155,7 +1155,8 @@ function incassoos_get_plugin_taxonomies() {
 	return apply_filters( 'incassoos_get_plugin_taxonomies', array(
 		incassoos_get_activity_cat_tax_id(),
 		incassoos_get_occasion_type_tax_id(),
-		incassoos_get_product_cat_tax_id()
+		incassoos_get_product_cat_tax_id(),
+		incassoos_get_consumer_type_tax_id()
 	) );
 }
 
@@ -1221,6 +1222,78 @@ function incassoos_get_taxonomies_for_default_terms() {
  */
 function incassoos_taxonomy_supports_default_terms( $taxonomy ) {
 	return (bool) apply_filters( 'incassoos_taxonomy_supports_default_terms', in_array( $taxonomy, incassoos_get_taxonomies_for_default_terms() ) );
+}
+
+/**
+ * Modify the term name before a term is created
+ *
+ * @since 1.0.0
+ *
+ * @param string|WP_Error $term     The term name to add, or a WP_Error object if there's an error.
+ * @param string          $taxonomy Taxonomy slug.
+ * @param array|string    $args     Array or query string of arguments passed to wp_insert_term().
+ * @return string|WP_Error Filtered term name
+ */
+function incassoos_pre_insert_term( $term, $taxonomy, $args ) {
+
+	// Bail when already an error
+	if ( is_wp_error( $term ) ) {
+		return $term;
+	}
+
+	// Consumer Type
+	if ( incassoos_get_consumer_type_tax_id() === $taxonomy ) {
+
+		$slug_provided = ! empty( $args['slug'] );
+		if ( ! $slug_provided ) {
+			$slug = sanitize_title( $term );
+		} else {
+			$slug = $args['slug'];
+		}
+
+		// Built-in consumer type maybe exists
+		if ( incassoos_get_consumer_type( $term ) || incassoos_get_consumer_type( $slug ) ) {
+
+			// Return error to prevent term creation
+			return new WP_Error( 'consumer_type_exists', __( 'A consumer type with the name provided already exists.', 'incassoos' ) );
+		}
+	}
+
+	return $term;
+}
+
+/**
+ * Modify the term name before it is created
+ *
+ * @since 1.0.0
+ *
+ * @param array  $data     Term data to be updated.
+ * @param int    $term_id  Term ID.
+ * @param string $taxonomy Taxonomy slug.
+ * @param array  $args     Arguments passed to wp_update_term().
+ * @return array Term data
+ */
+function incassoos_update_term_data( $data, $term_id, $taxonomy, $args ) {
+
+	// Consumer Type
+	if ( incassoos_get_consumer_type_tax_id() === $taxonomy ) {
+
+		// Get the term
+		$term = get_term( $term_id, $taxonomy );
+
+		// When the term slug changes
+		if ( $term->slug !== $data['slug'] ) {
+
+			// Built-in consumer type maybe exists
+			if ( incassoos_get_consumer_type( $data['slug'] ) ) {
+
+				// Cancel update data to prevent term slug duplicate
+				$data['slug'] = $term->slug;
+			}
+		}
+	}
+
+	return $data;
 }
 
 /**

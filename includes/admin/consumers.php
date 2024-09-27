@@ -441,6 +441,7 @@ function incassoos_admin_consumers_page() {
 
 					<?php endif; ?>
 
+					<a href="<?php echo add_query_arg( 'taxonomy', incassoos_get_consumer_type_tax_id(), admin_url( 'edit-tags.php' ) ); ?>" class="wp-core-ui button align-right"><?php esc_html_e( 'Manage Consumer Types', 'incassoos' ); ?></a>
 					<?php wp_nonce_field( 'incassoos-export-consumers' ); ?>
 					<input type="hidden" name="exportaction" value="incassoos-export-consumers" />
 					<?php submit_button( esc_html__( 'Export', 'incassoos' ), 'button-secondary', 'export-consumers', false ); ?>

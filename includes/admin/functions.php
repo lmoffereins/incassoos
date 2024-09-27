@@ -2399,6 +2399,33 @@ function incassoos_admin_add_nav_menu_meta_box() {
 	add_meta_box( 'add-incassoos-nav-menu', __( 'Incassoos', 'incassoos' ), 'incassoos_nav_menu_metabox', 'nav-menus', 'side', 'default' );
 }
 
+/** Pages ***************************************************************/
+
+/**
+ * Modify the list table class name
+ *
+ * @since 1.0.0
+ *
+ * @param  string $class_name Class name
+ * @param  array $args        List table arguments
+ * @return string Class name
+ */
+function incassoos_admin_list_table_class_name( $class_name, $args ) {
+
+	// Taxonomy: Consumer Type
+	if ( isset( $args['screen'] ) && isset( $args['screen']->taxonomy )
+		&& incassoos_get_consumer_type_tax_id() === $args['screen']->taxonomy
+	) {
+
+		// Include dependencies
+		require_once( incassoos()->includes_dir . 'classes/class-incassoos-consumer-types-list-table.php' );
+
+		$class_name = 'Incassoos_Consumer_Types_List_Table';
+	}
+
+	return $class_name;
+}
+
 /** Exporting ***********************************************************/
 
 /**

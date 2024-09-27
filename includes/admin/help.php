@@ -415,6 +415,21 @@ function incassoos_admin_taxonomy_help_tabs() {
 				'title'   => __( 'Adding Categories' ),
 				'content' => $adding_terms
 			)
+		),
+
+		// Consumer Type
+		incassoos_get_consumer_type_tax_id() => array(
+			'overview' => array(
+				'title'   => __( 'Overview' ),
+				'content' =>
+					'<p>' . __( 'You can assign orders to other consumers than users by using Consumer Types. Consumer Type names must be unique.', 'incassoos' ) . '</p>' .
+					'<p>' . __( 'You can delete Consumer Types in the Bulk Action pull-down, but that action does not delete the consumptions related to the type.', 'incassoos' ) . '</p>' .
+					'<p>' . __( 'You can not change or delete built-in Consumer Types that are registered as part of the plugin or those added by extensions.', 'incassoos' ) . '</p>',
+			),
+			'adding-terms' => array(
+				'title'   => __( 'Adding Types', 'incassoos' ),
+				'content' => $adding_terms
+			)
 		)
 	) );
 
@@ -509,7 +524,8 @@ function incassoos_admin_consumers_help_tabs() {
 			'title'   => __( 'Overview' ),
 			'content' =>
 				'<p>' . __( 'This screen gives an overview of the available consumers for Incassoos and a way of managing their relevant attributes.', 'incassoos' ) . '</p>' .
-				'<p>' . __( 'You can filter the list of consumers by searching for them by name. Click Show default to show only consumers that have the default visibility set to show. The default view is to show all consumers.', 'incassoos' ) . '</p>',
+				'<p>' . __( 'You can filter the list of consumers by searching for them by name. Click Show default to show only consumers that have the default visibility set to show. The default view is to show all consumers.', 'incassoos' ) . '</p>' .
+				'<p>' . __( 'The button for managing Consumer Types takes you to the admin screen for that taxonomy.', 'incassoos' ) . '</p>',
 		)
 	);
 

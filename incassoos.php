@@ -109,6 +109,7 @@ final class Incassoos {
 		$this->activity_cat_tax_id  = apply_filters( 'incassoos_activity_cat_tax',  'inc_activity_category' );
 		$this->occasion_type_tax_id = apply_filters( 'incassoos_occasion_type_tax', 'inc_occasion_type'     );
 		$this->product_cat_tax_id   = apply_filters( 'incassoos_product_cat_tax',   'inc_product_category'  );
+		$this->consumer_type_tax_id = apply_filters( 'incassoos_consumer_type_tax', 'inc_consumer_type'     );
 
 		// Status
 		$this->staged_status_id     = apply_filters( 'incassoos_staged_post_status',    'staged'    );
@@ -158,6 +159,10 @@ final class Incassoos {
 		require( $this->includes_dir . 'theme-compat.php' );
 		require( $this->includes_dir . 'users.php'        );
 		require( $this->includes_dir . 'update.php'       );
+
+		/** Classes *****************************************************/
+
+		require( $this->includes_dir . 'classes/class-incassoos-consumer-type.php' );
 
 		/** Admin *******************************************************/
 
@@ -439,6 +444,29 @@ final class Incassoos {
 				'show_in_rest'          => true   // Relevant for querying and updating
 			)
 		);
+
+		/** Consumer Type ***********************************************/
+
+		register_taxonomy(
+			incassoos_get_consumer_type_tax_id(),
+			array(), // No association with an object type
+			array(
+				'labels'                => incassoos_get_consumer_type_tax_labels(),
+				'capabilities'          => incassoos_get_consumer_type_tax_caps(),
+				'update_count_callback' => '',
+				'hierarchical'          => false,
+				'public'                => false,
+				'rewrite'               => false,
+				'query_var'             => false,
+				'show_tagcloud'         => false,
+				'show_in_quick_edit'    => false,
+				'show_admin_column'     => false,
+				'show_in_nav_menus'     => false,
+				'show_ui'               => current_user_can( 'incassoos_consumer_type_admin' ),
+				'meta_box_cb'           => false, // No metaboxing
+				'show_in_rest'          => true   // Relevant for querying and updating
+			)
+		);
 	}
 
 	/**
@@ -489,6 +517,7 @@ final class Incassoos {
 				'label'       => _x( 'Unknown users', 'Consumer type', 'incassoos' ),
 				'label_user'  => _x( 'Unknown user [%s]', 'Consumer type', 'incassoos' ),
 				'label_count' => _nx_noop( 'Unknown user <span class="count">(%s)</span>', 'Unknown users <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
+				'description' => __( 'Built-in type for consumers that no longer exist in the system.', 'incassoos' ),
 				'_hidden'     => true
 			)
 		);
@@ -498,7 +527,8 @@ final class Incassoos {
 			incassoos_get_guest_consumer_type_id(),
 			array(
 				'label'       => _x( 'Guest', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'Guest <span class="count">(%s)</span>', 'Guest <span class="count">(%s)</span>', 'Consumer type', 'incassoos' )
+				'label_count' => _nx_noop( 'Guest <span class="count">(%s)</span>', 'Guest <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
+				'description' => __( 'Built-in type for unregistered consumers.', 'incassoos' )
 			)
 		);
 	}

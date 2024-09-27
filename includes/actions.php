@@ -103,6 +103,8 @@ add_action( 'incassoos_reopened_occasion',   'incassoos_send_occasion_email_on_c
 
 /** Taxonomy ******************************************************************/
 
+add_filter( 'pre_insert_term',             'incassoos_pre_insert_term',            10, 3 );
+add_filter( 'wp_update_term_data',         'incassoos_update_term_data',           10, 4 );
 add_action( 'create_term',                 'incassoos_save_term_meta',             10, 3 );
 add_action( 'edit_term',                   'incassoos_save_term_meta',             10, 3 );
 add_filter( 'term_link',                   'incassoos_filter_term_link',           10, 3 );

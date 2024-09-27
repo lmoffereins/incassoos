@@ -1546,7 +1546,52 @@ function incassoos_is_consumption_within_limit_for_time_window( $products, $user
 	return (bool) apply_filters( 'incassoos_is_consumption_within_limit_for_time_window', $within_limit, $products, $user, $time_window );
 }
 
-/** Consumer Types ************************************************************/
+/** Consumer Type *************************************************************/
+
+/**
+ * Return the Consumer Type taxonomy
+ *
+ * @since 1.0.0
+ *
+ * @return string Taxonomy name
+ */
+function incassoos_get_consumer_type_tax_id() {
+	return incassoos()->consumer_type_tax_id;
+}
+
+/**
+ * Return the labels for the Consumer Type taxonomy
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_type_tax_labels'
+ * @return array Consumer Type taxonomy labels
+ */
+function incassoos_get_consumer_type_tax_labels() {
+	return apply_filters( 'incassoos_get_consumer_type_tax_labels', array(
+		'name'                       => __( 'Incassoos Consumer Types',        'incassoos' ),
+		'menu_name'                  => __( 'Consumer Types',                  'incassoos' ),
+		'singular_name'              => __( 'Consumer Type',                   'incassoos' ),
+		'search_items'               => __( 'Search Consumer Types',           'incassoos' ),
+		'popular_items'              => null, // Disable tagcloud
+		'all_items'                  => __( 'All Consumer Types',              'incassoos' ),
+		'no_items'                   => __( 'No Consumer Type',                'incassoos' ),
+		'edit_item'                  => __( 'Edit Consumer Type',              'incassoos' ),
+		'update_item'                => __( 'Update Consumer Type',            'incassoos' ),
+		'add_new_item'               => __( 'Add New Consumer Type',           'incassoos' ),
+		'new_item_name'              => __( 'New Consumer Type Name',          'incassoos' ),
+		'view_item'                  => __( 'View Consumer Type',              'incassoos' ),
+
+		'separate_items_with_commas' => __( 'Separate types with commas',      'incassoos' ),
+		'add_or_remove_items'        => __( 'Add or remove types',             'incassoos' ),
+		'choose_from_most_used'      => __( 'Choose from the most used types', 'incassoos' ),
+		'not_found'                  => __( 'No types found.',                 'incassoos' ),
+		'no_terms'                   => __( 'No types',                        'incassoos' ),
+		'items_list_navigation'      => __( 'Consumer types list navigation',  'incassoos' ),
+		'items_list'                 => __( 'Consumer types list',             'incassoos' ),
+		'back_to_items'              => __( '&larr; Go to Consumer Types',     'incassoos' ),
+	) );
+}
 
 /**
  * Return the base Unknown user consumer type id
@@ -1636,8 +1681,8 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 	$plugin  = incassoos();
 	$type_id = sanitize_title( $type_id );
 
-	// Bail when type param is invalid
-	if ( empty( $type_id ) ) {
+	// Bail when type param is invalid or type already exists
+	if ( empty( $type_id ) || incassoos_get_consumer_type( $type_id ) ) {
 		return false;
 	}
 
@@ -1649,6 +1694,7 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'label'               => ucfirst( $type_id ),
 		'label_count'         => ucfirst( $type_id ) . ' <span class="count">(%s)</span>',
+		'description'         => '',
 		'avatar_url_callback' => '',
 		'avatar_url'          => '',
 		'_hidden'             => false,
@@ -1662,8 +1708,8 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 		$plugin->consumer_types = array();
 	}
 
-	// Add type to collection
-	$plugin->consumer_types[ $type_id ] = (object) $consumer_type;
+	// Create and add type to collection
+	$plugin->consumer_types[ $type_id ] = new Incassoos_Consumer_Type( $consumer_type );
 
 	return true;
 }
@@ -1685,48 +1731,13 @@ function incassoos_unregister_consumer_type( $type_id ) {
 /**
  * Return the consumer type object
  *
- * The return value is cloned from the registered consumer type.
- *
  * @since 1.0.0
  *
- * @uses apply_filters Calls 'incassoos_get_consumer_type'
- *
- * @param  string $type_id Consumer type id or label.
+ * @param  string $type Consumer type id or label.
  * @return object|bool Consumer type object or False when not found.
  */
-function incassoos_get_consumer_type( $type_id ) {
-	$plugin      = incassoos();
-	$type_object = false;
-
-	if ( ! isset( $plugin->consumer_types ) ) {
-		$plugin->consumer_types = array();
-	}
-
-	// Special case: Unknown user type
-	if ( incassoos_is_unknown_consumer_type_id( $type_id ) ) {
-		$unknown_user_id = incassoos_get_user_id_from_unknown_consumer_type( $type_id );
-		$type_id         = incassoos_get_unknown_consumer_type_id_base();
-	} else {
-		$unknown_user_id = false;
-	}
-
-	// Get type by id
-	if ( isset( $plugin->consumer_types[ $type_id ] ) ) {
-		$type_object = clone $plugin->consumer_types[ $type_id ];
-
-	// Get type by label
-	} elseif ( $type_id = array_search( $type_id, wp_list_pluck( $plugin->consumer_types, 'label' ) ) ) {
-		$type_object = clone $plugin->consumer_types[ $type_id ];
-	}
-
-	// When handling Unknown user type
-	if ( $unknown_user_id ) {
-		$type_object->id              = incassoos_get_unknown_consumer_type_id( $unknown_user_id );
-		$type_object->label           = sprintf( $type_object->label_user, $unknown_user_id );
-		$type_object->unknown_user_id = $unknown_user_id;
-	}
-
-	return apply_filters( 'incassoos_get_consumer_type', $type_object, $type_id );
+function incassoos_get_consumer_type( $type ) {
+	return Incassoos_Consumer_Type::get_instance( $type );
 }
 
 /**
@@ -1746,10 +1757,51 @@ function incassoos_consumer_type_exists( $type ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_types'
+ *
+ * @param  array $args Query arguments
  * @return array Consumer type ids
  */
-function incassoos_get_consumer_types() {
-	return array_keys( incassoos()->consumer_types );
+function incassoos_get_consumer_types( $args = array() ) {
+	$args  = wp_parse_args( $args, array( 'builtin' => null ) );
+	$types = array();
+
+	// Get built-in types
+	if ( false !== $args['builtin'] ) {
+		foreach( incassoos()->consumer_types as $type_id => $type ) {
+
+			// Skip hidden items
+			if ( $type->is_hidden() ) {
+				continue;
+			}
+
+			// Search in item
+			if ( isset( $args['search'] ) && ! $type->find( $args['search'] ) ) {
+				continue;
+			}
+
+			// List item
+			$types[] = $type_id;
+		}
+	}
+
+	// Get custom types
+	if ( true !== $args['builtin'] ) {
+		$terms = get_terms( wp_parse_args( array(
+			'taxonomy'   => incassoos_get_consumer_type_tax_id(),
+			'fields'     => 'slugs',
+			'hide_empty' => false,
+
+			// Prevent limited queries
+			'number'     => '',
+			'offset'     => ''
+		), $args ) );
+
+		// Combine types
+		$types = array_merge( $types, $terms );
+	}
+
+	return (array) apply_filters( 'incassoos_get_consumer_types', $types, $args );
 }
 
 /**
@@ -1757,26 +1809,14 @@ function incassoos_get_consumer_types() {
  *
  * @since 1.0.0
  *
- * @todo Implement filter/search functionality?
- *
+ * @uses apply_filters Calls 'incassoos_query_consumer_types_query'
  * @uses apply_filters Calls 'incassoos_query_consumer_types'
  *
  * @param  array $query_args Optional. Query arguments.
  * @return array Queried consumer types
  */
-function incassoos_query_consumer_types( $query_args ) {
+function incassoos_query_consumer_types( $query_args = array() ) {
 	$items = array();
-
-	foreach ( incassoos_get_consumer_types() as $type ) {
-		$item = incassoos_get_consumer_type( $type );
-
-		// Exclude hidden items
-		if ( ! $item->_hidden ) {
-			$items[] = $item;
-		}
-	}
-
-	$items_count = count($items);
 
 	// Sorting
 	if ( ! isset( $query_args['orderby'] ) ) {
@@ -1793,6 +1833,12 @@ function incassoos_query_consumer_types( $query_args ) {
 	}
 
 	$query_args = apply_filters( 'incassoos_query_consumer_types_query', $query_args );
+
+	foreach ( incassoos_get_consumer_types( $query_args ) as $type ) {
+		$items[] = incassoos_get_consumer_type( $type );
+	}
+
+	$items_count = count($items);
 
 	// Handle sorting
 	$query_args['order'] = ( 'DESC' === strtoupper( $query_args['order'] ) ) ? 'DESC' : 'ASC';
@@ -1832,6 +1878,8 @@ function incassoos_the_consumer_type_title( $type ) {
  *
  * @since 1.0.0
  *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_type_title'
+ *
  * @param  string $type Consumer type id
  * @return string Consumer type title
  */
@@ -1850,6 +1898,8 @@ function incassoos_get_consumer_type_title( $type ) {
  * Return the consumer type avatar url
  *
  * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_type_avatar_url'
  *
  * @param  string $type Consumer type id
  * @param  array $args {

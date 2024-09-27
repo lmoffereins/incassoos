@@ -187,6 +187,25 @@ function incassoos_get_product_cat_tax_caps() {
 	) );
 }
 
+/** Consumers ***********************************************************/
+
+/**
+ * Return the capability mappings for the Consumer Type taxonomy
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_type_tax_caps'
+ * @return array Consumer Type taxonomy caps
+ */
+function incassoos_get_consumer_type_tax_caps() {
+	return apply_filters( 'incassoos_get_consumer_type_tax_caps', array(
+		'manage_terms' => 'manage_incassoos_consumer_types',
+		'edit_terms'   => 'manage_incassoos_consumer_types',
+		'delete_terms' => 'manage_incassoos_consumer_types',
+		'assign_terms' => 'manage_incassoos_consumer_types'
+	) );
+}
+
 /** Mapping *************************************************************/
 
 /**
@@ -883,6 +902,9 @@ function incassoos_get_caps_for_role( $role = '' ) {
 
 				// Product Category
 				'manage_incassoos_product_cats'   => false,
+
+				// Consumer Type
+				'manage_incassoos_consumer_types' => true,
 			);
 
 			break;
@@ -941,6 +963,9 @@ function incassoos_get_caps_for_role( $role = '' ) {
 
 				// Product Category
 				'manage_incassoos_product_cats'   => true,
+
+				// Consumer Type
+				'manage_incassoos_consumer_types' => true,
 			);
 
 			break;
@@ -999,6 +1024,9 @@ function incassoos_get_caps_for_role( $role = '' ) {
 
 				// Product Category
 				'manage_incassoos_product_cats'   => false,
+
+				// Consumer Type
+				'manage_incassoos_consumer_types' => false,
 			);
 
 			break;
@@ -1071,6 +1099,9 @@ function incassoos_get_cap_translations() {
 
 		// Product Category
 		'manage_incassoos_product_cats'   => _x( 'Manage Product Categories',  'Capability name', 'incassoos' ),
+
+		// Consumer Type
+		'manage_incassoos_consumer_types' => _x( 'Manage Consumer Types',      'Capability name', 'incassoos' ),
 	) );
 }
 

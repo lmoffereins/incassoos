@@ -216,6 +216,14 @@ class Incassoos_Admin {
 
 				break;
 
+			// Consumer Type admin
+			case 'incassoos_consumer_type_admin' :
+
+				// Defer to managing caps
+				$caps = array( 'manage_incassoos_consumer_types' );
+
+				break;
+
 			/** Admin Pages *************************************************/
 
 			// Dashboard
