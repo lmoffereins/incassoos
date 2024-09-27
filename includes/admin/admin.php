@@ -517,10 +517,7 @@ class Incassoos_Admin {
 						$views['consumer_type'] = sprintf(
 							'<a href="%s" class="current">%s</a>',
 							esc_url( add_query_arg( array( 'post_type' => $post_type, 'consumer_type' => $consumer_type->id ), admin_url( 'edit.php' ) ) ),
-							sprintf(
-								translate_nooped_plural( $consumer_type->label_count, $post_count ),
-								number_format_i18n( $post_count )
-							)
+							sprintf( $consumer_type->label_count, number_format_i18n( $post_count ) )
 						);
 					}
 				}

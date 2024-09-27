@@ -33,14 +33,6 @@ final class Incassoos_Consumer_Type {
 	public $label = '';
 
 	/**
-	 * The consumer type's label for counts.
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	public $label_count = '';
-
-	/**
 	 * The consumer type's description.
 	 *
 	 * @since 1.0.0
@@ -190,14 +182,12 @@ final class Incassoos_Consumer_Type {
 	 */
 	public function __get( $key ) {
 		switch ( $key ) {
-			case 'data':
-				$data    = new stdClass();
-				$columns = array( 'term_id', 'name', 'slug', 'description' );
-				foreach ( $columns as $column ) {
-					$data->{$column} = isset( $this->{$column} ) ? $this->{$column} : null;
-				}
-
-				return $data;
+			case 'label_count':
+				/* translators: 1: Consumer type label, 2: Count. */
+				return sprintf( _x( '%1$s %2$s', 'Consumer type count' 'incassoos' ),
+					$this->label,
+					'<span class="count">(%s)</span>'
+				);
 		}
 	}
 

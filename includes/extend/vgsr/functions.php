@@ -60,7 +60,6 @@ function incassoos_vgsr_register_consumer_types() {
 		incassoos_vgsr_get_cash_consumer_type_id(),
 		array(
 			'label'       => _x( 'Cash', 'Consumer type', 'incassoos' ),
-			'label_count' => _nx_noop( 'Cash <span class="count">(%s)</span>', 'Cash <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
 			'description' => __( 'Built-in type for anonymous consumptions with cash payment.', 'incassoos' )
 		)
 	);
@@ -70,7 +69,6 @@ function incassoos_vgsr_register_consumer_types() {
 		incassoos_vgsr_get_pin_consumer_type_id(),
 		array(
 			'label'       => _x( 'PIN', 'Consumer type', 'incassoos' ),
-			'label_count' => _nx_noop( 'PIN <span class="count">(%s)</span>', 'PIN <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
 			'description' => __( 'Built-in type for anonymous consumptions with digital payment.', 'incassoos' )
 		)
 	);
@@ -80,7 +78,6 @@ function incassoos_vgsr_register_consumer_types() {
 		incassoos_vgsr_get_on_the_house_consumer_type_id(),
 		array(
 			'label'       => _x( 'On the House', 'Consumer type', 'incassoos' ),
-			'label_count' => _nx_noop( 'On the House <span class="count">(%s)</span>', 'On the House <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
 			'description' => __( 'Built-in type for consumptions booked on the house.', 'incassoos' ),
 			// 'avatar_url'  => vgsr()->assets_url . 'images/logo.png' // TODO: implement and use vgsr_get_image()
 		)

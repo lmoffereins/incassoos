@@ -1693,7 +1693,6 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 	$args['id'] = $type_id;
 	$args = wp_parse_args( $args, array(
 		'label'               => ucfirst( $type_id ),
-		'label_count'         => ucfirst( $type_id ) . ' <span class="count">(%s)</span>',
 		'description'         => '',
 		'avatar_url_callback' => '',
 		'avatar_url'          => '',

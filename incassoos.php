@@ -516,7 +516,6 @@ final class Incassoos {
 			array(
 				'label'       => _x( 'Unknown users', 'Consumer type', 'incassoos' ),
 				'label_user'  => _x( 'Unknown user [%s]', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'Unknown user <span class="count">(%s)</span>', 'Unknown users <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
 				'description' => __( 'Built-in type for consumers that no longer exist in the system.', 'incassoos' ),
 				'_hidden'     => true
 			)
@@ -527,7 +526,6 @@ final class Incassoos {
 			incassoos_get_guest_consumer_type_id(),
 			array(
 				'label'       => _x( 'Guest', 'Consumer type', 'incassoos' ),
-				'label_count' => _nx_noop( 'Guest <span class="count">(%s)</span>', 'Guest <span class="count">(%s)</span>', 'Consumer type', 'incassoos' ),
 				'description' => __( 'Built-in type for unregistered consumers.', 'incassoos' )
 			)
 		);
