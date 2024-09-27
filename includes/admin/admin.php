@@ -443,7 +443,7 @@ class Incassoos_Admin {
 			WHERE post_type = %s
 			AND post_status NOT IN ( '" . implode( "','", $exclude_states ) . "' )
 			AND pm.meta_key = %s
-			AND pm.meta_value = %d
+			AND pm.meta_value = %s
 		";
 
 		switch ( $post_type ) {
