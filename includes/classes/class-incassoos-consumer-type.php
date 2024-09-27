@@ -184,7 +184,7 @@ final class Incassoos_Consumer_Type {
 		switch ( $key ) {
 			case 'label_count':
 				/* translators: 1: Consumer type label, 2: Count. */
-				return sprintf( _x( '%1$s %2$s', 'Consumer type count' 'incassoos' ),
+				return sprintf( _x( '%1$s %2$s', 'Consumer type count', 'incassoos' ),
 					$this->label,
 					'<span class="count">(%s)</span>'
 				);
