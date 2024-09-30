@@ -69,7 +69,7 @@ function incassoos_db_version_raw() {
 	 * @return string The current plugin version
 	 */
 	function incassoos_get_db_version_raw() {
-		return get_option( 'incassoos_db_version', '' );
+		return get_site_option( 'incassoos_db_version', '' );
 	}
 
 /** Rewrite *******************************************************************/
