@@ -780,14 +780,14 @@ function incassoos_get_post_consumer_total( $consumer, $post = 0, $num_format = 
  * @return bool Is the post published?
  */
 function incassoos_is_post_published( $post = 0 ) {
-	$post         = get_post( $post );
-	$is_published = false;
+	$post      = get_post( $post );
+	$published = false;
 
 	if ( $post ) {
-		$is_published = ! in_array( $post->post_status, array( 'auto-draft', 'draft' ), true );
+		$published = ! in_array( $post->post_status, array( 'auto-draft', 'draft' ), true );
 	}
 
-	return (bool) apply_filters( 'incassoos_is_post_published', $is_published, $post );
+	return (bool) apply_filters( 'incassoos_is_post_published', $published, $post );
 }
 
 /**
@@ -1382,14 +1382,14 @@ function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
  * @return bool Is this a default term?
  */
 function incassoos_is_default_term( $term ) {
-	$term = get_term( $term );
-	$is   = false;
+	$term    = get_term( $term );
+	$default = false;
 
 	if ( $term && ! is_wp_error( $term ) ) {
-		$is = (bool) get_term_meta( $term->term_id, '_default', true );
+		$default = (bool) get_term_meta( $term->term_id, '_default', true );
 	}
 
-	return (bool) apply_filters( 'incassoos_is_default_term', $is, $term );
+	return (bool) apply_filters( 'incassoos_is_default_term', $default, $term );
 }
 
 /**
@@ -1403,14 +1403,14 @@ function incassoos_is_default_term( $term ) {
  * @return bool Is the term archived?
  */
 function incassoos_is_term_archived( $term ) {
-	$term = get_term( $term );
-	$is   = false;
+	$term     = get_term( $term );
+	$archived = false;
 
 	if ( $term && ! is_wp_error( $term ) ) {
-		$is = (bool) get_term_meta( $term->term_id, '_incassoos_archived', true );
+		$archived = (bool) get_term_meta( $term->term_id, '_incassoos_archived', true );
 	}
 
-	return (bool) apply_filters( 'incassoos_is_term_archived', $is, $term );
+	return (bool) apply_filters( 'incassoos_is_term_archived', $archived, $term );
 }
 
 /**
@@ -2736,14 +2736,14 @@ function incassoos_get_export_type_label( $export_type_id, $label_type = 'name' 
  */
 function incassoos_get_export_type_is_decryption_key_required( $export_type_id ) {
 	$export_type = incassoos_get_export_type( $export_type_id );
-	$is_required = false;
+	$required    = false;
 
 	// Only require the decryption key when encryption is enabled and explictly required
 	if ( $export_type && incassoos_is_encryption_enabled() ) {
-		$is_required = true === $export_type->require_decryption_key;
+		$required = true === $export_type->require_decryption_key;
 	}
 
-	return (bool) apply_filters( 'incassoos_get_export_type_is_decryption_key_required', $is_required, $export_type );
+	return (bool) apply_filters( 'incassoos_get_export_type_is_decryption_key_required', $required, $export_type );
 }
 
 /**
@@ -2758,14 +2758,14 @@ function incassoos_get_export_type_is_decryption_key_required( $export_type_id )
  */
 function incassoos_get_export_type_is_decryption_key_optional( $export_type_id ) {
 	$export_type = incassoos_get_export_type( $export_type_id );
-	$is_optional = false;
+	$optional    = false;
 
 	// Only require the decryption key when encryption is enabled and optionally required
 	if ( $export_type && incassoos_is_encryption_enabled() ) {
-		$is_optional = 'optional' === $export_type->require_decryption_key;
+		$optional = 'optional' === $export_type->require_decryption_key;
 	}
 
-	return (bool) apply_filters( 'incassoos_get_export_type_is_decryption_key_optional', $is_optional, $export_type );
+	return (bool) apply_filters( 'incassoos_get_export_type_is_decryption_key_optional', $optional, $export_type );
 }
 
 /**

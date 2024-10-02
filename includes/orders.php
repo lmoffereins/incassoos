@@ -1178,10 +1178,10 @@ function incassoos_get_order_collection_hint( $post = 0 ) {
  * @return bool Order's Collection is collected
  */
 function incassoos_is_order_collection_collected( $post = 0 ) {
-	$collection   = incassoos_get_order_collection( $post );
-	$is_collected = $collection ? incassoos_is_collection_collected( $collection ) : false;
+	$collection = incassoos_get_order_collection( $post );
+	$collected  = $collection ? incassoos_is_collection_collected( $collection ) : false;
 
-	return $is_collected;
+	return $collected;
 }
 
 /** Update ********************************************************************/

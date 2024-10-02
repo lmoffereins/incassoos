@@ -1608,10 +1608,10 @@ function incassoos_get_occasion_collection_hint( $post = 0 ) {
  * @return bool Occasion's Collection is collected
  */
 function incassoos_is_occasion_collection_collected( $post = 0 ) {
-	$collection   = incassoos_get_occasion_collection( $post );
-	$is_collected = $collection ? incassoos_is_collection_collected( $collection ) : false;
+	$collection = incassoos_get_occasion_collection( $post );
+	$collected  = $collection ? incassoos_is_collection_collected( $collection ) : false;
 
-	return $is_collected;
+	return $collected;
 }
 
 /** Update ********************************************************************/
@@ -1876,19 +1876,19 @@ function incassoos_send_occasion_email_on_close_or_reopen( $post ) {
 	}
 
 	// Is Occasion closed?
-	$is_closed = incassoos_is_occasion_closed( $post );
+	$closed = incassoos_is_occasion_closed( $post );
 
 	// Setup email args
-	$args      = array(
-		'incassoos_email_type' => $is_closed
+	$args = array(
+		'incassoos_email_type' => $closed
 			? 'incassoos-occasion-closed'
 			: 'incassoos-occasion-reopened',
 		'post'                 => $post,
-		'subject'              => $is_closed
+		'subject'              => $closed
 			? __( 'An occasion was closed in Incassoos', 'incassoos' )
 			: __( 'An occasion was reopened in Incassoos', 'incassoos' ),
 		'message'              => '<p>' . sprintf(
-				$is_closed
+				$closed
 					? __( 'The occasion %1$s was just closed by %2$s.',   'incassoos' )
 					: __( 'The occasion %1$s was just reopened by %2$s.', 'incassoos' ),
 				incassoos_get_occasion_link( $post ),
@@ -1898,7 +1898,7 @@ function incassoos_send_occasion_email_on_close_or_reopen( $post ) {
 			'<table cellspacing="0" cellpadding="0" border="0" width="100%">' .
 				'<tr><td width="200px">' . __( 'Title:',                  'incassoos' ) . '</td><td>' . incassoos_get_occasion_title( $post ) . '</td></tr>' .
 				'<tr><td width="200px">' . __( 'Occasion date:',          'incassoos' ) . '</td><td>' . incassoos_get_occasion_date( $post ) . '</td></tr>' .
-				( $is_closed ? '<tr><td width="200px">' . __( 'Closed:',  'incassoos' ) . '</td><td>' . incassoos_get_occasion_closed_date( $post, 'd-m-Y H:i' ) . '</td></tr>' : '' ) .
+				( $closed ? '<tr><td width="200px">' . __( 'Closed:',     'incassoos' ) . '</td><td>' . incassoos_get_occasion_closed_date( $post, 'd-m-Y H:i' ) . '</td></tr>' : '' ) .
 				'<tr><td width="200px">' . __( 'Order count:',            'incassoos' ) . '</td><td>' . incassoos_get_occasion_order_count( $post ) . '</td></tr>' .
 				'<tr><td width="200px">' . __( 'Ordered products count:', 'incassoos' ) . '</td><td>' . incassoos_get_occasion_product_count( $post ) . '</td></tr>' .
 				'<tr><td width="200px">' . __( 'Value of consumptions:',  'incassoos' ) . '</td><td>' . incassoos_get_occasion_total( $post, true ) . '</td></tr>' .

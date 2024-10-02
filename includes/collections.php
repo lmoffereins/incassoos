@@ -671,11 +671,11 @@ function incassoos_get_collection_hint( $post = 0 ) {
  * @return bool Collection's consumer emails are sent
  */
 function incassoos_is_collection_consumer_collect_emails_sent( $post = 0 ) {
-	$post    = incassoos_get_collection( $post );
-	$dates   = incassoos_get_collection_consumer_collect_emails_sent( $post );
-	$is_sent = ! empty( $dates );
+	$post  = incassoos_get_collection( $post );
+	$dates = incassoos_get_collection_consumer_collect_emails_sent( $post );
+	$sent  = ! empty( $dates );
 
-	return apply_filters( 'incassoos_is_collection_consumer_collect_emails_sent', $is_sent, $post );
+	return apply_filters( 'incassoos_is_collection_consumer_collect_emails_sent', $sent, $post );
 }
 
 /**
@@ -1934,10 +1934,10 @@ function incassoos_send_collection_consumer_collect_emails( $post = 0 ) {
 				$args['message'] = incassoos_get_collection_collect_email_content( $user->ID, $post );
 
 				// Send the email
-				$sent[ $user->ID ] = $is_sent = incassoos_send_email( $args );
+				$sent[ $user->ID ] = $sent = incassoos_send_email( $args );
 
 				// Break out when sending failed
-				if ( ! $is_sent ) {
+				if ( ! $sent ) {
 					break;
 				}
 			}

@@ -533,7 +533,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	// Get details
 	$post_id          = (int) $post->ID;
-	$is_published     = incassoos_is_post_published( $post );
+	$published        = incassoos_is_post_published( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
 	// Formatting
@@ -559,7 +559,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
@@ -604,7 +604,7 @@ function incassoos_admin_collection_details_metabox( $post ) {
 
 		<?php endif; ?>
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php if ( incassoos_is_collection_collected( $post ) ) :
@@ -1014,7 +1014,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 	// Get details
 	$post_id          = (int) $post->ID;
 	$is_post_view     = incassoos_admin_is_post_view( $post );
-	$is_published     = incassoos_is_post_published( $post );
+	$published        = incassoos_is_post_published( $post );
 	$activity_cat_tax = incassoos_get_activity_cat_tax_id();
 
 	// Formatting
@@ -1033,7 +1033,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
@@ -1123,7 +1123,7 @@ function incassoos_admin_activity_details_metabox( $post ) {
 			</span>
 		</p>
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
@@ -1378,7 +1378,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 	// Get details
 	$post_id           = (int) $post->ID;
 	$is_post_view      = incassoos_admin_is_post_view( $post );
-	$is_published      = incassoos_is_post_published( $post );
+	$published         = incassoos_is_post_published( $post );
 	$occasion_type_tax = incassoos_get_occasion_type_tax_id();
 	$product_cat_tax   = incassoos_get_product_cat_tax_id();
 
@@ -1403,7 +1403,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
-		<?php if ( $is_published && ! incassoos_is_occasion_same_date_created( $post ) ) : ?>
+		<?php if ( $published && ! incassoos_is_occasion_same_date_created( $post ) ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
@@ -1479,7 +1479,7 @@ function incassoos_admin_occasion_details_metabox( $post ) {
 
 		<?php endif; ?>
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Content:', 'incassoos' ); ?></label>
@@ -1738,7 +1738,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 	// Get details
 	$is_post_view  = incassoos_admin_is_post_view( $post );
-	$is_published  = incassoos_is_post_published( $post );
+	$published     = incassoos_is_post_published( $post );
 	$consumer_type = incassoos_get_order_consumer_type( $post );
 
 	// Formatting
@@ -1755,7 +1755,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>
@@ -1822,7 +1822,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 			</span>
 		</p>
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Author:', 'incassoos' ); ?></label>
@@ -1973,7 +1973,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 	// Get taxonomies
 	$product_cat_tax = incassoos_get_product_cat_tax_id( $post );
-	$is_published    = incassoos_is_post_published( $post );
+	$published       = incassoos_is_post_published( $post );
 	$price           = incassoos_get_product_price( $post );
 
 	// Formatting
@@ -1989,7 +1989,7 @@ function incassoos_admin_product_details_metabox( $post ) {
 
 	<div class="incassoos-object-details">
 
-		<?php if ( $is_published ) : ?>
+		<?php if ( $published ) : ?>
 
 		<p>
 			<label><?php esc_html_e( 'Created:', 'incassoos' ); ?></label>

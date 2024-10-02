@@ -2275,10 +2275,10 @@ function incassoos_admin_get_post_action_types( $post ) {
 
 				// Distribution: send collect consumer emails
 				if ( incassoos_is_collection_collected( $post ) ) {
-					$is_sent = incassoos_is_collection_consumer_collect_emails_sent( $post );
+					$sent = incassoos_is_collection_consumer_collect_emails_sent( $post );
 					$action_types['distribution']['actions']['send-consumer_collect_emails'] = array(
-						'label'                => $is_sent ? esc_html__( 'Resend consumer emails', 'incassoos' ) : esc_html__( 'Send consumer emails', 'incassoos' ),
-						'require_confirmation' => $is_sent
+						'label'                => $sent ? esc_html__( 'Resend consumer emails', 'incassoos' ) : esc_html__( 'Send consumer emails', 'incassoos' ),
+						'require_confirmation' => $sent
 					);
 				}
 
