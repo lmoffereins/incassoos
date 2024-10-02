@@ -524,7 +524,7 @@ function incassoos_admin_consumers_help_tabs() {
 			'title'   => __( 'Overview' ),
 			'content' =>
 				'<p>' . __( 'This screen gives an overview of the available consumers for Incassoos and a way of managing their relevant attributes.', 'incassoos' ) . '</p>' .
-				'<p>' . __( 'You can filter the list of consumers by searching for them by name. Click Show default to show only consumers that have the default visibility set to show. The default view is to show all consumers.', 'incassoos' ) . '</p>' .
+				'<p>' . __( 'You can filter the list of consumers by searching for them by name. Click Hide archived to show only public consumers. The default view is to show all consumers.', 'incassoos' ) . '</p>' .
 				'<p>' . __( 'The button for managing Consumer Types takes you to the admin screen for that taxonomy.', 'incassoos' ) . '</p>',
 		)
 	);
@@ -536,7 +536,7 @@ function incassoos_admin_consumers_help_tabs() {
 			'content' =>
 				'<p>' . __( "<strong>Quick Edit</strong> &mdash; For editing a single consumer's attributes, click the row of the consumer to open the Quick Edit menu. This gives access to all relevant consumer details.", 'incassoos' ) . '</p>' .
 				'<p>' . __( '<strong>Bulk Edit</strong> &mdash; For editing multiple consumers at once, click Open bulk edit mode. Consumers can be selected individually or in bulk. Bulk selection of consumers is available through clicking their respective group heading or by selecting an option from the Quick Select menu.', 'incassoos' ) . '</p>' .
-				'<p>' . __( 'Actions available for bulk editing are to set the default visibility to hide or show.', 'incassoos' ) . '</p>' .
+				'<p>' . __( 'Actions available for bulk editing are Archive consumers or Unarchive consumers.', 'incassoos' ) . '</p>' .
 				'<p>' . __( '<strong>Export</strong> &mdash; Exporting consumers provides the option to download consumers with their attributes in a CSV formatted file.', 'incassoos' ) . '</p>',
 		)
 	);

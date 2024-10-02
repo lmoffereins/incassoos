@@ -36,11 +36,11 @@ function incassoos_admin_get_consumers_fields() {
 			'type'  => 'date'
 		),
 
-		// Hidden consumer
-		'_incassoos_hidden_consumer' => array(
-			'label'           => __( 'Hidden consumer', 'incassoos' ),
+		// Archived
+		'_incassoos_archived_consumer' => array(
+			'label'           => _x( 'Archived', 'Consumer status', 'incassoos' ),
 			'type'            => 'checkbox',
-			'update_callback' => 'incassoos_admin_consumers_field_update_hidden_consumer'
+			'update_callback' => 'incassoos_admin_consumers_field_update_archived'
 		),
 
 		// Spending limit
@@ -141,7 +141,7 @@ function incassoos_admin_consumers_field_update_callback( $user, $value, $field_
 }
 
 /**
- * Update callback for the consumer's Hidden Consumer field
+ * Update callback for the consumer's Archived field
  *
  * @since 1.0.0
  *
@@ -149,11 +149,11 @@ function incassoos_admin_consumers_field_update_callback( $user, $value, $field_
  * @param mixed   $value New user field value
  * @return bool Update success.
  */
-function incassoos_admin_consumers_field_update_hidden_consumer( $user, $value ) {
+function incassoos_admin_consumers_field_update_archived( $user, $value ) {
 	if ( empty( $value ) ) {
-		return incassoos_set_consumer_shown( $user );
+		return incassoos_unarchive_consumer( $user );
 	} else {
-		return incassoos_set_consumer_hidden( $user );
+		return incassoos_archive_consumer( $user );
 	}
 }
 
@@ -321,8 +321,8 @@ function incassoos_admin_load_consumers_page() {
 
 			break;
 
-		// Bulk edit: hidden consumer
-		case 'bulk-set-hidden-consumer' :
+		// Bulk edit: archived consumer
+		case 'bulk-set-archived-consumer' :
 			check_admin_referer( 'incassoos-bulk-consumers', '_bulk_edit' );
 
 			// Bail when the users cannot be edited
@@ -331,7 +331,7 @@ function incassoos_admin_load_consumers_page() {
 
 			// Update user meta per user
 			foreach ( $users as $user_id ) {
-				incassoos_set_consumer_hidden( $user_id );
+				incassoos_archive_consumer( $user_id );
 			}
 
 			// Redirect to consumers page
@@ -342,8 +342,8 @@ function incassoos_admin_load_consumers_page() {
 
 			break;
 
-		// Bulk edit: shown consumer
-		case 'bulk-set-shown-consumer' :
+		// Bulk edit: unarchive consumer
+		case 'bulk-set-unarchive-consumer' :
 			check_admin_referer( 'incassoos-bulk-consumers', '_bulk_edit' );
 
 			// Bail when the users cannot be edited
@@ -352,7 +352,7 @@ function incassoos_admin_load_consumers_page() {
 
 			// Update user meta per user
 			foreach ( $users as $user_id ) {
-				incassoos_set_consumer_shown( $user_id );
+				incassoos_unarchive_consumer( $user_id );
 			}
 
 			// Redirect to consumers page
@@ -422,7 +422,7 @@ function incassoos_admin_consumers_page() {
 
 	<p><?php esc_html_e( 'Manage consumers and their attributes for Incassoos.', 'incassoos' ); ?></p>
 
-	<form method="post" class="incassoos-item-list">
+	<form method="post" class="incassoos-item-list hiding-archived-items">
 
 		<?php if ( $can_bulk_edit ) : ?>
 
@@ -466,16 +466,18 @@ function incassoos_admin_consumers_page() {
 				<label for="consumers-item-search" class="screen-reader-text"><?php esc_html_e( 'Search consumers', 'incassoos' ); ?></label>
 				<input type="search" id="consumers-item-search" class="list-search" placeholder="<?php esc_attr_e( 'Search consumers&hellip;', 'incassoos' ); ?>" />
 
-				<button type="button" id="show-default-items" class="button-link"><?php esc_html_e( 'Show default', 'incassoos' ); ?></button>
+				<button type="button" id="show-archived-items" class="button-link"><?php esc_html_e( 'Show archived', 'incassoos' ); ?></button>
 				<button type="button" id="reverse-group-order" class="button-link" title="<?php esc_attr_e( 'Reverse group order', 'incassoos' ); ?>">
 					<span class="screen-reader-text"><?php esc_html_e( 'Reverse group order', 'incassoos' ); ?></span>
 				</button>
 			</div>
 
 			<ul class="sublist groups">
-				<?php foreach ( incassoos_get_grouped_users() as $group ) : ?>
+				<?php foreach ( incassoos_get_grouped_users() as $group ) :
+					$group_hidden = empty( array_filter( wp_list_pluck( $group->users, 'ID' ), 'incassoos_is_consumer_not_archived' ) ) ? 'hidden' : '';
+				?>
 
-				<li id="group-<?php echo $group->id; ?>" class="group">
+				<li id="group-<?php echo $group->id; ?>" class="group <?php echo $group_hidden; ?>">
 					<h4 class="sublist-header item-content">
 						<button type="button" class="button-link title select-group-users" id="select-group-<?php echo $group->id; ?>" title="<?php esc_attr_e( 'Select or deselect all users in the group', 'incassoos' ); ?>"><?php echo esc_html( $group->name ); ?></button>
 						<span class="title"><?php echo esc_html( $group->name ); ?></span>
@@ -515,8 +517,8 @@ function incassoos_admin_consumers_page() {
 			<label for="bulk-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action' ); ?></label>
 			<select id="bulk-action-selector" name="action">
 				<option value="-1"><?php esc_html_e( 'Bulk actions' ); ?></option>
-				<option value="bulk-set-hidden-consumer"><?php esc_html_e( 'Set hidden consumers', 'incassoos' ); ?></option>
-				<option value="bulk-set-shown-consumer"><?php esc_html_e( 'Set shown consumers', 'incassoos' ); ?></option>
+				<option value="bulk-set-archived-consumer"><?php esc_html_e( 'Archive consumers', 'incassoos' ); ?></option>
+				<option value="bulk-set-unarchive-consumer"><?php esc_html_e( 'Unarchive consumers', 'incassoos' ); ?></option>
 			</select>
 			<?php wp_nonce_field( 'incassoos-bulk-consumers', '_bulk_edit' ); ?>
 			<?php submit_button( __( 'Apply' ), 'action', 'bulkaction', false, array( 'id' => 'doaction' ) ); ?>
@@ -533,7 +535,7 @@ function incassoos_admin_consumers_page() {
 				<?php foreach ( incassoos_admin_get_consumers_fields() as $field_id => $args ) : ?>
 
 					<label>
-						<span class="title"><?php echo $args['label']; ?></span>
+						<span class="title"><?php echo esc_html( $args['label'] ); ?></span>
 						<span class="input-text-wrap"><?php call_user_func( $args['input_callback'], $field_id ); ?></span>
 					</label>
 
@@ -569,9 +571,9 @@ function incassoos_admin_consumers_page() {
 function incassoos_admin_consumers_list_class( $user ) {
 	$class = array();
 
-	// Add class for hidden consumers
-	if ( incassoos_is_consumer_hidden( $user ) ) {
-		$class[] = 'hidden-consumer'; /* Don't use 'hide-in-list' classname which affects search in admin.js */
+	// Add class for archived consumers
+	if ( incassoos_is_consumer_archived( $user ) ) {
+		$class[] = 'archived-consumer'; /* Don't use 'hide-in-list' classname which affects search in admin.js */
 	}
 
 	// Add class for missing IBAN

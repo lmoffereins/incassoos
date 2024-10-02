@@ -25,7 +25,7 @@ jQuery( document ).ready( function( $ ) {
 	var $consumerBox = $( '#incassoos_collection_consumers, #incassoos_activity_participants, #incassoos_occasion_consumers, body.incassoos_page_incassoos-consumers' ),
 	    $detailsBox = $( '#incassoos_collection_details, #incassoos_activity_details, #incassoos_occasion_details, #incassoos_order_details, #incassoos_product_details' ),
 	    $consumerList = $consumerBox.find( '.incassoos-item-list' ),
-	    consumerHiddenMatches = '.showing-default-items .hidden-consumer, .search-hide, .hide-in-list';
+	    consumerHiddenMatches = '.hiding-archived-items .archived-consumer, .search-hide, .hide-in-list';
 
 	$detailsBox
 		// Publishing action
@@ -808,12 +808,12 @@ jQuery( document ).ready( function( $ ) {
 			consumersRemoveInlineEdit();
 		})
 
-		// Show (un)limit visible items
-		.on( 'click', '#show-default-items', function() {
+		// Toggle archived items
+		.on( 'click', '#show-archived-items', function() {
 			$consumerList
-				.toggleClass( 'showing-default-items' )
-				.find( '#show-default-items' )
-				.text( $consumerList.hasClass( 'showing-default-items' ) ? l10n.showDefaultItemsAll : l10n.showDefaultItemsOnly );
+				.toggleClass( 'hiding-archived-items' )
+				.find( '#show-archived-items' )
+				.text( $consumerList.hasClass( 'hiding-archived-items' ) ? l10n.showArchivedItems : l10n.showingArchivedItems );
 
 			toggleGroups();
 		})

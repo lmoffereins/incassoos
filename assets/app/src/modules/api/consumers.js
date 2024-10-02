@@ -32,7 +32,7 @@ define([
 			name: he.decode(resp.name),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
 			spendingLimit: util.sanitizePrice(resp.spendingLimit) || 0,
-			show: !! resp.show,
+			show: ! resp.archived,
 			group: {
 				id: resp.group.id,
 				name: he.decode(resp.group.name),
@@ -153,16 +153,16 @@ define([
 				request.data.spendingLimit = payload.spendingLimit;
 			}
 
-			// Set the show parameter for hidden consumer. Can be false.
+			// Set the archived parameter for hidden consumer. Can be false.
 			if ("undefined" !== typeof payload.show) {
-				request.data.show = payload.show;
+				request.data.archived = ! payload.show;
 			}
 
 			return request;
 		},
 		post: getConsumerFromResponse
 	}, {
-		alias: "hide",
+		alias: "archive",
 		method: "PUT",
 		enableCache: { save: updateConsumerInCache },
 
@@ -175,14 +175,14 @@ define([
 		 */
 		pre: function( request, payload ) {
 
-			// Point to a single consumer's hide action
-			request.url = request.baseUrl.concat("/", payload.id, "/hide");
+			// Point to a single consumer's archive action
+			request.url = request.baseUrl.concat("/", payload.id, "/archive");
 
 			return request;
 		},
 		post: getConsumerFromResponse
 	}, {
-		alias: "show",
+		alias: "unarchive",
 		method: "PUT",
 		enableCache: { save: updateConsumerInCache },
 
@@ -195,8 +195,8 @@ define([
 		 */
 		pre: function( request, payload ) {
 
-			// Point to a single consumer's show action
-			request.url = request.baseUrl.concat("/", payload.id, "/show");
+			// Point to a single consumer's unarchive action
+			request.url = request.baseUrl.concat("/", payload.id, "/unarchive");
 
 			return request;
 		},

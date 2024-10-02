@@ -157,19 +157,19 @@ define([
 					cats = Object.assign({ "0": "Product.AllCategoriesOption" }, settings.product.productCategory.items);
 				}
 
-				// Remove hidden categories outside of settings
+				// Remove archived categories outside of settings
 				if (! this.$isSettings) {
-					cats = _.omit(cats, _.without(settings.product.productCategory.hiddenItems, this.defaultProductCategory));
+					cats = _.omit(cats, _.without(settings.product.productCategory.archivedItems, this.defaultProductCategory));
 				}
 
 				for (i in cats) {
 					if (cats.hasOwnProperty(i)) {
 						cats[i] = { label: cats[i] };
 
-						// Identify hidden categories
-						if (-1 !== settings.product.productCategory.hiddenItems.indexOf(parseInt(i))) {
+						// Identify archived categories
+						if (-1 !== settings.product.productCategory.archivedItems.indexOf(parseInt(i))) {
 							cats[i].icon      = "hidden";
-							cats[i].iconTitle = "Product.HiddenProductCategory";
+							cats[i].iconTitle = "Product.ArchivedProductCategory";
 						}
 					}
 				}
@@ -187,13 +187,13 @@ define([
 			},
 
 			/**
-			 * Return whether the product category is hidden
+			 * Return whether the product category is archived
 			 *
-			 * @return {Boolean} Is the product category hidden?
+			 * @return {Boolean} Is the product category archived?
 			 */
-			isProductCategoryHidden: function() {
+			isProductCategoryArchived: function() {
 				return function( productCategory ) {
-					return -1 !== settings.product.productCategory.hiddenItems.indexOf(productCategory);
+					return -1 !== settings.product.productCategory.archivedItems.indexOf(productCategory);
 				};
 			},
 
@@ -256,10 +256,10 @@ define([
 				}).filter( function( i ) {
 					return self.filterProductCategory === "0" || self.filterProductCategory === i.productCategory.toString();
 
-				// Filter for hidden product categories
+				// Filter for archived product categories
 				}).filter( function( i ) {
 					return self.$isSettings
-						|| -1 === _.without(settings.product.productCategory.hiddenItems, self.defaultProductCategory).indexOf(i.productCategory);
+						|| -1 === _.without(settings.product.productCategory.archivedItems, self.defaultProductCategory).indexOf(i.productCategory);
 
 				// Filter for searched items by title
 				}).filter( function( i ) {

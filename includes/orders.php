@@ -1695,8 +1695,7 @@ function incassoos_register_consumer_type( $type_id, $args = array() ) {
 		'label'               => ucfirst( $type_id ),
 		'description'         => '',
 		'avatar_url_callback' => '',
-		'avatar_url'          => '',
-		'_hidden'             => false,
+		'avatar_url'          => ''
 	) );
 
 	// Allow filtering
@@ -1769,8 +1768,8 @@ function incassoos_get_consumer_types( $args = array() ) {
 	if ( false !== $args['builtin'] ) {
 		foreach( incassoos()->consumer_types as $type_id => $type ) {
 
-			// Skip hidden items
-			if ( $type->is_hidden() ) {
+			// Skip internal items
+			if ( $type->is_internal() ) {
 				continue;
 			}
 

@@ -227,10 +227,10 @@ class Incassoos_REST_Settings_Controller extends WP_REST_Controller {
 		if ( ! empty( $schema['properties']['product'] ) ) {
 			$data['product'] = array(
 				'productCategory' => array(
-					'taxonomyId'   => incassoos_get_product_cat_tax_id(),
-					'defaultValue' => incassoos_get_default_product_category(),
-					'items'        => incassoos_get_product_cats( array( 'fields' => 'id=>name' ) ),
-					'hiddenItems'  => incassoos_get_hidden_product_categories()
+					'taxonomyId'    => incassoos_get_product_cat_tax_id(),
+					'defaultValue'  => incassoos_get_default_product_category(),
+					'items'         => incassoos_get_product_cats( array( 'fields' => 'id=>name' ) ),
+					'archivedItems' => incassoos_get_archived_product_categories()
 				)
 			);
 		}

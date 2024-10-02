@@ -236,10 +236,10 @@ define([
 					if (cats.hasOwnProperty(i)) {
 						cats[i] = { label: cats[i] };
 
-						// Identify hidden categories
-						if (-1 !== settings.product.productCategory.hiddenItems.indexOf(parseInt(i))) {
+						// Identify archived categories
+						if (-1 !== settings.product.productCategory.archivedItems.indexOf(parseInt(i))) {
 							cats[i].icon      = "hidden";
-							cats[i].iconTitle = "Product.HiddenProductCategory";
+							cats[i].iconTitle = "Product.ArchivedProductCategory";
 						}
 					}
 				}

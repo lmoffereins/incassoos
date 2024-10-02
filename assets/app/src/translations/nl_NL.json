@@ -287,7 +287,7 @@
 		"SelectMore": "Meer %s",
 		"SelectLess": "Minder %s",
 		"HiddenProduct": "Dit product is verborgen",
-		"HiddenProductCategory": "Dit is een verborgen productcategorie",
+		"ArchivedProductCategory": "Dit is een gearchiveerde productcategorie",
 		"AllCategoriesOption": "Alle categorieën",
 		"OrderBy": "Sorteer op",
 		"OrderByTitle": "Naam",

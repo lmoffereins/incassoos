@@ -214,14 +214,14 @@ function incassoos_parse_query_vars( $posts_query ) {
 	// Product query
 	if ( incassoos_get_product_post_type() === $post_type ) {
 
-		// Filter hidden Product Categories
-		if ( null !== $posts_query->get( 'hidden', null ) ) {
+		// Filter archived Product Categories
+		if ( null !== $posts_query->get( 'archived', null ) ) {
 			$tax_query = (array) $posts_query->get( 'tax_query', array() );
 			$tax_query[] = array(
 				'taxonomy' => incassoos_get_product_cat_tax_id(),
-				'terms'    => incassoos_get_hidden_product_categories(),
+				'terms'    => incassoos_get_archived_product_categories(),
 				'field'    => 'term_id',
-				'operator' => $posts_query->get( 'hidden', false ) ? 'IN' : 'NOT IN'
+				'operator' => $posts_query->get( 'archived', false ) ? 'IN' : 'NOT IN'
 			);
 			$posts_query->set( 'tax_query', $tax_query );
 		}

@@ -152,13 +152,13 @@ function incassoos_get_user_query( $args = array() ) {
  */
 function incassoos_pre_get_users( $users_query ) {
 
-	// Filter shortcut for shown/hidden consumers
-	if ( null !== $users_query->get( 'incassoos_hidden_consumers' ) ) {
+	// Filter shortcut for public/archived consumers
+	if ( null !== $users_query->get( 'incassoos_archived_consumers' ) ) {
 		$meta_query = (array) $users_query->get( 'meta_query' ) ?: array();
 		$meta_query[] = array(
-			'key'     => '_incassoos_hidden_consumer',
+			'key'     => '_incassoos_archived_consumer',
 			'value'   => array( '1' ),
-			'compare' => $users_query->get( 'incassoos_hidden_consumers' ) ? 'IN' : 'NOT IN'
+			'compare' => $users_query->get( 'incassoos_archived_consumers' ) ? 'IN' : 'NOT IN'
 		);
 		$users_query->set( 'meta_query', $meta_query );
 	}
@@ -322,25 +322,38 @@ function incassoos_get_user_spending_limit( $user = false, $by = 'id' ) {
 }
 
 /**
- * Return whether the user is a hidden consumer
+ * Return whether the user is an archived consumer
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_is_consumer_hidden'
+ * @uses apply_filters() Calls 'incassoos_is_consumer_archived'
  *
  * @param  mixed $user_id User object or property. Defaults to the current user ID.
  * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
- * @return bool Hide user by default.
+ * @return bool Consumer is archived.
  */
-function incassoos_is_consumer_hidden( $user = false, $by = 'id' ) {
-	$user = incassoos_get_user( $user, $by );
-	$hide = false;
+function incassoos_is_consumer_archived( $user = false, $by = 'id' ) {
+	$user     = incassoos_get_user( $user, $by );
+	$archived = false;
 
 	if ( $user ) {
-		$hide = (bool) $user->get( '_incassoos_hidden_consumer', false );
+		$archived = (bool) $user->get( '_incassoos_archived_consumer', false );
 	}
 
-	return (bool) apply_filters( 'incassoos_is_consumer_hidden', $hide, $user );
+	return (bool) apply_filters( 'incassoos_is_consumer_archived', $archived, $user );
+}
+
+/**
+ * Return whether the user is not an archived consumer
+ *
+ * @since 1.0.0
+ *
+ * @param  mixed $user_id User object or property. Defaults to the current user ID.
+ * @param  string $by Optional. Property to get the user by, passed to {@see get_user_by()}. Defaults to 'id'.
+ * @return bool Consumer is not archived.
+ */
+function incassoos_is_consumer_not_archived( $user = false, $by = 'id' ) {
+	return ! incassoos_is_consumer_archived( $user, $by );
 }
 
 /** Lists *****************************************************************/
@@ -1043,40 +1056,40 @@ function incassoos_decrypt_encryptable_usermeta( $decryption_key ) {
 /** Update ********************************************************************/
 
 /**
- * Set the consumer as hidden
+ * Archive the consumer
  *
  * @since 1.0.0
  *
  * @param  int|WP_User $user Optional. User ID or object. Defaults to the current user.
  * @return bool Update success
  */
-function incassoos_set_consumer_hidden( $user = 0 ) {
+function incassoos_archive_consumer( $user = 0 ) {
 	$user    = incassoos_get_user( $user );
 	$success = false;
 
 	if ( $user ) {
-		$success = update_user_meta( $user->ID, '_incassoos_hidden_consumer', 1 );
+		$success = update_user_meta( $user->ID, '_incassoos_archived_consumer', 1 );
 	}
 
 	return $success;
 }
 
 /**
- * Set the consumer as shown
+ * Unarchive the consumer
  *
- * Effectively removes the '_incassoos_hidden_consumer' user attribute.
+ * Effectively removes the '_incassoos_archived_consumer' user attribute.
  *
  * @since 1.0.0
  *
  * @param  int|WP_User $user Optional. User ID or object. Defaults to the current user.
  * @return bool Update success
  */
-function incassoos_set_consumer_shown( $user = 0 ) {
+function incassoos_unarchive_consumer( $user = 0 ) {
 	$user    = incassoos_get_user( $user );
 	$success = false;
 
 	if ( $user ) {
-		$success = delete_user_meta( $user->ID, '_incassoos_hidden_consumer' );
+		$success = delete_user_meta( $user->ID, '_incassoos_archived_consumer' );
 	}
 
 	return $success;

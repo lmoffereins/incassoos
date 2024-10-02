@@ -1187,14 +1187,14 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 	$participants      = incassoos_get_activity_participants( $post );
 	$participant_types = incassoos_get_activity_participant_types( $post );
 	$users             = incassoos_get_users( $is_post_view ? array( 'include' => $participants ) : array() );
-	$hidden_users      = array();
+	$archived_users    = array();
 	$prices            = get_post_meta( $post_id, 'prices', true ) ?: array();
 
-	// Collect hidden users
+	// Collect archived users
 	if ( ! $is_post_view ) {
 		foreach ( $users as $user ) {
-			if ( incassoos_is_consumer_hidden( $user ) && ! in_array( $user->ID, $participants ) ) {
-				$hidden_users[] = $user->ID;
+			if ( incassoos_is_consumer_archived( $user ) && ! in_array( $user->ID, $participants ) ) {
+				$archived_users[] = $user->ID;
 			}
 		}
 	}
@@ -1257,12 +1257,12 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 		<ul class="sublist list-columns groups">
 			<?php foreach ( incassoos_group_users( $users ) as $group ) :
 
-				// Group is hidden when all users are hidden
+				// Group is hidden when all users are archived
 				$group_user_ids = wp_list_pluck( $group->users, 'ID' );
-				$hidden_group   = array_diff( $group_user_ids, $hidden_users ) ? "" : "hide-in-list";
+				$hide_group     = array_diff( $group_user_ids, $archived_users ) ? "" : "hide-in-list";
 			?>
 
-			<li id="group-<?php echo $group->id; ?>" class="group <?php echo $hidden_group; ?>">
+			<li id="group-<?php echo $group->id; ?>" class="group <?php echo $hide_group; ?>">
 				<h4 class="sublist-header item-content">
 					<?php if ( ! $is_post_view ) : ?>
 					
@@ -1288,7 +1288,7 @@ function incassoos_admin_activity_participants_metabox( $post ) {
 							}
 						}
 
-						if ( in_array( $user->ID, $hidden_users ) ) {
+						if ( in_array( $user->ID, $archived_users ) ) {
 							$_item_class[] = 'hide-in-list';
 						}
 					?>
@@ -1887,7 +1887,7 @@ function incassoos_admin_order_products_metabox( $post ) {
 		$products = $order_products;
 	} else {
 		$products = incassoos_get_products( array(
-			'hidden' => false
+			'archived' => false
 		) );
 	}
 

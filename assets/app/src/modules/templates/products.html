@@ -69,7 +69,7 @@
 					</button>
 
 					<div
-						v-if="$isSettings && isProductCategoryHidden(p.productCategory)"
+						v-if="$isSettings && isProductCategoryArchived(p.productCategory)"
 						class="hidden-item"
 						v-l10n-title.Product.HiddenProduct>
 						<span class="screen-reader-text" v-l10n.Product.HiddenProduct></span>

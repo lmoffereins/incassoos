@@ -178,16 +178,53 @@ function incassoos_version_updater() {
 	// Get the raw database version
 	$raw_db_version = (int) incassoos_get_db_version_raw();
 
-	/** 0.1.0 Branch ********************************************************/
+	// Only run updater if previous installation exists
+	if ( ! empty( $raw_db_version ) ) {
 
-	// 0.1.0
-	if ( $raw_db_version < 10 ) {
+		/** 1.0 Branch ****************************************************/
 
-		// Do stuff
+		// 1.0.0-beta.11
+		if ( $raw_db_version < 10011 ) {
+
+			// Archive hidden objects
+			incassoos_archive_hidden_objects();
+		}
 	}
 
 	/** All done! *********************************************************/
 
 	// Bump the version
 	incassoos_version_bump();
+}
+
+/**
+ * Update hidden objects to archived objects
+ *
+ * @since 1.0.0
+ *
+ * @global WPDB $wpdb
+ */
+function incassoos_archive_hidden_objects() {
+	global $wpdb;
+
+	// Taxonomies: Product Category
+	$terms = get_terms( array(
+		'taxonomy'   => incassoos_get_product_cat_tax_id(),
+		'fields'     => 'ids',
+		'hide_empty' => false,
+		'meta_key'   => '_hidden',
+		'meta_value' => 1
+	) );
+
+	// Exchange plugin term meta
+	foreach ( $terms as $term_id ) {
+		delete_term_meta( $term_id, '_hidden' );
+		update_term_meta( $term_id, '_incassoos_archived', 1 );
+	}
+
+	// Users: update plugin user meta field
+	$wpdb->update( $wpdb->usermeta,
+		array( 'meta_key' => '_incassoos_archived_consumer' ),
+		array( 'meta_key' => '_incassoos_hidden_consumer' )
+	);
 }

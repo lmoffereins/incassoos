@@ -203,34 +203,34 @@ function incassoos_is_default_product_category( $term_id ) {
 }
 
 /**
- * Return the hidden Product Category term id's
+ * Return the archived Product Category term id's
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_get_hidden_product_categories'
+ * @uses apply_filters() Calls 'incassoos_get_archived_product_categories'
  *
  * @return array Product Category term ids.
  */
-function incassoos_get_hidden_product_categories() {
+function incassoos_get_archived_product_categories() {
 	$terms = incassoos_get_product_cats( array(
 		'fields'     => 'ids',
-		'meta_key'   => '_hidden',
+		'meta_key'   => '_incassoos_archived',
 		'meta_value' => 1
 	) );
 
-	return apply_filters( 'incassoos_get_hidden_product_categories', $terms );
+	return apply_filters( 'incassoos_get_archived_product_categories', $terms );
 }
 
 /**
- * Return whether this is a hidden Product Category
+ * Return whether this is an archived Product Category
  *
  * @since 1.0.0
  *
  * @param  int Product Category term id.
- * @return bool Is this a hidden product category?
+ * @return bool Is this an archived product category?
  */
-function incassoos_is_hidden_product_category( $term_id ) {
-	return in_array( (int) $term_id, incassoos_get_hidden_product_categories(), true );
+function incassoos_is_archived_product_category( $term_id ) {
+	return in_array( (int) $term_id, incassoos_get_archived_product_categories(), true );
 }
 
 /**

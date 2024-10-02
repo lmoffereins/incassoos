@@ -64,7 +64,7 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/show', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/archive', array(
 			'args' => array(
 				'id' => array(
 					'description' => __( 'Unique identifier for the object.' ),
@@ -73,13 +73,13 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			),
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'show_item' ),
-				'permission_callback' => array( $this, 'show_item_permissions_check' ),
+				'callback'            => array( $this, 'archive_item' ),
+				'permission_callback' => array( $this, 'archive_item_permissions_check' ),
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/hide', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/unarchive', array(
 			'args' => array(
 				'id' => array(
 					'description' => __( 'Unique identifier for the object.' ),
@@ -88,8 +88,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			),
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
-				'callback'            => array( $this, 'hide_item' ),
-				'permission_callback' => array( $this, 'hide_item_permissions_check' ),
+				'callback'            => array( $this, 'unarchive_item' ),
+				'permission_callback' => array( $this, 'unarchive_item_permissions_check' ),
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
@@ -128,8 +128,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true
 				),
-				'show'            => array(
-					'description' => __( 'Visibility status for the object.', 'incassoos' ),
+				'archived'         => array(
+					'description' => __( 'Whether the object is archived.', 'incassoos' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 				),
@@ -351,8 +351,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			$data['avatarUrl'] = get_avatar_url( $item->ID, $size ? array( 'size' => $size ) : array() );
 		}
 
-		if ( ! empty( $schema['properties']['show'] ) ) {
-			$data['show'] = ! $item->get( '_incassoos_hidden_consumer' );
+		if ( ! empty( $schema['properties']['archived'] ) ) {
+			$data['archived'] = incassoos_is_consumer_archived( $item );
 		}
 
 		if ( ! empty( $schema['properties']['spendingLimit'] ) ) {
@@ -468,11 +468,11 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		$schema = $this->get_item_schema();
 
-		if ( ! empty( $schema['properties']['show'] ) && isset( $request['show'] ) ) {
-			if ( $request['show'] ) {
-				incassoos_set_consumer_shown( $item );
+		if ( ! empty( $schema['properties']['archived'] ) && isset( $request['archived'] ) ) {
+			if ( $request['archived'] ) {
+				incassoos_archive_consumer( $item );
 			} else {
-				incassoos_set_consumer_hidden( $item );
+				incassoos_unarchive_consumer( $item );
 			}
 		}
 
@@ -505,23 +505,23 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to show a consumer
+	 * Checks if a given request has access to unarchive a consumer
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return true|WP_Error True if the request has access to show the item, WP_Error object otherwise.
+	 * @return true|WP_Error True if the request has access to unarchive the item, WP_Error object otherwise.
 	 */
-	public function show_item_permissions_check( $request ) {
+	public function unarchive_item_permissions_check( $request ) {
 		$item = $this->get_user( $request['id'] );
 		if ( is_wp_error( $item ) ) {
 			return $item;
 		}
 
-		if ( $item && ! current_user_can( 'show_incassoos_consumer', $item ) ) {
+		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_show_consumer',
-				__( 'Sorry, you are not allowed to show this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_unarchive_consumer',
+				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -530,14 +530,14 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Show a single consumer
+	 * Unarchive a single consumer
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
-	public function show_item( $request ) {
+	public function unarchive_item( $request ) {
 		$item = $this->get_user( $request['id'] );
 		if ( is_wp_error( $item ) ) {
 			return $item;
@@ -545,69 +545,69 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		$id = $item->ID;
 
-		if ( ! current_user_can( 'show_incassoos_consumer', $item ) ) {
+		if ( ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_show_consumer',
-				__( 'Sorry, you are not allowed to show this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_unarchive_consumer',
+				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
 		$request->set_param( 'context', 'edit' );
 
-		// Only show if we have already hidden.
-		if ( ! incassoos_is_consumer_hidden( $item ) ) {
+		// Only unarchive if we have already archived.
+		if ( incassoos_is_consumer_not_archived( $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_is_not_hidden',
-				__( 'The consumer is not hidden.', 'incassoos' ),
+				'incassoos_rest_is_not_archived',
+				__( 'The consumer is not archived.', 'incassoos' ),
 				array( 'status' => 410 )
 			);
 		}
 
-		$result   = incassoos_show_consumer( $item );
+		$result   = incassoos_unarchive_consumer( $item );
 		$item     = incassoos_get_user( $id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		if ( ! $result ) {
 			return new WP_Error(
-				'incassoos_rest_cannot_show',
-				__( 'The consumer cannot be shown.', 'incassoos' ),
+				'incassoos_rest_cannot_unarchive',
+				__( 'The consumer cannot be unarchived.', 'incassoos' ),
 				array( 'status' => 500 )
 			);
 		}
 
 		/**
-		 * Fires immediately after a single consumer is shown via the REST API.
+		 * Fires immediately after a single consumer is unarchived via the REST API.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Post          $item     The shown user.
+		 * @param WP_Post          $item     The unarchived user.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 */
-		do_action( "incassoos_rest_show_consumer", $item, $response, $request );
+		do_action( 'incassoos_rest_unarchive_consumer', $item, $response, $request );
 
 		return $response;
 	}
 
 	/**
-	 * Checks if a given request has access to hide an consumer
+	 * Checks if a given request has access to archive a consumer
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
-	 * @return true|WP_Error True if the request has access to hide the item, WP_Error object otherwise.
+	 * @return true|WP_Error True if the request has access to archive the item, WP_Error object otherwise.
 	 */
-	public function hide_item_permissions_check( $request ) {
+	public function archive_item_permissions_check( $request ) {
 		$item = $this->get_user( $request['id'] );
 		if ( is_wp_error( $item ) ) {
 			return $item;
 		}
 
-		if ( $item && ! current_user_can( 'hide_incassoos_consumer', $item ) ) {
+		if ( $item && ! current_user_can( 'archive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_hide_consumer',
-				__( 'Sorry, you are not allowed to hide this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_archive_consumer',
+				__( 'Sorry, you are not allowed to archive this consumer.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -616,14 +616,14 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Hide a single consumer
+	 * Archive a single consumer
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
-	public function hide_item( $request ) {
+	public function archive_item( $request ) {
 		$item = $this->get_user( $request['id'] );
 		if ( is_wp_error( $item ) ) {
 			return $item;
@@ -631,47 +631,47 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		$id = $item->ID;
 
-		if ( ! current_user_can( 'hide_incassoos_consumer', $item ) ) {
+		if ( ! current_user_can( 'archive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_hide_consumer',
-				__( 'Sorry, you are not allowed to hide this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_archive_consumer',
+				__( 'Sorry, you are not allowed to archive this consumer.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
 		$request->set_param( 'context', 'edit' );
 
-		// Only hide if we haven't already.
-		if ( incassoos_is_consumer_hidden( $item ) ) {
+		// Only archive if we haven't already.
+		if ( incassoos_is_consumer_archived( $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_is_hidden',
-				__( 'The consumer is hidden.', 'incassoos' ),
+				'incassoos_rest_is_archived',
+				__( 'The consumer is archived.', 'incassoos' ),
 				array( 'status' => 410 )
 			);
 		}
 
-		$result   = incassoos_hide_consumer( $item );
+		$result   = incassoos_archive_consumer( $item );
 		$item     = incassoos_get_user( $id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		if ( ! $result ) {
 			return new WP_Error(
-				'incassoos_rest_cannot_hide',
-				__( 'The consumer cannot be hidden.', 'incassoos' ),
+				'incassoos_rest_cannot_archive',
+				__( 'The consumer cannot be archived.', 'incassoos' ),
 				array( 'status' => 500 )
 			);
 		}
 
 		/**
-		 * Fires immediately after a single consumer is hidden via the REST API.
+		 * Fires immediately after a single consumer is archived via the REST API.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Post          $item     The hidden user.
+		 * @param WP_Post          $item     The archived user.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 */
-		do_action( "incassoos_rest_hide_consumer", $item, $response, $request );
+		do_action( 'incassoos_rest_archive_consumer', $item, $response, $request );
 
 		return $response;
 	}

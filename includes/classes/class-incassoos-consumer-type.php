@@ -65,12 +65,12 @@ final class Incassoos_Consumer_Type {
 	public $term_id = 0;
 
 	/**
-	 * Whether the consumer type is hidden from queries.
+	 * Whether the consumer type is internal. Internal types are removed from queries.
 	 *
 	 * @since 1.0.0
 	 * @var string
 	 */
-	private $_hidden = false;
+	private $_internal = false;
 
 	/**
 	 * Retrieve Incassoos_Consumer_Type instance.
@@ -192,14 +192,14 @@ final class Incassoos_Consumer_Type {
 	}
 
 	/**
-	 * Return whether the type is hidden.
+	 * Return whether the type is internal.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return bool Type is hidden.
+	 * @return bool Type is internal.
 	 */
-	public function is_hidden() {
-		return (bool) $this->_hidden;
+	public function is_internal() {
+		return (bool) $this->_internal;
 	}
 
 	/**

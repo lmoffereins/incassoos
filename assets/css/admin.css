@@ -626,7 +626,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 }
 
 .incassoos-item-list .item-list-header #show-selected,
-.incassoos-item-list .item-list-header #show-default-items {
+.incassoos-item-list .item-list-header #show-archived-items {
 	padding: 5px 3px 5.5px;
 }
 
@@ -644,7 +644,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 }
 
 .incassoos-item-list #show-selected:after,
-.incassoos-item-list #show-default-items:after,
+.incassoos-item-list #show-archived-items:after,
 .incassoos-item-list #reverse-group-order:after,
 .incassoos-item-list #toggle-list-columns:after,
 .incassoos-item-list #open-add-participant:after,
@@ -659,14 +659,14 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 }
 
 .incassoos-item-list #show-selected:after,
-.incassoos-item-list #show-default-items:after {
+.incassoos-item-list #show-archived-items:after {
 	content: '\f530'; /* dashicons-hidden */
 	color: #ddd;
 	margin: 0px 0px -2px 6px;
 }
 
 .incassoos-item-list.showing-selected #show-selected:after,
-.incassoos-item-list.showing-default-items #show-default-items:after {
+.incassoos-item-list.hiding-archived-items #show-archived-items:after {
 	content: '\f177'; /* dashicons-visibility */
 	color: inherit;
 }
@@ -770,7 +770,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 .incassoos-item-list .hide-in-list,
 .incassoos-item-list.showing-selected .groups .activity-participant .select-user:not(:checked),
 .incassoos-item-list.showing-selected .groups .activity-participant .select-user:not(:checked) ~ *,
-.incassoos-item-list.showing-default-items .hidden-consumer {
+.incassoos-item-list.hiding-archived-items .archived-consumer {
 	display: none;
 }
 
@@ -947,7 +947,7 @@ body.incassoos_page_incassoos-consumers .incassoos-item-list:not(.bulk-editing) 
 	}
 
 	.incassoos-item-list .item-list-header #show-selected,
-	.incassoos-item-list .item-list-header #show-default-items {
+	.incassoos-item-list .item-list-header #show-archived-items {
 		font-size: 16px;
 	}
 
@@ -1249,7 +1249,7 @@ body.incassoos_page_incassoos-consumers .users .consumer > .consumer-name:after 
 	opacity: .35;
 }
 
-body.incassoos_page_incassoos-consumers .users .consumer.hidden-consumer > .consumer-name:after {
+body.incassoos_page_incassoos-consumers .users .consumer.archived-consumer > .consumer-name:after {
 	content: '\f530'; /* dashicons-hidden */
 }
 
@@ -1275,6 +1275,7 @@ body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields > l
 
 body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields span.title {
 	display: contents; /* makes text not wrap */
+	cursor: pointer;
 }
 
 body.incassoos_page_incassoos-consumers .inline-edit-row .inline-edit-fields span.input-text-wrap {

@@ -79,7 +79,7 @@ define([
 		product: {
 			productCategory: {
 				items: {},
-				hiddenItems: [],
+				archivedItems: [],
 				defaultValue: 0
 			}
 		}

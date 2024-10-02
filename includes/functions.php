@@ -1328,13 +1328,13 @@ function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 	// Product Category
 	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) {
 
-		// Term hidden as a checkbox
-		if ( ! isset( $_POST['term-hidden'] ) ) {
-			delete_term_meta( $term_id, '_hidden' );
+		// Term archived as a checkbox
+		if ( ! isset( $_POST['term-archived'] ) ) {
+			delete_term_meta( $term_id, '_incassoos_archived' );
 
-		// Set hidden term
+		// Set archived term
 		} else {
-			update_term_meta( $term_id, '_hidden', 1 );
+			update_term_meta( $term_id, '_incassoos_archived', 1 );
 		}
 	}
 }

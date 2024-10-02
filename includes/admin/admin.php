@@ -324,8 +324,8 @@ class Incassoos_Admin {
 			'l10n' => array(
 				'showSelectedAll'      => __( 'Showing selected',                   'incassoos' ),
 				'showSelectedOnly'     => __( 'Show selected',                      'incassoos' ),
-				'showDefaultItemsAll'  => __( 'Showing default',                    'incassoos' ),
-				'showDefaultItemsOnly' => __( 'Show default',                       'incassoos' ),
+				'showArchivedItems'    => __( 'Show archived',                      'incassoos' ),
+				'showingArchivedItems' => __( 'Showing archived',                   'incassoos' ),
 				'termMetaDefault'      => _x( 'Default', 'Term meta',               'incassoos' ),
 				'toggleCloseErrors'    => _x( 'Hide errors', 'Notice toggle label', 'incassoos' ),
 				'toggleOpenErrors'     => _x( 'Show errors', 'Notice toggle label', 'incassoos' ),

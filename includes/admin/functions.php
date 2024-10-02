@@ -2143,10 +2143,10 @@ function incassoos_admin_filter_term_name( $name, $term ) {
 	// Product Category
 	if ( $a_term && $term->taxonomy === incassoos_get_product_cat_tax_id() ) {
 
-		// Default term
-		if ( incassoos_is_hidden_product_category( $term->term_id ) ) {
+		// Archived term
+		if ( incassoos_is_archived_product_category( $term->term_id ) ) {
 			/* translators: %s: Term name */
-			$name = sprintf( __( '%s <span class="status">&mdash; Hidden</span>', 'incassoos' ), $name );
+			$name = sprintf( __( '%s <span class="status">&mdash; Archived</span>', 'incassoos' ), $name );
 		}
 	}
 
@@ -2177,11 +2177,11 @@ function incassoos_admin_taxonomy_add_form_fields( $taxonomy ) {
 	// Product Category
 	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) : ?>
 
-	<div class="form-field term-hidden-wrap">
-		<label for="term-hidden"><?php esc_html_e( 'Hidden', 'incassoos' ); ?></label>
-		<input type="checkbox" id="term-hidden" name="term-hidden" value="1" />
+	<div class="form-field term-archived-wrap">
+		<label for="term-archived"><?php echo esc_html( _x( 'Archived', 'Term status', 'incassoos' ) ); ?></label>
+		<input type="checkbox" id="term-archived" name="term-archived" value="1" />
 
-		<p class="description"><?php esc_html_e( 'Mark whether this should be a hidden product category. Products in this category will be hidden from selection in orders.', 'incassoos' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Mark whether to archive this product category. Products in an archived category will be removed from selection in orders.', 'incassoos' ); ?></p>
 	</div>
 
 	<?php endif;
@@ -2216,14 +2216,14 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 	// Product Category
 	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) : ?>
 
-	<tr class="form-field term-hidden-wrap">
+	<tr class="form-field term-archived-wrap">
 		<th scope="row" valign="top">
-			<label for="term-hidden"><?php esc_html_e( 'Hidden', 'incassoos' ); ?></label>
+			<label for="term-archived"><?php echo esc_html( _x( 'Archived', 'Term status', 'incassoos' ) ); ?></label>
 		</th>
 		<td>
-			<input type="checkbox" id="term-hidden" name="term-hidden" value="1" <?php checked( get_term_meta( $term->term_id, '_hidden', true ) ); ?>/>
+			<input type="checkbox" id="term-archived" name="term-archived" value="1" <?php checked( get_term_meta( $term->term_id, '_incassoos_archived', true ) ); ?>/>
 
-			<p class="description"><?php esc_html_e( 'Mark whether this should be a hidden product category. Products in this category will be hidden from selection in orders.', 'incassoos' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Mark whether to archive this product category. Products in an archived category will be removed from selection in orders.', 'incassoos' ); ?></p>
 		</td>
 	</tr>
 
