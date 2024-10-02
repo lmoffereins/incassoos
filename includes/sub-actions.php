@@ -93,28 +93,23 @@ function incassoos_rest_api_init() {
  * @since 1.0.0
  *
  * @uses do_action() Calls 'incassoos_registered_{$type}_post_type'
+ *
  * @param string $post_type
  */
 function incassoos_registered_post_type( $post_type ) {
 
-	// The plugin post types
-	$types = array( 'collection', 'activity', 'occasion', 'order', 'product' );
+	// The plugin object type
+	if ( incassoos_is_plugin_post_type( $post_type ) && $type = incassoos_get_object_type( $post_type ) ) {
 
-	foreach ( $types as $type ) {
-
-		// Skip when this is not the current post type
-		if ( call_user_func( "incassoos_get_{$type}_post_type" ) !== $post_type )
-			continue;
-
+		// Define hook name
 		$hook = "incassoos_registered_{$type}_post_type";
 
+		// Run setup function
 		if ( is_callable( $hook ) ) {
 			call_user_func( $hook );
 		}
 
 		do_action( $hook );
-
-		break;
 	}
 }
 
@@ -124,28 +119,23 @@ function incassoos_registered_post_type( $post_type ) {
  * @since 1.0.0
  *
  * @uses do_action() Calls 'incassoos_registered_{$tax}_taxonomy'
+ *
  * @param string $taxonomy
  */
 function incassoos_registered_taxonomy( $taxonomy ) {
 
-	// The plugin taxonomies
-	$taxes = array( 'activity_cat', 'occasion_type', 'product_cat' );
+	// The plugin object type
+	if ( incassoos_is_plugin_taxonomy( $taxonomy ) && $type = incassoos_get_object_type( $taxonomy ) ) {
 
-	foreach ( $taxes as $tax ) {
+		// Define hook name
+		$hook = "incassoos_registered_{$type}_taxonomy";
 
-		// Skip when this is not the current taxonomy
-		if ( call_user_func( "incassoos_get_{$tax}_tax_id" ) !== $taxonomy )
-			continue;
-
-		$hook = "incassoos_registered_{$tax}_taxonomy";
-
+		// Run setup function
 		if ( is_callable( $hook ) ) {
 			call_user_func( $hook );
 		}
 
 		do_action( $hook );
-
-		break;
 	}
 }
 

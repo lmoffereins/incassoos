@@ -193,36 +193,44 @@ function incassoos_is_plugin_post_type( $post_type = null ) {
 }
 
 /**
- * Return the plugin object type of the given post type
+ * Return the plugin object type of the given post type or taxonomy
  *
  * @since 1.0.0
  *
  * @uses apply_filters() Calls 'incassoos_get_object_type'
  *
- * @param  string $post_type Optional. Post type. Defaults to the current post type.
+ * @param  string $post_type_or_taxonomy Optional. Post type or taxonomy. Defaults to the current post type.
  * @return string Plugin object type
  */
-function incassoos_get_object_type( $post_type = '' ) {
+function incassoos_get_object_type( $post_type_or_taxonomy = '' ) {
 	$type = '';
 
 	// Default to the current post type
-	if ( ! $post_type ) {
-		$post_type = get_post_type();
+	if ( ! $post_type_or_taxonomy ) {
+		$post_type_or_taxonomy = get_post_type();
 	}
 
 	$types = array(
+
+		// Post types
 		incassoos_get_collection_post_type() => 'collection',
 		incassoos_get_activity_post_type()   => 'activity',
 		incassoos_get_occasion_post_type()   => 'occasion',
 		incassoos_get_order_post_type()      => 'order',
 		incassoos_get_product_post_type()    => 'product',
+
+		// Taxonomies
+		incassoos_get_activity_cat_tax_id()  => 'activity_cat',
+		incassoos_get_occasion_type_tax_id() => 'occasion_type',
+		incassoos_get_product_cat_tax_id()   => 'product_cat',
+		incassoos_get_consumer_type_tax_id() => 'consumer_type',
 	);
 
-	if ( isset( $types[ $post_type ] ) ) {
-		$type = $types[ $post_type ];
+	if ( isset( $types[ $post_type_or_taxonomy ] ) ) {
+		$type = $types[ $post_type_or_taxonomy ];
 	}
 
-	return apply_filters( 'incassoos_get_object_type', $type, $post_type );
+	return apply_filters( 'incassoos_get_object_type', $type, $post_type_or_taxonomy );
 }
 
 /**
@@ -1191,7 +1199,7 @@ function incassoos_get_plugin_taxonomy_post_types() {
 	return apply_filters( 'incassoos_get_plugin_taxonomy_post_types', array(
 		incassoos_get_activity_cat_tax_id()  => incassoos_get_activity_post_type(),
 		incassoos_get_occasion_type_tax_id() => incassoos_get_occasion_post_type(),
-		incassoos_get_product_cat_tax_id()   => incassoos_get_product_post_type()
+		incassoos_get_product_cat_tax_id()   => incassoos_get_product_post_type(),
 	) );
 }
 
