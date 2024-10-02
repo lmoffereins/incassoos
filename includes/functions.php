@@ -1216,12 +1216,36 @@ function incassoos_get_taxonomies_for_default_terms() {
  *
  * @since 1.0.0
  *
- * @uses apply_filters() Calls 'incassoos_taxonomy_supports_default_terms'
- *
  * @return bool Does the taxonomy support default terms?
  */
 function incassoos_taxonomy_supports_default_terms( $taxonomy ) {
-	return (bool) apply_filters( 'incassoos_taxonomy_supports_default_terms', in_array( $taxonomy, incassoos_get_taxonomies_for_default_terms() ) );
+	return in_array( $taxonomy, incassoos_get_taxonomies_for_default_terms(), true );
+}
+
+/**
+ * Return the taxonomies that support archived terms
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_taxonomies_for_archived_terms'
+ *
+ * @return array Taxonomy names
+ */
+function incassoos_get_taxonomies_for_archived_terms() {
+	return apply_filters( 'incassoos_get_taxonomies_for_archived_terms', array(
+		incassoos_get_product_cat_tax_id()
+	) );
+}
+
+/**
+ * Return whether the taxonomy supports archived terms
+ *
+ * @since 1.0.0
+ *
+ * @return bool Does the taxonomy support archived terms?
+ */
+function incassoos_taxonomy_supports_archived_terms( $taxonomy ) {
+	return in_array( $taxonomy, incassoos_get_taxonomies_for_archived_terms(), true );
 }
 
 /**
@@ -1325,8 +1349,8 @@ function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 		}
 	}
 
-	// Product Category
-	if ( incassoos_get_product_cat_tax_id() === $taxonomy ) {
+	// Taxonomy supports archived terms
+	if ( incassoos_taxonomy_supports_archived_terms( $taxonomy ) ) {
 
 		// Term archived as a checkbox
 		if ( ! isset( $_POST['term-archived'] ) ) {
@@ -1358,6 +1382,27 @@ function incassoos_is_default_term( $term ) {
 	}
 
 	return (bool) apply_filters( 'incassoos_is_default_term', $is, $term );
+}
+
+/**
+ * Return whether the given term is archived
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_is_term_archived'
+ *
+ * @param  WP_Term|int $term Term object or id.
+ * @return bool Is the term archived?
+ */
+function incassoos_is_term_archived( $term ) {
+	$term = get_term( $term );
+	$is   = false;
+
+	if ( $term && ! is_wp_error( $term ) ) {
+		$is = (bool) get_term_meta( $term->term_id, '_incassoos_archived', true );
+	}
+
+	return (bool) apply_filters( 'incassoos_is_term_archived', $is, $term );
 }
 
 /**

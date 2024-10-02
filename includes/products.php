@@ -222,18 +222,6 @@ function incassoos_get_archived_product_categories() {
 }
 
 /**
- * Return whether this is an archived Product Category
- *
- * @since 1.0.0
- *
- * @param  int Product Category term id.
- * @return bool Is this an archived product category?
- */
-function incassoos_is_archived_product_category( $term_id ) {
-	return in_array( (int) $term_id, incassoos_get_archived_product_categories(), true );
-}
-
-/**
  * Register REST fields for the Product Category taxonomy
  *
  * @since 1.0.0
