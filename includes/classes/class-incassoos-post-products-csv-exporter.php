@@ -52,10 +52,10 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 		$this->file_type = incassoos_get_post_products_export_type_id();
 
 		// Set the post context
-		$this->post        = get_post( $post );
-		$this->object_type = $this->post ? incassoos_get_object_type( $this->post->post_type ) : 'default';
+		$this->post        = $post = get_post( $post );
+		$this->object_type = $post ? incassoos_get_object_type( $post->post_type ) : 'default';
 
-		if ( $this->post ) {
+		if ( $post ) {
 			$columns   = $this->get_post_columns();
 			$file_data = $this->get_post_data();
 
@@ -65,10 +65,10 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 			// Set file name
 			$this->set_filename(
 				sprintf( '%s-%s-%s-%s.csv',
-					incassoos_get_post_type_label( $this->post->post_type ),
-					incassoos_get_post_title( $this->post ),
-					incassoos_get_order_post_type() === $this->post->post_type
-						? incassoos_get_order_created( $this->post, 'YmdHis' ) . '-' . esc_html__( 'Products', 'incassoos' )
+					incassoos_get_post_type_label( $post->post_type ),
+					incassoos_get_post_title( $post ),
+					incassoos_get_order_post_type() === $post->post_type
+						? incassoos_get_order_created( $post, 'YmdHis' ) . '-' . esc_html__( 'Products', 'incassoos' )
 						: esc_html__( 'Products', 'incassoos' ),
 					date( 'Ymd' )
 				)
@@ -88,7 +88,11 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 	 * @return array Post file columns
 	 */
 	public function get_post_columns() {
-		switch ( $this->post->post_type ) {
+		$post        = $this->post;
+		$file_type   = $this->file_type;
+		$object_type = $this->object_type;
+
+		switch ( $post->post_type ) {
 
 			// Occasion
 			case incassoos_get_occasion_post_type() :
@@ -122,7 +126,7 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$columns = array();
 		}
 
-		return apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_columns", $columns, $this );
+		return apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_columns", $columns, $this );
 	}
 
 	/**
@@ -138,16 +142,20 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 	public function get_post_data() {
 		$rows = array();
 
-		switch ( $this->post->post_type ) {
+		$post        = $this->post;
+		$file_type   = $this->file_type;
+		$object_type = $this->object_type;
+
+		switch ( $post->post_type ) {
 
 			// Occasion
 			case incassoos_get_occasion_post_type() :
-				$post_id    = $this->post->ID;
-				$post_title = incassoos_get_occasion_title( $this->post );
-				$post_date  = incassoos_get_occasion_date( $this->post, 'Y-m-d' );
+				$post_id    = $post->ID;
+				$post_title = incassoos_get_occasion_title( $post );
+				$post_date  = incassoos_get_occasion_date( $post, 'Y-m-d' );
 
-				foreach ( incassoos_get_occasion_products( $this->post ) as $product ) {
-					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
+				foreach ( incassoos_get_occasion_products( $post ) as $product ) {
+					$rows[] = apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_data_row", array(
 						'id'            => $post_id,
 						'occasion'      => $post_title,
 						'occasion_date' => $post_date,
@@ -162,12 +170,12 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 
 			// Order
 			case incassoos_get_order_post_type() :
-				$post_id    = $this->post->ID;
-				$post_title = incassoos_get_order_title( $this->post );
-				$post_date  = incassoos_get_order_created( $this->post, 'Y-m-d' );
+				$post_id    = $post->ID;
+				$post_title = incassoos_get_order_title( $post );
+				$post_date  = incassoos_get_order_created( $post, 'Y-m-d' );
 
-				foreach ( incassoos_get_order_products( $this->post ) as $product ) {
-					$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
+				foreach ( incassoos_get_order_products( $post ) as $product ) {
+					$rows[] = apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_data_row", array(
 						'id'           => $post_id,
 						'order'        => $post_title,
 						'order_date'   => $post_date,
@@ -181,7 +189,7 @@ class Incassoos_Post_Products_CSV_Exporter extends Incassoos_CSV_Exporter {
 				break;
 		}
 
-		return apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data", $rows, $this );
+		return apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_data", $rows, $this );
 	}
 }
 

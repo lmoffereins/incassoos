@@ -57,7 +57,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		$this->file_extension = 'sfc';
 
 		// Require the Collection to be collected
-		$this->post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
+		$this->post = $post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
 
 		// Bail when invalid
 		if ( ! $this->validate_file() ) {
@@ -65,14 +65,14 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 		}
 
 		// Set collection date
-		$this->collection_date = incassoos_get_collection_date( $this->post, 'Y-m-d' );
+		$this->collection_date = incassoos_get_collection_date( $post, 'Y-m-d' );
 
 		// Set file name
 		$this->set_filename(
 			sprintf( '%s-SFC-%s-%s.sfc',
 				incassoos_get_organization_name(),
-				incassoos_get_collection_title( $this->post ),
-				incassoos_get_collection_date( $this->post, 'Ymd' )
+				incassoos_get_collection_title( $post ),
+				incassoos_get_collection_date( $post, 'Ymd' )
 			)
 		);
 	}
@@ -110,6 +110,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 * @return string|false VGSR SFC file or False when invalid.
 	 */
 	public function get_file() {
+		$file_type = $this->file_type;
 
 		// Bail when the file is invalid
 		if ( $this->has_errors() )
@@ -127,7 +128,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 			$file .= $this->parse_lines( $olines );
 		}
 
-		return apply_filters( "incassoos_export-{$this->file_type}-get_file", $file, $this );
+		return apply_filters( "incassoos_export-{$file_type}-get_file", $file, $this );
 	}
 
 	/** Structure *******************************************************/
@@ -142,8 +143,9 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 * @return array Collection Activity line data
 	 */
 	public function get_activity_lines() {
-		$activities     = incassoos_get_collection_activities( $this->post );
-		$date           = incassoos_get_collection_date( $this->post, 'j-n-Y' );
+		$post           = $this->post;
+		$activities     = incassoos_get_collection_activities( $post );
+		$date           = incassoos_get_collection_date( $post, 'j-n-Y' );
 		$consumer_types = incassoos_get_consumer_types();
 		$retval         = array();
 
@@ -207,7 +209,7 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 			'item_id'   => 'activities-counter',
 			'ledger_id' => 10, // Nog te ontvangen incasso's
 			/* translators: %s: Date */
-			'title'     => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $this->post, 'j-n-Y' ) ),
+			'title'     => sprintf( __( 'All activities per %s', 'incassoos' ), incassoos_get_collection_date( $post, 'j-n-Y' ) ),
 			'debit'     => $counter_total < 0 ? abs( $counter_total ) : 0,
 			'credit'    => $counter_total < 0 ? 0 : $counter_total,
 		);
@@ -227,8 +229,9 @@ class Incassoos_VGSR_SFC_Exporter extends Incassoos_File_Exporter {
 	 * @return array Collection Occasion line data
 	 */
 	public function get_occasion_lines() {
-		$occasions      = incassoos_get_collection_occasions( $this->post );
-		$date           = incassoos_get_collection_date( $this->post, 'j-n-Y' );
+		$post           = $this->post;
+		$occasions      = incassoos_get_collection_occasions( $post );
+		$date           = incassoos_get_collection_date( $post, 'j-n-Y' );
 		$consumer_types = incassoos_get_consumer_types();
 		$retval         = array();
 

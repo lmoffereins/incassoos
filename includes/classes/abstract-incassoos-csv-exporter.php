@@ -192,6 +192,8 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 			$formatted = $input;
 		}
 
+		$file_type = $this->file_type;
+
 		$use_mb = function_exists( 'mb_convert_encoding' );
 
 		if ( $use_mb ) {
@@ -199,7 +201,7 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 			$formatted = 'UTF-8' === $encoding ? $formatted : utf8_encode( $formatted );
 		}
 
-		$formatted = apply_filters( "incassoos_export-{$this->file_type}-format_value", $formatted, $input, $column_id, $this );
+		$formatted = apply_filters( "incassoos_export-{$file_type}-format_value", $formatted, $input, $column_id, $this );
 
 		return $this->escape_value( $formatted );
 	}
@@ -277,7 +279,9 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 	 * @return array Columns as key => label
 	 */
 	public function get_columns() {
-		return apply_filters( "incassoos_export-{$this->file_type}-get_columns", $this->file_columns, $this );
+		$file_type = $this->file_type;
+
+		return apply_filters( "incassoos_export-{$file_type}-get_columns", $this->file_columns, $this );
 	}
 
 	/**
@@ -305,7 +309,9 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 	 * @return array File data
 	 */
 	public function get_file_data() {
-		return apply_filters( "incassoos_export-{$this->file_type}-get_file_data", $this->file_data, $this );
+		$file_type = $this->file_type;
+
+		return apply_filters( "incassoos_export-{$file_type}-get_file_data", $this->file_data, $this );
 	}
 
 	/**
@@ -333,7 +339,9 @@ abstract class Incassoos_CSV_Exporter extends Incassoos_File_Exporter {
 	 * @return string Delimiter
 	 */
 	public function get_delimiter() {
-		return apply_filters( "incassoos_export-{$this->file_type}-get_delimiter", $this->delimiter, $this );
+		$file_type = $this->file_type;
+
+		return apply_filters( "incassoos_export-{$file_type}-get_delimiter", $this->delimiter, $this );
 	}
 }
 

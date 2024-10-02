@@ -52,8 +52,8 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 		$this->file_type = incassoos_get_post_consumptions_export_type_id();
 
 		// Set the post context
-		$this->post = $post = get_post( $post );
-		$this->object_type  = incassoos_get_object_type( $post->post_type ) ?: 'default';
+		$this->post        = $post = get_post( $post );
+		$this->object_type = $post ? incassoos_get_object_type( $post->post_type ) : 'default';
 
 		if ( $post ) {
 			$columns   = $this->get_post_columns();
@@ -65,8 +65,8 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 			// Set file name
 			$this->set_filename(
 				sprintf( '%s-%s-%s-%s.csv',
-					incassoos_get_post_type_label( $this->post->post_type ),
-					incassoos_get_post_title( $this->post ),
+					incassoos_get_post_type_label( $post->post_type ),
+					incassoos_get_post_title( $post ),
 					esc_html__( 'Consumptions', 'incassoos' ),
 					date( 'Ymd' )
 				)
@@ -86,7 +86,11 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 	 * @return array Post file columns
 	 */
 	public function get_post_columns() {
-		switch ( $this->post->post_type ) {
+		$post        = $this->post;
+		$file_type   = $this->file_type;
+		$object_type = $this->object_type;
+
+		switch ( $post->post_type ) {
 
 			// Occasion
 			case incassoos_get_occasion_post_type() :
@@ -110,7 +114,7 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 				$columns = array();
 		}
 
-		return apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_columns", $columns, $this );
+		return apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_columns", $columns, $this );
 	}
 
 	/**
@@ -126,21 +130,25 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 	public function get_post_data() {
 		$rows = array();
 
-		switch ( $this->post->post_type ) {
+		$post        = $this->post;
+		$file_type   = $this->file_type;
+		$object_type = $this->object_type;
+
+		switch ( $post->post_type ) {
 
 			// Occasion
 			case incassoos_get_occasion_post_type() :
-				$post_id    = $this->post->ID;
-				$post_title = incassoos_get_occasion_title( $this->post );
-				$post_date  = incassoos_get_occasion_date( $this->post, 'Y-m-d' );
+				$post_id    = $post->ID;
+				$post_title = incassoos_get_occasion_title( $post );
+				$post_date  = incassoos_get_occasion_date( $post, 'Y-m-d' );
 
-				foreach ( incassoos_get_occasion_orders( $this->post, array( 'order' => 'ASC' ) ) as $order_id ) {
+				foreach ( incassoos_get_occasion_orders( $post, array( 'order' => 'ASC' ) ) as $order_id ) {
 					$order_date = incassoos_get_order_created( $order_id, 'Y-m-d H:i:s' );
 					$user_id    = incassoos_get_order_consumer( $order_id );
 					$user_name  = incassoos_get_order_consumer_title( $order_id );
 
 					foreach ( incassoos_get_order_products( $order_id ) as $product ) {
-						$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data_row", array(
+						$rows[] = apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_data_row", array(
 							'id'             => $post_id,
 							'occasion'       => $post_title,
 							'occasion_date'  => $post_date,
@@ -159,7 +167,7 @@ class Incassoos_Post_Consumptions_CSV_Exporter extends Incassoos_CSV_Exporter {
 				break;
 		}
 
-		return apply_filters( "incassoos_export-{$this->file_type}-get_{$this->object_type}_data", $rows, $this );
+		return apply_filters( "incassoos_export-{$file_type}-get_{$object_type}_data", $rows, $this );
 	}
 }
 

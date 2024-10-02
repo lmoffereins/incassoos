@@ -47,9 +47,9 @@ class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter
 		}
 
 		// Require the Collection to be collected
-		$this->post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
+		$this->post = $post = incassoos_get_collection( $post, array( 'is_collected' => true ) );
 
-		if ( $this->post ) {
+		if ( $post ) {
 			$iban = incassoos_get_account_iban();
 			$args = array(
 				'party'        => array(
@@ -77,11 +77,13 @@ class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter
 	 * @return string Export filename
 	 */
 	public function set_filename( $filename ) {
-		if ( $this->post ) {
+		$post = $this->post;
+
+		if ( $post ) {
 			$filename = sprintf( '%s-SEPA-%s-%s.xml',
 				$this->party->organization,
-				incassoos_get_collection_title( $this->post ),
-				incassoos_get_collection_date( $this->post, 'Ymd' )
+				incassoos_get_collection_title( $post ),
+				incassoos_get_collection_date( $post, 'Ymd' )
 			);
 		}
 
@@ -96,14 +98,16 @@ class Incassoos_Collection_SEPA_XML_Exporter extends Incassoos_SEPA_XML_Exporter
 	 * @return array Collection transaction data
 	 */
 	public function get_transactions() {
-		$users  = incassoos_get_collection_consumer_users( $this->post );
+		$post = $this->post;
+
+		$users  = incassoos_get_collection_consumer_users( $post );
 		$retval = array();
 
 		foreach ( $users as $user ) {
 			$iban     = incassoos_get_user_iban( $user->ID );
 			$retval[] = array(
-				'amount'      => incassoos_get_collection_consumer_total( $user->ID, $this->post ),
-				'description' => incassoos_get_collection_transaction_description( $this->post ),
+				'amount'      => incassoos_get_collection_consumer_total( $user->ID, $post ),
+				'description' => incassoos_get_collection_transaction_description( $post ),
 				'party'       => array(
 					'id'           => $user->ID,
 					'name'         => incassoos_get_user_display_name( $user->ID ),

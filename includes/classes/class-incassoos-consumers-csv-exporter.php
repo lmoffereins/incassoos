@@ -89,6 +89,8 @@ class Incassoos_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 		$fields = incassoos_admin_get_consumers_fields();
 		$rows   = array();
 
+		$file_type = $this->file_type;
+
 		// Consumer groups
 		foreach ( incassoos_get_grouped_users() as $group ) {
 
@@ -106,7 +108,7 @@ class Incassoos_Consumers_CSV_Exporter extends Incassoos_CSV_Exporter {
 					$row[ $field_id ] = call_user_func( $args['display_callback'], $user, $field_id );
 				}
 
-				$rows[] = apply_filters( "incassoos_export-{$this->file_type}-get_data_row", $row, $user, $group, $this );
+				$rows[] = apply_filters( "incassoos_export-{$file_type}-get_data_row", $row, $user, $group, $this );
 			}
 		}
 

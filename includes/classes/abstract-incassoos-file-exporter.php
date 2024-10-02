@@ -157,7 +157,9 @@ abstract class Incassoos_File_Exporter {
 	 * @return string Export filename
 	 */
 	public function get_filename() {
-		return sanitize_file_name( apply_filters( "incassoos_export-{$this->file_type}-get_filename", $this->filename, $this ) );
+		$file_type = $this->file_type;
+
+		return sanitize_file_name( apply_filters( "incassoos_export-{$file_type}-get_filename", $this->filename, $this ) );
 	}
 }
 
