@@ -774,6 +774,8 @@ function incassoos_map_generic_caps( $caps = array(), $cap = '', $user_id = 0, $
 
 			break;
 
+		case 'archive_incassoos_consumer' :
+		case 'unarchive_incassoos_consumer' :
 		case 'edit_incassoos_consumer' :
 
 			// Block all non-assigned
