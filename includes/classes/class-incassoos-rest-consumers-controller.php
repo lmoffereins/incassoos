@@ -505,92 +505,6 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Checks if a given request has access to unarchive a consumer
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return true|WP_Error True if the request has access to unarchive the item, WP_Error object otherwise.
-	 */
-	public function unarchive_item_permissions_check( $request ) {
-		$item = $this->get_user( $request['id'] );
-		if ( is_wp_error( $item ) ) {
-			return $item;
-		}
-
-		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
-			return new WP_Error(
-				'incassoos_rest_user_cannot_unarchive_consumer',
-				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Unarchive a single consumer
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
-	 */
-	public function unarchive_item( $request ) {
-		$item = $this->get_user( $request['id'] );
-		if ( is_wp_error( $item ) ) {
-			return $item;
-		}
-
-		$id = $item->ID;
-
-		if ( ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
-			return new WP_Error(
-				'incassoos_rest_user_cannot_unarchive_consumer',
-				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		$request->set_param( 'context', 'edit' );
-
-		// Only unarchive if we have already archived.
-		if ( incassoos_is_consumer_not_archived( $item ) ) {
-			return new WP_Error(
-				'incassoos_rest_is_not_archived',
-				__( 'The consumer is not archived.', 'incassoos' ),
-				array( 'status' => 410 )
-			);
-		}
-
-		$result   = incassoos_unarchive_consumer( $item );
-		$item     = incassoos_get_user( $id );
-		$response = $this->prepare_item_for_response( $item, $request );
-
-		if ( ! $result ) {
-			return new WP_Error(
-				'incassoos_rest_cannot_unarchive',
-				__( 'The consumer cannot be unarchived.', 'incassoos' ),
-				array( 'status' => 500 )
-			);
-		}
-
-		/**
-		 * Fires immediately after a single consumer is unarchived via the REST API.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param WP_Post          $item     The unarchived user.
-		 * @param WP_REST_Response $response The response data.
-		 * @param WP_REST_Request  $request  The request sent to the API.
-		 */
-		do_action( 'incassoos_rest_unarchive_consumer', $item, $response, $request );
-
-		return $response;
-	}
-
-	/**
 	 * Checks if a given request has access to archive a consumer
 	 *
 	 * @since 1.0.0
@@ -667,11 +581,97 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Post          $item     The archived user.
+		 * @param WP_User          $item     The archived user.
 		 * @param WP_REST_Response $response The response data.
 		 * @param WP_REST_Request  $request  The request sent to the API.
 		 */
 		do_action( 'incassoos_rest_archive_consumer', $item, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to unarchive a consumer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to unarchive the item, WP_Error object otherwise.
+	 */
+	public function unarchive_item_permissions_check( $request ) {
+		$item = $this->get_user( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_unarchive_consumer',
+				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Unarchive a single consumer
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function unarchive_item( $request ) {
+		$item = $this->get_user( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$id = $item->ID;
+
+		if ( ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_unarchive_consumer',
+				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only unarchive if we have already archived.
+		if ( incassoos_is_consumer_not_archived( $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_not_archived',
+				__( 'The consumer is not archived.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_unarchive_consumer( $item );
+		$item     = incassoos_get_user( $id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_unarchive',
+				__( 'The consumer cannot be unarchived.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single consumer is unarchived via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_User          $item     The unarchived user.
+		 * @param WP_REST_Response $response The response data.
+		 * @param WP_REST_Request  $request  The request sent to the API.
+		 */
+		do_action( 'incassoos_rest_unarchive_consumer', $item, $response, $request );
 
 		return $response;
 	}
