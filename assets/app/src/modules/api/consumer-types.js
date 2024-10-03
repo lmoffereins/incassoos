@@ -23,7 +23,7 @@ define([
 			show: true,
 			isConsumerType: true,
 			group: {
-				id: 0,
+				id: "consumer-types",
 				name: "Consumer.TypesGroupName",
 				order: 0
 			}

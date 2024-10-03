@@ -299,7 +299,7 @@ define([
 			 *
 			 * This is blocked when all groups are expanded.
 			 *
-			 * @param  {Number|String} id Group identifier. Defaults to false to remove the filter.
+			 * @param  {Number|String} id Group identifier
 			 * @return {Void}
 			 */
 			expandOneGroup: function( id ) {
@@ -307,7 +307,7 @@ define([
 					? false
 					: this.oneGroupExpanded === id
 						? false
-						: id || false;
+						: id;
 			},
 
 			/**
