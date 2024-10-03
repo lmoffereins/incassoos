@@ -86,6 +86,8 @@ define([
 			groups: function() {
 				return _.orderBy(
 					_.uniqBy(this.consumers.map( function( i ) {
+						i.group.className = "consumer-group-".concat(i.group.id);
+
 						// Return group data
 						return i.group;
 					}), "id"),
@@ -231,9 +233,9 @@ define([
 			consumers: function( state, getters ) {
 				var self = this;
 
-				// Get items. Filter for hidden consumers
+				// Get items. Filter for hidden consumers and consumer types
 				return _.orderBy(
-					getters.getConsumers.filter( function( i ) {
+					getters.getItems.filter( function( i ) {
 						return i.show || getters.isActiveItem(i.id) || self.isSettings;
 
 					// Filter for searched items by name or group name

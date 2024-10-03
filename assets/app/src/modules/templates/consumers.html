@@ -33,30 +33,7 @@
 
 	<div class="item-list-body">
 		<ul class="item-list parent-item-list">
-			<li class="item consumer-types" v-if="!isSearching">
-				<span
-					v-if="allGroupsExpanded"
-					class="select-item"
-					v-l10n.Consumer.TypesGroupName></span>
-				<button
-					v-else
-					class="select-item"
-					@click="expandOneGroup('types')"
-					v-l10n-title="expandGroupLabel('types')"
-					v-l10n.Consumer.TypesGroupName></button>
-
-				<div class="item-sublist" v-if="showGroupSubList('types')">
-					<ul class="item-list">
-						<li class="item" v-for="t in types" :key="t.id" :class="{ 'is-selected': ! isSettings && isSelected(t.id) }">
-							<button type="button" class="select-item" @click="select(t.id)" v-l10n-title.Consumer.Select="t.name">
-								<span class="item-name" v-l10n="t.name"></span>
-							</button>
-						</li>
-					</ul>
-				</div>
-			</li>
-
-			<li class="item" v-for="g in groups" :key="g.id">
+			<li class="item" v-for="g in groups" :key="g.id" :class="g.className">
 				<span
 					v-if="allGroupsExpanded"
 					class="select-item"
