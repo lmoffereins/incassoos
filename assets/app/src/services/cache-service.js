@@ -233,6 +233,51 @@ define([
 	},
 
 	/**
+	 * Update a single item in a cached list
+	 *
+	 * @param {Object} keyParams Key parameters for the cached list
+	 * @param {Mixed} item Item to update
+	 * @return {Promise} Item cache was updated
+	 */
+	updateItemInList = function( keyParams, item ) {
+		var key = getCacheKeyForRequest(keyParams);
+
+		// Get existing item cache
+		return get(key).then( function( cache ) {
+
+			// Find original item in cache
+			var index = cache.findIndex( function( i ) {
+				return i.id === item.id;
+			});
+
+			// Replace in or othwerise add to cache list
+			if (-1 !== index) {
+				cache[index] = item;
+			} else {
+				cache.push(item);
+			}
+
+			// Update list in cache, return item
+			return save(key, cache, { expires: true }).then( function() {
+				return item;
+			});
+		});
+	},
+
+	/**
+	 * Update a single item in a cached list from a request object
+	 *
+	 * @param {Object} request Request details
+	 * @param {Mixed} item Item to update
+	 * @return {Promise} Item cache was updated
+	 */
+	updateItemInListFromRequest = function( request, item ) {
+
+		// Construct cache key for generic GET
+		return updateItemInList({ url: request.baseUrl }, item);
+	},
+
+	/**
 	 * Remove the indicated cache
 	 *
 	 * @param  {String} key Cache key
@@ -313,6 +358,8 @@ define([
 		off: listeners.off,
 		on: listeners.on,
 		reset: reset,
-		save: save
+		save: save,
+		updateItemInList: updateItemInList,
+		updateItemInListFromRequest: updateItemInListFromRequest
 	};
 });

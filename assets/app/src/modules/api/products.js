@@ -90,42 +90,6 @@ define([
 	},
 
 	/**
-	 * Return the parameters for updating a single product in cache
-	 *
-	 * @param {Object} request Request details
-	 * @param {Mixed} value Request return value
-	 * @return {Promise} Product cache was updated
-	 */
-	updateProductInCache = function( request, value ) {
-
-		// Construct cache key for generic GET
-		var key = cacheService.getCacheKeyForRequest({
-			url: request.baseUrl
-		});
-
-		// Get existing item cache
-		return cacheService.get(key).then( function( cache ) {
-
-			// Find original item in cache
-			var index = cache.findIndex( function( i ) {
-				return i.id === value.id;
-			});
-
-			// Replace in or othwerise add to cache list
-			if (-1 !== index) {
-				cache[index] = value;
-			} else {
-				cache.push(value);
-			}
-
-			// Update list in cache
-			return cacheService.save(key, cache, { expires: true }).then( function() {
-				return value;
-			});
-		});
-	},
-
-	/**
 	 * Holds endpoint configuration for the product resource
 	 *
 	 * @return {Object}
@@ -169,13 +133,13 @@ define([
 	}, {
 		alias: "create",
 		method: "POST",
-		enableCache: { save: updateProductInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 		pre: preSingleProductRequest,
 		post: getProductFromResponse
 	}, {
 		alias: "update",
 		method: "PUT",
-		enableCache: { save: updateProductInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 
 		/**
 		 * Modify the request parameters before performing the call
@@ -195,7 +159,7 @@ define([
 	}, {
 		alias: "trash",
 		method: "DELETE",
-		enableCache: { save: updateProductInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 
 		/**
 		 * Modify the request parameters before performing the call
@@ -215,7 +179,7 @@ define([
 	}, {
 		alias: "untrash",
 		method: "PUT",
-		enableCache: { save: updateProductInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 
 		/**
 		 * Modify the request parameters before performing the call

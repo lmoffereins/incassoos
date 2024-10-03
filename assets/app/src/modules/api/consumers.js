@@ -58,42 +58,6 @@ define([
 	},
 
 	/**
-	 * Return the parameters for updating a single consumer in cache
-	 *
-	 * @param {Object} request Request details
-	 * @param {Mixed} value Request return value
-	 * @return {Promise} Consumer cache was updated
-	 */
-	updateConsumerInCache = function( request, value ) {
-
-		// Construct cache key for generic GET
-		var key = cacheService.getCacheKeyForRequest({
-			url: request.baseUrl
-		});
-
-		// Get existing item cache
-		return cacheService.get(key).then( function( cache ) {
-
-			// Find original item in cache
-			var index = cache.findIndex( function( i ) {
-				return i.id === value.id;
-			});
-
-			// Replace in or otherwise add to cache list
-			if (-1 !== index) {
-				cache[index] = value;
-			} else {
-				cache.push(value);
-			}
-
-			// Update list in cache
-			return cacheService.save(key, cache, { expires: true }).then( function() {
-				return value;
-			});
-		});
-	},
-
-	/**
 	 * Holds endpoint configuration for the consumers resource
 	 *
 	 * @return {Object}
@@ -134,7 +98,7 @@ define([
 	}, {
 		alias: "update",
 		method: "PUT",
-		enableCache: { save: updateConsumerInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 
 		/**
 		 * Modify the request parameters before performing the call
@@ -164,7 +128,7 @@ define([
 	}, {
 		alias: "archive",
 		method: "PUT",
-		enableCache: { save: updateConsumerInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 
 		/**
 		 * Modify the request parameters before performing the call
@@ -184,7 +148,7 @@ define([
 	}, {
 		alias: "unarchive",
 		method: "PUT",
-		enableCache: { save: updateConsumerInCache },
+		enableCache: { save: cacheService.updateItemInListFromRequest },
 
 		/**
 		 * Modify the request parameters before performing the call
