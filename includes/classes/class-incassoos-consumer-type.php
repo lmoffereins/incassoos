@@ -77,8 +77,6 @@ final class Incassoos_Consumer_Type {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @uses apply_filters Calls 'incassoos_get_consumer_type'
-	 *
 	 * @param  string|WP_Term $type Consumer type ID or label or term object.
 	 * @return Incassoos_Consumer_Type|false Type object, if found. False if the type was not found.
 	 */
@@ -137,9 +135,7 @@ final class Incassoos_Consumer_Type {
 			return false;
 		}
 
-		$type_obj = new Incassoos_Consumer_Type( $_type );
-
-		return apply_filters( 'incassoos_get_consumer_type', $type_obj, $type_id );
+		return new Incassoos_Consumer_Type( $_type );
 	}
 
 	/**

@@ -1731,11 +1731,27 @@ function incassoos_unregister_consumer_type( $type_id ) {
  *
  * @since 1.0.0
  *
- * @param  string $type Consumer type id or label.
+ * @uses apply_filters Calls 'incassoos_get_consumer_type'
+ *
+ * @param  Incassoos_Consumer_Type|string|int|WP_Term $type_id Consumer type, id or label. Term id or object.
  * @return Incassoos_Consumer_Type|bool Consumer type object or False when not found.
  */
-function incassoos_get_consumer_type( $type ) {
-	return Incassoos_Consumer_Type::get_instance( $type );
+function incassoos_get_consumer_type( $type_id ) {
+	if ( empty( $type_id ) ) {
+		return false;
+	}
+
+	if ( $type_id instanceof Incassoos_Consumer_Type ) {
+		$_type = $type_id;
+	} else {
+		$_type = Incassoos_Consumer_Type::get_instance( $type_id );
+	}
+
+	if ( ! $_type ) {
+		return false;
+	}
+
+	return apply_filters( 'incassoos_get_consumer_type', $_type );
 }
 
 /**
@@ -1743,11 +1759,11 @@ function incassoos_get_consumer_type( $type ) {
  *
  * @since 1.0.0
  *
- * @param  string $type Consumer type id or label
+ * @param  string $type_id Consumer type id or label
  * @return bool Does consumer type exist?
  */
-function incassoos_consumer_type_exists( $type ) {
-	return !! incassoos_get_consumer_type( $type );
+function incassoos_consumer_type_exists( $type_id ) {
+	return !! incassoos_get_consumer_type( $type_id );
 }
 
 /**
@@ -1865,10 +1881,10 @@ function incassoos_query_consumer_types( $query_args = array() ) {
  *
  * @since 1.0.0
  *
- * @param  string $type Consumer type id
+ * @param  string $type_id Consumer type id
  */
-function incassoos_the_consumer_type_title( $type ) {
-	echo incassoos_get_consumer_type_title( $type );
+function incassoos_the_consumer_type_title( $type_id ) {
+	echo incassoos_get_consumer_type_title( $type_id );
 }
 
 /**
@@ -1878,11 +1894,11 @@ function incassoos_the_consumer_type_title( $type ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_consumer_type_title'
  *
- * @param  string $type Consumer type id
+ * @param  string $type_id Consumer type id
  * @return string Consumer type title
  */
-function incassoos_get_consumer_type_title( $type ) {
-	$consumer_type = incassoos_get_consumer_type( $type );
+function incassoos_get_consumer_type_title( $type_id ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
 	$title         = ucfirst( $type );
 
 	if ( $consumer_type ) {
@@ -1899,7 +1915,7 @@ function incassoos_get_consumer_type_title( $type ) {
  *
  * @uses apply_filters() Calls 'incassoos_get_consumer_type_avatar_url'
  *
- * @param  string $type Consumer type id
+ * @param  string $type_id Consumer type id
  * @param  array $args {
  *     Optional. Arguments to return instead of the default arguments.
  *
@@ -1907,13 +1923,14 @@ function incassoos_get_consumer_type_title( $type ) {
  * }
  * @return string Consumer type avatar url
  */
-function incassoos_get_consumer_type_avatar_url( $type, $args = array() ) {
-	$consumer_type = incassoos_get_consumer_type( $type );
+function incassoos_get_consumer_type_avatar_url( $type_id, $args = array() ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
 	$avatar_url    = '';
 	$args          = wp_parse_args( $args, array(
 		'size' => 96
 	) );
 
+	// Parse defaults
 	if ( is_numeric( $args['size'] ) ) {
 		$args['size'] = absint( $args['size'] );
 		if ( ! $args['size'] ) {
