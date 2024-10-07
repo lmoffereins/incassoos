@@ -8,10 +8,10 @@ define([
 	"vue",
 	"q",
 	"util",
-	"./debug-service",
+	"./log-service",
 	"./storage-service",
 	"./shortcuts-service"
-], function( Vue, Q, util, debugService, storageService, shortcutsService ) {
+], function( Vue, Q, util, logService, storageService, shortcutsService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -21,9 +21,7 @@ define([
 	 * @type {Object}
 	 */
 	var listeners = util.createListeners("service/darkmode", {
-		log: function( context, domain, args ) {
-			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
-		}
+		log: logService.logListenerEvent
 	}),
 
 	/**

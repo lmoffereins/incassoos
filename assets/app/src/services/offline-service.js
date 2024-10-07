@@ -8,8 +8,8 @@ define([
 	"vue",
 	"q",
 	"util",
-	"./debug-service"
-], function( Vue, Q, util, debugService ) {
+	"./log-service"
+], function( Vue, Q, util, logService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -20,9 +20,7 @@ define([
 	 * @type {Object}
 	 */
 	var listeners = util.createListeners("service/offline", {
-		log: function( context, domain, args ) {
-			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
-		}
+		log: logService.logListenerEvent
 	}),
 
 	/**

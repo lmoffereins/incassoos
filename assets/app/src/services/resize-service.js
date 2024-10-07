@@ -9,8 +9,8 @@ define([
 	"q",
 	"lodash",
 	"util",
-	"./debug-service"
-], function( Vue, Q, _, util, debugService ) {
+	"./log-service"
+], function( Vue, Q, _, util, logService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -21,9 +21,7 @@ define([
 	 * @type {Object}
 	 */
 	var listeners = util.createListeners("service/resize", {
-		log: function( context, domain, args ) {
-			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
-		}
+		log: logService.logListenerEvent
 	}),
 
 	/**

@@ -9,8 +9,8 @@
 define([
 	"q",
 	"util",
-	"./debug-service"
-], function( Q, util, debugService ) {
+	"./log-service"
+], function( Q, util, logService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -20,9 +20,7 @@ define([
 	 * @type {Object}
 	 */
 	var listeners = util.createListeners("service/idle", {
-		log: function( context, domain, args ) {
-			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
-		}
+		log: logService.logListenerEvent
 	}),
 
 	/**

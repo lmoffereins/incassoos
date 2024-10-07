@@ -7,9 +7,9 @@
 define([
 	"vue",
 	"util",
-	"./debug-service",
+	"./log-service",
 	"./storage-service"
-], function( Vue, util, debugService, storageService ) {
+], function( Vue, util, logService, storageService ) {
 	/**
 	 * Define listener construct for the service
 	 *
@@ -19,9 +19,7 @@ define([
 	 * @type {Object}
 	 */
 	var listeners = util.createListeners("service/history", {
-		log: function( context, domain, args ) {
-			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
-		}
+		log: logService.logListenerEvent
 	}),
 
 	/**

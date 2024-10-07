@@ -13,10 +13,10 @@ define([
 	"translations",
 	"./storage-service",
 	"./auth-service",
-	"./debug-service",
 	"./feedback-service",
+	"./log-service",
 	"./shortcuts-service"
-], function( Vue, Q, _, dayjs, util, translations, storageService, authService, debugService, feedbackService, shortcutsService ) {
+], function( Vue, Q, _, dayjs, util, translations, storageService, authService, feedbackService, logService, shortcutsService ) {
 	/**
 	 * Holds the list of domains with translated strings
 	 *
@@ -33,9 +33,7 @@ define([
 	 * @type {Object}
 	 */
 	listeners = util.createListeners("service/l10n", {
-		log: function( context, domain, args ) {
-			debugService.isDebugmode() && console.log(context.concat(" > ", domain, ":", args[0]));
-		}
+		log: logService.logListenerEvent
 	}),
 
 	/**

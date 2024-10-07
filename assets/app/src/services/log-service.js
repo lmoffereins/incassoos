@@ -7,8 +7,9 @@
 define([
 	"lodash",
 	"./storage-service",
+	"./debug-service",
 	"./auth-service"
-], function( _, storageService, authService ) {
+], function( _, storageService, debugService, authService ) {
 	/**
 	 * Holds the storage for the service
 	 *
@@ -81,8 +82,8 @@ define([
 	/**
 	 * Add an error message to the log registry
 	 *
-	 * @param  {String} domain Log domain
-	 * @param  {String} message Log message
+	 * @param {String} domain Log domain
+	 * @param {String} message Log message
 	 * @return {Promise} Was the action successfull?
 	 */
 	error = function( domain, message ) {
@@ -104,8 +105,8 @@ define([
 	/**
 	 * Add a message to the log registry
 	 *
-	 * @param  {String} domain Log domain
-	 * @param  {String} message Log message
+	 * @param {String} domain Log domain
+	 * @param {String} message Log message
 	 * @return {Promise} Was the action successfull?
 	 */
 	log = function( domain, message ) {
@@ -116,12 +117,30 @@ define([
 			domain = defaultDomain;
 		}
 
+		// Log message to the console
 		console.log("logService/log", message);
 
+		// Add log to the registry
 		return add({
 			domain: domain,
 			message: message
 		});
+	},
+
+	/**
+	 * Add a message for a service event
+	 *
+	 * @param {String} context Service context name
+	 * @param {String} domain  Log domain
+	 * @param {Object} args    Message arguments
+	 * @return {Void}
+	 */
+	logListenerEvent = function( context, domain, args ) {
+
+		// Log event when debugging
+		if (debugService.isDebugmode()) {
+			log(domain, context.concat(" > ", domain, ":", args[0]));
+		}
 	},
 
 	/**
@@ -157,6 +176,7 @@ define([
 		disable: disable,
 		getEntries: getEntries,
 		isEnabled: isEnabled,
-		log: log
+		log: log,
+		logListenerEvent: logListenerEvent
 	};
 });
