@@ -813,7 +813,7 @@ jQuery( document ).ready( function( $ ) {
 			$consumerList
 				.toggleClass( 'hiding-archived-items' )
 				.find( '#show-archived-items' )
-				.text( $consumerList.hasClass( 'hiding-archived-items' ) ? l10n.showArchivedItems : l10n.showingArchivedItems );
+				.text( $consumerList.hasClass( 'hiding-archived-items' ) ? l10n.showArchivedItems : l10n.hideArchivedItems );
 
 			toggleGroups();
 		})

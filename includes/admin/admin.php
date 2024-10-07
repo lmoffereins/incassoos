@@ -325,7 +325,7 @@ class Incassoos_Admin {
 				'showSelectedAll'      => __( 'Showing selected',                   'incassoos' ),
 				'showSelectedOnly'     => __( 'Show selected',                      'incassoos' ),
 				'showArchivedItems'    => __( 'Show archived',                      'incassoos' ),
-				'showingArchivedItems' => __( 'Showing archived',                   'incassoos' ),
+				'hideArchivedItems'    => __( 'Hide archived',                      'incassoos' ),
 				'termMetaDefault'      => _x( 'Default', 'Term meta',               'incassoos' ),
 				'toggleCloseErrors'    => _x( 'Hide errors', 'Notice toggle label', 'incassoos' ),
 				'toggleOpenErrors'     => _x( 'Show errors', 'Notice toggle label', 'incassoos' ),
