@@ -92,20 +92,12 @@ define([
 		return get().then( function( values ) {
 			return !! values.root && !! values.settings;
 		});
-	},
-
-	/**
-	 * Return whether the application is used locally
-	 *
-	 * @return {Boolean} Is the application used locally?
-	 */
-	isLocal = !! ("undefined" !== typeof incassoosL10n && incassoosL10n.isLocal);
+	};
 
 	return {
 		get: get,
 		install: install,
 		isInstalled: isInstalled,
-		isLocal: isLocal,
 		on: listeners.on
 	};
 });

@@ -10,14 +10,21 @@ define([
 	"lodash",
 	"util",
 	"./storage-service",
-	"./install-service"
-], function( Vue, Q, _, util, storageService, installService ) {
+	"./system-service"
+], function( Vue, Q, _, util, storageService, systemService ) {
 	/**
 	 * Holds the storage for the service
 	 *
 	 * @type {Object}
 	 */
 	var storage = storageService.create("service/auth"),
+
+	/**
+	 * Holds whether the application is used locally
+	 *
+	 * @type {Object}
+	 */
+	isLocalSystem = systemService.isLocal,
 
 	/**
 	 * Define listener construct for the service
@@ -309,7 +316,7 @@ define([
 		var dfd = Q.defer();
 
 		// When running locally setup user
-		if (installService.isLocal) {
+		if (isLocalSystem) {
 			saveUserAndSetActive(incassoosL10n.auth).then( function() {
 
 				// Load initial users
@@ -475,7 +482,7 @@ define([
 	 * @return {Boolean} Is this a single-user installation?
 	 */
 	isSingleUser = function() {
-		return installService.isLocal;
+		return isLocalSystem;
 	},
 
 	/**
@@ -548,7 +555,7 @@ define([
 			request.headers = request.headers || {};
 
 			// When running locally use nonce token
-			if (installService.isLocal) {
+			if (isLocalSystem) {
 				// TODO: works with multi-user?
 				request.headers["X-WP-Nonce"] = token;
 

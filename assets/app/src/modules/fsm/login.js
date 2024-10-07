@@ -43,11 +43,11 @@ define([
 	feedbackService = services.get("feedback"),
 
 	/**
-	 * Holds a reference to the installation service
+	 * Holds whether the application is used locally
 	 *
 	 * @type {Object}
 	 */
-	installService = services.get("install"),
+	isLocalSystem = services.get("system").isLocal,
 
 	/**
 	 * Holds a reference to the shortcuts service
@@ -121,7 +121,7 @@ define([
 		var isLoggedIn = authService.isUserLoggedIn(),
 		    userCount = authService.getUsers().length;
 
-		if (installService.isLocal) {
+		if (isLocalSystem) {
 			return authService.hasPin() ? STATES.PIN_LOGIN : STATES.IDLE;
 
 		// Require new login when no other users are registered
@@ -449,7 +449,7 @@ define([
 						authService.setActiveUser(self.userid).then(dfd.resolve)
 
 						// When not running locally, validate user in the background
-						.then(installService.isLocal ? _.noop : api.auth.validate)
+						.then(isLocalSystem ? _.noop : api.auth.validate)
 
 						// When the user does not validate
 						.catch( function() {
@@ -919,7 +919,7 @@ define([
 	onBeforeLogout = function() {
 
 		// When running locally
-		if (installService.isLocal) {
+		if (isLocalSystem) {
 
 			// Navigate to the site's logout page
 			window.location = incassoosL10n.auth.logoutUrl;

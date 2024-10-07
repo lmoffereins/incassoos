@@ -25,6 +25,7 @@ define([
 	"./resize-service",
 	"./shortcuts-service",
 	"./storage-service",
+	"./system-service",
 	"./visibility-service"
 ], function(
 	Q,
@@ -47,6 +48,7 @@ define([
 	resizeService,
 	shortcutsService,
 	storageService,
+	systemService,
 	visibilityService
 ) {
 	/**
@@ -73,6 +75,7 @@ define([
 		resize: resizeService,
 		shortcuts: shortcutsService,
 		storage: storageService,
+		system: systemService,
 		visibility: visibilityService
 	},
 
