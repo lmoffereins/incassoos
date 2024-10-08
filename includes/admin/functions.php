@@ -2169,7 +2169,7 @@ function incassoos_admin_taxonomy_add_form_fields( $taxonomy ) {
 		<label for="term-default"><?php esc_html_e( 'Default', 'incassoos' ); ?></label>
 		<input type="checkbox" id="term-default" name="term-default" value="1" />
 
-		<p class="description"><?php esc_html_e( 'Mark whether this should be the default term.', 'incassoos' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Is it the default item?', 'incassoos' ); ?></p>
 	</div>
 
 	<?php endif;
@@ -2181,7 +2181,7 @@ function incassoos_admin_taxonomy_add_form_fields( $taxonomy ) {
 		<label for="term-archived"><?php echo esc_html( _x( 'Archived', 'Term status', 'incassoos' ) ); ?></label>
 		<input type="checkbox" id="term-archived" name="term-archived" value="1" />
 
-		<p class="description"><?php esc_html_e( 'Mark whether to archive this term. Objects associated with an archived term will be hidden.', 'incassoos' ); ?></p>
+		<p class="description"><?php esc_html_e( 'When archived, it will not appear on your site along with linked items.', 'incassoos' ); ?></p>
 	</div>
 
 	<?php endif;
@@ -2207,7 +2207,7 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 		<td>
 			<input type="checkbox" id="term-default" name="term-default" value="1" <?php checked( get_term_meta( $term->term_id, '_default', true ) ); ?>/>
 
-			<p class="description"><?php esc_html_e( 'Mark whether this should be the default term.', 'incassoos' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Is it the default item?', 'incassoos' ); ?></p>
 		</td>
 	</tr>
 
@@ -2223,7 +2223,7 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 		<td>
 			<input type="checkbox" id="term-archived" name="term-archived" value="1" <?php checked( get_term_meta( $term->term_id, '_incassoos_archived', true ) ); ?>/>
 
-			<p class="description"><?php esc_html_e( 'Mark whether to archive this term. Objects associated with an archived term will be hidden.', 'incassoos' ); ?></p>
+			<p class="description"><?php esc_html_e( 'When archived, it will not appear on your site along with linked items.', 'incassoos' ); ?></p>
 		</td>
 	</tr>
 
