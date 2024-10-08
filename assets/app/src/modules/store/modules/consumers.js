@@ -584,6 +584,28 @@ define([
 		},
 
 		/**
+		 * Archive the selected item
+		 *
+		 * @param  {Object} payload Item to archive
+		 * @return {Promise} Was the item archived?
+		 */
+		archive: function( context, payload ) {
+			context.commit("toggleShow", payload);
+			return api.consumers.archive(payload);
+		},
+
+		/**
+		 * Unarchive the selected item
+		 *
+		 * @param  {Object} payload Item to unarchive
+		 * @return {Promise} Was the item unarchived?
+		 */
+		unarchive: function( context, payload ) {
+			context.commit("toggleShow", payload);
+			return api.consumers.unarchive(payload);
+		},
+
+		/**
 		 * Transition when cancelling the current action
 		 *
 		 * @return {Promise} Transition success

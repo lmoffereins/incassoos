@@ -321,9 +321,7 @@ define([
 					this.shortcutsOff = false;
 				}
 			}
-		}, Vuex.mapMutations("consumers", {
-			"toggleShowConsumer": "toggleShow"
-		}), Vuex.mapActions("consumers", {
+		}, Vuex.mapActions("consumers", {
 			/**
 			 * Select the active item
 			 *
@@ -364,6 +362,19 @@ define([
 				dispatch("reload").finally( function() {
 					self.isLoading = false;
 				});
+			},
+
+			/**
+			 * Toggle the visibility of a single consumer
+			 *
+			 * Dispatch the action without returning the promise.
+			 *
+			 * @param  {Function} dispatch Dispatch method
+			 * @param  {Object} payload Consumer object
+			 * @return {Void}
+			 */
+			toggleShowConsumer: function( dispatch, payload ) {
+				dispatch((payload.show ? "archive" : "unarchive"), payload);
 			}
 		})),
 		watch: Object.assign({
