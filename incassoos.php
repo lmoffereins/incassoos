@@ -272,6 +272,7 @@ final class Incassoos {
 				'show_ui'             => current_user_can( 'incassoos_collection_admin' ),
 				'show_in_nav_menus'   => false,
 				'can_export'          => true,
+				'delete_with_user'    => false,
 				'menu_icon'           => 'dashicons-forms',
 			)
 		);
@@ -295,6 +296,7 @@ final class Incassoos {
 				'show_ui'             => current_user_can( 'incassoos_activity_admin' ),
 				'show_in_nav_menus'   => false,
 				'can_export'          => true,
+				'delete_with_user'    => false,
 				'menu_icon'           => 'dashicons-forms',
 			)
 		);
@@ -318,6 +320,7 @@ final class Incassoos {
 				'show_ui'               => current_user_can( 'incassoos_occasion_admin' ),
 				'show_in_nav_menus'     => false,
 				'can_export'            => true,
+				'delete_with_user'      => false,
 				'menu_icon'             => 'dashicons-screenoptions',
 			)
 		);
@@ -341,6 +344,7 @@ final class Incassoos {
 				'show_ui'               => current_user_can( 'incassoos_order_admin' ),
 				'show_in_nav_menus'     => false,
 				'can_export'            => true,
+				'delete_with_user'      => false,
 				'menu_icon'             => 'dashicons-screenoptions',
 			)
 		);
@@ -364,6 +368,7 @@ final class Incassoos {
 				'show_ui'               => current_user_can( 'incassoos_product_admin' ),
 				'show_in_nav_menus'     => false,
 				'can_export'            => true,
+				'delete_with_user'      => false,
 				'menu_icon'             => 'dashicons-screenoptions',
 			)
 		);
