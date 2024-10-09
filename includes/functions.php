@@ -1241,7 +1241,8 @@ function incassoos_taxonomy_supports_default_terms( $taxonomy ) {
  */
 function incassoos_get_taxonomies_for_archived_terms() {
 	return apply_filters( 'incassoos_get_taxonomies_for_archived_terms', array(
-		incassoos_get_product_cat_tax_id()
+		incassoos_get_product_cat_tax_id(),
+		incassoos_get_consumer_type_tax_id()
 	) );
 }
 

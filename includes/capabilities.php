@@ -802,6 +802,22 @@ function incassoos_map_generic_caps( $caps = array(), $cap = '', $user_id = 0, $
 
 			break;
 
+		/** Consumer Types **********************************************/
+
+		case 'archive_incassoos_consumer_type' :
+		case 'unarchive_incassoos_consumer_type' :
+
+			// Allow REST users
+			if ( incassoos_doing_rest() && user_can( $user_id, 'access_incassoos_rest_api' ) ) {
+				$caps = array( 'access_incassoos_rest_api' );
+
+			// Defer to managing caps
+			} else {
+				$caps = array( 'manage_incassoos_consumer_types' );
+			}
+
+			break;
+
 		/** Application *************************************************/
 
 		case 'view_incassoos_application' :

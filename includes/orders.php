@@ -1594,6 +1594,19 @@ function incassoos_get_consumer_type_tax_labels() {
 }
 
 /**
+ * Act when the Consumer Type taxonomy has been registered
+ *
+ * @since 1.0.0
+ */
+function incassoos_registered_consumer_type_taxonomy() {
+	$taxonomy = incassoos_get_consumer_type_tax_id();
+
+	// Admin
+	add_action( "{$taxonomy}_add_form_fields",  'incassoos_admin_taxonomy_add_form_fields',  10    );
+	add_action( "{$taxonomy}_edit_form_fields", 'incassoos_admin_taxonomy_edit_form_fields', 10, 2 );
+}
+
+/**
  * Return the base Unknown user consumer type id
  *
  * @since 1.0.0
@@ -1949,4 +1962,89 @@ function incassoos_get_consumer_type_avatar_url( $type_id, $args = array() ) {
 	}
 
 	return apply_filters( 'incassoos_get_consumer_type_avatar_url', $avatar_url, $consumer_type, $args );
+}
+
+/**
+ * Return whether the consumer type is archived
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Consumer type id
+ * @return bool Is the consumer type archived?
+ */
+function incassoos_is_consumer_type_archived( $type_id ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
+	$archived      = false;
+
+	if ( $consumer_type ) {
+
+		// Type is a term
+		if ( $consumer_type->is_term() ) {
+			$archived = incassoos_is_term_archived( $consumer_type->term_id );
+		}
+	}
+
+	return (bool) apply_filters( 'incassoos_is_consumer_type_archived', $archived, $consumer_type );
+}
+
+/**
+ * Return whether the consumer type is not archived
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Consumer type id
+ * @return bool Is the consumer type not archived?
+ */
+function incassoos_is_consumer_type_not_archived( $type_id ) {
+	return ! incassoos_is_consumer_type_archived( $type_id );
+}
+
+/** Update ********************************************************************/
+
+/**
+ * Archive the consumer type
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Consumer type id
+ * @return bool Update success
+ */
+function incassoos_archive_consumer_type( $type_id ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
+	$success       = false;
+
+	if ( $consumer_type ) {
+
+		// Type is term
+		if ( $consumer_type->is_term() ) {
+			$success = update_term_meta( $consumer_type->term_id, '_incassoos_archived', 1 );
+		}
+	}
+
+	return $success;
+}
+
+/**
+ * Unarchive the consumer type
+ *
+ * Effectively removes the '_incassoos_archived' term attribute.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Consumer type id
+ * @return bool Update success
+ */
+function incassoos_unarchive_consumer_type( $type_id ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
+	$success       = false;
+
+	if ( $consumer_type ) {
+
+		// Type is term
+		if ( $consumer_type->is_term() ) {
+			$success = delete_term_meta( $consumer_type->term_id, '_incassoos_archived' );
+		}
+	}
+
+	return $success;
 }

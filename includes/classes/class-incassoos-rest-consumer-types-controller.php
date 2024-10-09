@@ -47,6 +47,36 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			),
 			'schema' => array( $this, 'get_public_item_schema' )
 		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\w-]+)/archive', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'string',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'archive_item' ),
+				'permission_callback' => array( $this, 'archive_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\w-]+)/unarchive', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'string',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'unarchive_item' ),
+				'permission_callback' => array( $this, 'unarchive_item_permissions_check' ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
 	}
 
 	/**
@@ -114,6 +144,28 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get the consumer type, if the ID is valid.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int|string $id Supplied ID.
+	 * @return Incassoos_Consumer_Type|WP_Error Consumer type object if ID is valid, WP_Error otherwise.
+	 */
+	protected function get_consumer_type( $id ) {
+		$error = new WP_Error( 'rest_consumer_type_invalid_id', __( 'Invalid consumer type ID.' ), array( 'status' => 404 ) );
+		if ( is_numeric( $id ) && (int) $id <= 0 ) {
+			return $error;
+		}
+
+		$type = incassoos_get_consumer_type( $id );
+		if ( empty( $type ) ) {
+			return $error;
+		}
+
+		return $type;
 	}
 
 	/**
@@ -219,6 +271,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			$data['avatarUrl'] = incassoos_get_consumer_type_avatar_url( $item, $size ? array( 'size' => $size ) : array() );
 		}
 
+		if ( ! empty( $schema['properties']['archived'] ) ) {
+			$data['archived'] = incassoos_is_consumer_type_archived( $item );
+		}
+
 		if ( ! empty( $schema['properties']['_builtin'] ) ) {
 			$data['_builtin'] = $item->is_builtin();
 		}
@@ -289,6 +345,178 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		 * @param array $query_params JSON Schema-formatted collection parameters.
 		 */
 		return apply_filters( 'incassoos_rest_consumer_types_collection_params', $query_params );
+	}
+
+	/**
+	 * Checks if a given request has access to archive a consumer type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to archive the item, WP_Error object otherwise.
+	 */
+	public function archive_item_permissions_check( $request ) {
+		$item = $this->get_consumer_type( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		if ( $item && ! current_user_can( 'archive_incassoos_consumer_type', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_archive_consumer_type',
+				__( 'Sorry, you are not allowed to archive this consumer type.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Archive a single consumer type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function archive_item( $request ) {
+		$item = $this->get_consumer_type( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$id = $item->ID;
+
+		if ( ! current_user_can( 'archive_incassoos_consumer_type', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_archive_consumer_type',
+				__( 'Sorry, you are not allowed to archive this consumer type.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only archive if we haven't already.
+		if ( incassoos_is_consumer_type_archived( $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_archived',
+				__( 'The consumer type is archived.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_archive_consumer_type( $item );
+		$item     = incassoos_get_consumer_type( $id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_archive',
+				__( 'The consumer type cannot be archived.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single consumer type is archived via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param Incassoos_Consumer_Type $item     The archived consumer type.
+		 * @param WP_REST_Response        $response The response data.
+		 * @param WP_REST_Request         $request  The request sent to the API.
+		 */
+		do_action( 'incassoos_rest_archive_consumer_type', $item, $response, $request );
+
+		return $response;
+	}
+
+	/**
+	 * Checks if a given request has access to unarchive a consumer type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to unarchive the item, WP_Error object otherwise.
+	 */
+	public function unarchive_item_permissions_check( $request ) {
+		$item = $this->get_consumer_type( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer_type', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_unarchive_consumer_type',
+				__( 'Sorry, you are not allowed to unarchive this consumer type.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Unarchive a single consumer type
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function unarchive_item( $request ) {
+		$item = $this->get_consumer_type( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$id = $item->ID;
+
+		if ( ! current_user_can( 'unarchive_incassoos_consumer_type', $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_user_cannot_unarchive_consumer_type',
+				__( 'Sorry, you are not allowed to unarchive this consumer type.', 'incassoos' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		$request->set_param( 'context', 'edit' );
+
+		// Only unarchive if we have already archived.
+		if ( incassoos_is_consumer_type_not_archived( $item ) ) {
+			return new WP_Error(
+				'incassoos_rest_is_not_archived',
+				__( 'The consumer type is not archived.', 'incassoos' ),
+				array( 'status' => 410 )
+			);
+		}
+
+		$result   = incassoos_unarchive_consumer_type( $item );
+		$item     = incassoos_get_consumer_type( $id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		if ( ! $result ) {
+			return new WP_Error(
+				'incassoos_rest_cannot_unarchive',
+				__( 'The consumer type cannot be unarchived.', 'incassoos' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		/**
+		 * Fires immediately after a single consumer type is unarchived via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param Incassoos_Consumer_Type $item     The unarchived consumer type.
+		 * @param WP_REST_Response        $response The response data.
+		 * @param WP_REST_Request         $request  The request sent to the API.
+		 */
+		do_action( 'incassoos_rest_unarchive_consumer_type', $item, $response, $request );
+
+		return $response;
 	}
 }
 

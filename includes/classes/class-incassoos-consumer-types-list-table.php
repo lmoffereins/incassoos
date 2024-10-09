@@ -131,7 +131,7 @@ class Incassoos_Consumer_Types_List_Table extends WP_Terms_List_Table {
 	public function single_row( $tag, $level = 0 ) {
 		// Restores the more descriptive, specific name for use within this method.
 		// Support external calls to this method with a WP_Term parameter
-		$type = ! is_a( $tag, 'Incassoos_Consumer_Type' ) ? incassoos_get_consumer_type( $tag ) : $tag;
+		$type = incassoos_get_consumer_type( $tag );
 
 		// To support inline editing of terms, use the term id
 		$id = $type->is_term() ? $type->term_id : $type->id;
@@ -156,6 +156,21 @@ class Incassoos_Consumer_Types_List_Table extends WP_Terms_List_Table {
 
 		// For terms
 		if ( $type->is_term() ) {
+			/**
+			 * Filters display of the term name in the terms list table.
+			 *
+			 * The default output may include padding due to the term's
+			 * current level in the term hierarchy.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @see WP_Terms_List_Table::column_name()
+			 *
+			 * @param string $pad_tag_name The term name, padded if not top-level.
+			 * @param WP_Term $tag         Term object.
+			 */
+			$name = apply_filters( 'term_name', $name, $type->get_term() );
+
 			$qe_data = get_term( $type->term_id, $taxonomy, OBJECT, 'edit' );
 
 			$uri = wp_doing_ajax() ? wp_get_referer() : $_SERVER['REQUEST_URI'];

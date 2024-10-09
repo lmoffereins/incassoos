@@ -221,6 +221,17 @@ final class Incassoos_Consumer_Type {
 	}
 
 	/**
+	 * Return the term of the type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return WP_Term|bool Term or False when not a term.
+	 */
+	public function get_term() {
+		return $this->term_id ? get_term( $this->term_id ) : false;
+	}
+
+	/**
 	 * Return whether the type is found for the search term
 	 *
 	 * @since 1.0.0
