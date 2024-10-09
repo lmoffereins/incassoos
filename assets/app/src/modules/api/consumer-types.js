@@ -7,20 +7,28 @@
 define([
 	"he",
 	"lodash",
+	"services",
 	"settings"
-], function( he, _, settings ) {
+], function( he, _, services, settings ) {
+	/**
+	 * Holds a reference to the cache service
+	 *
+	 * @type {Object}
+	 */
+	var cacheService = services.get("cache"),
+
 	/**
 	 * Get the consumer type from the request item
 	 *
 	 * @param  {Object} resp Response item
 	 * @return {Object} Single consumer type
 	 */
-	var getConsumerTypeFromResponse = function( resp ) {
+	getConsumerTypeFromResponse = function( resp ) {
 		var item = {
 			id: resp.id,
 			name: he.decode(resp.name),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
-			show: true,
+			show: ! resp.archived,
 			isBuiltin: resp._builtin,
 			isConsumerType: true,
 			group: {
@@ -85,6 +93,46 @@ define([
 		post: function( resp ) {
 			return resp.map(getConsumerTypeFromResponse);
 		}
+	}, {
+		alias: "archive",
+		method: "PUT",
+		enableCache: { save: cacheService.updateItemInListFromRequest },
+
+		/**
+		 * Modify the request parameters before performing the call
+		 *
+		 * @param {Object} request Request construct
+		 * @param {Object} payload Parameters for the request
+		 * @return {Object} Request construct
+		 */
+		pre: function( request, payload ) {
+
+			// Point to a single consumer type's archive action
+			request.url = request.baseUrl.concat("/", payload.id, "/archive");
+
+			return request;
+		},
+		post: getConsumerTypeFromResponse
+	}, {
+		alias: "unarchive",
+		method: "PUT",
+		enableCache: { save: cacheService.updateItemInListFromRequest },
+
+		/**
+		 * Modify the request parameters before performing the call
+		 *
+		 * @param {Object} request Request construct
+		 * @param {Object} payload Parameters for the request
+		 * @return {Object} Request construct
+		 */
+		pre: function( request, payload ) {
+
+			// Point to a single consumer type's unarchive action
+			request.url = request.baseUrl.concat("/", payload.id, "/unarchive");
+
+			return request;
+		},
+		post: getConsumerTypeFromResponse
 	}];
 
 	return {

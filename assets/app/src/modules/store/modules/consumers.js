@@ -330,7 +330,7 @@ define([
 			payload.id || (payload = { id: payload });
 
 			// Find item in list
-			item = state.all.find( function( i ) {
+			item = state.all.concat(state.types).find( function( i ) {
 				return i.id === payload.id;
 			});
 
@@ -591,7 +591,11 @@ define([
 		 */
 		archive: function( context, payload ) {
 			context.commit("toggleShow", payload);
-			return api.consumers.archive(payload);
+
+			return api[payload.isConsumerType ? "consumerTypes" : "consumers"].archive(payload).catch( function() {
+				// Toggle again to return to the previous state
+				context.commit("toggleShow", payload);
+			});
 		},
 
 		/**
@@ -602,7 +606,11 @@ define([
 		 */
 		unarchive: function( context, payload ) {
 			context.commit("toggleShow", payload);
-			return api.consumers.unarchive(payload);
+
+			return api[payload.isConsumerType ? "consumerTypes" : "consumers"].unarchive(payload).catch( function() {
+				// Toggle again to return to the previous state
+				context.commit("toggleShow", payload);
+			});
 		},
 
 		/**
