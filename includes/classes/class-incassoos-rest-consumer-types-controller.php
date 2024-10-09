@@ -112,6 +112,11 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true
 				),
+				'archived'        => array(
+					'description' => __( 'Whether the object is archived.', 'incassoos' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit' ),
+				),
 				'_builtin'        => array(
 					'description' => __( 'Whether the object is builtin.', 'incassoos' ),
 					'type'        => 'boolean',
