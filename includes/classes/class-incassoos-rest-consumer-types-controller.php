@@ -121,6 +121,12 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
+				'description'            => array(
+					'description' => __( 'Description of the object.', 'incassoos' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
 				'avatarUrl'       => array(
 					'description' => __( "Path to the object's avatar image", 'incassoos' ),
 					'type'        => 'string',
@@ -285,6 +291,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 
 		if ( ! empty( $schema['properties']['name'] ) ) {
 			$data['name'] = incassoos_get_consumer_type_title( $item );
+		}
+
+		if ( ! empty( $schema['properties']['description'] ) ) {
+			$data['description'] = incassoos_get_consumer_type_description( $item );
 		}
 
 		if ( ! empty( $schema['properties']['avatarUrl'] ) ) {

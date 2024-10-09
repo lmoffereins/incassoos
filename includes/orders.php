@@ -1922,6 +1922,38 @@ function incassoos_get_consumer_type_title( $type_id ) {
 }
 
 /**
+ * Output the consumer type description
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Consumer type id
+ */
+function incassoos_the_consumer_type_description( $type_id ) {
+	echo incassoos_get_consumer_type_description( $type_id );
+}
+
+/**
+ * Return the consumer type description
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_type_description'
+ *
+ * @param  string $type_id Consumer type id
+ * @return string Consumer type description
+ */
+function incassoos_get_consumer_type_description( $type_id ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
+	$description   = '';
+
+	if ( $consumer_type ) {
+		$description = $consumer_type->description;
+	}
+
+	return apply_filters( 'incassoos_get_consumer_type_description', $description, $consumer_type );
+}
+
+/**
  * Return the consumer type avatar url
  *
  * @since 1.0.0
