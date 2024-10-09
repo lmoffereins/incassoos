@@ -163,7 +163,7 @@ define([
 		 * @return {Boolean} Is the active item editable?
 		 */
 		isEditable: function( state ) {
-			return state.active && ! state.active.isConsumerType;
+			return state.active && ! state.active.isBuiltin;
 		},
 
 		/**
@@ -281,9 +281,31 @@ define([
 	 */
 	mutations = list.mutations({
 		/**
+		 * Update single item in the list
+		 *
+		 * Handles both items and consumer types.
+		 *
+		 * @param {Object} payload The item to update in the list
+		 * @return {Void}
+		 */
+		setItemInList: function( state, payload ) {
+
+			// Accept item property as the id
+			payload.item && (payload.id = payload.item);
+
+			// Find item in list
+			var item = state.all.concat(state.types).find( function( i ) {
+				return i.id === payload.id;
+			});
+
+			// Update details
+			item && Object.assign(item, payload);
+		},
+
+		/**
 		 * Set the active active item.
 		 *
-		 * This handles also consumer types.
+		 * Handles both items and consumer types.
 		 *
 		 * @param {Object} payload The item id to select
 		 * @return {Void}
@@ -383,7 +405,7 @@ define([
 					}
 
 					// Update the user
-					return api.consumers.update(payload).then( function( resp ) {
+					return api[payload.isConsumerType ? "consumerTypes" : "consumers"].update(payload).then( function( resp ) {
 
 						// Report success message
 						feedbackService.add({

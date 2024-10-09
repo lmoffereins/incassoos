@@ -94,6 +94,31 @@ define([
 			return resp.map(getConsumerTypeFromResponse);
 		}
 	}, {
+		alias: "update",
+		method: "PUT",
+		enableCache: { save: cacheService.updateItemInListFromRequest },
+
+		/**
+		 * Modify the request parameters before performing the call
+		 *
+		 * @param  {Object} request Request construct
+		 * @param  {Object} payload Parameters for the request
+		 * @return {Object} Request construct
+		 */
+		pre: function( request, payload ) {
+
+			// Point to a single consumer type
+			request.url = request.baseUrl.concat("/", payload.id);
+
+			// Set the archived parameter for hidden consumer type. Can be false.
+			if ("undefined" !== typeof payload.show) {
+				request.data.archived = ! payload.show;
+			}
+
+			return request;
+		},
+		post: getConsumerTypeFromResponse
+	}, {
 		alias: "archive",
 		method: "PUT",
 		enableCache: { save: cacheService.updateItemInListFromRequest },
