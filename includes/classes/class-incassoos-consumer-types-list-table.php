@@ -15,31 +15,6 @@
  * @see WP_Terms_List_Table
  */
 class Incassoos_Consumer_Types_List_Table extends WP_Terms_List_Table {
-
-	/**
-	 * Constructor
-	 *
-	 * @since 1.0.0
-	 *
-	 * @see WP_List_Table::__construct() for more information on default arguments.
-	 *
-	 * @param array $args An associative array of arguments.
-	 */
-	public function __construct( $args = array() ) {
-		global $taxonomy, $action;
-
-		WP_List_Table::__construct(
-			array(
-				'plural'   => 'consumer-types',
-				'singular' => 'consumer-type',
-				'screen'   => isset( $args['screen'] ) ? $args['screen'] : null,
-			)
-		);
-
-		$action    = $this->screen->action;
-		$taxonomy  = $this->screen->taxonomy;
-	}
-
 	/**
 	 * Load and prepare the table items
 	 *
@@ -136,7 +111,7 @@ class Incassoos_Consumer_Types_List_Table extends WP_Terms_List_Table {
 		// To support inline editing of terms, use the term id
 		$id = $type->is_term() ? $type->term_id : $type->id;
 
-		echo '<tr id="consumer-type-' . $id . '" class="level-0">';
+		echo '<tr id="tag-' . $id . '" class="level-0">';
 		$this->single_row_columns( $type );
 		echo '</tr>';
 	}
