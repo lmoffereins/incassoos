@@ -48,6 +48,22 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			'schema' => array( $this, 'get_public_item_schema' )
 		) );
 
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\w-]+)', array(
+			'args' => array(
+				'id' => array(
+					'description' => __( 'Unique identifier for the object.' ),
+					'type'        => 'string',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array( $this, 'update_item' ),
+				'permission_callback' => array( $this, 'update_item_permissions_check' ),
+				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+			),
+			'schema' => array( $this, 'get_public_item_schema' ),
+		) );
+
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\w-]+)/archive', array(
 			'args' => array(
 				'id' => array(
@@ -350,6 +366,71 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		 * @param array $query_params JSON Schema-formatted collection parameters.
 		 */
 		return apply_filters( 'incassoos_rest_consumer_types_collection_params', $query_params );
+	}
+
+	/**
+	 * Checks if a given request has access to update a consumer type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return true|WP_Error True if the request has access to update the item, WP_Error object otherwise.
+	 */
+	public function update_item_permissions_check( $request ) {
+		$item = $this->get_consumer_type( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		if ( ! current_user_can( 'edit_incassoos_consumer_type', $item->id ) ) {
+			return new WP_Error( 'rest_cannot_edit', __( 'Sorry, you are not allowed to edit this item.', 'incassoos' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Updates a single consumer type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function update_item( $request ) {
+		$item = $this->get_consumer_type( $request['id'] );
+		if ( is_wp_error( $item ) ) {
+			return $item;
+		}
+
+		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['archived'] ) && isset( $request['archived'] ) ) {
+			if ( $request['archived'] ) {
+				incassoos_archive_consumer_type( $item );
+			} else {
+				incassoos_unarchive_consumer_type( $item );
+			}
+		}
+
+		/**
+		 * Fires after a single consumer type is created or updated via the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param Incassoos_Consumer_Type $item     Inserted or updated consumer type object.
+		 * @param WP_REST_Request         $request  Request object.
+		 * @param bool                    $creating True when creating a post, false when updating.
+		 */
+		do_action( 'incassoos_rest_insert_consumer_type', $item, $request, false );
+
+		$item = incassoos_get_consumer_type( $item->id );
+
+		$request->set_param( 'context', 'edit' );
+
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		return rest_ensure_response( $response );
 	}
 
 	/**

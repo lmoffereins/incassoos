@@ -806,6 +806,7 @@ function incassoos_map_generic_caps( $caps = array(), $cap = '', $user_id = 0, $
 
 		case 'archive_incassoos_consumer_type' :
 		case 'unarchive_incassoos_consumer_type' :
+		case 'edit_incassoos_consumer_type' :
 
 			// Allow REST users
 			if ( incassoos_doing_rest() && user_can( $user_id, 'access_incassoos_rest_api' ) ) {
