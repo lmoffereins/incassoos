@@ -361,10 +361,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			return $item;
 		}
 
-		if ( $item && ! current_user_can( 'archive_incassoos_consumer_type', $item ) ) {
+		if ( $item && ! current_user_can( 'archive_incassoos_consumer_type', $item->id ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_archive_consumer_type',
-				__( 'Sorry, you are not allowed to archive this consumer type.', 'incassoos' ),
+				'incassoos_rest_user_cannot_archive',
+				__( 'Sorry, you are not allowed to archive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -386,12 +386,12 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			return $item;
 		}
 
-		$id = $item->ID;
+		$id = $item->id;
 
-		if ( ! current_user_can( 'archive_incassoos_consumer_type', $item ) ) {
+		if ( ! current_user_can( 'archive_incassoos_consumer_type', $id ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_archive_consumer_type',
-				__( 'Sorry, you are not allowed to archive this consumer type.', 'incassoos' ),
+				'incassoos_rest_user_cannot_archive',
+				__( 'Sorry, you are not allowed to archive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -447,10 +447,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			return $item;
 		}
 
-		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer_type', $item ) ) {
+		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer_type', $item->id ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_unarchive_consumer_type',
-				__( 'Sorry, you are not allowed to unarchive this consumer type.', 'incassoos' ),
+				'incassoos_rest_user_cannot_unarchive',
+				__( 'Sorry, you are not allowed to unarchive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -472,12 +472,12 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			return $item;
 		}
 
-		$id = $item->ID;
+		$id = $item->id;
 
-		if ( ! current_user_can( 'unarchive_incassoos_consumer_type', $item ) ) {
+		if ( ! current_user_can( 'unarchive_incassoos_consumer_type', $id ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_unarchive_consumer_type',
-				__( 'Sorry, you are not allowed to unarchive this consumer type.', 'incassoos' ),
+				'incassoos_rest_user_cannot_unarchive',
+				__( 'Sorry, you are not allowed to unarchive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}

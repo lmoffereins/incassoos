@@ -249,8 +249,8 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 
 		if ( $post && ! $this->check_delete_permission( $post ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_untrash_post',
-				__( 'Sorry, you are not allowed to restore this post from the Trash.', 'incassoos' ),
+				'incassoos_rest_user_cannot_untrash',
+				__( 'Sorry, you are not allowed to restore this item from the Trash.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -276,8 +276,8 @@ class Incassoos_REST_Products_Controller extends WP_REST_Posts_Controller {
 
 		if ( ! $this->check_delete_permission( $post ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_untrash_post',
-				__( 'Sorry, you are not allowed to restore this post from the Trash.', 'incassoos' ),
+				'incassoos_rest_user_cannot_untrash',
+				__( 'Sorry, you are not allowed to restore this item from the Trash.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}

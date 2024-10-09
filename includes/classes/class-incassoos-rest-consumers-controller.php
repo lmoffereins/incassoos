@@ -520,8 +520,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( $item && ! current_user_can( 'archive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_archive_consumer',
-				__( 'Sorry, you are not allowed to archive this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_archive',
+				__( 'Sorry, you are not allowed to archive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -547,8 +547,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( ! current_user_can( 'archive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_archive_consumer',
-				__( 'Sorry, you are not allowed to archive this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_archive',
+				__( 'Sorry, you are not allowed to archive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -606,8 +606,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( $item && ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_unarchive_consumer',
-				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_unarchive',
+				__( 'Sorry, you are not allowed to unarchive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -633,8 +633,8 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		if ( ! current_user_can( 'unarchive_incassoos_consumer', $item ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_unarchive_consumer',
-				__( 'Sorry, you are not allowed to unarchive this consumer.', 'incassoos' ),
+				'incassoos_rest_user_cannot_unarchive',
+				__( 'Sorry, you are not allowed to unarchive this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}

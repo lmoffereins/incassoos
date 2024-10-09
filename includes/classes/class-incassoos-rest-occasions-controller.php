@@ -304,8 +304,8 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 
 		if ( $post && ! current_user_can( 'close_incassoos_occasion', $post ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_close_post',
-				__( 'Sorry, you are not allowed to close this occasion.', 'incassoos' ),
+				'incassoos_rest_user_cannot_close',
+				__( 'Sorry, you are not allowed to close this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -331,8 +331,8 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 
 		if ( ! current_user_can( 'close_incassoos_occasion', $post ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_close_post',
-				__( 'Sorry, you are not allowed to close this occasion.', 'incassoos' ),
+				'incassoos_rest_user_cannot_close',
+				__( 'Sorry, you are not allowed to close this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -343,7 +343,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		if ( incassoos_is_occasion_locked( $post ) ) {
 			return new WP_Error(
 				'incassoos_rest_is_locked',
-				__( 'The occasion is locked.', 'incassoos' ),
+				__( 'The item is locked.', 'incassoos' ),
 				array( 'status' => 410 )
 			);
 		}
@@ -355,7 +355,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		if ( ! $result ) {
 			return new WP_Error(
 				'incassoos_rest_cannot_close',
-				__( 'The occasion cannot be closed.', 'incassoos' ),
+				__( 'The item cannot be closed.', 'incassoos' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -390,8 +390,8 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 
 		if ( $post && ! current_user_can( 'reopen_incassoos_occasion', $post ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_reopen_post',
-				__( 'Sorry, you are not allowed to reopen this occasion.', 'incassoos' ),
+				'incassoos_rest_user_cannot_reopen',
+				__( 'Sorry, you are not allowed to reopen this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -417,8 +417,8 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 
 		if ( ! current_user_can( 'reopen_incassoos_occasion', $post ) ) {
 			return new WP_Error(
-				'incassoos_rest_user_cannot_reopen_post',
-				__( 'Sorry, you are not allowed to reopen this occasion.', 'incassoos' ),
+				'incassoos_rest_user_cannot_reopen',
+				__( 'Sorry, you are not allowed to reopen this item.', 'incassoos' ),
 				array( 'status' => rest_authorization_required_code() )
 			);
 		}
@@ -429,7 +429,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		if ( ! incassoos_is_occasion_closed( $post ) ) {
 			return new WP_Error(
 				'incassoos_rest_is_not_closed',
-				__( 'The occasion is not closed.', 'incassoos' ),
+				__( 'The item is not closed.', 'incassoos' ),
 				array( 'status' => 410 )
 			);
 		}
@@ -441,7 +441,7 @@ class Incassoos_REST_Occasions_Controller extends WP_REST_Posts_Controller {
 		if ( ! $result ) {
 			return new WP_Error(
 				'incassoos_rest_cannot_reopen',
-				__( 'The occasion cannot be reopened.', 'incassoos' ),
+				__( 'The item cannot be reopened.', 'incassoos' ),
 				array( 'status' => 500 )
 			);
 		}
