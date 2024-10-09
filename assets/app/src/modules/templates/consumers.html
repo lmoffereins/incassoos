@@ -62,7 +62,7 @@
 								<object class="avatar-image" :data="consumerAvatarUrl(c)" type="image/png" v-l10n-alt.Consumer.AvatarOf="c.name"></object>
 								<span class="item-name" v-l10n="c.name"></span>
 							</button>
-							<input-toggle class="toggle-show-item" v-if="isSettings" :value="c.show" @input="toggleShowConsumer(c)" v-l10n-title="c.show ? 'Common.Hide' : 'Common.Show'"></input-toggle>
+							<input-toggle class="toggle-show-item" v-if="isSettings && ! c.isBuiltin" :value="c.show" @input="toggleShowConsumer(c)" v-l10n-title="c.show ? 'Common.Hide' : 'Common.Show'"></input-toggle>
 						</li>
 					</ul>
 				</div>

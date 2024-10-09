@@ -21,6 +21,7 @@ define([
 			name: he.decode(resp.name),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
 			show: true,
+			isBuiltin: resp._builtin,
 			isConsumerType: true,
 			group: {
 				id: "consumer-types",

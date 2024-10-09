@@ -365,7 +365,7 @@ define([
 			},
 
 			/**
-			 * Toggle the visibility of a single consumer
+			 * Toggle the show status of a single consumer
 			 *
 			 * Dispatch the action without returning the promise.
 			 *
