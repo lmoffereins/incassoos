@@ -65,7 +65,7 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			'properties' => array(
 				'id'              => array(
 					'description' => __( 'Unique identifier for the object.', 'incassoos' ),
-					'type'        => 'integer',
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
@@ -75,12 +75,17 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'avatarUrl'          => array(
+				'avatarUrl'       => array(
 					'description' => __( "Path to the object's avatar image", 'incassoos' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true
+				),
+				'_builtin'        => array(
+					'description' => __( 'Whether the object is builtin.', 'incassoos' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view' ),
 				),
 				'_applicationFields' => array(
 					'description' => __( 'List of additional field names in this endpoint to make known to the application.', 'incassoos' ),
@@ -190,8 +195,8 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_User         $item    Item object.
-	 * @param WP_REST_Request $request Request object.
+	 * @param Incassoos_Consumer_Type $item    Item object.
+	 * @param WP_REST_Request         $request Request object.
 	 * @return WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -206,12 +211,16 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		}
 
 		if ( ! empty( $schema['properties']['name'] ) ) {
-			$data['name'] = incassoos_get_consumer_type_title( $item->id );
+			$data['name'] = incassoos_get_consumer_type_title( $item );
 		}
 
 		if ( ! empty( $schema['properties']['avatarUrl'] ) ) {
 			$size = $request->get_param( 'avatar_size' );
-			$data['avatarUrl'] = incassoos_get_consumer_type_avatar_url( $item->id, $size ? array( 'size' => $size ) : array() );
+			$data['avatarUrl'] = incassoos_get_consumer_type_avatar_url( $item, $size ? array( 'size' => $size ) : array() );
+		}
+
+		if ( ! empty( $schema['properties']['_builtin'] ) ) {
+			$data['_builtin'] = $item->is_builtin();
 		}
 
 		if ( ! empty( $schema['properties']['_applicationFields'] ) ) {
@@ -230,9 +239,9 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_REST_Response $response The response object.
-		 * @param WP_User          $item     Consumer type object.
-		 * @param WP_REST_Request  $request  Request object.
+		 * @param WP_REST_Response        $response The response object.
+		 * @param Incassoos_Consumer_Type $item     Consumer type object.
+		 * @param WP_REST_Request         $request  Request object.
 		 */
 		return apply_filters( 'incassoos_rest_prepare_consumer_type', $response, $item, $request );
 	}

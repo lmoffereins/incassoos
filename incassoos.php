@@ -522,7 +522,7 @@ final class Incassoos {
 				'label'       => _x( 'Unknown users', 'Consumer type', 'incassoos' ),
 				'label_user'  => _x( 'Unknown user [%s]', 'Consumer type', 'incassoos' ),
 				'description' => __( 'Built-in type for consumers that no longer exist in the system.', 'incassoos' ),
-				'_hidden'     => true
+				'_internal'   => true
 			)
 		);
 

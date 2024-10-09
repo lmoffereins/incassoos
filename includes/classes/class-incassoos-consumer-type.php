@@ -199,6 +199,17 @@ final class Incassoos_Consumer_Type {
 	}
 
 	/**
+	 * Return whether the type is builtin.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool Type is builtin.
+	 */
+	public function is_builtin() {
+		return ! (bool) $this->term_id;
+	}
+
+	/**
 	 * Return whether the type is a term.
 	 *
 	 * @since 1.0.0
