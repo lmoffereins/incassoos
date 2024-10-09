@@ -14,6 +14,10 @@
 
 	<div class="panel-content">
 		<div class="item-details">
+			<div class="item-description" v-if="active.description">
+				<span class="description" v-l10n="active.description"></span>
+			</div>
+
 			<form v-if="editable" id="the-consumer" class="detail-list edit-consumer" @submit.prevent="update" novalidate>
 				<div class="detail-item consumer-show">
 					<span class="detail-label" v-l10n.Consumer.ConsumerShow></span>

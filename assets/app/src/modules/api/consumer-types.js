@@ -27,6 +27,7 @@ define([
 		var item = {
 			id: resp.id,
 			name: he.decode(resp.name),
+			description: he.decode(resp.description),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
 			show: ! resp.archived,
 			isBuiltin: resp._builtin,
