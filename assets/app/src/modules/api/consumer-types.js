@@ -8,8 +8,9 @@ define([
 	"he",
 	"lodash",
 	"services",
-	"settings"
-], function( he, _, services, settings ) {
+	"settings",
+	"util"
+], function( he, _, services, settings, util ) {
 	/**
 	 * Holds a reference to the cache service
 	 *
@@ -29,6 +30,7 @@ define([
 			name: he.decode(resp.name),
 			description: he.decode(resp.description),
 			avatarUrl: resp.avatarUrl || settings.consumer.defaultAvatarUrl,
+			spendingLimit: util.sanitizePrice(resp.spendingLimit) || 0,
 			show: ! resp.archived,
 			isBuiltin: resp._builtin,
 			isConsumerType: true,
@@ -110,6 +112,11 @@ define([
 
 			// Point to a single consumer type
 			request.url = request.baseUrl.concat("/", payload.id);
+
+			// Set the consumption limit. Can be 0.
+			if ("undefined" !== typeof payload.spendingLimit) {
+				request.data.spendingLimit = payload.spendingLimit;
+			}
 
 			// Set the archived parameter for hidden consumer type. Can be false.
 			if ("undefined" !== typeof payload.show) {
