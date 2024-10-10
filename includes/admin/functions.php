@@ -2185,6 +2185,23 @@ function incassoos_admin_taxonomy_add_form_fields( $taxonomy ) {
 	</div>
 
 	<?php endif;
+
+	// Consumer Type
+	if ( incassoos_get_consumer_type_tax_id() === $taxonomy ) :
+
+		// Formatting
+		$format_args     = incassoos_get_currency_format_args();
+		$min_price_value = 1 / pow( 10, $format_args['decimals'] );
+	?>
+
+	<div class="form-field term-spending-limit-wrap">
+		<label for="term-spending-limit"><?php esc_html_e( 'Spending limit', 'incassoos' ); ?></label>
+		<input type="number" id="term-spending-limit" name="term-spending-limit" class="small-text" min="0" step="<?php echo $min_price_value; ?>" value="0" />
+
+		<p class="description"><?php esc_html_e( 'Spending limit of the item per occasion.', 'incassoos' ); ?></p>
+	</div>
+
+	<?php endif;
 }
 
 /**
@@ -2224,6 +2241,27 @@ function incassoos_admin_taxonomy_edit_form_fields( $term, $taxonomy ) {
 			<input type="checkbox" id="term-archived" name="term-archived" value="1" <?php checked( get_term_meta( $term->term_id, '_incassoos_archived', true ) ); ?>/>
 
 			<p class="description"><?php esc_html_e( 'When archived, it will not appear on your site along with linked items.', 'incassoos' ); ?></p>
+		</td>
+	</tr>
+
+	<?php endif;
+
+	// Consumer Type
+	if ( incassoos_get_consumer_type_tax_id() === $taxonomy ) :
+
+		// Formatting
+		$format_args     = incassoos_get_currency_format_args();
+		$min_price_value = 1 / pow( 10, $format_args['decimals'] );
+	?>
+
+	<tr class="form-field term-archived-wrap">
+		<th scope="row" valign="top">
+			<label for="term-spending-limit"><?php esc_html_e( 'Spending limit', 'incassoos' ); ?></label>
+		</th>
+		<td>
+			<input type="number" id="term-spending-limit" name="term-spending-limit" class="small-text" min="0" step="<?php echo $min_price_value; ?>" value="<?php echo get_term_meta( $term->term_id, '_incassoos_spending_limit', true ); ?>" />
+
+			<p class="description"><?php esc_html_e( 'Spending limit of the item per occasion.', 'incassoos' ); ?></p>
 		</td>
 	</tr>
 

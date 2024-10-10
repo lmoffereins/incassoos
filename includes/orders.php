@@ -1997,6 +1997,31 @@ function incassoos_get_consumer_type_avatar_url( $type_id, $args = array() ) {
 }
 
 /**
+ * Return the consumer type spending limit
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_get_consumer_type_spending_limit'
+ *
+ * @param  string $type_id Consumer type id
+ * @return float Consumer type spending limit.
+ */
+function incassoos_get_consumer_type_spending_limit( $type_id ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
+	$limit         = 0;
+
+	if ( $consumer_type ) {
+
+		// Type is a term
+		if ( $consumer_type->is_term() ) {
+			$limit = (float) get_term_meta( $consumer_type->term_id, '_incassoos_spending_limit', true );
+		}
+	}
+
+	return (float) apply_filters( 'incassoos_get_consumer_type_spending_limit', $limit, $consumer_type );
+}
+
+/**
  * Return whether the consumer type is archived
  *
  * @since 1.0.0
@@ -2032,6 +2057,34 @@ function incassoos_is_consumer_type_not_archived( $type_id ) {
 }
 
 /** Update ********************************************************************/
+
+/**
+ * Update the consumer type spending limit
+ *
+ * @since 1.0.0
+ *
+ * @param  string $type_id Consumer type id
+ * @param  float $limit Optional. Spending limit. Removed when empty.
+ * @return bool Update success
+ */
+function incassoos_update_consumer_type_spending_limit( $type_id, $limit = 0 ) {
+	$consumer_type = incassoos_get_consumer_type( $type_id );
+	$success       = false;
+
+	if ( $consumer_type ) {
+
+		// Type is term
+		if ( $consumer_type->is_term() ) {
+			if ( ! $limit ) {
+				$success = delete_term_meta( $consumer_type->term_id, '_incassoos_spending_limit' );
+			} else {
+				$success = update_term_meta( $consumer_type->term_id, '_incassoos_spending_limit', (float) $limit );
+			}
+		}
+	}
+
+	return $success;
+}
 
 /**
  * Archive the consumer type

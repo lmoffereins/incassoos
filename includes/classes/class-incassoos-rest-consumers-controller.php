@@ -128,15 +128,15 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true
 				),
-				'archived'         => array(
-					'description' => __( 'Whether the object is archived.', 'incassoos' ),
-					'type'        => 'boolean',
-					'context'     => array( 'view', 'edit' ),
-				),
 				'spendingLimit' => array(
 					'description' => __( 'Spending limit for the object.', 'incassoos' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' )
+				),
+				'archived'         => array(
+					'description' => __( 'Whether the object is archived.', 'incassoos' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit' ),
 				),
 				'group'           => array(
 					'description' => __( 'List group for the object.', 'incassoos' ),
@@ -351,12 +351,12 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 			$data['avatarUrl'] = get_avatar_url( $item->ID, $size ? array( 'size' => $size ) : array() );
 		}
 
-		if ( ! empty( $schema['properties']['archived'] ) ) {
-			$data['archived'] = incassoos_is_consumer_archived( $item );
-		}
-
 		if ( ! empty( $schema['properties']['spendingLimit'] ) ) {
 			$data['spendingLimit'] = incassoos_get_user_spending_limit( $item );
+		}
+
+		if ( ! empty( $schema['properties']['archived'] ) ) {
+			$data['archived'] = incassoos_is_consumer_archived( $item );
 		}
 
 		if ( ! empty( $schema['properties']['group'] ) ) {
@@ -468,19 +468,19 @@ class Incassoos_REST_Consumers_Controller extends WP_REST_Controller {
 
 		$schema = $this->get_item_schema();
 
-		if ( ! empty( $schema['properties']['archived'] ) && isset( $request['archived'] ) ) {
-			if ( $request['archived'] ) {
-				incassoos_archive_consumer( $item );
-			} else {
-				incassoos_unarchive_consumer( $item );
-			}
-		}
-
 		if ( ! empty( $schema['properties']['spendingLimit'] ) && isset( $request['spendingLimit'] ) ) {
 			if ( ! (float) $request['spendingLimit'] ) {
 				delete_user_meta( $item->ID, '_incassoos_spending_limit' );
 			} else {
 				update_user_meta( $item->ID, '_incassoos_spending_limit', (float) $request['spendingLimit'] );
+			}
+		}
+
+		if ( ! empty( $schema['properties']['archived'] ) && isset( $request['archived'] ) ) {
+			if ( $request['archived'] ) {
+				incassoos_archive_consumer( $item );
+			} else {
+				incassoos_unarchive_consumer( $item );
 			}
 		}
 

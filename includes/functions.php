@@ -1370,6 +1370,19 @@ function incassoos_save_term_meta( $term_id, $tt_id, $taxonomy ) {
 			update_term_meta( $term_id, '_incassoos_archived', 1 );
 		}
 	}
+
+	// Consumer Type
+	if ( incassoos_get_consumer_type_tax_id() === $taxonomy ) {
+
+		// Remove spending limit
+		if ( empty( $_POST['term-spending-limit'] ) ) {
+			delete_term_meta( $term_id, '_incassoos_spending_limit' );
+
+		// Set spending limit
+		} else {
+			update_term_meta( $term_id, '_incassoos_spending_limit', (float) $_POST['term-spending-limit'] );
+		}
+	}
 }
 
 /**

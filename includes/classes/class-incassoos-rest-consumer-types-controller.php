@@ -134,6 +134,11 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true
 				),
+				'spendingLimit' => array(
+					'description' => __( 'Spending limit for the object.', 'incassoos' ),
+					'type'        => 'number',
+					'context'     => array( 'view', 'edit' )
+				),
 				'archived'        => array(
 					'description' => __( 'Whether the object is archived.', 'incassoos' ),
 					'type'        => 'boolean',
@@ -302,6 +307,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 			$data['avatarUrl'] = incassoos_get_consumer_type_avatar_url( $item, $size ? array( 'size' => $size ) : array() );
 		}
 
+		if ( ! empty( $schema['properties']['spendingLimit'] ) ) {
+			$data['spendingLimit'] = incassoos_get_consumer_type_spending_limit( $item );
+		}
+
 		if ( ! empty( $schema['properties']['archived'] ) ) {
 			$data['archived'] = incassoos_is_consumer_type_archived( $item );
 		}
@@ -414,6 +423,10 @@ class Incassoos_REST_Consumer_Types_Controller extends WP_REST_Controller {
 		}
 
 		$schema = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['spendingLimit'] ) && isset( $request['spendingLimit'] ) ) {
+			incassoos_update_consumer_type_spending_limit( $item, (float) $request['spendingLimit'] );
+		}
 
 		if ( ! empty( $schema['properties']['archived'] ) && isset( $request['archived'] ) ) {
 			if ( $request['archived'] ) {
