@@ -1912,7 +1912,7 @@ function incassoos_the_consumer_type_title( $type_id ) {
  */
 function incassoos_get_consumer_type_title( $type_id ) {
 	$consumer_type = incassoos_get_consumer_type( $type_id );
-	$title         = ucfirst( $type );
+	$title         = ucfirst( $type_id );
 
 	if ( $consumer_type ) {
 		$title = $consumer_type->label;
