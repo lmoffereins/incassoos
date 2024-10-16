@@ -1790,7 +1790,10 @@ function incassoos_consumer_type_exists( $type_id ) {
  * @return array Consumer type ids
  */
 function incassoos_get_consumer_types( $args = array() ) {
-	$args  = wp_parse_args( $args, array( 'builtin' => null ) );
+	$args  = wp_parse_args( $args, array(
+		'builtin'  => null,
+		'archived' => null
+	) );
 	$types = array();
 
 	// Get built-in types
@@ -1814,7 +1817,7 @@ function incassoos_get_consumer_types( $args = array() ) {
 
 	// Get custom types
 	if ( true !== $args['builtin'] ) {
-		$terms = get_terms( wp_parse_args( array(
+		$query_args = wp_parse_args( array(
 			'taxonomy'   => incassoos_get_consumer_type_tax_id(),
 			'fields'     => 'slugs',
 			'hide_empty' => false,
@@ -1822,7 +1825,22 @@ function incassoos_get_consumer_types( $args = array() ) {
 			// Prevent limited queries
 			'number'     => '',
 			'offset'     => ''
-		), $args ) );
+		), $args );
+
+		// Consider archived items
+		if ( null !== $args['archived'] ) {
+			$meta_query = isset( $query_args['meta_query'] ) ? $query_args['meta_query'] : array();
+			$meta_query[] = array(
+				array(
+					'key'     => '_incassoos_archived',
+					'compare' => 'NOT EXISTS'
+				)
+			);
+			$query_args['meta_query'] = $meta_query;
+		}
+
+		// Query terms
+		$terms = get_terms( $query_args );
 
 		// Combine types
 		$types = array_merge( $types, $terms );
