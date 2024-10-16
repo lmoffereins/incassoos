@@ -1770,12 +1770,7 @@ function incassoos_admin_order_details_metabox( $post ) {
 			<?php if ( ! $is_post_view ) : ?>
 
 			<span class="detail-wrapper">
-				<select id="consumer_type" name="consumer_type">
-					<option value=""><?php esc_html_e( '&mdash; Consumer Type &mdash;', 'incassoos' ); ?></option>
-					<?php foreach ( incassoos_get_consumer_types() as $type ) : ?>
-					<option value="<?php echo $type; ?>" <?php selected( $type, $consumer_type ); ?>><?php incassoos_the_consumer_type_title( $type ); ?></option>
-					<?php endforeach; ?>
-				</select>
+				<?php incassoos_dropdown_consumer_types( array( 'id' => 'consumer_type', 'selected' => $consumer_type ) ); ?>
 
 				<span class="separator"><?php esc_html_e( '&mdash; or &mdash;', 'incassoos' ); ?></span>
 

@@ -1975,6 +1975,63 @@ function incassoos_get_consumer_type_description( $type_id ) {
 }
 
 /**
+ * Display or return consumer types dropdown element
+ *
+ * @since 1.0.0
+ *
+ * @uses apply_filters() Calls 'incassoos_dropdown_consumer_types_query_args'
+ * @uses apply_filters() Calls 'incassoos_dropdown_consumer_types'
+ *
+ * @param  Incassoos_Consumer_Type|string $consumer_type Consumer type object or id
+ * @param  array                          $args Dropdown arguments
+ * @return string HTML dropdown list of consumer types
+ */
+function incassoos_dropdown_consumer_types( $args = array() ) {
+	$parsed_args = wp_parse_args( $args, array(
+		'echo'              => 1,
+		'id'                => 'consumer-type',
+		'class'             => '',
+		'tab_index'         => 0,
+		'selected'          => '',
+		'option_none_value' => __( '&mdash; Consumer Type &mdash;', 'incassoos' ),
+	) );
+
+	$id    = esc_attr( $parsed_args['id'] );
+	$name  = isset( $parsed_args['name'] ) ? esc_attr( $parsed_args['name'] ) : $id;
+	$class = ! empty( $parsed_args['class'] ) ? ' class="'. esc_attr( $parsed_args['class'] ) . '"' : '';
+
+	$tab_index = $parsed_args['tab_index'];
+	$tab_index_attribute = '';
+	if ( (int) $tab_index > 0 ) {
+		$tab_index_attribute = " tabindex=\"$tab_index\"";
+	}
+
+	$output  = "<select id='$id' name='$name' $class $tab_index_attribute>\n";
+	$output .= '<option value="-1">' . esc_html( $parsed_args['option_none_value'] ) . '</option>';
+
+	// Default query all unarchived items
+	$query_args = apply_filters( 'incassoos_dropdown_consumer_types_query_args', wp_parse_args( $parsed_args, array(
+		'per_page' => -1,
+		'archived' => false
+	) ), $args );
+	$query = incassoos_query_consumer_types( $query_args );
+
+	// Consumer types
+	foreach ( $query->query_result as $type ) {
+		$output .= '<option value="' . esc_attr( $type->id ) . '"' . selected( $type->id, $parsed_args['selected'], false ) . '>' . esc_html( incassoos_get_consumer_type_title( $type->id ) ) . '</option>';
+	}
+
+	$output .= '</select>';
+	$output = apply_filters( 'incassoos_dropdown_consumer_types', $output, $parsed_args );
+
+	if ( $parsed_args['echo'] ) {
+		echo $output;
+	}
+
+	return $output;
+}
+
+/**
  * Return the consumer type avatar url
  *
  * @since 1.0.0
