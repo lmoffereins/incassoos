@@ -1828,6 +1828,9 @@ function incassoos_get_consumer_types( $args = array() ) {
 		$types = array_merge( $types, $terms );
 	}
 
+	// Default sort alphabetically
+	sort( $types );
+
 	return (array) apply_filters( 'incassoos_get_consumer_types', $types, $args );
 }
 
