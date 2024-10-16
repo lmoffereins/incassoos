@@ -1805,6 +1805,11 @@ function incassoos_get_consumer_types( $args = array() ) {
 				continue;
 			}
 
+			// Consider archived items
+			if ( $args['archived'] ) {
+				continue;
+			}
+
 			// Search in item
 			if ( isset( $args['search'] ) && ! $type->find( $args['search'] ) ) {
 				continue;
@@ -1833,7 +1838,8 @@ function incassoos_get_consumer_types( $args = array() ) {
 			$meta_query[] = array(
 				array(
 					'key'     => '_incassoos_archived',
-					'compare' => 'NOT EXISTS'
+					'value'   => 1,
+					'compare' => $args['archived'] ? '=' : 'NOT EXISTS'
 				)
 			);
 			$query_args['meta_query'] = $meta_query;
