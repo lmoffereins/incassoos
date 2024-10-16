@@ -1746,7 +1746,7 @@ function incassoos_unregister_consumer_type( $type_id ) {
  *
  * @uses apply_filters Calls 'incassoos_get_consumer_type'
  *
- * @param  Incassoos_Consumer_Type|string|int|WP_Term $type_id Consumer type, id or label. Term id or object.
+ * @param  Incassoos_Consumer_Type|string|WP_Term $type_id Consumer type, id or label or Term object.
  * @return Incassoos_Consumer_Type|bool Consumer type object or False when not found.
  */
 function incassoos_get_consumer_type( $type_id ) {
