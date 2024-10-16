@@ -1902,9 +1902,11 @@ function incassoos_query_consumer_types( $query_args = array() ) {
 	$items = wp_list_sort( $items, $query_args['orderby'], $query_args['order'] );
 
 	// Handle pagination
-	$query_args['page'] = max( isset( $query_args['page'] ) ? (int) $query_args['page'] : 1, 1 );
-	$offset = ($query_args['page'] - 1) * $query_args['per_page'];
-	$items = array_slice( $items, $offset, $query_args['per_page'] );
+	if ( (int) $query_args['per_page'] >= 0 ) {
+		$query_args['page'] = max( isset( $query_args['page'] ) ? (int) $query_args['page'] : 1, 1 );
+		$offset = ($query_args['page'] - 1) * $query_args['per_page'];
+		$items = array_slice( $items, $offset, $query_args['per_page'] );
+	}
 
 	// Define query result
 	$items_query = (object) array(
