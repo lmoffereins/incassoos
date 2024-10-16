@@ -253,7 +253,8 @@ body.incassoos-post-view #postdivrich .inside {
 	width: 68%;
 }
 
-.incassoos-object-details label + .detail-wrapper select {
+.incassoos-object-details label + .detail-wrapper select,
+.incassoos-object-details label + .detail-wrapper input {
 	width: 100%;
 }
 
