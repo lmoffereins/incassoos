@@ -407,18 +407,18 @@ function incassoos_admin_consumers_page() {
 		}
 	}
 
-	if ( isset( $_GET['updated']) ) :
+	if ( isset( $_GET['updated']) ) {
 		$updated = explode( ',', $_GET['updated'] );
-	?>
-
-	<div id="message" class="updated notice notice-success is-dismissible"><p>
-		<?php printf(
+		$message = sprintf(
 			esc_html( _n( 'Successfully updated user %s.', 'Successfully updated users %s', count( $updated ), 'incassoos' ) ),
 			'<strong>' . wp_sprintf_l( '%l', array_map( 'incassoos_get_user_display_name', $updated ) ) . '</strong>'
-		); ?>
-	</p></div>
+		);
 
-	<?php endif; ?>
+		// Display notice
+		wp_admin_notice( $message, array( 'type' => 'success', 'dismissible' => true, 'additional_classes' => array( 'updated' ) ) );
+	}
+
+	?>
 
 	<p><?php esc_html_e( 'Manage consumers and their attributes for Incassoos.', 'incassoos' ); ?></p>
 

@@ -984,8 +984,9 @@ function incassoos_admin_settings_notices() {
 		$messages[] = esc_html__( 'All application tokens are successfully invalidated.', 'incassoos' );
 	}
 
+	// Display notices
 	foreach ( $messages as $message ) {
-		echo '<div class="notice updated is-dismissible"><p>' . $message . '</p></div>';
+		wp_admin_notice( $message, array( 'type' => 'success', 'dismissible' => true, 'additional_classes' => array( 'updated' ) ) );
 	}
 }
 

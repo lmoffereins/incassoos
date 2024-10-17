@@ -1814,7 +1814,7 @@ function incassoos_admin_bulk_notices() {
 	}
 
 	if ( $messages ) {
-		echo '<div id="message" class="updated notice is-dismissible"><p>' . implode( ' ', $messages ) . '</p></div>';
+		wp_admin_notice( implode( ' ', $messages ), array( 'type' => 'success', 'dismissible' => true, 'additional_classes' => array( 'updated' ) ) );
 	}
 	unset( $messages );
 
@@ -2013,11 +2013,16 @@ function incassoos_admin_post_action_notices() {
 	$errors  = isset( $feedback['errors']  ) ? $feedback['errors']  : false;
 	$success = isset( $feedback['success'] ) ? $feedback['success'] : false;
 
-	// Display error messages first
-	if ( $errors ) : ?>
+	// Define default notice arguments
+	$notice_args = array(
+		'dismissible'        => true,
+		'additional_classes' => array( 'incassoos-notice' ),
+		'paragraph_wrap'     => false
+	);
 
-	<div class="notice notice-error is-dismissible incassoos-notice">
-		<p><?php printf(
+	// Display error messages first
+	if ( $errors ) {
+		$message = '<p>' . sprintf(
 			/* translators: 1. Error amount 2. Button */
 			_n(
 				'Error: %2$s',
@@ -2029,29 +2034,26 @@ function incassoos_admin_post_action_notices() {
 			count( $errors ) > 1
 				? sprintf( '<button type="button" class="button-link">%s</button>', esc_html__( 'Show errors', 'incassoos' ) )
 				: $errors[0]
-		); ?></p>
+		) . '</p>';
 
-		<?php if ( count( $errors ) > 1 ) : foreach ( $errors as $message ) : ?>
+		if ( count( $errors ) > 1 ) {
+			foreach ( $errors as $error_message ) {
+				$message .= '<p>' . $error_message . '</p>';
+			}
+		}
 
-		<p><?php echo $message; ?></p>
-
-		<?php endforeach; endif; ?>
-	</div>
-
-	<?php endif;
+		wp_admin_notice( $message, array_merge( array( 'type' => 'error' ), $notice_args ) );
+	}
 
 	// Display success messages second
-	if ( $success ) : ?>
+	if ( $success ) {
+		$message = '';
+		foreach ( $success as $success_message ) {
+			$message .= '<p>' . $success_message . '</p>';
+		}
 
-	<div class="notice notice-success is-dismissible incassoos-notice">
-		<?php foreach ( $success as $message ) : ?>
-
-		<p><?php echo $message; ?></p>
-
-		<?php endforeach; ?>
-	</div>
-
-	<?php endif;
+		wp_admin_notice( $message, array_merge( array( 'type' => 'success' ), $notice_args ) );
+	}
 
 	// Remove logged feedback afterwards
 	delete_transient( "incassoos_admin_post_action_notice-{$post_id}" );

@@ -30,9 +30,7 @@ function incassoos_admin_encryption_page() {
 		<div class="encryption-not-supported">
 			<p><?php _e( 'Encryption helps with securing <strong>sensitive data</strong> by obscuring the data when registering it in your database. If the database would ever get compromised, there is no value in the obscured data. Only using a <strong>password</strong> can the original sensitive data be accessed again.', 'incassoos' ); ?></p>
 
-			<div class="notice notice-error inline">
-				<p><?php printf( esc_html__( 'Encryption is currently not supported on %s.', 'incassoos' ), site_url() ); ?></p>
-			</div>
+			<?php wp_admin_notice( sprintf( esc_html__( 'Encryption is currently not supported on %s.', 'incassoos' ), site_url() ), array( 'type' => 'error', 'additional_classes' => array( 'inline' ) ) ); ?>
 
 			<p><?php printf( esc_html__( "To be able to use encryption in Incassoos on %s, please update the website's PHP version to 7.2 or greater or make sure the site uses WordPress 5.2 or greater.", 'incassoos' ), site_url() ); ?></p>
 
@@ -244,7 +242,7 @@ function incassoos_admin_get_enable_encryption_steps() {
 		// Welcome
 		'welcome'   => array(
 			'description' =>
-				'<div class="notice notice-warning inline"><p>' . esc_html__( 'Encryption is currently not enabled for Incassoos.', 'incassoos' ) . '</p></div>' .
+				wp_get_admin_notice( esc_html__( 'Encryption is currently not enabled for Incassoos.', 'incassoos' ), array( 'type' => 'warning', 'additional_classes' => array( 'inline' ) ) ) .
 				'<p>' . esc_html__( 'Your system meets the requirements for setting up encryption in Incassoos. With encryption enabled, the following data will be encrypted when it is saved:', 'incassoos' ) . '</p>' .
 				'<ul>' . array_reduce( incassoos_admin_get_encryptable_data(), function( $carry, $item ) {
 					return $carry . '<li>' . $item . '</li>';
@@ -309,7 +307,7 @@ function incassoos_admin_get_enable_encryption_steps() {
 					'<button type="button" id="copy-decryption-key" class="button button-in-input hide-if-no-js" data-clipboard-target="#decryption-key" title="' . esc_html__( 'Copy to clipboard', 'incassoos' ) . '"><span class="screen-reader-text">' . esc_html__( 'Copy to clipboard', 'incassoos' ) . '</span></button>' .
 				'</label>' .
 				'<p>' . esc_html__( 'Treat the private key as a password and store it in a secure place. When access to the encrypted data is required, this password must be provided. The key is also required as a password when you should decide to disable encryption.', 'incassoos' ) . '</p>' .
-				'<div class="notice notice-info inline"><p>' . esc_html__( 'NOTE: The private key is only available on this screen and cannot be retreived afterwards.', 'incassoos' ) . '</p></div>',
+				wp_get_admin_notice( esc_html__( 'NOTE: The private key is only available on this screen and cannot be retreived afterwards.', 'incassoos' ), array( 'type' => 'info', 'additional_classes' => array( 'inline' ) ) ),
 			'next_label'  => esc_html__( 'Continue', 'incassoos' )
 		),
 
@@ -343,7 +341,7 @@ function incassoos_admin_get_disable_encryption_steps() {
 		// Welcome
 		'welcome' => array(
 			'description' =>
-				'<div class="notice notice-success inline"><p>' . esc_html__( 'Encryption is currently enabled for Incassoos.', 'incassoos' ) . '</p></div>' .
+				wp_get_admin_notice( esc_html__( 'Encryption is currently enabled for Incassoos.', 'incassoos' ), array( 'type' => 'success', 'additional_classes' => array( 'inline' ) ) ) .
 				'<p>' . __( 'The data is encrypted using the <strong>public key</strong> that has been generated and stored in the database. The secret <strong>private key</strong> is used for decrypting the data. This key should be saved separately from the system.', 'incassoos' ) . '</p>' .
 				'<p>' . esc_html__( 'The following data is encrypted when it is saved:', 'incassoos' ) . '</p>' .
 				'<ul>' . array_reduce( incassoos_admin_get_encryptable_data(), function( $carry, $item ) {

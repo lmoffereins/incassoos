@@ -190,19 +190,17 @@ function incassoos_vgsr_admin_collection_sfc_metabox( $post ) {
 	?>
 
 	<div class="incassoos-file-content">
-		<?php if ( $file->has_errors() ) : ?>
+		<?php if ( $file->has_errors() ) {
+			$message = '';
+			foreach ( $file->get_errors() as $error_message ) {
+				$message .= '<p>' . $error_message . '</p>';
+			}
 
-		<div class="notice notice-error">
-			<?php foreach ( $file->get_errors() as $message ) : ?>
-			<p><?php echo $message; ?></p>
-			<?php endforeach; ?>
-		</div>
-
-		<?php else : ?>
-
-		<pre><?php echo $file->get_file(); ?></pre>
-
-		<?php endif; ?>
+			// Display notice
+			wp_admin_notice( $message, array( 'type' => 'error', 'paragraph_wrap' => false ) );
+		} else {
+			echo '<pre>' . $file->get_file() . '</pre>';
+		} ?>
 	</div>
 
 	<?php
